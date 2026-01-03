@@ -72,6 +72,19 @@ const DesktopDoctorView: React.FC<Props> = ({
       return result ? `${parseInt(result[1], 16)} ${parseInt(result[2], 16)} ${parseInt(result[3], 16)}` : '99 102 241';
    };
 
+   // Helper to calculate luminance for contrast
+   const getLuminance = (hex: string) => {
+      const rgb = parseInt(hex.slice(1), 16);
+      const r = (rgb >> 16) & 0xff;
+      const g = (rgb >> 8) & 0xff;
+      const b = (rgb >> 0) & 0xff;
+      return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+   };
+
+   const isLight = useMemo(() => {
+      return /^#[0-9A-F]{6}$/i.test(clinic.primaryColor) ? getLuminance(clinic.primaryColor) > 180 : false;
+   }, [clinic.primaryColor]);
+
    return (
       <div className={`flex flex-col h-screen text-slate-900 font-sans overflow-hidden transition-all duration-1000 ${textureClass}`} style={{ '--primary': clinic.primaryColor, '--primary-rgb': hexToRgb(clinic.primaryColor), '--primary-glow': clinic.primaryColor + '15' } as React.CSSProperties}>
 
@@ -84,7 +97,7 @@ const DesktopDoctorView: React.FC<Props> = ({
                      {clinic.logoUrl ? (
                         <img src={clinic.logoUrl} className="h-10 w-10 rounded-xl shadow-lg ring-2 ring-white transition-transform group-hover:scale-105" />
                      ) : (
-                        <div className="h-10 w-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg ring-2 ring-white transition-transform group-hover:scale-105">
+                        <div className={`h-10 w-10 bg-primary rounded-xl flex items-center justify-center shadow-lg ring-2 ring-white transition-transform group-hover:scale-105 ${isLight ? 'text-slate-900' : 'text-white'}`}>
                            <Activity size={20} />
                         </div>
                      )}
@@ -99,7 +112,7 @@ const DesktopDoctorView: React.FC<Props> = ({
                      {['Operational Hub', 'Patient Records', 'Financial Ledger', 'Settings'].map((item, i) => (
                         <div key={item}
                            onClick={() => setActiveSection(item)}
-                           className={`flex items-center gap-4 px-4 py-3.5 rounded-xl cursor-pointer transition-all duration-300 group ${activeSection === item ? 'bg-primary text-white shadow-xl shadow-primary/20 scale-[1.02]' : 'hover:bg-white/50 text-slate-500 hover:text-slate-800'}`}
+                           className={`flex items-center gap-4 px-4 py-3.5 rounded-xl cursor-pointer transition-all duration-300 group ${activeSection === item ? `bg-primary shadow-xl shadow-primary/20 scale-[1.02] ${isLight ? 'text-slate-900 font-black' : 'text-white'}` : 'hover:bg-white/50 text-slate-500 hover:text-slate-800'}`}
                         >
                            <Grid size={18} className={`transition-transform duration-300 ${activeSection === item ? 'scale-110' : 'group-hover:scale-110'}`} />
                            <span className="font-bold text-sm tracking-wide">{item}</span>
