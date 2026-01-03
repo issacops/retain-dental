@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { AreaChart, Area, XAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Clinic, ThemeTexture } from '../../types';
-import { LayoutGrid, Plus, BarChart3, Lock, Cpu, Settings, Globe, Radio, Search, Palette, X, Copy, Terminal, Monitor, Server } from 'lucide-react';
+import { LayoutGrid, Plus, BarChart3, Lock, Cpu, Settings, Globe, Radio, Search, Palette, X, Copy, Terminal, Monitor, Server, LayoutGrid as LayoutGridIcon } from 'lucide-react';
 import GlobalStats from './subcomponents/GlobalStats';
 import ClinicCard from './subcomponents/ClinicCard';
 
@@ -41,6 +41,7 @@ interface Props {
    };
    onOnboardClinic: (name: string, color: string, texture: ThemeTexture, ownerName: string, logoUrl: string) => void;
    onEnterClinic: (clinicId: string) => void;
+   onDeleteClinic: (clinicId: string) => void;
    onUpdateConfig: (updates: any) => void;
 }
 
@@ -53,7 +54,7 @@ const LiveHeartbeat = () => (
    </div>
 );
 
-const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, onEnterClinic, onUpdateConfig }) => {
+const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, onEnterClinic, onUpdateConfig, onDeleteClinic }) => {
    const [activeView, setActiveView] = useState<'HUB' | 'REVENUE' | 'SECURITY' | 'DEPLOYMENTS' | 'CONFIG'>('HUB');
    const [showOnboardModal, setShowOnboardModal] = useState(false);
    const [selectedClinicForManifest, setSelectedClinicForManifest] = useState<PerformanceMetric | null>(null);
@@ -338,6 +339,14 @@ const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, o
                      <div className="flex gap-4">
                         <button onClick={() => onEnterClinic(selectedClinicForManifest.id)} className="flex-1 py-7 bg-indigo-600 hover:bg-indigo-500 text-white rounded-[32px] font-black text-xl shadow-2xl transition-all hover:scale-[1.02]">
                            Initiate Master Override
+                        </button>
+                        <button onClick={() => {
+                           if (confirm(`CRITICAL WARNING: You are about to Permanently Decommission Node ${selectedClinicForManifest.name.toUpperCase()}.\n\nThis action cannot be undone. All associated data (records, wallets, transactions) will be wiped from the network.\n\nProceed?`)) {
+                              onDeleteClinic(selectedClinicForManifest.id);
+                              setSelectedClinicForManifest(null);
+                           }
+                        }} className="py-7 px-8 bg-rose-950/30 hover:bg-rose-900/50 border border-rose-900/50 text-rose-500 hover:text-rose-400 rounded-[32px] font-black text-lg transition-all hover:scale-[1.02] flex items-center justify-center gap-2">
+                           <LayoutGridIcon size={24} className="animate-pulse" /> Nuke Node
                         </button>
                      </div>
                   </div>

@@ -269,6 +269,30 @@ export class MockBackendService {
     return { success: true, message: 'Network expanded', updatedData: this.getData() };
   }
 
+  public deleteClinic(clinicId: string): { success: boolean; message: string; updatedData?: any } {
+    const clinicIndex = this.clinics.findIndex(c => c.id === clinicId);
+    if (clinicIndex === -1) return { success: false, message: 'Node not found' };
+
+    const clinicName = this.clinics[clinicIndex].name;
+
+    // Filter out clinic-specific data
+    this.clinics = this.clinics.filter(c => c.id !== clinicId);
+    const usersToDelete = this.users.filter(u => u.clinicId === clinicId);
+    this.users = this.users.filter(u => u.clinicId !== clinicId);
+
+    const userIds = usersToDelete.map(u => u.id);
+    this.wallets = this.wallets.filter(w => !userIds.includes(w.userId));
+    this.transactions = this.transactions.filter(t => t.clinicId !== clinicId);
+    this.appointments = this.appointments.filter(a => a.clinicId !== clinicId);
+    // Note: Family groups logic is complex, for MVP just leaving orphaned groups or filtering if Head User is gone.
+    this.familyGroups = this.familyGroups.filter(fg => this.users.find(u => u.id === fg.headUserId));
+
+    this.logActivity('Platform', 'Super Admin', `Decommissioned Node: ${clinicName}`, 'SECURITY');
+    this.persist();
+
+    return { success: true, message: 'Node decommissioned', updatedData: this.getData() };
+  }
+
   public getPlatformStats() {
     const activePatients = this.users.filter(u => u.role === Role.PATIENT);
     const totalGTV = this.transactions.filter(t => t.type === TransactionType.EARN).reduce((a, b) => a + b.amountPaid, 0);

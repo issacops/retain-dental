@@ -136,6 +136,13 @@ const App = () => {
     }));
   };
 
+  const handleDeleteClinic = (clinicId: string) => {
+    const result = backendService.deleteClinic(clinicId);
+    if (result.success && result.updatedData) {
+      setData(prev => ({ ...prev, ...result.updatedData }));
+    }
+  };
+
   const handleUpdateGlobalConfig = (updates: any) => {
     const result = backendService.updateSystemConfig(updates);
     if (result.success) {
@@ -222,6 +229,7 @@ const App = () => {
     onAddPatient: handleAddPatient,
     onOnboardClinic: handleOnboardClinic,
     onEnterClinic: handleEnterClinic,
+    onDeleteClinic: handleDeleteClinic,
     onLogin: handleLogin,
     onRedeem: (amount: number, description: string) => handleTransaction(data.currentUser?.id!, amount, TransactionCategory.REWARD, TransactionType.REDEEM, { name: description } as any),
   };
