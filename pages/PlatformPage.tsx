@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import PlatformDashboard from '../components/Platform/PlatformDashboard';
 import { AppState } from '../types';
 
@@ -11,6 +12,14 @@ interface Props {
 
 export const PlatformPage: React.FC<Props> = (props) => {
     const { data, ...handlers } = props;
+    const navigate = useNavigate();
+
+    // Wrapper to handle navigation explicitly since Auth Gates are removed
+    const handleEnterClinic = (clinicId: string) => {
+        handlers.onEnterClinic(clinicId);
+        navigate('/doctor');
+    };
+
     // Calculate real performance metrics from data
     const clinicPerformance = data.clinics.map(clinic => {
         const clinicPatients = data.users.filter(u => u.clinicId === clinic.id && u.role === 'PATIENT');
@@ -51,6 +60,7 @@ export const PlatformPage: React.FC<Props> = (props) => {
                 clinics={data.clinics}
                 stats={stats}
                 {...handlers}
+                onEnterClinic={handleEnterClinic}
             />
         </div>
     );
