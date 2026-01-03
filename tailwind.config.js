@@ -10,7 +10,7 @@ export default {
                 sans: ['Inter', 'sans-serif'],
             },
             colors: {
-                primary: 'var(--primary)',
+                primary: 'rgb(var(--primary-rgb) / <alpha-value>)',
                 glass: {
                     100: 'rgba(255, 255, 255, 0.1)',
                     200: 'rgba(255, 255, 255, 0.2)',

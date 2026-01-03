@@ -66,8 +66,14 @@ const DesktopDoctorView: React.FC<Props> = ({
    // Helper function to get user's first name
    const getUserName = (fullName: string) => (fullName || 'Doctor').split(' ')[0];
 
+   // Helper to convert hex to rgb string for Tailwind alpha support
+   const hexToRgb = (hex: string) => {
+      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result ? `${parseInt(result[1], 16)} ${parseInt(result[2], 16)} ${parseInt(result[3], 16)}` : '99 102 241';
+   };
+
    return (
-      <div className={`flex flex-col h-screen text-slate-900 font-sans overflow-hidden transition-all duration-1000 ${textureClass}`} style={{ '--primary': clinic.primaryColor, '--primary-glow': clinic.primaryColor + '15' } as React.CSSProperties}>
+      <div className={`flex flex-col h-screen text-slate-900 font-sans overflow-hidden transition-all duration-1000 ${textureClass}`} style={{ '--primary': clinic.primaryColor, '--primary-rgb': hexToRgb(clinic.primaryColor), '--primary-glow': clinic.primaryColor + '15' } as React.CSSProperties}>
 
          {/* Sidebar */}
          <div className="flex h-full">
