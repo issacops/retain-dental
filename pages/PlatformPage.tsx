@@ -44,6 +44,7 @@ export const PlatformPage: React.FC<Props> = (props) => {
         config: { platformName: 'Prime OS', globalMfaEnabled: true, maintenanceMode: false },
         shards: [{ id: 'S1', region: 'Mumbai', health: 100, load: 45, latency: '24ms' }]
     };
+
     return (
         <div className="h-screen w-full bg-slate-950">
             <PlatformDashboard
