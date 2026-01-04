@@ -100,9 +100,9 @@ const PatientProfile: React.FC<Props> = ({
                 <div className="flex flex-col gap-12 relative z-10">
                     {/* TOP: AMOUNT INPUT */}
                     <div className="relative group w-full">
-                        <span className="absolute left-0 top-1/2 -translate-y-1/2 text-slate-300/50 text-6xl xl:text-8xl font-black px-6 transition-colors group-focus-within:text-slate-400">₹</span>
+                        <span className="absolute left-0 top-1/2 -translate-y-1/2 text-slate-300/50 text-5xl xl:text-6xl font-black px-6 transition-colors group-focus-within:text-slate-400">₹</span>
                         <input type="number" placeholder="0.00" value={txAmount} onChange={(e) => setTxAmount(e.target.value)}
-                            className="w-full text-8xl xl:text-[10rem] font-black outline-none border-b-[8px] border-slate-100 bg-transparent pb-8 pl-24 xl:pl-40 focus:border-slate-800 transition-all duration-300 placeholder:text-slate-100 text-slate-900 tracking-tighter" />
+                            className="w-full text-7xl xl:text-8xl font-black outline-none border-b-[6px] border-slate-100 bg-transparent pb-6 pl-20 xl:pl-32 focus:border-slate-800 transition-all duration-300 placeholder:text-slate-100/50 text-slate-900 tracking-tighter" />
                     </div>
 
                     {/* BOTTOM: CLASSIFICATION & CONTROLS */}
