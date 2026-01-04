@@ -21,6 +21,15 @@ const PatientProfile: React.FC<Props> = ({
 }) => {
     const [txAmount, setTxAmount] = useState('');
     const [txCategory, setTxCategory] = useState<TransactionCategory>(TransactionCategory.GENERAL);
+    const [selectedTemplateName, setSelectedTemplateName] = useState<string>('');
+
+    // Auto-set category based on selected protocol
+    useEffect(() => {
+        if (selectedTemplateName) {
+            const template = TREATMENT_TEMPLATES.find(t => t.name === selectedTemplateName);
+            if (template) setTxCategory(template.category);
+        }
+    }, [selectedTemplateName]);
 
     // Computed data
     const activeCarePlan = useMemo(() => {
@@ -106,8 +115,27 @@ const PatientProfile: React.FC<Props> = ({
                     </div>
 
                     {/* BOTTOM: CLASSIFICATION & CONTROLS */}
-                    <div className="flex flex-col md:flex-row gap-8 items-end w-full">
-                        <div className="space-y-4 flex-1 w-full">
+                    <div className="flex flex-col xl:flex-row gap-8 items-end w-full">
+
+                        {/* 1. PROTOCOL SELECTOR */}
+                        <div className="space-y-4 flex-1 w-full relative z-20">
+                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] px-2 flex items-center gap-2"><Microscope size={12} /> Clinical Protocol</label>
+                            <div className="relative group/select">
+                                <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 rounded-[28px] opacity-0 group-hover/select:opacity-100 transition-opacity"></div>
+                                <select className="w-full p-8 bg-white/50 border border-slate-200/60 rounded-[28px] outline-none font-black text-lg appearance-none cursor-pointer hover:bg-white hover:shadow-xl hover:shadow-slate-200/50 hover:-translate-y-0.5 transition-all duration-300 text-slate-700 uppercase tracking-widest backdrop-blur-sm truncate"
+                                    onChange={(e) => setSelectedTemplateName(e.target.value)}
+                                    value={selectedTemplateName}>
+                                    <option value="">Custom / No Protocol</option>
+                                    {TREATMENT_TEMPLATES.map(t => (
+                                        <option key={t.name} value={t.name}>{t.name}</option>
+                                    ))}
+                                </select>
+                                <div className="absolute right-8 top-1/2 -translate-y-1/2 pointer-events-none text-slate-300">▼</div>
+                            </div>
+                        </div>
+
+                        {/* 2. CATEGORY SELECTOR */}
+                        <div className="space-y-4 flex-1 w-full relative z-20">
                             <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] px-2 flex items-center gap-2"><Layers size={12} /> Classification</label>
                             <div className="relative group/select">
                                 <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 rounded-[28px] opacity-0 group-hover/select:opacity-100 transition-opacity"></div>
@@ -121,8 +149,10 @@ const PatientProfile: React.FC<Props> = ({
                                 <div className="absolute right-8 top-1/2 -translate-y-1/2 pointer-events-none text-slate-300">▼</div>
                             </div>
                         </div>
+
+                        {/* 3. ACTION BUTTONS */}
                         <div className="flex gap-4 flex-1 w-full">
-                            <button onClick={() => { if (!txAmount) return; onProcessTransaction(selectedPatient.id, parseFloat(txAmount), txCategory, TransactionType.EARN); setTxAmount(''); }}
+                            <button onClick={() => { if (!txAmount) return; onProcessTransaction(selectedPatient.id, parseFloat(txAmount), txCategory, TransactionType.EARN, TREATMENT_TEMPLATES.find(t => t.name === selectedTemplateName)); setTxAmount(''); }}
                                 className="flex-1 py-8 rounded-[28px] text-white font-black text-xs uppercase tracking-[0.2em] shadow-2xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] hover:shadow-3xl relative overflow-hidden group/btn" style={{ backgroundColor: clinic.primaryColor }}>
                                 <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300 ease-out"></div>
                                 <span className="relative z-10">Commit Earn</span>
