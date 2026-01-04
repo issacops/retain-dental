@@ -4,10 +4,7 @@ import { PlatformPage } from './pages/PlatformPage';
 import { ClinicPage } from './pages/ClinicPage';
 import { PatientPage } from './pages/PatientPage';
 import { AppState, Role } from './types';
-
-// Dev Mode: No Auth Required
-// We trust the App.tsx role switcher to handle the context
-
+import { LoginPage } from './pages/LoginPage';
 import { IBackendService } from './services/IBackendService';
 
 interface RouterProps {
@@ -31,8 +28,9 @@ export const AppRouter: React.FC<RouterProps> = ({ appState, handlers, backendSe
     const activeClinic = appState.clinics.find(c => c.id === appState.activeClinicId) || appState.clinics[0] || SAFE_CLINIC_FALLBACK;
     return (
         <Routes>
-            {/* Auto-redirect Login to Platform in Dev Mode */}
-            <Route path="/login" element={<Navigate to="/platform" replace />} />
+            {/* PUBLIC: UNIFIED LOGIN & BRANDED LOGIN */}
+            <Route path="/login" element={<LoginPage clinics={appState.clinics} activeClinic={activeClinic} />} />
+            <Route path="/login/:slug" element={<LoginPage clinics={appState.clinics} activeClinic={activeClinic} />} />
 
             {/* SUPER ADMIN PORTAL - Unprotected */}
             <Route path="/platform" element={

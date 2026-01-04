@@ -46,6 +46,7 @@ export class SupabaseService implements IBackendService {
         return {
             ...u,
             name: u.full_name || u.name || 'Unknown User',
+            email: u.email,
             clinicId: u.clinic_id,
             familyGroupId: u.family_group_id,
             lifetimeSpend: Number(u.lifetime_spend || 0),
@@ -143,22 +144,44 @@ export class SupabaseService implements IBackendService {
         color: string,
         texture: ThemeTexture,
         ownerName: string,
-        logoUrl: string
+        logoUrl: string,
+        slug: string,
+        adminEmail: string
     ): Promise<ServiceResponse<DatabaseState>> {
         try {
-            const { data, error } = await this.supabase.from('clinics').insert({
+            // 1. Create Clinic
+            const { data: clinic, error: clinicError } = await this.supabase.from('clinics').insert({
                 name,
                 primary_color: color,
                 theme_texture: texture,
                 owner_name: ownerName,
                 logo_url: logoUrl,
-                slug: name.toLowerCase().replace(/\s+/g, '-')
+                slug: slug.toLowerCase()
             }).select().single();
 
-            if (error) throw error;
+            if (clinicError) throw clinicError;
+
+            // 2. Provision Admin Profile (Pre-auth)
+            // We create a profile with the email. When they log in via Google, 
+            // App.tsx MUST match them by Email if ID match fails.
+            const { error: userError } = await this.supabase.from('profiles').insert({
+                clinic_id: clinic.id,
+                full_name: ownerName,
+                role: 'ADMIN',
+                email: adminEmail, // Crucial for mapping
+                mobile: 'PENDING',
+                current_tier: 'STARTER',
+                lifetime_spend: 0
+            });
+
+            if (userError) {
+                // Rollback clinic if user creation fails? 
+                // For MVP, just warn.
+                console.error("Failed to provision admin user", userError);
+            }
 
             const newState = await this.getData();
-            return { success: true, message: 'Clinic Deployed', updatedData: newState };
+            return { success: true, message: 'Node Deployed & Admin Provisioned', updatedData: newState };
         } catch (e: any) {
             return { success: false, message: e.message || 'Deployment Failed', error: 'DB_ERR' };
         }

@@ -39,7 +39,7 @@ interface Props {
       config: any;
       shards: ShardStatus[];
    };
-   onOnboardClinic: (name: string, color: string, texture: ThemeTexture, ownerName: string, logoUrl: string) => Promise<any>;
+   onOnboardClinic: (name: string, color: string, texture: ThemeTexture, ownerName: string, logoUrl: string, slug: string, adminEmail: string) => Promise<any>;
    onEnterClinic: (clinicId: string) => void; // Sync nav wrapper
    onDeleteClinic: (clinicId: string) => Promise<any>;
    onUpdateConfig: (updates: any) => Promise<any>;
@@ -65,6 +65,10 @@ const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, o
    const [newClinicLogo, setNewClinicLogo] = useState('');
    const [newClinicColor, setNewClinicColor] = useState('#6366f1');
    const [newClinicTexture, setNewClinicTexture] = useState<ThemeTexture>('minimal');
+
+   // NEW FIELDS
+   const [newClinicSlug, setNewClinicSlug] = useState('');
+   const [newClinicAdminEmail, setNewClinicAdminEmail] = useState('');
 
    const [configDraft, setConfigDraft] = useState(stats.config);
 
@@ -367,14 +371,29 @@ const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, o
                   </div>
 
                   <div className="space-y-12">
-                     <div className="grid grid-cols-1 gap-8">
+                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div className="space-y-4">
                            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest px-3">Identity Signature</label>
-                           <input type="text" className="w-full bg-white/5 border border-white/10 rounded-[32px] px-10 py-7 text-white font-black text-2xl outline-none focus:border-indigo-500 transition-all" placeholder="Practice Name" value={newClinicName} onChange={e => setNewClinicName(e.target.value)} />
+                           <input type="text" className="w-full bg-white/5 border border-white/10 rounded-[32px] px-8 py-5 text-white font-black text-xl outline-none focus:border-indigo-500 transition-all" placeholder="Practice Name" value={newClinicName} onChange={e => setNewClinicName(e.target.value)} />
                         </div>
                         <div className="space-y-4">
                            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest px-3">Primary Stakeholder</label>
-                           <input type="text" className="w-full bg-white/5 border border-white/10 rounded-[32px] px-10 py-7 text-white font-black text-2xl outline-none focus:border-indigo-500 transition-all" placeholder="Owner Full Name" value={newClinicOwner} onChange={e => setNewClinicOwner(e.target.value)} />
+                           <input type="text" className="w-full bg-white/5 border border-white/10 rounded-[32px] px-8 py-5 text-white font-black text-xl outline-none focus:border-indigo-500 transition-all" placeholder="Owner Full Name" value={newClinicOwner} onChange={e => setNewClinicOwner(e.target.value)} />
+                        </div>
+                     </div>
+
+                     {/* NEW ROW: SLUG & EMAIL */}
+                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="space-y-4">
+                           <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest px-3">Network Subdomain</label>
+                           <div className="flex items-center bg-white/5 border border-white/10 rounded-[32px] px-8 py-2 focus-within:border-indigo-500 transition-all">
+                              <input type="text" className="bg-transparent text-white font-black text-xl outline-none w-full py-3" placeholder="slug" value={newClinicSlug} onChange={e => setNewClinicSlug(e.target.value.toLowerCase().replace(/\s+/g, '-'))} />
+                              <span className="text-slate-500 font-bold text-xs uppercase tracking-widest bg-white/5 px-2 py-1 rounded">.retain.dental</span>
+                           </div>
+                        </div>
+                        <div className="space-y-4">
+                           <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest px-3">Administrator Email</label>
+                           <input type="email" className="w-full bg-white/5 border border-white/10 rounded-[32px] px-8 py-5 text-white font-black text-xl outline-none focus:border-indigo-500 transition-all" placeholder="doctor@gmail.com" value={newClinicAdminEmail} onChange={e => setNewClinicAdminEmail(e.target.value)} />
                         </div>
                      </div>
 
@@ -417,7 +436,7 @@ const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, o
                         </div>
                      </div>
 
-                     <button onClick={async () => { await onOnboardClinic(newClinicName, newClinicColor, newClinicTexture, newClinicOwner, newClinicLogo); setShowOnboardModal(false); }}
+                     <button onClick={async () => { await onOnboardClinic(newClinicName, newClinicColor, newClinicTexture, newClinicOwner, newClinicLogo, newClinicSlug || newClinicName.toLowerCase().replace(/\s+/g, '-'), newClinicAdminEmail); setShowOnboardModal(false); }}
                         className="w-full py-10 bg-indigo-600 hover:bg-indigo-500 text-white rounded-[48px] font-black text-2xl shadow-[0_30px_60px_-10px_rgba(99,102,241,0.4)] transition-all hover:scale-[1.02] active:scale-95">
                         Deploy Optimized Node
                      </button>

@@ -42,6 +42,7 @@ export interface User {
   id: string;
   clinicId: string; // Multi-tenant isolation
   mobile: string;
+  email?: string; // Auth mapping
   name: string;
   role: Role;
   familyGroupId?: string;

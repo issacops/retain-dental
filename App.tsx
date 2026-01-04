@@ -1,16 +1,49 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { BrowserRouter, useLocation, Link } from 'react-router-dom';
+import { BrowserRouter, useLocation, Link, useNavigate } from 'react-router-dom';
 import {
   User, Wallet, Transaction, FamilyGroup, Role, AppState, ViewMode, Clinic, TransactionCategory, TransactionType, CarePlan, ThemeTexture,
   AppointmentType, AppointmentStatus
 } from './types';
 import { getBackendService } from './services/BackendFactory';
 import { AppRouter } from './router';
+import { supabase } from './lib/supabase'; // Auth
 
 // Icons
 import { Activity } from 'lucide-react';
 
 import { useToast } from './context/ToastContext';
+
+// Auth State Helper Component to handle redirects outside of Router context
+const AuthHandler = ({
+  currentUser,
+  onRoleChange
+}: {
+  currentUser: User | null,
+  onRoleChange: (r: Role) => void
+}) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // If no user and trying to access protected route, send to Login
+    const publicPaths = ['/login', '/public'];
+    const isPublic = publicPaths.some(p => location.pathname.startsWith(p));
+
+    if (!currentUser && !isPublic) {
+      // Check if we are at root, redirect to login
+      navigate('/login');
+    }
+
+    // Role-based Redirects (Only if at root or login)
+    if (currentUser && (location.pathname === '/' || location.pathname.startsWith('/login'))) {
+      if (currentUser.role === Role.SUPER_ADMIN) navigate('/platform');
+      else if (currentUser.role === Role.ADMIN) navigate('/doctor');
+      else if (currentUser.role === Role.PATIENT) navigate('/patient');
+    }
+  }, [currentUser, location, navigate]);
+
+  return null;
+};
 
 const App = () => {
   const [isClient, setIsClient] = useState(false);
@@ -23,67 +56,84 @@ const App = () => {
   const [data, setData] = useState<AppState | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // AUTH STATE
   useEffect(() => {
     const initData = async () => {
       try {
-        const dbData = await backendService.getData();
+        const dbData = await backendService.getData(); // Initial Fetch
 
-        // Compute Derived State (UI State)
-        const path = window.location.pathname;
-        let initialClinicId: string | null = null;
-        let initialUser: User | null = null;
-        let initialViewMode: ViewMode = 'PLATFORM_MASTER';
+        // 1. Check Active Session
+        const { data: { session } } = await supabase.auth.getSession();
+        let activeUser: User | null = null;
+        let derivedClinicId = dbData.clinics[0]?.id || '';
 
-        // ... (Keep existing URL logic logic here, but adapted)
-        // For brevity in this replacement, I'll simplify the dev logic or copy it if I can see it clearly.
-        // Re-implementing the URL parsing logic from previous state:
+        // SUBDOMAIN DETECTION
+        const hostname = window.location.hostname;
+        // Logic: 'krown.retain.dental' -> 'krown'
+        // Logic: 'localhost' -> null
+        const parts = hostname.split('.');
+        let subdomain = parts.length > 2 ? parts[0] : null; // Basic check, assumes app.domain.com structure
 
-        const pathParts = path.split('/').filter(Boolean); // e.g. ['clinic', 'city-dental']
+        // Localhost debugging override
+        if (hostname.includes('localhost')) {
+          // Optional: Allow testing via ?subdomain= query param since we can't easily do subdomains on localhost without /etc/hosts
+          const params = new URLSearchParams(window.location.search);
+          const subParam = params.get('subdomain');
+          if (subParam) subdomain = subParam;
+        }
 
-        // 1. Check for specific clinic slug
-        if (pathParts[0] === 'clinic' && pathParts[1]) {
-          const found = dbData.clinics.find(c => c.slug === pathParts[1]);
-          if (found) {
-            initialClinicId = found.id;
+        const IGNORED_SUBDOMAINS = ['www', 'app', 'platform', 'api'];
+        let tenantClinic: Clinic | undefined;
+        let isPlatform = false;
 
-            // Context-Aware User: Admin
-            // For Dev Mode: Auto-login as the Admin of this clinic
-            const admin = dbData.users.find(u => u.clinicId === found.id && u.role === Role.ADMIN);
-            if (admin) initialUser = admin;
+        if (subdomain === 'platform') {
+          isPlatform = true;
+        } else if (subdomain && !IGNORED_SUBDOMAINS.includes(subdomain)) {
+          tenantClinic = dbData.clinics.find(c => c.slug === subdomain);
+          if (tenantClinic) {
+            derivedClinicId = tenantClinic.id;
           }
         }
-        // 2. Patient App
-        else if (pathParts[0] === 'patient') {
-          initialViewMode = 'MOBILE_PATIENT';
-          // Find a patient
-          const patient = dbData.users.find(u => u.role === Role.PATIENT);
-          if (patient) {
-            initialUser = patient;
-            initialClinicId = patient.clinicId;
+
+        if (session) {
+          // Find user in DB associated with this Auth ID
+          // NOTE: In real prod, we'd query API. Here we search loaded DB state.
+          // For Patient (Mobile+PIN), email is mobile@retain.dental
+          const email = session.user.email;
+
+          // SUPER USER CHECK
+          if (email === 'issaciconnect@gmail.com') {
+            activeUser = {
+              id: session.user.id,
+              name: 'Isaac Thomas',
+              mobile: 'SUPER-ADMIN',
+              role: Role.SUPER_ADMIN,
+              clinicId: 'platform',
+              currentTier: 'PLATINUM', // cast any
+              lifetimeSpend: 0,
+              joinedAt: new Date().toISOString()
+            } as any;
+          } else {
+            // NORMAL USER CHECK
+            // DB must have a mapping. For MVP, we might filter by email if we stored it.
+            // 1. Try ID match (Standard)
+            let found = dbData.users.find(u => u.id === session.user.id);
+
+            // 2. Try Email Match (For Pre-Provisioned Admins)
+            if (!found && session.user.email) {
+              found = dbData.users.find(u => u.email === session.user.email);
+            }
+
+            activeUser = found || null;
           }
-        }
-        // 3. Platform Admin (Default)
-        else {
-          const superAdmin = dbData.users.find(u => u.role === Role.SUPER_ADMIN);
-          // Fallback to creating a fake super admin if none exists in mock
-          initialUser = superAdmin || {
-            id: 'super-admin',
-            clinicId: 'platform',
-            name: 'Platform Master',
-            mobile: '0000',
-            role: Role.SUPER_ADMIN,
-            lifetimeSpend: 0,
-            currentTier: Role.SUPER_ADMIN as any,
-            joinedAt: new Date().toISOString()
-          };
         }
 
         setData({
           ...dbData,
-          activeClinicId: initialClinicId || dbData.clinics[0]?.id || '', // Fallback to first clinic if no specific clinic found
-          currentUser: initialUser || dbData.users[0], // Fallback to first user if no specific user found
-          viewMode: initialViewMode
+          activeClinicId: tenantClinic ? tenantClinic.id : (activeUser?.clinicId || derivedClinicId),
+          currentUser: activeUser || null // If null, Router will redirect to Login
         });
+
       } catch (err) {
         console.error("Failed to load backend data", err);
         const errorMessage = err instanceof Error ? err.message : (err as any).message || JSON.stringify(err);
@@ -94,6 +144,22 @@ const App = () => {
     };
 
     initData();
+
+    // Listen for Auth Changes (Login/Logout)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (!session) {
+        // Logged out
+        setData(prev => prev ? ({ ...prev, currentUser: null }) : null);
+      } else {
+        // Logged in - Reload Data to get fresh user context
+        // In a real app we'd just fetch the profile.
+        // Re-triggering initData logic manually or just page reload is safest for this MVP architecture
+        window.location.reload();
+      }
+    });
+
+    return () => subscription.unsubscribe();
+
   }, [backendService]);
 
   // Client-side hydration check
@@ -101,40 +167,12 @@ const App = () => {
     setIsClient(true);
   }, []);
 
-  // Handle Deep Linking simulation
-  useEffect(() => {
-    if (!isClient || !data) return;
-    const params = new URLSearchParams(window.location.search);
-    const clinicSlug = params.get('c');
-    const mode = params.get('v'); // 'staff' or 'patient'
-
-    if (clinicSlug) {
-      const foundClinic = data.clinics.find(cl => cl.slug === clinicSlug);
-      if (foundClinic) {
-        let targetUser: User | undefined;
-
-        if (mode === 'patient') {
-          targetUser = data.users.find(u => u.clinicId === foundClinic.id && u.role === 'PATIENT');
-        } else {
-          // Default to Kiosk/Doctor
-          targetUser = data.users.find(u => u.id === foundClinic.adminUserId);
-        }
-
-        setData(prev => prev ? ({
-          ...prev,
-          activeClinicId: foundClinic.id,
-          currentUser: targetUser || prev.currentUser
-        }) : null);
-      }
-    }
-  }, [isClient, data]);
-
   if (loading || !data) {
     return (
       <div className="min-h-screen bg-slate-950 flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <Activity size={48} className="text-indigo-500 animate-pulse" />
-          <h2 className="text-white text-xl font-medium tracking-tight">Booting DentalOS...</h2>
+          <h2 className="text-white text-xl font-medium tracking-tight">Booting Retain.OS...</h2>
         </div>
       </div>
     );
@@ -172,8 +210,8 @@ const App = () => {
     return result;
   };
 
-  const handleOnboardClinic = async (name: string, color: string, texture: ThemeTexture, ownerName: string, logoUrl: string) => {
-    const result = await backendService.createClinic(name, color, texture, ownerName, logoUrl);
+  const handleOnboardClinic = async (name: string, color: string, texture: ThemeTexture, ownerName: string, logoUrl: string, slug: string, adminEmail: string) => {
+    const result = await backendService.createClinic(name, color, texture, ownerName, logoUrl, slug, adminEmail);
     if (result.success && result.updatedData) {
       setData(prev => ({ ...prev, ...result.updatedData }));
       addToast("Clinic Deployed Successfully", "success");
@@ -305,40 +343,10 @@ const App = () => {
     onRedeem: (amount: number, description: string) => handleTransaction(data.currentUser?.id!, amount, TransactionCategory.REWARD, TransactionType.REDEEM, { name: description } as any),
   };
 
-  const DevModeRoleSwitcher = () => {
-    const location = useLocation();
-    const path = location.pathname;
-
-    useEffect(() => {
-      // Logic to auto-switch user based on path in Dev Mode
-      let requiredRole: Role | null = null;
-      if (path.startsWith('/platform')) requiredRole = Role.SUPER_ADMIN;
-      else if (path.startsWith('/patient')) requiredRole = Role.PATIENT;
-
-      if (requiredRole && data.currentUser?.role !== requiredRole) {
-        console.log(`[DevMode] Auto-switching to ${requiredRole} based on path ${path}`);
-        const targetUser = data.users.find(u => u.role === requiredRole);
-        if (targetUser) {
-          setData(prev => ({
-            ...prev,
-            currentUser: targetUser
-          }));
-        }
-      }
-    }, [path]);
-
-    return null;
-  };
-
   return (
     <div className="h-screen w-full relative overflow-hidden bg-slate-950">
       <BrowserRouter>
-        <DevModeRoleSwitcher />
-        <div className="fixed top-2 right-2 z-[100] flex gap-2 opacity-50 hover:opacity-100 transition-opacity">
-          <Link to="/patient" className="px-2 py-1 bg-slate-800 text-white text-[10px] rounded">Patient</Link>
-          <Link to="/doctor" className="px-2 py-1 bg-slate-800 text-white text-[10px] rounded">Doctor</Link>
-          <Link to="/platform" className="px-2 py-1 bg-slate-800 text-white text-[10px] rounded">Platform</Link>
-        </div>
+        <AuthHandler currentUser={data.currentUser} onRoleChange={(r) => { }} />
         <AppRouter appState={data} handlers={handlers} backendService={backendService} />
       </BrowserRouter>
     </div>

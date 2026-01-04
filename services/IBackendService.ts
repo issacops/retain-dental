@@ -36,7 +36,9 @@ export interface IBackendService {
         color: string,
         texture: ThemeTexture,
         ownerName: string,
-        logoUrl: string
+        logoUrl: string,
+        slug: string,
+        adminEmail: string
     ): Promise<ServiceResponse<DatabaseState>>;
 
     deleteClinic(clinicId: string): Promise<ServiceResponse<DatabaseState>>;
