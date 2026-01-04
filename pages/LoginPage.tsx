@@ -16,6 +16,11 @@ export const LoginPage: React.FC<LoginPageProps> = ({ clinics = [], activeClinic
     const [mobile, setMobile] = useState('');
     const [pin, setPin] = useState('');
 
+    // EMAIL AUTH STATE
+    const [authEmail, setAuthEmail] = useState('');
+    const [authPassword, setAuthPassword] = useState('');
+    const [isSignUp, setIsSignUp] = useState(false);
+
     // BRANDING LOGIC
     // If slug exists, find specific clinic. If not, use activeClinic (subdomain/context).
     const slugClinic = slug ? clinics.find(c => c.slug === slug) : undefined;
@@ -27,20 +32,35 @@ export const LoginPage: React.FC<LoginPageProps> = ({ clinics = [], activeClinic
     const brandName = targetClinic?.name || 'Retain.OS';
     const brandSubtitle = isBranded ? 'Patient Portal & Staff Login' : 'Dental Operating System';
 
-    const handleGoogleLogin = async () => {
+    const handleEmailAuth = async () => {
+        if (!authEmail || !authPassword) {
+            alert("Please enter both email and password");
+            return;
+        }
         setLoading(true);
-        const { error } = await supabase.auth.signInWithOAuth({
-            provider: 'google',
-            options: {
-                redirectTo: `${window.location.origin}/auth/callback`,
-                queryParams: {
-                    access_type: 'offline',
-                    prompt: 'consent',
-                },
-            },
-        });
-        if (error) {
-            alert(error.message);
+
+        try {
+            if (isSignUp) {
+                // REGISTER: Create Auth User
+                const { data, error } = await supabase.auth.signUp({
+                    email: authEmail,
+                    password: authPassword,
+                });
+                if (error) throw error;
+                // Auto-login happens usually, or verification required.
+                // Assuming "Disable Confirm Email" is ON in Supabase for MVP speed, 
+                // or user checks email.
+                alert("Account activated! logging you in...");
+            } else {
+                // LOGIN
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: authEmail,
+                    password: authPassword
+                });
+                if (error) throw error;
+            }
+        } catch (e: any) {
+            alert(e.message || "Authentication Failed");
             setLoading(false);
         }
     };
@@ -111,23 +131,38 @@ export const LoginPage: React.FC<LoginPageProps> = ({ clinics = [], activeClinic
                     </div>
                 )}
 
-                {/* MODE: DOCTOR (Google) */}
+                {/* MODE: DOCTOR (Email/Pass) */}
                 {mode === 'DOCTOR' && (
                     <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-500">
-                        <button onClick={handleGoogleLogin} disabled={loading}
-                            className="w-full py-4 bg-white text-slate-900 rounded-[20px] font-black text-sm uppercase tracking-widest hover:bg-slate-50 transition-all flex items-center justify-center gap-3 shadow-lg hover:scale-[1.02] active:scale-[0.98]">
-                            {loading ? <Loader2 className="animate-spin" /> : (
-                                <>
-                                    <svg className="w-5 h-5" viewBox="0 0 24 24"><path fill="currentColor" d="M21.35 11.1h-9.17v2.73h6.51c-.33 3.81-3.5 5.44-6.5 5.44C8.36 19.27 5 16.25 5 12c0-4.1 3.2-7.27 7.2-7.27c3.09 0 4.9 1.97 4.9 1.97L19 4.72S16.56 2 12.1 2C6.42 2 2.03 6.8 2.03 12.5S6.42 23 12.09 23c5.83 0 8.8-4.15 8.8-10.24c0-1.07-.15-1.66-.15-1.66z" /></svg>
-                                    Sign in with Google
-                                </>
-                            )}
+                        <div className="space-y-4">
+                            <div className="bg-slate-800/80 p-4 rounded-2xl border border-slate-700/50 flex items-center gap-3 focus-within:border-indigo-400 transition-colors">
+                                <Command size={18} className="text-slate-400" />
+                                <input type="email" placeholder="Official Email ID"
+                                    value={authEmail} onChange={e => setAuthEmail(e.target.value)}
+                                    className="bg-transparent w-full outline-none text-white font-bold placeholder:text-slate-600" />
+                            </div>
+                            <div className="bg-slate-800/80 p-4 rounded-2xl border border-slate-700/50 flex items-center gap-3 focus-within:border-indigo-400 transition-colors">
+                                <Lock size={18} className="text-slate-400" />
+                                <input type="password" placeholder="Password"
+                                    value={authPassword} onChange={e => setAuthPassword(e.target.value)}
+                                    className="bg-transparent w-full outline-none text-white font-bold placeholder:text-slate-600" />
+                            </div>
+                        </div>
+
+                        <button onClick={handleEmailAuth} disabled={loading}
+                            className="w-full py-4 text-white rounded-[20px] font-black text-sm uppercase tracking-widest transition-all flex items-center justify-center gap-3 shadow-lg hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
+                            style={{ backgroundColor: isSignUp ? '#10b981' : (brandColor || '#6366f1') }}>
+                            {loading ? <Loader2 className="animate-spin" /> : (isSignUp ? 'Activate Account' : 'Secure Login')}
                         </button>
-                        <p className="text-center text-xs text-slate-500 font-medium">
-                            {isBranded ? `Authorized personnel of ${brandName} only.` : 'Authorized access only.'}
-                            <br />
-                            <button onClick={() => setMode('CHOICE')} className="mt-4 hover:text-white transition-colors" style={{ color: brandColor }}>Back</button>
-                        </p>
+
+                        <div className="text-center space-y-3">
+                            <button onClick={() => setIsSignUp(!isSignUp)} className="text-xs font-bold text-slate-500 hover:text-white uppercase tracking-widest transition-colors">
+                                {isSignUp ? 'Already have an ID? Login' : 'First time? Activate Account'}
+                            </button>
+                            <div className="pt-2 border-t border-white/5">
+                                <button onClick={() => setMode('CHOICE')} className="text-xs font-medium text-slate-600 hover:text-slate-400 transition-colors">Cancel Access</button>
+                            </div>
+                        </div>
                     </div>
                 )}
 
