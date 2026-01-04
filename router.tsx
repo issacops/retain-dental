@@ -69,6 +69,7 @@ export const AppRouter: React.FC<RouterProps> = ({ appState, handlers, backendSe
             } />
 
             {/* ROOT REDIRECT - Default to Platform */}
+            <Route path="/auth/callback" element={<Navigate to="/" replace />} />
             <Route path="/" element={<Navigate to="/platform" replace />} />
         </Routes>
     );
