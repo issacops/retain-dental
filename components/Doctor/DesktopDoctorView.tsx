@@ -127,15 +127,15 @@ const DesktopDoctorView: React.FC<Props> = ({
                   </div>
 
                   {/* Navigation */}
-                  <nav className="space-y-2">
+                  <nav className="space-y-1">
                      {['Operational Hub', 'Patient Records', 'Financial Ledger', 'Settings'].map((item, i) => (
                         <div key={item}
                            onClick={() => setActiveSection(item)}
-                           className={`flex items - center gap - 4 px - 4 py - 3.5 rounded - xl cursor - pointer transition - all duration - 300 group ${activeSection === item ? `bg-primary shadow-xl shadow-primary/20 scale-[1.02] ${isLight ? 'text-slate-900 font-black' : 'text-white'}` : 'hover:bg-white/50 text-slate-500 hover:text-slate-800'} `}
+                           className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all duration-300 group ${activeSection === item ? `bg-primary shadow-xl shadow-primary/20 scale-[1.02] ${isLight ? 'text-slate-900 font-black' : 'text-white'}` : 'hover:bg-white/50 text-slate-500 hover:text-slate-800'} `}
                         >
-                           <Grid size={18} className={`transition - transform duration - 300 ${activeSection === item ? 'scale-110' : 'group-hover:scale-110'} `} />
-                           <span className="font-bold text-sm tracking-wide">{item}</span>
-                           {i === 0 && <div className="ml-auto h-2 w-2 rounded-full bg-rose-500 animate-pulse box-shadow-lg shadow-rose-500/50" />}
+                           <Grid size={18} className={`transition-transform duration-300 ${activeSection === item ? 'scale-110' : 'group-hover:scale-110'} `} />
+                           <span className="font-bold text-sm tracking-wide flex-1">{item}</span>
+                           {i === 0 && activeSection === 'Operational Hub' && <div className="h-1.5 w-1.5 rounded-full bg-rose-500 animate-pulse shadow-[0_0_10px_rgba(244,63,94,0.5)]" />}
                         </div>
                      ))}
                   </nav>

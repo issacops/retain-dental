@@ -60,13 +60,13 @@ const PatientProfile: React.FC<Props> = ({
         <div className="max-w-5xl mx-auto space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
 
             {/* PATIENT HEADER BENTO */}
-            <div className="grid grid-cols-5 gap-6">
-                <div className="col-span-3 bg-white p-8 rounded-[32px] shadow-sm border border-slate-100 flex flex-col justify-between group">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="bg-white p-6 rounded-[32px] shadow-sm border border-slate-100 flex flex-col justify-between group min-h-[220px]">
                     <div>
                         <div className="flex items-center gap-3 mb-4">
                             <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100">Active Lifecycle</span>
                         </div>
-                        <h1 className="text-4xl font-black tracking-tight text-slate-900 leading-none">{selectedPatient.name}</h1>
+                        <h1 className="text-3xl font-black tracking-tight text-slate-900 leading-none break-words">{selectedPatient.name}</h1>
                         <p className="text-sm font-bold text-slate-400 mt-2 tracking-tight">Identity Bound: <span className="text-slate-700 font-mono">{selectedPatient.mobile}</span></p>
                     </div>
                     <div className="flex gap-3 mt-8">
@@ -74,15 +74,18 @@ const PatientProfile: React.FC<Props> = ({
                         <button className="flex-1 py-3 bg-white border border-slate-200 text-slate-500 rounded-xl font-bold text-[10px] uppercase tracking-widest hover:bg-slate-50 hover:text-slate-800 transition-all">Profile Vault</button>
                     </div>
                 </div>
-                <div className="col-span-2 space-y-6">
-                    <div className="bg-white p-8 rounded-[32px] shadow-sm border border-slate-100 text-center relative overflow-hidden group h-full flex flex-col justify-center items-center">
+                <div className="grid grid-cols-2 gap-6">
+                    <div className="bg-white p-6 rounded-[32px] shadow-sm border border-slate-100 text-center relative overflow-hidden group h-full flex flex-col justify-center items-center">
                         <div className="absolute top-0 left-0 w-full h-1" style={{ backgroundColor: clinic.primaryColor }}></div>
                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Smile Credits</p>
-                        <h2 className="text-7xl font-black tracking-tighter" style={{ color: clinic.primaryColor }}>
+                        <h2 className="text-5xl font-black tracking-tighter" style={{ color: clinic.primaryColor }}>
                             {wallets.find(w => w.userId === selectedPatient.id)?.balance || 0}
                         </h2>
                     </div>
-                    <FamilyEquityVisualizer patient={selectedPatient} allUsers={allUsers} familyGroups={familyGroups} primaryColor={clinic.primaryColor} />
+                    {/* Visualizer consumes remaining space */}
+                    <div className="h-full">
+                        <FamilyEquityVisualizer patient={selectedPatient} allUsers={allUsers} familyGroups={familyGroups} primaryColor={clinic.primaryColor} />
+                    </div>
                 </div>
             </div>
 
@@ -315,7 +318,7 @@ const PatientProfile: React.FC<Props> = ({
                     )}
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 
