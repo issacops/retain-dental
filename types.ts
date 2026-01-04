@@ -123,14 +123,26 @@ export interface Appointment {
 // UI State Types
 export type ViewMode = 'PLATFORM_MASTER' | 'MOBILE_PATIENT' | 'DESKTOP_KIOSK';
 
-export interface AppState {
+export interface SystemConfig {
+  platformName: string;
+  baseCurrency: string;
+  globalMfaEnabled: boolean;
+  maintenanceMode: boolean;
+  referralBonusPoints: number;
+}
+
+export interface DatabaseState {
   clinics: Clinic[];
-  activeClinicId: string | null;
   users: User[];
   wallets: Wallet[];
   transactions: Transaction[];
   familyGroups: FamilyGroup[];
   carePlans: CarePlan[];
   appointments: Appointment[];
+}
+
+export interface AppState extends DatabaseState {
+  activeClinicId: string | null;
   currentUser: User | null;
+  viewMode: ViewMode; // UI state only
 }

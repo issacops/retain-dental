@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { LayoutGrid, TrendingUp, Bell, Settings, Smile, LayoutGrid as LayoutGridIcon, Plus, X, Calendar as CalendarIcon, Activity, Grid, Zap, Search, UserPlus, CreditCard, MessageSquare } from 'lucide-react';
+import { IBackendService } from '../../services/IBackendService';
 import { User, Wallet, Transaction, FamilyGroup, Clinic, CarePlan, TransactionCategory, TransactionType, Appointment, AppointmentStatus, AppointmentType } from '../../types';
-import { MockBackendService } from '../../services/mockBackend';
 import MorningBriefTicker from './subcomponents/MorningBrief';
 import IntelligenceSidebar from './subcomponents/IntelligenceSidebar';
 import PatientList from './subcomponents/PatientList';
@@ -17,14 +17,14 @@ interface Props {
    familyGroups: FamilyGroup[];
    carePlans: CarePlan[];
    clinic: Clinic;
-   onProcessTransaction: (patientId: string, amount: number, category: TransactionCategory, type: TransactionType, carePlanTemplate?: any) => any;
-   onUpdateCarePlan: (carePlanId: string, updates: Partial<CarePlan>) => any;
-   onLinkFamily: (headUserId: string, memberMobile: string) => any;
-   onAddPatient: (name: string, mobile: string) => { success: boolean; message: string; user?: User };
-   backendService: MockBackendService;
    appointments: Appointment[];
-   onSchedule: (patientId: string, start: string, end: string, type: AppointmentType, notes: string) => any;
-   onUpdateAppointmentStatus: (id: string, status: AppointmentStatus) => any;
+   backendService: IBackendService;
+   onProcessTransaction: (patientId: string, amount: number, category: any, type: any, carePlanTemplate?: any) => Promise<any>;
+   onUpdateCarePlan: (carePlanId: string, updates: Partial<CarePlan>) => Promise<any>;
+   onLinkFamily: (headUserId: string, memberMobile: string) => Promise<any>;
+   onAddPatient: (name: string, mobile: string) => Promise<{ success: boolean; message: string; user?: User }>;
+   onSchedule: (patientId: string, start: string, end: string, type: AppointmentType, notes: string) => Promise<any>;
+   onUpdateAppointmentStatus: (id: string, status: AppointmentStatus) => Promise<any>;
 }
 
 const DesktopDoctorView: React.FC<Props> = ({
@@ -39,8 +39,25 @@ const DesktopDoctorView: React.FC<Props> = ({
    const [newPatientName, setNewPatientName] = useState('');
    const [newPatientMobile, setNewPatientMobile] = useState('');
 
-   const stats = useMemo(() => backendService.getDashboardStats(clinic.id), [backendService, clinic.id, transactions]);
+   const [stats, setStats] = useState<any>({});
+
+   // Async Stats Fetch
+   React.useEffect(() => {
+      let mounted = true;
+      backendService.getDashboardStats(clinic.id).then(res => {
+         if (mounted) setStats(res);
+      });
+      return () => { mounted = false; };
+   }, [backendService, clinic.id, transactions]);
+
    const filteredPatients = allUsers.filter(u => u.clinicId === clinic.id && u.role === 'PATIENT' && (u.name.toLowerCase().includes(searchQuery.toLowerCase()) || u.mobile.includes(searchQuery)));
+
+   // ... (Rest of useMemos same) ...
+
+   // ... (Render) ...
+
+   // In the Add Patient button handler:
+   // <button onClick={async () => { if (!newPatientName || !newPatientMobile) return; const res = await onAddPatient(newPatientName, newPatientMobile); ... }}
 
    const activeCarePlan = useMemo(() => {
       return carePlans.find(cp => cp.userId === selectedPatient?.id && cp.isActive && cp.clinicId === clinic.id);
@@ -69,7 +86,7 @@ const DesktopDoctorView: React.FC<Props> = ({
    // Helper to convert hex to rgb string for Tailwind alpha support
    const hexToRgb = (hex: string) => {
       const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-      return result ? `${parseInt(result[1], 16)} ${parseInt(result[2], 16)} ${parseInt(result[3], 16)}` : '99 102 241';
+      return result ? `${parseInt(result[1], 16)} ${parseInt(result[2], 16)} ${parseInt(result[3], 16)} ` : '99 102 241';
    };
 
    // Helper to calculate luminance for contrast
@@ -86,7 +103,7 @@ const DesktopDoctorView: React.FC<Props> = ({
    }, [clinic.primaryColor]);
 
    return (
-      <div className={`flex flex-col h-screen text-slate-900 font-sans overflow-hidden transition-all duration-1000 ${textureClass}`} style={{ '--primary': clinic.primaryColor, '--primary-rgb': hexToRgb(clinic.primaryColor), '--primary-glow': clinic.primaryColor + '15' } as React.CSSProperties}>
+      <div className={`flex flex - col h - screen text - slate - 900 font - sans overflow - hidden transition - all duration - 1000 ${textureClass} `} style={{ '--primary': clinic.primaryColor, '--primary-rgb': hexToRgb(clinic.primaryColor), '--primary-glow': clinic.primaryColor + '15' } as React.CSSProperties}>
 
          {/* Sidebar */}
          <div className="flex h-full">
@@ -97,7 +114,7 @@ const DesktopDoctorView: React.FC<Props> = ({
                      {clinic.logoUrl ? (
                         <img src={clinic.logoUrl} className="h-10 w-10 rounded-xl shadow-lg ring-2 ring-white transition-transform group-hover:scale-105" />
                      ) : (
-                        <div className={`h-10 w-10 bg-primary rounded-xl flex items-center justify-center shadow-lg ring-2 ring-white transition-transform group-hover:scale-105 ${isLight ? 'text-slate-900' : 'text-white'}`}>
+                        <div className={`h - 10 w - 10 bg - primary rounded - xl flex items - center justify - center shadow - lg ring - 2 ring - white transition - transform group - hover: scale - 105 ${isLight ? 'text-slate-900' : 'text-white'} `}>
                            <Activity size={20} />
                         </div>
                      )}
@@ -112,9 +129,9 @@ const DesktopDoctorView: React.FC<Props> = ({
                      {['Operational Hub', 'Patient Records', 'Financial Ledger', 'Settings'].map((item, i) => (
                         <div key={item}
                            onClick={() => setActiveSection(item)}
-                           className={`flex items-center gap-4 px-4 py-3.5 rounded-xl cursor-pointer transition-all duration-300 group ${activeSection === item ? `bg-primary shadow-xl shadow-primary/20 scale-[1.02] ${isLight ? 'text-slate-900 font-black' : 'text-white'}` : 'hover:bg-white/50 text-slate-500 hover:text-slate-800'}`}
+                           className={`flex items - center gap - 4 px - 4 py - 3.5 rounded - xl cursor - pointer transition - all duration - 300 group ${activeSection === item ? `bg-primary shadow-xl shadow-primary/20 scale-[1.02] ${isLight ? 'text-slate-900 font-black' : 'text-white'}` : 'hover:bg-white/50 text-slate-500 hover:text-slate-800'} `}
                         >
-                           <Grid size={18} className={`transition-transform duration-300 ${activeSection === item ? 'scale-110' : 'group-hover:scale-110'}`} />
+                           <Grid size={18} className={`transition - transform duration - 300 ${activeSection === item ? 'scale-110' : 'group-hover:scale-110'} `} />
                            <span className="font-bold text-sm tracking-wide">{item}</span>
                            {i === 0 && <div className="ml-auto h-2 w-2 rounded-full bg-rose-500 animate-pulse box-shadow-lg shadow-rose-500/50" />}
                         </div>
@@ -277,7 +294,7 @@ const DesktopDoctorView: React.FC<Props> = ({
                                        <input type="tel" placeholder="+91 0000 000 000" value={newPatientMobile} onChange={(e) => setNewPatientMobile(e.target.value)}
                                           className="glass-input w-full px-10 py-7 bg-slate-50 border border-slate-100 rounded-[32px] text-2xl font-black outline-none focus:border-black transition-all" />
                                     </div>
-                                    <button onClick={() => { if (!newPatientName || !newPatientMobile) return; const res = onAddPatient(newPatientName, newPatientMobile); if (res.success) { setIsAddPatientModalOpen(false); setNewPatientName(''); setNewPatientMobile(''); if (res.user) setSelectedPatient(res.user); } }}
+                                    <button onClick={async () => { if (!newPatientName || !newPatientMobile) return; const res = await onAddPatient(newPatientName, newPatientMobile); if (res.success) { setIsAddPatientModalOpen(false); setNewPatientName(''); setNewPatientMobile(''); if (res.updatedData) { /* Handle user update if needed or rely on global reload */ } } }}
                                        className="w-full py-10 rounded-[32px] bg-slate-900 text-white font-black text-xl tracking-widest shadow-2xl transition-all hover:scale-[1.02] active:scale-95 text-center block">
                                        Initiate Identity Onboarding
                                     </button>

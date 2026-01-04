@@ -8,12 +8,15 @@ import { AppState, Role } from './types';
 // Dev Mode: No Auth Required
 // We trust the App.tsx role switcher to handle the context
 
+import { IBackendService } from './services/IBackendService';
+
 interface RouterProps {
     appState: AppState;
     handlers: any;
+    backendService: IBackendService;
 }
 
-export const AppRouter: React.FC<RouterProps> = ({ appState, handlers }) => {
+export const AppRouter: React.FC<RouterProps> = ({ appState, handlers, backendService }) => {
     return (
         <Routes>
             {/* Auto-redirect Login to Platform in Dev Mode */}
@@ -33,6 +36,7 @@ export const AppRouter: React.FC<RouterProps> = ({ appState, handlers }) => {
                 <ClinicPage
                     data={appState}
                     clinic={appState.clinics.find(c => c.id === appState.activeClinicId)}
+                    backendService={backendService}
                     {...handlers}
                 />
             } />

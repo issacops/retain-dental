@@ -39,10 +39,10 @@ interface Props {
       config: any;
       shards: ShardStatus[];
    };
-   onOnboardClinic: (name: string, color: string, texture: ThemeTexture, ownerName: string, logoUrl: string) => void;
-   onEnterClinic: (clinicId: string) => void;
-   onDeleteClinic: (clinicId: string) => void;
-   onUpdateConfig: (updates: any) => void;
+   onOnboardClinic: (name: string, color: string, texture: ThemeTexture, ownerName: string, logoUrl: string) => Promise<any>;
+   onEnterClinic: (clinicId: string) => void; // Sync nav wrapper
+   onDeleteClinic: (clinicId: string) => Promise<any>;
+   onUpdateConfig: (updates: any) => Promise<any>;
 }
 
 const LiveHeartbeat = () => (
@@ -417,7 +417,7 @@ const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, o
                         </div>
                      </div>
 
-                     <button onClick={() => { onOnboardClinic(newClinicName, newClinicColor, newClinicTexture, newClinicOwner, newClinicLogo); setShowOnboardModal(false); }}
+                     <button onClick={async () => { await onOnboardClinic(newClinicName, newClinicColor, newClinicTexture, newClinicOwner, newClinicLogo); setShowOnboardModal(false); }}
                         className="w-full py-10 bg-indigo-600 hover:bg-indigo-500 text-white rounded-[48px] font-black text-2xl shadow-[0_30px_60px_-10px_rgba(99,102,241,0.4)] transition-all hover:scale-[1.02] active:scale-95">
                         Deploy Optimized Node
                      </button>

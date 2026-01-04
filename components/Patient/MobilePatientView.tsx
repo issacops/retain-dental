@@ -11,11 +11,11 @@ interface Props {
   familyGroups: FamilyGroup[];
   carePlans: CarePlan[];
   clinic: Clinic;
-  onToggleChecklistItem?: (carePlanId: string, itemId: string) => void;
-  onSchedule: (patientId: string, start: string, end: string, type: AppointmentType, notes: string) => any;
-  onAddFamilyMember: (name: string, relation: string, age: string) => void;
-  onSwitchProfile: (userId: string) => void;
-  onRedeem: (amount: number, description: string) => void;
+  onToggleChecklistItem?: (carePlanId: string, itemId: string) => Promise<any>;
+  onSchedule: (patientId: string, start: string, end: string, type: AppointmentType, notes: string) => Promise<any>;
+  onAddFamilyMember: (name: string, relation: string, age: string) => Promise<any>;
+  onSwitchProfile: (userId: string) => void; // Switch profile is client-side only (setData), so maybe sync? App.tsx handleSwitchProfile is sync. Keep as void.
+  onRedeem: (amount: number, description: string) => Promise<any>;
 }
 
 const TreatmentComplianceRing = ({ progress, color }: { progress: number, color: string }) => {
@@ -397,8 +397,8 @@ const MobilePatientView: React.FC<Props> = ({ currentUser, users, wallets, trans
                     </div>
                     <button
                       disabled={!canAfford}
-                      onClick={() => {
-                        onRedeem(reward.cost, reward.name);
+                      onClick={async () => {
+                        await onRedeem(reward.cost, reward.name);
                         setRedeemSuccess(true);
                         setTimeout(() => {
                           setRedeemSuccess(false);
@@ -460,11 +460,11 @@ const MobilePatientView: React.FC<Props> = ({ currentUser, users, wallets, trans
                   </div>
                 </div>
 
-                <button onClick={() => {
+                <button onClick={async () => {
                   const start = new Date(`${bookDate}T${bookTime}`);
                   const end = new Date(start);
                   end.setMinutes(end.getMinutes() + 30);
-                  onSchedule(currentUser.id, start.toISOString(), end.toISOString(), bookType, 'Mobile Booking');
+                  await onSchedule(currentUser.id, start.toISOString(), end.toISOString(), bookType, 'Mobile Booking');
                   setBookSuccess(true);
                 }} className="w-full py-5 bg-indigo-600 text-white rounded-[32px] font-black text-lg shadow-xl shadow-indigo-200 mt-4 active:scale-95 transition-transform" style={{ backgroundColor: clinic.primaryColor }}>
                   Confirm Request
@@ -502,8 +502,8 @@ const MobilePatientView: React.FC<Props> = ({ currentUser, users, wallets, trans
                 </div>
               </div>
 
-              <button onClick={() => {
-                onAddFamilyMember(newMemberName, newMemberRelation, newMemberAge);
+              <button onClick={async () => {
+                await onAddFamilyMember(newMemberName, newMemberRelation, newMemberAge);
                 setShowAddFamilyModal(false);
                 setNewMemberName('');
                 setNewMemberAge('');

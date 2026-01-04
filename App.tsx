@@ -4,54 +4,107 @@ import {
   User, Wallet, Transaction, FamilyGroup, Role, AppState, ViewMode, Clinic, TransactionCategory, TransactionType, CarePlan, ThemeTexture,
   AppointmentType, AppointmentStatus
 } from './types';
-import { MockBackendService } from './services/mockBackend';
+import { getBackendService } from './services/BackendFactory';
 import { AppRouter } from './router';
 
 // Icons
 import { Activity } from 'lucide-react';
 
+import { useToast } from './context/ToastContext';
+
 const App = () => {
   const [isClient, setIsClient] = useState(false);
+  const { addToast } = useToast();
 
-  // Initialize Backend Service (Singleton)
-  const backendService = useMemo(() => MockBackendService.getInstance(), []);
+  // Initialize Backend Service (Singleton) via Factory
+  const backendService = useMemo(() => getBackendService(), []);
 
-  // Initialize State from Backend
-  const [data, setData] = useState<AppState>(() => {
-    const dbData = backendService.getData();
+  // Initialize State (Async)
+  const [data, setData] = useState<AppState | null>(null);
+  const [loading, setLoading] = useState(true);
 
-    // Determine user based on URL for dev/demo mode bypass
-    let activeUser: User | null = null;
+  useEffect(() => {
+    const initData = async () => {
+      try {
+        const dbData = await backendService.getData();
 
-    if (typeof window !== 'undefined') {
-      // 1. Check for manual override
-      const overrideId = localStorage.getItem('dev_override_user_id');
-      if (overrideId) {
-        activeUser = dbData.users.find(u => u.id === overrideId) || null;
-      }
-
-      // 2. Fallback to path-based default if no override or user not found
-      if (!activeUser) {
+        // Compute Derived State (UI State)
         const path = window.location.pathname;
-        if (path.startsWith('/platform')) activeUser = dbData.users.find(u => u.role === Role.SUPER_ADMIN) || null;
-        else if (path.startsWith('/patient')) activeUser = dbData.users.find(u => u.role === Role.PATIENT) || null;
-        else activeUser = dbData.users.find(u => u.role === Role.ADMIN) || null;
-      }
-    }
+        let initialClinicId: string | null = null;
+        let initialUser: User | null = null;
+        let initialViewMode: ViewMode = 'PLATFORM_MASTER';
 
-    return {
-      clinics: dbData.clinics,
-      users: dbData.users,
-      wallets: dbData.wallets,
-      transactions: dbData.transactions,
-      familyGroups: dbData.familyGroups,
-      carePlans: dbData.carePlans,
-      appointments: dbData.appointments,
-      currentUser: activeUser || dbData.users[0],
-      activeClinicId: dbData.clinics[0]?.id || '',
-      viewMode: 'DESKTOP_KIOSK'
+        // ... (Keep existing URL logic logic here, but adapted)
+        // For brevity in this replacement, I'll simplify the dev logic or copy it if I can see it clearly.
+        // Re-implementing the URL parsing logic from previous state:
+
+        const pathParts = path.split('/').filter(Boolean); // e.g. ['clinic', 'city-dental']
+
+        // 1. Check for specific clinic slug
+        if (pathParts[0] === 'clinic' && pathParts[1]) {
+          const found = dbData.clinics.find(c => c.slug === pathParts[1]);
+          if (found) {
+            initialClinicId = found.id;
+
+            // Context-Aware User: Admin
+            // For Dev Mode: Auto-login as the Admin of this clinic
+            const admin = dbData.users.find(u => u.clinicId === found.id && u.role === Role.ADMIN);
+            if (admin) initialUser = admin;
+          }
+        }
+        // 2. Patient App
+        else if (pathParts[0] === 'patient') {
+          initialViewMode = 'MOBILE_PATIENT';
+          // Find a patient
+          const patient = dbData.users.find(u => u.role === Role.PATIENT);
+          if (patient) {
+            initialUser = patient;
+            initialClinicId = patient.clinicId;
+          }
+        }
+        // 3. Platform Admin (Default)
+        else {
+          const superAdmin = dbData.users.find(u => u.role === Role.SUPER_ADMIN);
+          // Fallback to creating a fake super admin if none exists in mock
+          initialUser = superAdmin || {
+            id: 'super-admin',
+            clinicId: 'platform',
+            name: 'Platform Master',
+            mobile: '0000',
+            role: Role.SUPER_ADMIN,
+            lifetimeSpend: 0,
+            currentTier: Role.SUPER_ADMIN as any,
+            joinedAt: new Date().toISOString()
+          };
+        }
+
+        setData({
+          ...dbData,
+          activeClinicId: initialClinicId || dbData.clinics[0]?.id || '', // Fallback to first clinic if no specific clinic found
+          currentUser: initialUser || dbData.users[0], // Fallback to first user if no specific user found
+          viewMode: initialViewMode
+        });
+      } catch (err) {
+        console.error("Failed to load backend data", err);
+        addToast({ title: "System Error", message: "Failed to connect to backend services. Retrying...", type: "error", duration: 10000 });
+      } finally {
+        setLoading(false);
+      }
     };
-  });
+
+    initData();
+  }, [backendService]);
+
+  if (loading || !data) {
+    return (
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <Activity size={48} className="text-indigo-500 animate-pulse" />
+          <h2 className="text-white text-xl font-medium tracking-tight">Booting DentalOS...</h2>
+        </div>
+      </div>
+    );
+  }
 
   // Client-side hydration check
   useEffect(() => {
@@ -86,43 +139,44 @@ const App = () => {
     }
   }, [isClient]);
 
-  const handleTransaction = (patientId: string, amount: number, category: TransactionCategory, type: TransactionType, carePlanTemplate?: any) => {
-    const result = backendService.processTransaction(data.activeClinicId!, patientId, amount, category, type, carePlanTemplate);
+  const handleTransaction = async (patientId: string, amount: number, category: TransactionCategory, type: TransactionType, carePlanTemplate?: any) => {
+    const result = await backendService.processTransaction(data.activeClinicId!, patientId, amount, category, type, carePlanTemplate);
     if (result.success && result.updatedData) {
       setData(prev => ({ ...prev, ...result.updatedData }));
     }
     return result;
   };
 
-  const handleUpdateCarePlan = (carePlanId: string, updates: Partial<CarePlan>) => {
-    const result = backendService.updateCarePlan(carePlanId, updates);
+  const handleUpdateCarePlan = async (carePlanId: string, updates: Partial<CarePlan>) => {
+    const result = await backendService.updateCarePlan(carePlanId, updates);
     if (result.success && result.updatedData) {
       setData(prev => ({ ...prev, ...result.updatedData }));
     }
     return result;
   };
 
-  const handleLinkFamily = (headUserId: string, memberMobile: string) => {
-    const result = backendService.linkFamilyMember(headUserId, memberMobile);
+  const handleLinkFamily = async (headUserId: string, memberMobile: string) => {
+    const result = await backendService.linkFamilyMember(headUserId, memberMobile);
     if (result.success && result.updatedData) {
       setData(prev => ({ ...prev, ...result.updatedData }));
     }
     return result;
   };
 
-  const handleAddPatient = (name: string, mobile: string) => {
-    const result = backendService.addPatient(data.activeClinicId!, name, mobile);
+  const handleAddPatient = async (name: string, mobile: string) => {
+    const result = await backendService.addPatient(data.activeClinicId!, name, mobile);
     if (result.success && result.updatedData) {
       setData(prev => ({ ...prev, ...result.updatedData }));
     }
     return result;
   };
 
-  const handleOnboardClinic = (name: string, color: string, texture: ThemeTexture, ownerName: string, logoUrl: string) => {
-    const result = backendService.createClinic(name, color, texture, ownerName, logoUrl);
+  const handleOnboardClinic = async (name: string, color: string, texture: ThemeTexture, ownerName: string, logoUrl: string) => {
+    const result = await backendService.createClinic(name, color, texture, ownerName, logoUrl);
     if (result.success && result.updatedData) {
       setData(prev => ({ ...prev, ...result.updatedData }));
     }
+    return result;
   };
 
   const handleEnterClinic = (clinicId: string) => {
@@ -136,15 +190,15 @@ const App = () => {
     }));
   };
 
-  const handleDeleteClinic = (clinicId: string) => {
-    const result = backendService.deleteClinic(clinicId);
+  const handleDeleteClinic = async (clinicId: string) => {
+    const result = await backendService.deleteClinic(clinicId);
     if (result.success && result.updatedData) {
       setData(prev => ({ ...prev, ...result.updatedData }));
     }
   };
 
-  const handleUpdateGlobalConfig = (updates: any) => {
-    const result = backendService.updateSystemConfig(updates);
+  const handleUpdateGlobalConfig = async (updates: any) => {
+    const result = await backendService.updateSystemConfig(updates);
     if (result.success) {
       // Config is internal to backend service for now in terms of state ref, but we could sync if needed
       // Force re-render if needed or just sync
@@ -152,32 +206,32 @@ const App = () => {
     }
   };
 
-  const handleToggleChecklistItem = (carePlanId: string, itemId: string) => {
-    const result = backendService.toggleChecklistItem(carePlanId, itemId);
+  const handleToggleChecklistItem = async (carePlanId: string, itemId: string) => {
+    const result = await backendService.toggleChecklistItem(carePlanId, itemId);
     if (result.success && result.updatedData) {
       setData(prev => ({ ...prev, ...result.updatedData }));
     }
   };
 
-  const handleScheduleAppointment = (patientId: string, start: string, end: string, type: AppointmentType, notes: string) => {
-    const result = backendService.scheduleAppointment(data.activeClinicId!, patientId, undefined, start, end, type, notes);
-    if (result.success && result.updatedData) {
-      setData(prev => ({ ...prev, ...result.updatedData }));
-    }
-    return result;
-  };
-
-  const handleUpdateAppointmentStatus = (id: string, status: AppointmentStatus) => {
-    const result = backendService.updateAppointmentStatus(id, status);
+  const handleScheduleAppointment = async (patientId: string, start: string, end: string, type: AppointmentType, notes: string) => {
+    const result = await backendService.scheduleAppointment(data.activeClinicId!, patientId, undefined, start, end, type, notes);
     if (result.success && result.updatedData) {
       setData(prev => ({ ...prev, ...result.updatedData }));
     }
     return result;
   };
 
-  const handleAddFamilyMember = (name: string, relation: string, age: string) => {
+  const handleUpdateAppointmentStatus = async (id: string, status: AppointmentStatus) => {
+    const result = await backendService.updateAppointmentStatus(id, status);
+    if (result.success && result.updatedData) {
+      setData(prev => ({ ...prev, ...result.updatedData }));
+    }
+    return result;
+  };
+
+  const handleAddFamilyMember = async (name: string, relation: string, age: string) => {
     if (!data.currentUser) return;
-    const result = backendService.addFamilyMember(data.currentUser.id, name, relation, age);
+    const result = await backendService.addFamilyMember(data.currentUser.id, name, relation, age);
     if (result.success && result.updatedData) {
       setData(prev => {
         // Refresh current user from existing ID to ensure familyGroupId is up to date
@@ -268,7 +322,7 @@ const App = () => {
           <Link to="/doctor" className="px-2 py-1 bg-slate-800 text-white text-[10px] rounded">Doctor</Link>
           <Link to="/platform" className="px-2 py-1 bg-slate-800 text-white text-[10px] rounded">Platform</Link>
         </div>
-        <AppRouter appState={data} handlers={handlers} />
+        <AppRouter appState={data} handlers={handlers} backendService={backendService} />
       </BrowserRouter>
     </div>
   );

@@ -3,9 +3,12 @@ import {
   User, Wallet, Transaction, Tier, Role,
   TransactionType, TransactionCategory,
   FamilyGroup, Clinic, CarePlan, ThemeTexture,
-  Appointment, AppointmentStatus, AppointmentType
+  Appointment, AppointmentStatus, AppointmentType,
+  DatabaseState,
+  SystemConfig
 } from '../types';
 import { TIER_THRESHOLDS, TIER_REWARDS, REWARD_MULTIPLIERS, INITIAL_CLINICS, INITIAL_USERS, INITIAL_WALLETS, INITIAL_TRANSACTIONS, INITIAL_FAMILIES } from '../constants';
+import { IBackendService, ServiceResponse } from './IBackendService';
 
 export interface GlobalActivityLog {
   id: string;
@@ -16,15 +19,7 @@ export interface GlobalActivityLog {
   type: 'INFO' | 'SUCCESS' | 'UPGRADE' | 'REVENUE' | 'SECURITY' | 'DEPLOYMENT';
 }
 
-export interface SystemConfig {
-  platformName: string;
-  baseCurrency: string;
-  globalMfaEnabled: boolean;
-  maintenanceMode: boolean;
-  referralBonusPoints: number;
-}
-
-export class MockBackendService {
+export class MockBackendService implements IBackendService {
   private static instance: MockBackendService;
 
   private clinics: Clinic[];
@@ -38,6 +33,7 @@ export class MockBackendService {
   private systemConfig: SystemConfig;
 
   private constructor() {
+    // Sync constructor is fine, but methods will be async
     const savedState = typeof window !== 'undefined' ? localStorage.getItem('dentalOS_db_v2') : null;
 
     if (savedState) {
@@ -123,20 +119,37 @@ export class MockBackendService {
     this.persist();
   }
 
-  public processTransaction(
+  // --- ASYNC WRAPPERS ---
+
+  public async getData(): Promise<DatabaseState> {
+    return Promise.resolve({
+      clinics: [...this.clinics],
+      users: [...this.users],
+      wallets: [...this.wallets],
+      transactions: [...this.transactions],
+      familyGroups: [...this.familyGroups],
+      carePlans: [...this.carePlans],
+      appointments: [...this.appointments]
+    });
+  }
+
+  public async processTransaction(
     clinicId: string,
     patientId: string,
     amount: number,
     category: TransactionCategory,
     type: TransactionType,
     carePlanTemplate?: { name: string; instructions: string[]; metadata?: Record<string, any> }
-  ): { success: boolean; message: string; updatedData?: any } {
+  ): Promise<ServiceResponse<DatabaseState>> {
+    // Simulate network delay
+    // await new Promise(resolve => setTimeout(resolve, 300));
+
     const user = this.users.find(u => u.id === patientId);
     const clinic = this.clinics.find(c => c.id === clinicId);
-    if (!user || !clinic) return { success: false, message: 'Identity not verified' };
+    if (!user || !clinic) return { success: false, message: 'Identity not verified', error: 'AUTH_ERR' };
 
     const wallet = this.getEffectiveWallet(patientId);
-    if (!wallet) return { success: false, message: 'Wallet mapping failed' };
+    if (!wallet) return { success: false, message: 'Wallet mapping failed', error: 'DATA_ERR' };
 
     let pointsChange = 0;
     let newCarePlanId: string | undefined = undefined;
@@ -184,8 +197,8 @@ export class MockBackendService {
         actualRedeem = Math.min(wallet.balance, Math.floor(amount * 0.25));
       }
 
-      if (wallet.balance < actualRedeem) return { success: false, message: 'Insufficient Smile Points' };
-      if (actualRedeem <= 0) return { success: false, message: 'Invalid redemption amount' };
+      if (wallet.balance < actualRedeem) return { success: false, message: 'Insufficient Smile Points', error: 'FUNDS_ERR' };
+      if (actualRedeem <= 0) return { success: false, message: 'Invalid redemption amount', error: 'VALIDATION_ERR' };
 
       pointsChange = -actualRedeem;
       wallet.balance -= actualRedeem;
@@ -206,23 +219,23 @@ export class MockBackendService {
     });
 
     this.persist();
-    return { success: true, message: 'Ledger updated', updatedData: this.getData() };
+    return { success: true, message: 'Ledger updated', updatedData: await this.getData() };
   }
 
-  public toggleChecklistItem(carePlanId: string, itemId: string) {
+  public async toggleChecklistItem(carePlanId: string, itemId: string): Promise<ServiceResponse<DatabaseState>> {
     const plan = this.carePlans.find(p => p.id === carePlanId);
     if (plan && plan.checklist) {
       const item = plan.checklist.find(i => i.id === itemId);
       if (item) {
         item.completed = !item.completed;
         this.persist();
-        return { success: true, updatedData: this.getData() };
+        return { success: true, message: 'Item updated', updatedData: await this.getData() };
       }
     }
-    return { success: false };
+    return { success: false, message: 'Item not found', error: 'NOT_FOUND' };
   }
 
-  public createClinic(name: string, color: string, texture: ThemeTexture, ownerName: string, logoUrl: string): { success: boolean; message: string; updatedData?: any } {
+  public async createClinic(name: string, color: string, texture: ThemeTexture, ownerName: string, logoUrl: string): Promise<ServiceResponse<DatabaseState>> {
     const newClinicId = `clinic-${Date.now()}`;
     const newAdminId = `doc-${Date.now()}`;
 
@@ -244,38 +257,28 @@ export class MockBackendService {
       role: Role.ADMIN, lifetimeSpend: 0, currentTier: Tier.MEMBER, joinedAt: new Date().toISOString()
     };
 
-    // Create a default patient for this clinic so Patient App is accessible immediately
-    const newPatientId = `patient-${Date.now()}`;
     const newPatient: User = {
-      id: newPatientId, clinicId: newClinicId, mobile: '9999999999', name: 'Guest Patient',
+      id: `patient-${Date.now()}`, clinicId: newClinicId, mobile: '9999999999', name: 'Guest Patient',
       role: Role.PATIENT, lifetimeSpend: 0, currentTier: Tier.MEMBER, joinedAt: new Date().toISOString()
     };
 
     this.clinics.push(newClinic);
     this.users.push(newAdmin);
-    this.users.push(newPatient); // Add patient
-
-    // Wallet for patient
-    this.wallets.push({
-      id: `wallet-${newPatientId}`,
-      userId: newPatientId,
-      balance: 0,
-      lastTransactionAt: new Date().toISOString()
-    });
+    this.users.push(newPatient);
+    this.wallets.push({ id: `wallet-${newPatient.id}`, userId: newPatient.id, balance: 0, lastTransactionAt: new Date().toISOString() });
 
     this.logActivity(name, ownerName, 'Joined the platform (Subscription: ' + newClinic.subscriptionTier + ')', 'UPGRADE');
     this.persist();
 
-    return { success: true, message: 'Network expanded', updatedData: this.getData() };
+    return { success: true, message: 'Network expanded', updatedData: await this.getData() };
   }
 
-  public deleteClinic(clinicId: string): { success: boolean; message: string; updatedData?: any } {
+  public async deleteClinic(clinicId: string): Promise<ServiceResponse<DatabaseState>> {
     const clinicIndex = this.clinics.findIndex(c => c.id === clinicId);
-    if (clinicIndex === -1) return { success: false, message: 'Node not found' };
+    if (clinicIndex === -1) return { success: false, message: 'Node not found', error: 'NOT_FOUND' };
 
     const clinicName = this.clinics[clinicIndex].name;
 
-    // Filter out clinic-specific data
     this.clinics = this.clinics.filter(c => c.id !== clinicId);
     const usersToDelete = this.users.filter(u => u.clinicId === clinicId);
     this.users = this.users.filter(u => u.clinicId !== clinicId);
@@ -284,16 +287,15 @@ export class MockBackendService {
     this.wallets = this.wallets.filter(w => !userIds.includes(w.userId));
     this.transactions = this.transactions.filter(t => t.clinicId !== clinicId);
     this.appointments = this.appointments.filter(a => a.clinicId !== clinicId);
-    // Note: Family groups logic is complex, for MVP just leaving orphaned groups or filtering if Head User is gone.
     this.familyGroups = this.familyGroups.filter(fg => this.users.find(u => u.id === fg.headUserId));
 
     this.logActivity('Platform', 'Super Admin', `Decommissioned Node: ${clinicName}`, 'SECURITY');
     this.persist();
 
-    return { success: true, message: 'Node decommissioned', updatedData: this.getData() };
+    return { success: true, message: 'Node decommissioned', updatedData: await this.getData() };
   }
 
-  public getPlatformStats() {
+  public async getPlatformStats() {
     const activePatients = this.users.filter(u => u.role === Role.PATIENT);
     const totalGTV = this.transactions.filter(t => t.type === TransactionType.EARN).reduce((a, b) => a + b.amountPaid, 0);
     const mrr = this.clinics.reduce((sum, c) => sum + (c.subscriptionTier === 'PRO' ? 4999 : 1999), 0);
@@ -329,47 +331,14 @@ export class MockBackendService {
     };
   }
 
-  public updateSystemConfig(updates: Partial<SystemConfig>): { success: boolean; message: string } {
+  public async updateSystemConfig(updates: Partial<SystemConfig>): Promise<ServiceResponse> {
     this.systemConfig = { ...this.systemConfig, ...updates };
     this.logActivity('Platform', 'Admin', 'Updated system configuration', 'INFO');
     this.persist();
     return { success: true, message: 'Configuration deployed globally' };
   }
 
-  private getEffectiveWallet(userId: string): Wallet | undefined {
-    const user = this.users.find(u => u.id === userId);
-    if (user?.familyGroupId) {
-      const fam = this.familyGroups.find(f => f.id === user.familyGroupId);
-      return this.wallets.find(w => w.userId === fam?.headUserId);
-    }
-    return this.wallets.find(w => w.userId === userId);
-  }
-
-  private getHeadUser(userId: string): User | undefined {
-    const user = this.users.find(u => u.id === userId);
-    if (user?.familyGroupId) {
-      const f = this.familyGroups.find(fg => fg.id === user.familyGroupId);
-      return this.users.find(u => u.id === f?.headUserId);
-    }
-    return user;
-  }
-
-  public getData() {
-    return {
-      clinics: [...this.clinics],
-      users: [...this.users],
-      wallets: [...this.wallets],
-      transactions: [...this.transactions],
-      familyGroups: [...this.familyGroups],
-      carePlans: [...this.carePlans],
-      appointments: [...this.appointments]
-    };
-  }
-
-  // --- APPOINTMENT MODULE ---
-
-  public scheduleAppointment(clinicId: string, patientId: string, doctorId: string | undefined, startTime: string, endTime: string, type: AppointmentType, notes?: string) {
-    // Basic validation: Check for overlaps (simplified for MVP)
+  public async scheduleAppointment(clinicId: string, patientId: string, doctorId: string | undefined, startTime: string, endTime: string, type: AppointmentType, notes?: string): Promise<ServiceResponse> {
     const overlap = this.appointments.find(a =>
       a.clinicId === clinicId &&
       a.status !== AppointmentStatus.CANCELLED &&
@@ -377,7 +346,7 @@ export class MockBackendService {
         (new Date(endTime) > new Date(a.startTime) && new Date(endTime) <= new Date(a.endTime)))
     );
 
-    if (overlap) return { success: false, message: 'Time slot unavailable' };
+    if (overlap) return { success: false, message: 'Time slot unavailable', error: 'CONFLICT_ERR' };
 
     const newAppt: Appointment = {
       id: `appt-${Date.now()}`,
@@ -397,27 +366,24 @@ export class MockBackendService {
     this.logActivity(this.clinics.find(c => c.id === clinicId)?.name || 'Clinic', patientName, `Scheduled ${type} appointment`, 'INFO');
 
     this.persist();
-    return { success: true, message: 'Appointment locked', updatedData: this.getData() };
+    return { success: true, message: 'Appointment locked', updatedData: await this.getData() };
   }
 
-  public updateAppointmentStatus(appointmentId: string, status: AppointmentStatus) {
+  public async updateAppointmentStatus(appointmentId: string, status: AppointmentStatus): Promise<ServiceResponse> {
     const appt = this.appointments.find(a => a.id === appointmentId);
-    if (!appt) return { success: false, message: 'Appointment not found' };
+    if (!appt) return { success: false, message: 'Appointment not found', error: 'NOT_FOUND' };
 
     appt.status = status;
     this.persist();
-    return { success: true, message: `Status updated to ${status}`, updatedData: this.getData() };
+    return { success: true, message: `Status updated to ${status}`, updatedData: await this.getData() };
   }
 
-  // --- FAMILY MODULE ---
-
-  public addFamilyMember(headUserId: string, name: string, relation: string, age: string) {
+  public async addFamilyMember(headUserId: string, name: string, relation: string, age: string): Promise<ServiceResponse> {
     const headUser = this.users.find(u => u.id === headUserId);
-    if (!headUser) return { success: false, message: 'Head user not found' };
+    if (!headUser) return { success: false, message: 'Head user not found', error: 'AUTH_ERR' };
 
     let familyGroup = this.familyGroups.find(fg => fg.headUserId === headUserId || fg.id === headUser.familyGroupId);
 
-    // Create group if doesn't exist
     if (!familyGroup) {
       familyGroup = {
         id: `fam-${Date.now()}`,
@@ -432,7 +398,7 @@ export class MockBackendService {
     const newMember: User = {
       id: `user-${Date.now()}`,
       clinicId: headUser.clinicId,
-      mobile: `linked-${Date.now()}`, // Placeholder logic
+      mobile: `linked-${Date.now()}`,
       name: name,
       role: Role.PATIENT,
       familyGroupId: familyGroup.id,
@@ -443,29 +409,22 @@ export class MockBackendService {
     };
 
     this.users.push(newMember);
-
-    // Create wallet for new member (or shared? - plan said individual wallets for now)
-    this.wallets.push({
-      id: `wallet-${newMember.id}`,
-      userId: newMember.id,
-      balance: 0,
-      lastTransactionAt: new Date().toISOString()
-    });
+    this.wallets.push({ id: `wallet-${newMember.id}`, userId: newMember.id, balance: 0, lastTransactionAt: new Date().toISOString() });
 
     this.persist();
-    return { success: true, message: 'Family member added', updatedData: this.getData() };
+    return { success: true, message: 'Family member added', updatedData: await this.getData() };
   }
 
-  public updateCarePlan(carePlanId: string, updates: Partial<CarePlan>) {
+  public async updateCarePlan(carePlanId: string, updates: Partial<CarePlan>): Promise<ServiceResponse> {
     const index = this.carePlans.findIndex(cp => cp.id === carePlanId);
-    if (index === -1) return { success: false, message: 'Protocol not found' };
+    if (index === -1) return { success: false, message: 'Protocol not found', error: 'NOT_FOUND' };
     this.carePlans[index] = { ...this.carePlans[index], ...updates };
     this.persist();
-    return { success: true, message: 'Protocol synchronized', updatedData: this.getData() };
+    return { success: true, message: 'Protocol synchronized', updatedData: await this.getData() };
   }
 
-  public addPatient(clinicId: string, name: string, mobile: string) {
-    if (this.users.find(u => u.mobile === mobile && u.clinicId === clinicId)) return { success: false, message: 'Identity exists' };
+  public async addPatient(clinicId: string, name: string, mobile: string): Promise<ServiceResponse> {
+    if (this.users.find(u => u.mobile === mobile && u.clinicId === clinicId)) return { success: false, message: 'Identity exists', error: 'CONFLICT_ERR' };
     const newUserId = `user-${Date.now()}`;
     const newUser: User = {
       id: newUserId, clinicId, name, mobile, role: Role.PATIENT,
@@ -473,18 +432,15 @@ export class MockBackendService {
     };
     this.users.push(newUser);
     this.wallets.push({ id: `w-${Date.now()}`, userId: newUserId, balance: 0, lastTransactionAt: new Date().toISOString() });
-
-    // Also save new state
     this.persist();
-
-    return { success: true, message: 'Patient onboarded', user: newUser, updatedData: this.getData() };
+    return { success: true, message: 'Patient onboarded', updatedData: await this.getData() };
   }
 
-  public linkFamilyMember(headUserId: string, memberMobile: string) {
+  public async linkFamilyMember(headUserId: string, memberMobile: string): Promise<ServiceResponse> {
     const headUser = this.users.find(u => u.id === headUserId);
-    if (!headUser) return { success: false, message: 'Head not found' };
+    if (!headUser) return { success: false, message: 'Head not found', error: 'NOT_FOUND' };
     const memberUser = this.users.find(u => u.mobile === memberMobile && u.clinicId === headUser.clinicId);
-    if (!memberUser) return { success: false, message: 'Member not found' };
+    if (!memberUser) return { success: false, message: 'Member not found', error: 'NOT_FOUND' };
     let familyGroup = this.familyGroups.find(f => f.headUserId === headUserId);
     if (!familyGroup) {
       familyGroup = { id: `fam-${Date.now()}`, clinicId: headUser.clinicId, headUserId: headUserId, familyName: `${headUser.name}'s Family` };
@@ -492,13 +448,11 @@ export class MockBackendService {
       headUser.familyGroupId = familyGroup.id;
     }
     memberUser.familyGroupId = familyGroup.id;
-    // Save state
     this.persist();
-
-    return { success: true, message: 'Household linked', updatedData: this.getData() };
+    return { success: true, message: 'Household linked', updatedData: await this.getData() };
   }
 
-  public getDashboardStats(clinicId: string) {
+  public async getDashboardStats(clinicId: string) {
     const txs = this.transactions.filter(t => t.clinicId === clinicId);
     return {
       totalLiability: this.wallets.filter(w => this.users.find(u => u.id === w.userId)?.clinicId === clinicId).reduce((a, b) => a + b.balance, 0),
@@ -506,5 +460,23 @@ export class MockBackendService {
       upgradingSoon: this.users.filter(u => u.clinicId === clinicId && u.role === Role.PATIENT && u.currentTier !== Tier.PLATINUM).length,
       staffPerformance: this.users.filter(u => u.clinicId === clinicId && u.role === Role.ADMIN).map(doc => ({ name: doc.name, rev: txs.length * 500 }))
     };
+  }
+
+  private getEffectiveWallet(userId: string): Wallet | undefined {
+    const user = this.users.find(u => u.id === userId);
+    if (user?.familyGroupId) {
+      const fam = this.familyGroups.find(f => f.id === user.familyGroupId);
+      return this.wallets.find(w => w.userId === fam?.headUserId);
+    }
+    return this.wallets.find(w => w.userId === userId);
+  }
+
+  private getHeadUser(userId: string): User | undefined {
+    const user = this.users.find(u => u.id === userId);
+    if (user?.familyGroupId) {
+      const f = this.familyGroups.find(fg => fg.id === user.familyGroupId);
+      return this.users.find(u => u.id === f?.headUserId);
+    }
+    return user;
   }
 }
