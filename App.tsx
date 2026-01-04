@@ -96,17 +96,6 @@ const App = () => {
     initData();
   }, [backendService]);
 
-  if (loading || !data) {
-    return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <Activity size={48} className="text-indigo-500 animate-pulse" />
-          <h2 className="text-white text-xl font-medium tracking-tight">Booting DentalOS...</h2>
-        </div>
-      </div>
-    );
-  }
-
   // Client-side hydration check
   useEffect(() => {
     setIsClient(true);
@@ -114,7 +103,7 @@ const App = () => {
 
   // Handle Deep Linking simulation
   useEffect(() => {
-    if (!isClient) return;
+    if (!isClient || !data) return;
     const params = new URLSearchParams(window.location.search);
     const clinicSlug = params.get('c');
     const mode = params.get('v'); // 'staff' or 'patient'
@@ -125,20 +114,31 @@ const App = () => {
         let targetUser: User | undefined;
 
         if (mode === 'patient') {
-          targetUser = data.users.find(u => u.clinicId === foundClinic.id && u.role === Role.PATIENT);
+          targetUser = data.users.find(u => u.clinicId === foundClinic.id && u.role === 'PATIENT');
         } else {
           // Default to Kiosk/Doctor
           targetUser = data.users.find(u => u.id === foundClinic.adminUserId);
         }
 
-        setData(prev => ({
+        setData(prev => prev ? ({
           ...prev,
           activeClinicId: foundClinic.id,
           currentUser: targetUser || prev.currentUser
-        }));
+        }) : null);
       }
     }
-  }, [isClient]);
+  }, [isClient, data]);
+
+  if (loading || !data) {
+    return (
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <Activity size={48} className="text-indigo-500 animate-pulse" />
+          <h2 className="text-white text-xl font-medium tracking-tight">Booting DentalOS...</h2>
+        </div>
+      </div>
+    );
+  }
 
   const handleTransaction = async (patientId: string, amount: number, category: TransactionCategory, type: TransactionType, carePlanTemplate?: any) => {
     const result = await backendService.processTransaction(data.activeClinicId!, patientId, amount, category, type, carePlanTemplate);
