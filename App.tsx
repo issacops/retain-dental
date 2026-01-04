@@ -184,13 +184,26 @@ const App = () => {
   };
 
   const handleEnterClinic = (clinicId: string) => {
-    // Dynamically find the admin for this clinic (Schema decoupling)
-    const admin = data.users.find(u => u.clinicId === clinicId && u.role === Role.ADMIN);
+    // Dynamically find the admin for this clinic
+    const realAdmin = data.users.find(u => u.clinicId === clinicId && u.role === Role.ADMIN);
+    const targetClinic = data.clinics.find(c => c.id === clinicId);
+
+    // If no real admin profile exists (e.g. freshly deployed demo clinic), synthesize one for the session
+    const activeUser = realAdmin || (targetClinic ? {
+      id: `virtual-admin-${clinicId}`,
+      clinicId: clinicId,
+      name: targetClinic.ownerName || 'Clinic Director',
+      role: Role.ADMIN,
+      mobile: 'DOC-ACCESS',
+      currentTier: Role.ADMIN as any,
+      lifetimeSpend: 0,
+      joinedAt: new Date().toISOString()
+    } as User : prev.currentUser);
 
     setData(prev => ({
       ...prev,
       activeClinicId: clinicId,
-      currentUser: admin || prev.currentUser
+      currentUser: activeUser || prev.currentUser
     }));
   };
 
