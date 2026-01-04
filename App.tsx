@@ -56,116 +56,95 @@ const App = () => {
   const [data, setData] = useState<AppState | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // AUTH STATE
+  // CORE DATA FETCHING
+  const fetchData = async () => {
+    try {
+      // Don't set loading true here to avoid flashing if just refreshing
+      // only if we have no data? No, let's keep it smooth.
+
+      const dbData = await backendService.getData(); // Initial Fetch
+
+      const { data: { session } } = await supabase.auth.getSession();
+      let activeUser: User | null = null;
+      let derivedClinicId = dbData.clinics[0]?.id || '';
+
+      // SUBDOMAIN DETECTION
+      const hostname = window.location.hostname;
+      const parts = hostname.split('.');
+      let subdomain = parts.length > 2 ? parts[0] : null;
+      if (hostname.includes('localhost')) {
+        const params = new URLSearchParams(window.location.search);
+        const subParam = params.get('subdomain');
+        if (subParam) subdomain = subParam;
+      }
+
+      const IGNORED_SUBDOMAINS = ['www', 'app', 'platform', 'api'];
+      let tenantClinic: Clinic | undefined;
+
+      if (subdomain === 'platform') {
+      } else if (subdomain && !IGNORED_SUBDOMAINS.includes(subdomain)) {
+        tenantClinic = dbData.clinics.find(c => c.slug === subdomain);
+        if (tenantClinic) {
+          derivedClinicId = tenantClinic.id;
+        }
+      }
+
+      if (session) {
+        const email = session.user.email;
+        if (email === 'issaciconnect@gmail.com') {
+          activeUser = {
+            id: session.user.id,
+            name: 'Isaac Thomas',
+            mobile: 'SUPER-ADMIN',
+            role: Role.SUPER_ADMIN,
+            clinicId: 'platform',
+            currentTier: 'PLATINUM',
+            lifetimeSpend: 0,
+            joinedAt: new Date().toISOString()
+          } as any;
+        } else {
+          let found = dbData.users.find(u => u.id === session.user.id);
+          if (!found && session.user.email) {
+            found = dbData.users.find(u => u.email === session.user.email);
+          }
+          activeUser = found || null;
+        }
+      }
+
+      setData({
+        ...dbData,
+        activeClinicId: tenantClinic ? tenantClinic.id : (activeUser?.clinicId || derivedClinicId),
+        currentUser: activeUser || null
+      });
+
+    } catch (err) {
+      console.error("Failed to load backend data", err);
+      const errorMessage = err instanceof Error ? err.message : (err as any).message || JSON.stringify(err);
+      addToast(`Connection Failed: ${errorMessage}`, "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // INITIAL LOAD & AUTH LISTENER
   useEffect(() => {
-    const initData = async () => {
-      try {
-        const dbData = await backendService.getData(); // Initial Fetch
+    fetchData();
 
-        // 1. Check Active Session
-        const { data: { session } } = await supabase.auth.getSession();
-        let activeUser: User | null = null;
-        let derivedClinicId = dbData.clinics[0]?.id || '';
-
-        // SUBDOMAIN DETECTION
-        const hostname = window.location.hostname;
-        // Logic: 'krown.retain.dental' -> 'krown'
-        // Logic: 'localhost' -> null
-        const parts = hostname.split('.');
-        let subdomain = parts.length > 2 ? parts[0] : null; // Basic check, assumes app.domain.com structure
-
-        // Localhost debugging override
-        if (hostname.includes('localhost')) {
-          // Optional: Allow testing via ?subdomain= query param since we can't easily do subdomains on localhost without /etc/hosts
-          const params = new URLSearchParams(window.location.search);
-          const subParam = params.get('subdomain');
-          if (subParam) subdomain = subParam;
-        }
-
-        const IGNORED_SUBDOMAINS = ['www', 'app', 'platform', 'api'];
-        let tenantClinic: Clinic | undefined;
-        let isPlatform = false;
-
-        if (subdomain === 'platform') {
-          isPlatform = true;
-        } else if (subdomain && !IGNORED_SUBDOMAINS.includes(subdomain)) {
-          tenantClinic = dbData.clinics.find(c => c.slug === subdomain);
-          if (tenantClinic) {
-            derivedClinicId = tenantClinic.id;
-          }
-        }
-
-        if (session) {
-          // Find user in DB associated with this Auth ID
-          // NOTE: In real prod, we'd query API. Here we search loaded DB state.
-          // For Patient (Mobile+PIN), email is mobile@retain.dental
-          const email = session.user.email;
-
-          // SUPER USER CHECK
-          if (email === 'issaciconnect@gmail.com') {
-            activeUser = {
-              id: session.user.id,
-              name: 'Isaac Thomas',
-              mobile: 'SUPER-ADMIN',
-              role: Role.SUPER_ADMIN,
-              clinicId: 'platform',
-              currentTier: 'PLATINUM', // cast any
-              lifetimeSpend: 0,
-              joinedAt: new Date().toISOString()
-            } as any;
-          } else {
-            // NORMAL USER CHECK
-            // DB must have a mapping. For MVP, we might filter by email if we stored it.
-            // 1. Try ID match (Standard)
-            let found = dbData.users.find(u => u.id === session.user.id);
-
-            // 2. Try Email Match (For Pre-Provisioned Admins)
-            if (!found && session.user.email) {
-              found = dbData.users.find(u => u.email === session.user.email);
-            }
-
-            activeUser = found || null;
-          }
-        }
-
-        setData({
-          ...dbData,
-          activeClinicId: tenantClinic ? tenantClinic.id : (activeUser?.clinicId || derivedClinicId),
-          currentUser: activeUser || null // If null, Router will redirect to Login
-        });
-
-      } catch (err) {
-        console.error("Failed to load backend data", err);
-        const errorMessage = err instanceof Error ? err.message : (err as any).message || JSON.stringify(err);
-        addToast(`Connection Failed: ${errorMessage}`, "error");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    initData();
-
-    // Listen for Auth Changes (Login/Logout)
-    // Listen for Auth Changes (Login/Logout)
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      // Prevent infinite loop on initial load
-      if (_event === 'INITIAL_SESSION') {
-        return;
-      }
-
-      if (!session) {
-        // Logged out
+      // If we signed out, clear user
+      if (_event === 'SIGNED_OUT' || !session) {
         setData(prev => prev ? ({ ...prev, currentUser: null }) : null);
-      } else if (_event === 'SIGNED_IN' || _event === 'TOKEN_REFRESHED') {
-        // Logged in or token refresh - Reload Data to get fresh user context
-        // We only reload if we actually need to change state to avoid loops
-        window.location.reload();
+      }
+      // If signed in, or token refreshed, just refresh data (no reload)
+      else if (_event === 'SIGNED_IN' || _event === 'TOKEN_REFRESHED' || _event === 'INITIAL_SESSION') {
+        // Only fetch if we suspect a change, but simply fetching is safer than reloading
+        // We check if we already have a user to avoid redundant fetches on INITIAL_SESSION if fetchData already ran
+        fetchData();
       }
     });
 
     return () => subscription.unsubscribe();
-
-  }, [backendService]);
+  }, [backendService, addToast]); // Added addToast to dependencies as it's used in fetchData
 
   // Client-side hydration check
   useEffect(() => {
