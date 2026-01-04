@@ -22,12 +22,20 @@ const PatientProfile: React.FC<Props> = ({
     const [txAmount, setTxAmount] = useState('');
     const [txCategory, setTxCategory] = useState<TransactionCategory>(TransactionCategory.GENERAL);
     const [selectedTemplateName, setSelectedTemplateName] = useState<string>('');
+    const [customValues, setCustomValues] = useState<Record<string, any>>({});
 
-    // Auto-set category based on selected protocol
+    // Auto-set category and defaults based on selected protocol
     useEffect(() => {
         if (selectedTemplateName) {
             const template = TREATMENT_TEMPLATES.find(t => t.name === selectedTemplateName);
-            if (template) setTxCategory(template.category);
+            if (template) {
+                setTxCategory(template.category);
+                const defaults: Record<string, any> = {};
+                template.customFields?.forEach(f => defaults[f.key] = f.defaultValue);
+                setCustomValues(defaults);
+            }
+        } else {
+            setCustomValues({});
         }
     }, [selectedTemplateName]);
 
@@ -114,11 +122,41 @@ const PatientProfile: React.FC<Props> = ({
                             className="w-full text-7xl xl:text-8xl font-black outline-none border-b-[6px] border-slate-100 bg-transparent pb-6 pl-20 xl:pl-32 focus:border-slate-800 transition-all duration-300 placeholder:text-slate-100/50 text-slate-900 tracking-tighter" />
                     </div>
 
-                    {/* BOTTOM: CLASSIFICATION & CONTROLS */}
-                    <div className="flex flex-col xl:flex-row gap-8 items-end w-full">
+                    {/* BOTTOM: CONTROLS & CONFIGURATION */}
+                    <div className="space-y-8 w-full">
 
-                        {/* 1. PROTOCOL SELECTOR */}
-                        <div className="space-y-4 flex-1 w-full relative z-20">
+                        {/* ROW 1: CLASSIFICATION & ACTIONS */}
+                        <div className="flex flex-col xl:flex-row gap-8 items-end w-full">
+                            {/* CLASSIFICATION */}
+                            <div className="space-y-4 flex-1 w-full relative z-20">
+                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] px-2 flex items-center gap-2"><Layers size={12} /> Classification</label>
+                                <div className="relative group/select">
+                                    <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 rounded-[28px] opacity-0 group-hover/select:opacity-100 transition-opacity"></div>
+                                    <select className="w-full p-8 bg-white/50 border border-slate-200/60 rounded-[28px] outline-none font-black text-lg appearance-none cursor-pointer hover:bg-white hover:shadow-xl hover:shadow-slate-200/50 hover:-translate-y-0.5 transition-all duration-300 text-slate-700 uppercase tracking-widest backdrop-blur-sm"
+                                        onChange={(e) => setTxCategory(e.target.value as TransactionCategory)}
+                                        value={txCategory}>
+                                        {Object.values(TransactionCategory).map(c => (
+                                            <option key={c} value={c}>{c}</option>
+                                        ))}
+                                    </select>
+                                    <div className="absolute right-8 top-1/2 -translate-y-1/2 pointer-events-none text-slate-300">▼</div>
+                                </div>
+                            </div>
+
+                            {/* ACTIONS */}
+                            <div className="flex gap-4 flex-1 w-full">
+                                <button onClick={() => { if (!txAmount) return; onProcessTransaction(selectedPatient.id, parseFloat(txAmount), txCategory, TransactionType.EARN, selectedTemplateName ? { ...TREATMENT_TEMPLATES.find(t => t.name === selectedTemplateName), customValues } : undefined); setTxAmount(''); }}
+                                    className="flex-1 py-8 rounded-[28px] text-white font-black text-xs uppercase tracking-[0.2em] shadow-2xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] hover:shadow-3xl relative overflow-hidden group/btn" style={{ backgroundColor: clinic.primaryColor }}>
+                                    <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300 ease-out"></div>
+                                    <span className="relative z-10">Commit Earn</span>
+                                </button>
+                                <button onClick={() => { if (!txAmount) return; onProcessTransaction(selectedPatient.id, parseFloat(txAmount), txCategory, TransactionType.REDEEM); setTxAmount(''); }}
+                                    className="flex-1 py-8 rounded-[28px] bg-slate-900 text-white font-black text-xs uppercase tracking-[0.2em] shadow-2xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] hover:bg-black hover:shadow-3xl">Redeem</button>
+                            </div>
+                        </div>
+
+                        {/* ROW 2: CLINICAL PROTOCOL */}
+                        <div className="space-y-4 w-full relative z-10">
                             <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] px-2 flex items-center gap-2"><Microscope size={12} /> Clinical Protocol</label>
                             <div className="relative group/select">
                                 <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 rounded-[28px] opacity-0 group-hover/select:opacity-100 transition-opacity"></div>
@@ -134,32 +172,54 @@ const PatientProfile: React.FC<Props> = ({
                             </div>
                         </div>
 
-                        {/* 2. CATEGORY SELECTOR */}
-                        <div className="space-y-4 flex-1 w-full relative z-20">
-                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] px-2 flex items-center gap-2"><Layers size={12} /> Classification</label>
-                            <div className="relative group/select">
-                                <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 rounded-[28px] opacity-0 group-hover/select:opacity-100 transition-opacity"></div>
-                                <select className="w-full p-8 bg-white/50 border border-slate-200/60 rounded-[28px] outline-none font-black text-lg appearance-none cursor-pointer hover:bg-white hover:shadow-xl hover:shadow-slate-200/50 hover:-translate-y-0.5 transition-all duration-300 text-slate-700 uppercase tracking-widest backdrop-blur-sm"
-                                    onChange={(e) => setTxCategory(e.target.value as TransactionCategory)}
-                                    value={txCategory}>
-                                    {Object.values(TransactionCategory).map(c => (
-                                        <option key={c} value={c}>{c}</option>
-                                    ))}
-                                </select>
-                                <div className="absolute right-8 top-1/2 -translate-y-1/2 pointer-events-none text-slate-300">▼</div>
-                            </div>
-                        </div>
+                        {/* ROW 3: REAL-TIME PROTOCOL STATUS & CONFIGURATION */}
+                        {selectedTemplateName && (
+                            <div className="bg-white/40 backdrop-blur-xl border border-white/60 p-8 rounded-[36px] shadow-xl animate-in fade-in slide-in-from-top-4 space-y-8">
+                                <div className="flex items-center gap-4 text-emerald-600 mb-2">
+                                    <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                                    <h4 className="font-black text-xs uppercase tracking-widest">Live Protocol Configuration</h4>
+                                </div>
 
-                        {/* 3. ACTION BUTTONS */}
-                        <div className="flex gap-4 flex-1 w-full">
-                            <button onClick={() => { if (!txAmount) return; onProcessTransaction(selectedPatient.id, parseFloat(txAmount), txCategory, TransactionType.EARN, TREATMENT_TEMPLATES.find(t => t.name === selectedTemplateName)); setTxAmount(''); }}
-                                className="flex-1 py-8 rounded-[28px] text-white font-black text-xs uppercase tracking-[0.2em] shadow-2xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] hover:shadow-3xl relative overflow-hidden group/btn" style={{ backgroundColor: clinic.primaryColor }}>
-                                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300 ease-out"></div>
-                                <span className="relative z-10">Commit Earn</span>
-                            </button>
-                            <button onClick={() => { if (!txAmount) return; onProcessTransaction(selectedPatient.id, parseFloat(txAmount), txCategory, TransactionType.REDEEM); setTxAmount(''); }}
-                                className="flex-1 py-8 rounded-[28px] bg-slate-900 text-white font-black text-xs uppercase tracking-[0.2em] shadow-2xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] hover:bg-black hover:shadow-3xl">Redeem</button>
-                        </div>
+                                {/* Custom Fields Input Grid */}
+                                <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                                    {TREATMENT_TEMPLATES.find(t => t.name === selectedTemplateName)?.customFields?.map(field => (
+                                        <div key={field.key} className="space-y-2 group/input">
+                                            <label className="text-[9px] font-black text-slate-400 uppercase tracking-wider block ml-2 group-focus-within/input:text-indigo-500 transition-colors">{field.label}</label>
+                                            <div className="relative">
+                                                <input
+                                                    type={field.type}
+                                                    value={customValues[field.key] || ''}
+                                                    onChange={(e) => setCustomValues(prev => ({ ...prev, [field.key]: e.target.value }))}
+                                                    className="w-full px-5 py-4 bg-white/50 rounded-2xl border border-slate-200 text-slate-800 font-bold text-sm outline-none focus:border-indigo-500 focus:bg-white focus:shadow-lg transition-all"
+                                                />
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {/* Real-time Preview Window */}
+                                <div className="bg-slate-900 rounded-[24px] p-6 text-slate-300 shadow-2xl relative overflow-hidden group/console">
+                                    <div className="absolute top-0 right-0 p-4 opacity-20"><Activity size={32} /></div>
+                                    <div className="font-mono text-[10px] space-y-2 relative z-10">
+                                        <p className="text-emerald-400 font-bold mb-4 flex items-center gap-2"><Sparkles size={10} /> AFTERCARE_PROTOCOL_V1.0 initialized...</p>
+                                        {TREATMENT_TEMPLATES.find(t => t.name === selectedTemplateName)?.instructions.map((inst, i) => (
+                                            <div key={i} className="flex gap-3 opacity-80 group-hover/console:opacity-100 transition-opacity">
+                                                <span className="text-slate-600 select-none">0{i + 1}</span>
+                                                <p>{inst}</p>
+                                            </div>
+                                        ))}
+                                        {Object.entries(customValues).length > 0 && (
+                                            <div className="pt-4 border-t border-slate-800 mt-4">
+                                                <p className="text-purple-400 font-bold mb-2">CUSTOM_PARAMETERS:</p>
+                                                {Object.entries(customValues).map(([k, v]) => (
+                                                    <p key={k} className="text-indigo-300"><span className="text-slate-500">{k}:</span> {v}</p>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
