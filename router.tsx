@@ -16,7 +16,22 @@ interface RouterProps {
     backendService: IBackendService;
 }
 
+backendService: IBackendService;
+}
+
+// Fallback for empty state (prevents crashes when no clinics exist yet)
+const SAFE_CLINIC_FALLBACK: any = {
+    id: 'fallback',
+    name: 'Loading...',
+    slug: 'loading',
+    primaryColor: '#6366f1',
+    themeTexture: 'minimal',
+    adminUserId: 'system',
+    createdAt: new Date().toISOString()
+};
+
 export const AppRouter: React.FC<RouterProps> = ({ appState, handlers, backendService }) => {
+    const activeClinic = appState.clinics.find(c => c.id === appState.activeClinicId) || appState.clinics[0] || SAFE_CLINIC_FALLBACK;
     return (
         <Routes>
             {/* Auto-redirect Login to Platform in Dev Mode */}
@@ -35,7 +50,7 @@ export const AppRouter: React.FC<RouterProps> = ({ appState, handlers, backendSe
             <Route path="/doctor" element={
                 <ClinicPage
                     data={appState}
-                    clinic={appState.clinics.find(c => c.id === appState.activeClinicId)}
+                    clinic={activeClinic}
                     backendService={backendService}
                     {...handlers}
                 />
@@ -49,7 +64,7 @@ export const AppRouter: React.FC<RouterProps> = ({ appState, handlers, backendSe
                     wallets={appState.wallets}
                     transactions={appState.transactions}
                     carePlans={appState.carePlans}
-                    clinic={appState.clinics.find(c => c.id === appState.activeClinicId) || appState.clinics[0]!}
+                    clinic={activeClinic}
                     onToggleChecklistItem={handlers.onToggleChecklistItem}
                     onSchedule={handlers.onSchedule}
                     onAddFamilyMember={handlers.onAddFamilyMember}
