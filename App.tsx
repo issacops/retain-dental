@@ -253,6 +253,16 @@ const App = () => {
     }
   };
 
+  const handleUpdateClinic = async (clinicId: string, updates: Partial<Clinic>) => {
+    const result = await backendService.updateClinic(clinicId, updates);
+    if (result.success && result.updatedData) {
+      setData(prev => ({ ...prev, ...result.updatedData }));
+      addToast("Clinic Updates Deployed", "success");
+    } else {
+      addToast(`Update Failed: ${result.message}`, "error");
+    }
+  };
+
   const handleUpdateGlobalConfig = async (updates: any) => {
     const result = await backendService.updateSystemConfig(updates);
     if (result.success) {
