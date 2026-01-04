@@ -27,6 +27,75 @@ export class SupabaseService implements IBackendService {
         return SupabaseService.instance;
     }
 
+    // --- MAPPERS ---
+
+    private mapClinic(c: any): Clinic {
+        return {
+            ...c,
+            primaryColor: c.primary_color || '#6366f1',
+            themeTexture: c.theme_texture || 'minimal',
+            ownerName: c.owner_name,
+            logoUrl: c.logo_url,
+            subscriptionTier: c.subscription_tier || 'STARTER',
+            adminUserId: c.admin_user_id || c.owner_id, // fallback logic
+            createdAt: c.created_at
+        };
+    }
+
+    private mapUser(u: any): User {
+        return {
+            ...u,
+            clinicId: u.clinic_id,
+            familyGroupId: u.family_group_id,
+            lifetimeSpend: Number(u.lifetime_spend || 0),
+            currentTier: u.current_tier,
+            joinedAt: u.created_at
+        };
+    }
+
+    private mapWallet(w: any): Wallet {
+        return {
+            ...w,
+            userId: w.user_id,
+            lastTransactionAt: w.last_transaction_at
+        };
+    }
+
+    private mapTransaction(t: any): Transaction {
+        return {
+            ...t,
+            walletId: t.wallet_id,
+            clinicId: t.clinic_id,
+            amountPaid: Number(t.amount_paid || 0),
+            pointsEarned: Number(t.points_earned || 0),
+            date: t.created_at,
+            carePlanId: t.care_plan_id
+        };
+    }
+
+    private mapCarePlan(cp: any): CarePlan {
+        return {
+            ...cp,
+            userId: cp.user_id,
+            clinicId: cp.clinic_id,
+            treatmentName: cp.treatment_name,
+            isActive: cp.is_active,
+            assignedAt: cp.created_at
+        };
+    }
+
+    private mapAppointment(a: any): Appointment {
+        return {
+            ...a,
+            clinicId: a.clinic_id,
+            patientId: a.patient_id,
+            doctorId: a.doctor_id,
+            startTime: a.start_time,
+            endTime: a.end_time,
+            createdAt: a.created_at
+        };
+    }
+
     // --- DATA FETCHING ---
 
     public async getData(): Promise<DatabaseState> {
@@ -44,13 +113,13 @@ export class SupabaseService implements IBackendService {
             if (users.error) throw users.error;
 
             return {
-                clinics: (clinics.data || []) as any,
-                users: (users.data || []) as any,
-                wallets: (wallets.data || []) as any,
-                transactions: (transactions.data || []) as any,
+                clinics: (clinics.data || []).map(c => this.mapClinic(c)),
+                users: (users.data || []).map(u => this.mapUser(u)),
+                wallets: (wallets.data || []).map(w => this.mapWallet(w)),
+                transactions: (transactions.data || []).map(t => this.mapTransaction(t)),
                 familyGroups: [],
-                carePlans: (carePlans.data || []) as any,
-                appointments: (appointments.data || []) as any,
+                carePlans: (carePlans.data || []).map(cp => this.mapCarePlan(cp)),
+                appointments: (appointments.data || []).map(a => this.mapAppointment(a)),
             };
         } catch (error) {
             console.error('Supabase Sync Error:', error);
