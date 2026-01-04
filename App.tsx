@@ -105,11 +105,26 @@ const App = () => {
             joinedAt: new Date().toISOString()
           } as any;
         } else {
+          // NORMAL USER CHECK
+          // DB must have a mapping. For MVP, we might filter by email if we stored it.
+          // 1. Try ID match (Standard)
           let found = dbData.users.find(u => u.id === session.user.id);
+
+          // 2. Try Email Match (For Pre-Provisioned Admins)
           if (!found && session.user.email) {
-            found = dbData.users.find(u => u.email === session.user.email);
+            const sessionEmail = session.user.email.trim().toLowerCase();
+            found = dbData.users.find(u => u.email?.trim().toLowerCase() === sessionEmail);
           }
+
           activeUser = found || null;
+        }
+
+        if (session && !activeUser) {
+          console.warn("Session exists but User Profile not found", session.user.email);
+          // We don't toast here usually to avoid spam, but for debugging this critical flow:
+          // Actually, let's allow the UI to handle the 'null' user state gracefully or let AuthHandler redirect.
+          // But giving a hint helps.
+          addToast(`Login Error: No profile found for ${session.user.email}`, "error");
         }
       }
 
