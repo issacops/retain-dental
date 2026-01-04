@@ -86,7 +86,7 @@ const App = () => {
         });
       } catch (err) {
         console.error("Failed to load backend data", err);
-        addToast({ title: "System Error", message: "Failed to connect to backend services. Retrying...", type: "error", duration: 10000 });
+        addToast("Failed to connect to backend services. Retrying...", "error");
       } finally {
         setLoading(false);
       }

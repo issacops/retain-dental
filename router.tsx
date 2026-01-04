@@ -49,7 +49,7 @@ export const AppRouter: React.FC<RouterProps> = ({ appState, handlers, backendSe
                     wallets={appState.wallets}
                     transactions={appState.transactions}
                     carePlans={appState.carePlans}
-                    clinic={appState.clinics.find(c => c.id === appState.activeClinicId)!}
+                    clinic={appState.clinics.find(c => c.id === appState.activeClinicId) || appState.clinics[0]!}
                     onToggleChecklistItem={handlers.onToggleChecklistItem}
                     onSchedule={handlers.onSchedule}
                     onAddFamilyMember={handlers.onAddFamilyMember}
