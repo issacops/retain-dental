@@ -86,7 +86,8 @@ const App = () => {
         });
       } catch (err) {
         console.error("Failed to load backend data", err);
-        addToast(`Connection Failed: ${err instanceof Error ? err.message : String(err)}`, "error");
+        const errorMessage = err instanceof Error ? err.message : (err as any).message || JSON.stringify(err);
+        addToast(`Connection Failed: ${errorMessage}`, "error");
       } finally {
         setLoading(false);
       }
