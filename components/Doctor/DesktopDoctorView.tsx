@@ -102,8 +102,10 @@ const DesktopDoctorView: React.FC<Props> = ({
       return /^#[0-9A-F]{6}$/i.test(clinic.primaryColor) ? getLuminance(clinic.primaryColor) > 180 : false;
    }, [clinic.primaryColor]);
 
+   console.log("[DesktopDoctorView] Rendering for clinic:", clinic.name, "Texture:", textureClass);
+
    return (
-      <div className={`flex flex - col h - screen text - slate - 900 font - sans overflow - hidden transition - all duration - 1000 ${textureClass} `} style={{ '--primary': clinic.primaryColor, '--primary-rgb': hexToRgb(clinic.primaryColor), '--primary-glow': clinic.primaryColor + '15' } as React.CSSProperties}>
+      <div className={`flex flex-col h-screen text-slate-900 font-sans overflow-hidden transition-all duration-1000 ${textureClass || 'bg-white'} `} style={{ '--primary': clinic.primaryColor, '--primary-rgb': hexToRgb(clinic.primaryColor), '--primary-glow': clinic.primaryColor + '15' } as React.CSSProperties}>
 
          {/* Sidebar */}
          <div className="flex h-full">

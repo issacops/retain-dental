@@ -184,8 +184,8 @@ const App = () => {
   };
 
   const handleEnterClinic = (clinicId: string) => {
-    const targetClinic = data.clinics.find(c => c.id === clinicId);
-    const admin = data.users.find(u => u.id === targetClinic?.adminUserId);
+    // Dynamically find the admin for this clinic (Schema decoupling)
+    const admin = data.users.find(u => u.clinicId === clinicId && u.role === Role.ADMIN);
 
     setData(prev => ({
       ...prev,
