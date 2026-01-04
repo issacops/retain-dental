@@ -69,7 +69,7 @@ const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, o
 
    // NEW FIELDS
    const [newClinicSlug, setNewClinicSlug] = useState('');
-   const [newClinicSlug, setNewClinicSlug] = useState('');
+
    const [newClinicAdminEmail, setNewClinicAdminEmail] = useState('');
 
    // APPROVAL WORKFLOW STATE
