@@ -15,7 +15,7 @@ const MorningBriefTicker: React.FC<Props> = ({ clinic, stats }) => (
         </div>
         <div className="flex items-center gap-6">
             <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest flex items-center gap-2">
-                <Zap size={12} className="text-amber-400" /> Today's GTV: <span className="text-white">₹{stats.totalRevenue.toLocaleString()}</span>
+                <Zap size={12} className="text-amber-400" /> Today's GTV: <span className="text-white">₹{(stats?.totalRevenue || 0).toLocaleString()}</span>
             </span>
             <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest flex items-center gap-2">
                 <Users size={12} className="text-indigo-400" /> Active Chair Time: <span className="text-white">84%</span>

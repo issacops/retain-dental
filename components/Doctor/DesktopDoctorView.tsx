@@ -39,7 +39,7 @@ const DesktopDoctorView: React.FC<Props> = ({
    const [newPatientName, setNewPatientName] = useState('');
    const [newPatientMobile, setNewPatientMobile] = useState('');
 
-   const [stats, setStats] = useState<any>({});
+   const [stats, setStats] = useState<any>({ totalRevenue: 0 });
 
    // Async Stats Fetch
    React.useEffect(() => {
