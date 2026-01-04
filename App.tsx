@@ -146,14 +146,19 @@ const App = () => {
     initData();
 
     // Listen for Auth Changes (Login/Logout)
+    // Listen for Auth Changes (Login/Logout)
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      // Prevent infinite loop on initial load
+      if (_event === 'INITIAL_SESSION') {
+        return;
+      }
+
       if (!session) {
         // Logged out
         setData(prev => prev ? ({ ...prev, currentUser: null }) : null);
-      } else {
-        // Logged in - Reload Data to get fresh user context
-        // In a real app we'd just fetch the profile.
-        // Re-triggering initData logic manually or just page reload is safest for this MVP architecture
+      } else if (_event === 'SIGNED_IN' || _event === 'TOKEN_REFRESHED') {
+        // Logged in or token refresh - Reload Data to get fresh user context
+        // We only reload if we actually need to change state to avoid loops
         window.location.reload();
       }
     });
