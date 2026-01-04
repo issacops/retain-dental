@@ -190,7 +190,8 @@ const App = () => {
 
     // If no real admin profile exists (e.g. freshly deployed demo clinic), synthesize one for the session
     const activeUser = realAdmin || (targetClinic ? {
-      activeClinicId: clinicId,
+      id: `virtual-admin-${clinicId}`,
+      clinicId: clinicId,
       name: targetClinic.ownerName || 'Clinic Director',
       role: Role.ADMIN,
       mobile: 'DOC-ACCESS',
