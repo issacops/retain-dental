@@ -45,6 +45,7 @@ export class SupabaseService implements IBackendService {
     private mapUser(u: any): User {
         return {
             ...u,
+            name: u.full_name || u.name || 'Unknown User',
             clinicId: u.clinic_id,
             familyGroupId: u.family_group_id,
             lifetimeSpend: Number(u.lifetime_spend || 0),
