@@ -206,7 +206,6 @@ const PatientProfile: React.FC<Props> = ({
                 </div>
             </div>
         </div>
-        </div >
     );
 };
 
