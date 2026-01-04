@@ -74,14 +74,24 @@ const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, o
 
    // GLOBAL IDENTITY REGISTRY STATE
    const [allUsers, setAllUsers] = useState<any[]>([]);
+   const [isLoading, setIsLoading] = useState(false);
+   const [fetchError, setFetchError] = useState('');
 
    useEffect(() => {
       if (activeView === 'SECURITY') fetchAllUsers();
    }, [activeView]);
 
    const fetchAllUsers = async () => {
-      const { data } = await supabase.from('profiles').select('*, clinics(id, name)').order('created_at', { ascending: false });
-      if (data) setAllUsers(data);
+      setIsLoading(true);
+      setFetchError('');
+      const { data, error } = await supabase.from('profiles').select('*, clinics(id, name)').order('created_at', { ascending: false });
+
+      if (error) {
+         setFetchError(error.message);
+      } else {
+         setAllUsers(data || []);
+      }
+      setIsLoading(false);
    };
 
    const handleUpdateUser = async (userId: string, field: string, value: any) => {
@@ -270,6 +280,15 @@ const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, o
                         </div>
 
                         <div className="space-y-4">
+                           {/* ERROR DISPLAY */}
+                           {fetchError && (
+                              <div className="bg-red-500/10 border border-red-500/20 p-6 rounded-3xl text-center animate-in fade-in zoom-in duration-300">
+                                 <p className="text-red-400 font-bold mb-2">Error Loading Registry</p>
+                                 <p className="text-xs text-red-300 font-mono">{fetchError}</p>
+                                 <button onClick={fetchAllUsers} className="mt-4 px-4 py-2 bg-red-500/20 hover:bg-red-500/30 rounded-lg text-xs font-bold text-red-200 uppercase tracking-wider">Retry</button>
+                              </div>
+                           )}
+
                            {/* HEADER ROW */}
                            <div className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-white/5 text-[10px] font-black uppercase text-slate-500 tracking-widest">
                               <div className="col-span-3">Identity</div>
@@ -345,10 +364,16 @@ const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, o
                               </div>
                            ))}
 
-                           {allUsers.length === 0 && (
+                           {isLoading && allUsers.length === 0 && (
                               <div className="bg-white/5 border border-white/5 rounded-3xl p-12 text-center text-slate-500">
                                  <div className="animate-spin h-8 w-8 border-2 border-indigo-500 border-t-transparent rounded-full mx-auto mb-4"></div>
                                  Loading Registry...
+                              </div>
+                           )}
+
+                           {!isLoading && !fetchError && allUsers.length === 0 && (
+                              <div className="bg-white/5 border border-white/5 rounded-3xl p-12 text-center text-slate-500">
+                                 <p>No identities found.</p>
                               </div>
                            )}
                         </div>
