@@ -4,6 +4,7 @@ import { Clinic, ThemeTexture } from '../../types';
 import { LayoutGrid, Plus, BarChart3, Lock, Cpu, Settings, Globe, Radio, Search, Palette, X, Copy, Terminal, Monitor, Server, LayoutGrid as LayoutGridIcon } from 'lucide-react';
 import GlobalStats from './subcomponents/GlobalStats';
 import ClinicCard from './subcomponents/ClinicCard';
+import { supabase } from '../../lib/supabase';
 
 interface PerformanceMetric {
    id: string;
@@ -68,7 +69,30 @@ const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, o
 
    // NEW FIELDS
    const [newClinicSlug, setNewClinicSlug] = useState('');
+   const [newClinicSlug, setNewClinicSlug] = useState('');
    const [newClinicAdminEmail, setNewClinicAdminEmail] = useState('');
+
+   // APPROVAL WORKFLOW STATE
+   const [pendingUsers, setPendingUsers] = useState<any[]>([]);
+
+   useEffect(() => {
+      fetchPendingUsers();
+   }, [activeView]);
+
+   const fetchPendingUsers = async () => {
+      const { data } = await supabase.from('profiles').select('*, clinics(name)').eq('status', 'PENDING');
+      if (data) setPendingUsers(data);
+   };
+
+   const handleApproveUser = async (userId: string) => {
+      const { error } = await supabase.from('profiles').update({ status: 'ACTIVE' }).eq('id', userId);
+      if (!error) {
+         alert("User Approved and Activated");
+         fetchPendingUsers();
+      } else {
+         alert("Failed to approve: " + error.message);
+      }
+   };
 
    const [configDraft, setConfigDraft] = useState(stats.config);
 
@@ -229,6 +253,43 @@ const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, o
                               ))}
                            </div>
                         </div>
+                     </div>
+                  </div>
+               )}
+
+               {activeView === 'SECURITY' && (
+                  <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-8">
+                     <div className="bg-white/[0.02] border border-white/5 p-12 rounded-[56px]">
+                        <h4 className="text-2xl font-black text-white tracking-tighter mb-8">Pending Access Requests</h4>
+
+                        {pendingUsers.length === 0 ? (
+                           <div className="text-center py-20 text-slate-500">
+                              <Lock size={48} className="mx-auto mb-4 opacity-20" />
+                              <p className="font-bold text-sm uppercase tracking-widest">All identities verified</p>
+                           </div>
+                        ) : (
+                           <div className="space-y-4">
+                              {pendingUsers.map(user => (
+                                 <div key={user.id} className="flex items-center justify-between p-6 bg-white/5 border border-white/5 rounded-3xl hover:bg-white/[0.08] transition-all group">
+                                    <div className="flex items-center gap-6">
+                                       <div className="h-12 w-12 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center font-bold text-xl">
+                                          {user.email?.charAt(0).toUpperCase()}
+                                       </div>
+                                       <div>
+                                          <p className="font-bold text-white text-lg">{user.email}</p>
+                                          <p className="text-xs text-slate-500 font-medium uppercase tracking-widest flex items-center gap-2">
+                                             Requesting access to <span className="text-indigo-400">{user.clinics?.name || 'Unknown Clinic'}</span>
+                                          </p>
+                                       </div>
+                                    </div>
+                                    <button onClick={() => handleApproveUser(user.id)}
+                                       className="px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-bold rounded-xl transition-all shadow-lg hover:scale-105 active:scale-95">
+                                       Approve Access
+                                    </button>
+                                 </div>
+                              ))}
+                           </div>
+                        )}
                      </div>
                   </div>
                )}

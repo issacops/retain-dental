@@ -344,6 +344,32 @@ const App = () => {
     onRedeem: (amount: number, description: string) => handleTransaction(data.currentUser?.id!, amount, TransactionCategory.REWARD, TransactionType.REDEEM, { name: description } as any),
   };
 
+  // CHECK FOR PENDING STATUS (Approval Workflow)
+  if (data?.currentUser?.status === 'PENDING') {
+    return (
+      <div className="h-screen w-full flex items-center justify-center bg-slate-950 p-6">
+        <div className="max-w-md w-full glass-panel border border-amber-500/30 p-8 rounded-3xl text-center shadow-2xl relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-1 bg-amber-500"></div>
+          <div className="w-16 h-16 bg-amber-500/10 rounded-full flex items-center justify-center mx-auto mb-6 text-amber-500">
+            <Activity size={32} />
+          </div>
+          <h2 className="text-2xl font-bold text-white mb-2">Access Restricted</h2>
+          <p className="text-slate-400 mb-8">
+            Your clinic workspace has been provisioned, but access requires final security clearance from the Platform Super Admin.
+          </p>
+          <div className="space-y-3">
+            <button onClick={fetchData} className="w-full py-3 bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold rounded-xl transition-colors">
+              Check Status Again
+            </button>
+            <button onClick={() => supabase.auth.signOut()} className="w-full py-3 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white font-medium rounded-xl transition-colors">
+              Logout
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="h-screen w-full relative overflow-hidden bg-slate-950">
       <BrowserRouter>

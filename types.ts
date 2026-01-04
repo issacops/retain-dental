@@ -45,6 +45,7 @@ export interface User {
   email?: string; // Auth mapping
   name: string;
   role: Role;
+  status?: 'PENDING' | 'ACTIVE' | 'SUSPENDED';
   familyGroupId?: string;
   lifetimeSpend: number;
   currentTier: Tier;
