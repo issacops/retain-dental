@@ -33,7 +33,7 @@ const DashboardAnalytics: React.FC<Props> = React.memo(({ clinic, stats }) => (
                 <div className="glass-panel p-12 rounded-[56px] shadow-sm border border-white/50 flex flex-col justify-between">
                     <div>
                         <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-1">Total Lifetime GTV</p>
-                        <h3 className="text-5xl font-black tracking-tighter text-slate-900">₹{stats.totalRevenue.toLocaleString()}</h3>
+                        <h3 className="text-5xl font-black tracking-tighter text-slate-900">₹{(stats?.totalRevenue || 0).toLocaleString()}</h3>
                     </div>
                     <div className="space-y-4">
                         <div className="flex justify-between items-center py-4 border-b border-slate-100">

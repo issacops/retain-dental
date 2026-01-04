@@ -109,7 +109,15 @@ export class SupabaseService implements IBackendService {
     // --- OPS ---
 
     async getDashboardStats(clinicId: string): Promise<any> {
-        return {};
+        return {
+            totalClinics: 0,
+            totalPatients: 0,
+            totalSystemRevenue: 0,
+            mrr: 0,
+            totalRevenue: 0,
+            activeChairTime: 0,
+            redemptionRate: 0
+        };
     }
 
     async scheduleAppointment(
