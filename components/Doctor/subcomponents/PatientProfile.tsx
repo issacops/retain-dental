@@ -57,7 +57,7 @@ const PatientProfile: React.FC<Props> = ({
     }, [selectedTemplate]);
 
     return (
-        <div className="max-w-5xl mx-auto space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
+        <div className="w-full max-w-[1600px] mx-auto space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20 px-8">
 
             {/* PATIENT HEADER BENTO */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

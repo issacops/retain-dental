@@ -3,7 +3,7 @@ import { LayoutGrid, TrendingUp, Bell, Settings, Smile, LayoutGrid as LayoutGrid
 import { IBackendService } from '../../services/IBackendService';
 import { User, Wallet, Transaction, FamilyGroup, Clinic, CarePlan, TransactionCategory, TransactionType, Appointment, AppointmentStatus, AppointmentType } from '../../types';
 import MorningBriefTicker from './subcomponents/MorningBrief';
-import IntelligenceSidebar from './subcomponents/IntelligenceSidebar';
+// import IntelligenceSidebar from './subcomponents/IntelligenceSidebar';
 import PatientList from './subcomponents/PatientList';
 import DashboardAnalytics from './subcomponents/DashboardAnalytics';
 import PatientProfile from './subcomponents/PatientProfile';
@@ -267,13 +267,7 @@ const DesktopDoctorView: React.FC<Props> = ({
                               )}
                            </div>
 
-                           {selectedPatient && (
-                              <IntelligenceSidebar
-                                 patient={selectedPatient}
-                                 wallet={wallets.find(w => w.userId === selectedPatient.id)}
-                                 carePlan={activeCarePlan}
-                              />
-                           )}
+                           {/* Sidebar Removed for cleaner UX per user request */}
                         </div>
 
                         {/* ADD PATIENT MODAL - Premium Minimalist */}
