@@ -131,11 +131,15 @@ const DesktopDoctorView: React.FC<Props> = ({
                      {['Operational Hub', 'Patient Records', 'Financial Ledger', 'Settings'].map((item, i) => (
                         <div key={item}
                            onClick={() => setActiveSection(item)}
-                           className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all duration-300 group ${activeSection === item ? `bg-primary shadow-xl shadow-primary/20 scale-[1.02] ${isLight ? 'text-slate-900 font-black' : 'text-white'}` : 'hover:bg-white/50 text-slate-500 hover:text-slate-800'} `}
+                           style={{
+                              backgroundColor: activeSection === item ? clinic.primaryColor : undefined,
+                              color: activeSection === item ? (isLight ? '#0f172a' : '#ffffff') : undefined,
+                           }}
+                           className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all duration-300 group ${activeSection === item ? 'shadow-xl scale-[1.02] font-black' : 'hover:bg-white/50 text-slate-500 hover:text-slate-800'} `}
                         >
                            <Grid size={18} className={`transition-transform duration-300 ${activeSection === item ? 'scale-110' : 'group-hover:scale-110'} `} />
                            <span className="font-bold text-sm tracking-wide flex-1">{item}</span>
-                           {i === 0 && activeSection === 'Operational Hub' && <div className="h-1.5 w-1.5 rounded-full bg-rose-500 animate-pulse shadow-[0_0_10px_rgba(244,63,94,0.5)]" />}
+                           {i === 0 && activeSection === 'Operational Hub' && <div className="h-1.5 w-1.5 rounded-full animate-pulse shadow-[0_0_10px_currentColor]" style={{ backgroundColor: isLight ? '#f43f5e' : 'white' }} />}
                         </div>
                      ))}
                   </nav>
