@@ -21,8 +21,6 @@ const PatientProfile: React.FC<Props> = ({
 }) => {
     const [txAmount, setTxAmount] = useState('');
     const [txCategory, setTxCategory] = useState<TransactionCategory>(TransactionCategory.GENERAL);
-    const [selectedTemplate, setSelectedTemplate] = useState<TreatmentTemplate | null>(null);
-    const [customMetadata, setCustomMetadata] = useState<Record<string, any>>({});
 
     // Computed data
     const activeCarePlan = useMemo(() => {
@@ -47,14 +45,6 @@ const PatientProfile: React.FC<Props> = ({
             }));
     }, [patientTransactions]);
 
-    useEffect(() => {
-        if (selectedTemplate) {
-            const initialMeta: Record<string, any> = {};
-            selectedTemplate.customFields?.forEach(f => { initialMeta[f.key] = f.defaultValue; });
-            setCustomMetadata(initialMeta);
-            setTxCategory(selectedTemplate.category);
-        }
-    }, [selectedTemplate]);
 
     return (
         <div className="w-full max-w-[1600px] mx-auto space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20 px-8">
@@ -89,7 +79,7 @@ const PatientProfile: React.FC<Props> = ({
                 </div>
             </div>
 
-            {/* ACTION LAYER: TRANSACTION & PROTOCOL */}
+            {/* ACTION & STATUS LAYER */}
             <div className="grid grid-cols-12 gap-8">
                 {/* TRANSACTION TERMINAL */}
                 <div className="col-span-12 lg:col-span-7 glass-panel p-12 rounded-[48px] shadow-sm border border-white/50 space-y-10 relative overflow-hidden">
@@ -108,19 +98,20 @@ const PatientProfile: React.FC<Props> = ({
                         </div>
                         <div className="grid grid-cols-2 gap-6">
                             <div className="space-y-3">
-                                <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest px-2">Protocol Link</label>
+                                <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest px-2">Category Classification</label>
                                 <div className="relative">
-                                    <select className="w-full p-5 bg-slate-50 border border-slate-100 rounded-[24px] outline-none font-bold text-sm appearance-none cursor-pointer hover:bg-white transition-all text-slate-700"
-                                        onChange={(e) => setSelectedTemplate(TREATMENT_TEMPLATES.find(t => t.name === e.target.value) || null)}
-                                        value={selectedTemplate?.name || ''}>
-                                        <option value="">-- Manual Journal Entry --</option>
-                                        {TREATMENT_TEMPLATES.map(t => <option key={t.name} value={t.name}>{t.name}</option>)}
+                                    <select className="w-full p-5 bg-slate-50 border border-slate-100 rounded-[24px] outline-none font-bold text-sm appearance-none cursor-pointer hover:bg-white transition-all text-slate-700 uppercase tracking-wider"
+                                        onChange={(e) => setTxCategory(e.target.value as TransactionCategory)}
+                                        value={txCategory}>
+                                        {Object.values(TransactionCategory).map(c => (
+                                            <option key={c} value={c}>{c}</option>
+                                        ))}
                                     </select>
                                     <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 text-xs">▼</div>
                                 </div>
                             </div>
                             <div className="flex items-end gap-4">
-                                <button onClick={() => { if (!txAmount) return; onProcessTransaction(selectedPatient.id, parseFloat(txAmount), txCategory, TransactionType.EARN, selectedTemplate ? { name: selectedTemplate.name, instructions: selectedTemplate.instructions, metadata: customMetadata } : undefined); setTxAmount(''); setSelectedTemplate(null); }}
+                                <button onClick={() => { if (!txAmount) return; onProcessTransaction(selectedPatient.id, parseFloat(txAmount), txCategory, TransactionType.EARN); setTxAmount(''); }}
                                     className="flex-1 py-5 rounded-[24px] text-white font-black text-[10px] uppercase tracking-widest shadow-xl transition-all hover:scale-105 active:scale-95 hover:shadow-2xl" style={{ backgroundColor: clinic.primaryColor }}>Commit Earn</button>
                                 <button onClick={() => { if (!txAmount) return; onProcessTransaction(selectedPatient.id, parseFloat(txAmount), txCategory, TransactionType.REDEEM); setTxAmount(''); }}
                                     className="flex-1 py-5 rounded-[24px] bg-slate-900 text-white font-black text-[10px] uppercase tracking-widest shadow-xl transition-all hover:scale-105 active:scale-95 hover:shadow-2xl">Redeem Used</button>
@@ -129,42 +120,7 @@ const PatientProfile: React.FC<Props> = ({
                     </div>
                 </div>
 
-                {/* PROTOCOL CONFIG */}
-                <div className="col-span-12 lg:col-span-5 glass-panel p-10 rounded-[48px] shadow-sm border border-white/50 space-y-8 relative">
-                    <h3 className="font-black text-xl tracking-tighter flex items-center gap-4 text-slate-800"><Layers size={24} className="text-rose-500" /> Protocol Layer</h3>
-                    {selectedTemplate ? (
-                        <div className="space-y-6 animate-in fade-in slide-in-from-right-4">
-                            {selectedTemplate.customFields?.map(field => (
-                                <div key={field.key} className="space-y-2">
-                                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest px-1">{field.label}</label>
-                                    <input
-                                        type={field.type}
-                                        value={customMetadata[field.key] || ''}
-                                        onChange={(e) => setCustomMetadata({ ...customMetadata, [field.key]: e.target.value })}
-                                        className="w-full px-6 py-4 bg-white border border-slate-100 rounded-[20px] text-sm font-bold outline-none focus:border-indigo-400 focus:ring-4 focus:ring-indigo-50 transition-all"
-                                    />
-                                </div>
-                            ))}
-                            <div className="p-6 bg-slate-50 rounded-[28px] border border-slate-100">
-                                <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-3">Compliance Regimen</p>
-                                <div className="space-y-2">
-                                    {selectedTemplate.instructions.slice(0, 3).map((ins, i) => <p key={i} className="text-xs font-bold text-slate-600 flex items-start gap-2"><span className="text-emerald-500">•</span> {ins}</p>)}
-                                </div>
-                            </div>
-                        </div>
-                    ) : (
-                        <div className="h-[200px] flex flex-col items-center justify-center text-center opacity-50">
-                            <Sparkles size={40} className="text-slate-300 mb-4" />
-                            <p className="text-sm font-bold text-slate-400 max-w-[200px]">Select a protocol pattern to configure parameters.</p>
-                        </div>
-                    )}
-                </div>
-            </div>
-
-            {/* STATUS & HISTORY */}
-            <div className="grid grid-cols-12 gap-8">
-
-                {/* ACTIVE PROTOCOL MONITOR */}
+                {/* ACTIVE PROTOCOL MONITOR (MOVED HERE) */}
                 <div className="col-span-12 lg:col-span-5 glass-panel p-10 rounded-[48px] shadow-sm border border-white/50 space-y-8">
                     <div className="flex justify-between items-center">
                         <h3 className="font-black text-xl tracking-tighter flex items-center gap-3 text-slate-800"><ClipboardCheck size={24} className="text-emerald-500" /> Active Monitor</h3>
@@ -205,9 +161,11 @@ const PatientProfile: React.FC<Props> = ({
                         </div>
                     )}
                 </div>
+            </div>
 
-                {/* CLINICAL JOURNAL (HISTORY) */}
-                <div className="col-span-12 lg:col-span-7 glass-panel p-10 rounded-[48px] shadow-sm border border-white/50 space-y-8">
+            {/* CLINICAL JOURNAL (FULL WIDTH) */}
+            <div className="grid grid-cols-12 gap-8">
+                <div className="col-span-12 glass-panel p-10 rounded-[48px] shadow-sm border border-white/50 space-y-8">
                     <div className="flex justify-between items-center">
                         <h3 className="font-black text-xl tracking-tighter flex items-center gap-3 text-slate-800"><History size={24} className="text-indigo-500" /> Clinical Journal</h3>
                         <button className="p-3 bg-slate-50 rounded-xl text-slate-400 hover:text-slate-600 transition-colors"><Filter size={16} /></button>
