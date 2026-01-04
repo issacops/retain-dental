@@ -156,7 +156,8 @@ export class SupabaseService implements IBackendService {
                 theme_texture: texture,
                 owner_name: ownerName,
                 logo_url: logoUrl,
-                slug: slug.toLowerCase()
+                slug: slug.toLowerCase(),
+                admin_email: adminEmail // Used by trigger handle_new_user
             }).select().single();
 
             if (clinicError) throw clinicError;

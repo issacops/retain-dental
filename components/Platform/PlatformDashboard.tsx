@@ -72,25 +72,24 @@ const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, o
 
    const [newClinicAdminEmail, setNewClinicAdminEmail] = useState('');
 
-   // APPROVAL WORKFLOW STATE
-   const [pendingUsers, setPendingUsers] = useState<any[]>([]);
+   // GLOBAL IDENTITY REGISTRY STATE
+   const [allUsers, setAllUsers] = useState<any[]>([]);
 
    useEffect(() => {
-      fetchPendingUsers();
+      if (activeView === 'SECURITY') fetchAllUsers();
    }, [activeView]);
 
-   const fetchPendingUsers = async () => {
-      const { data } = await supabase.from('profiles').select('*, clinics(name)').eq('status', 'PENDING');
-      if (data) setPendingUsers(data);
+   const fetchAllUsers = async () => {
+      const { data } = await supabase.from('profiles').select('*, clinics(id, name)').order('created_at', { ascending: false });
+      if (data) setAllUsers(data);
    };
 
-   const handleApproveUser = async (userId: string) => {
-      const { error } = await supabase.from('profiles').update({ status: 'ACTIVE' }).eq('id', userId);
+   const handleUpdateUser = async (userId: string, field: string, value: any) => {
+      const { error } = await supabase.from('profiles').update({ [field]: value }).eq('id', userId);
       if (!error) {
-         alert("User Approved and Activated");
-         fetchPendingUsers();
+         fetchAllUsers(); // Refresh
       } else {
-         alert("Failed to approve: " + error.message);
+         alert("Update failed: " + error.message);
       }
    };
 
@@ -259,37 +258,100 @@ const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, o
 
                {activeView === 'SECURITY' && (
                   <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-8">
-                     <div className="bg-white/[0.02] border border-white/5 p-12 rounded-[56px]">
-                        <h4 className="text-2xl font-black text-white tracking-tighter mb-8">Pending Access Requests</h4>
+                     <div className="bg-white/[0.02] border border-white/5 p-12 rounded-[56px] min-h-[600px]">
+                        <div className="flex justify-between items-center mb-10">
+                           <div>
+                              <h4 className="text-2xl font-black text-white tracking-tighter">Global Identity Registry</h4>
+                              <p className="text-sm text-slate-500 font-bold uppercase tracking-widest mt-2 opacity-60">God Mode User Management</p>
+                           </div>
+                           <div className="flex gap-4">
+                              <button onClick={fetchAllUsers} className="px-6 py-3 bg-white/5 hover:bg-white/10 rounded-xl font-bold text-xs uppercase tracking-widest transition-colors">Refresh Registry</button>
+                           </div>
+                        </div>
 
-                        {pendingUsers.length === 0 ? (
-                           <div className="text-center py-20 text-slate-500">
-                              <Lock size={48} className="mx-auto mb-4 opacity-20" />
-                              <p className="font-bold text-sm uppercase tracking-widest">All identities verified</p>
+                        <div className="space-y-4">
+                           {/* HEADER ROW */}
+                           <div className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-white/5 text-[10px] font-black uppercase text-slate-500 tracking-widest">
+                              <div className="col-span-3">Identity</div>
+                              <div className="col-span-3">Assigned Node</div>
+                              <div className="col-span-2">Clearance</div>
+                              <div className="col-span-2">Status</div>
+                              <div className="col-span-2 text-right">Actions</div>
                            </div>
-                        ) : (
-                           <div className="space-y-4">
-                              {pendingUsers.map(user => (
-                                 <div key={user.id} className="flex items-center justify-between p-6 bg-white/5 border border-white/5 rounded-3xl hover:bg-white/[0.08] transition-all group">
-                                    <div className="flex items-center gap-6">
-                                       <div className="h-12 w-12 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center font-bold text-xl">
-                                          {user.email?.charAt(0).toUpperCase()}
-                                       </div>
-                                       <div>
-                                          <p className="font-bold text-white text-lg">{user.email}</p>
-                                          <p className="text-xs text-slate-500 font-medium uppercase tracking-widest flex items-center gap-2">
-                                             Requesting access to <span className="text-indigo-400">{user.clinics?.name || 'Unknown Clinic'}</span>
-                                          </p>
-                                       </div>
+
+                           {allUsers.map(user => (
+                              <div key={user.id} className={`grid grid-cols-12 gap-4 items-center p-6 bg-white/5 border border-white/5 rounded-3xl hover:bg-white/[0.08] transition-all group ${user.role === 'SUPER_ADMIN' ? 'opacity-50 pointer-events-none' : ''}`}>
+
+                                 {/* IDENTITY */}
+                                 <div className="col-span-3 flex items-center gap-4">
+                                    <div className={`h-10 w-10 rounded-xl flex items-center justify-center font-bold text-lg ${user.role === 'ADMIN' ? 'bg-indigo-500/10 text-indigo-400' : 'bg-slate-800 text-slate-400'}`}>
+                                       {user.email?.charAt(0).toUpperCase()}
                                     </div>
-                                    <button onClick={() => handleApproveUser(user.id)}
-                                       className="px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-bold rounded-xl transition-all shadow-lg hover:scale-105 active:scale-95">
-                                       Approve Access
-                                    </button>
+                                    <div className="overflow-hidden">
+                                       <p className="font-bold text-white text-sm truncate" title={user.email}>{user.email}</p>
+                                       <p className="text-[10px] text-slate-500 font-mono mt-0.5 truncate">{user.id.slice(0, 8)}...</p>
+                                    </div>
                                  </div>
-                              ))}
-                           </div>
-                        )}
+
+                                 {/* NODE (CLINIC) */}
+                                 <div className="col-span-3">
+                                    <select
+                                       value={user.clinic_id || ''}
+                                       onChange={(e) => handleUpdateUser(user.id, 'clinic_id', e.target.value)}
+                                       className="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-xs font-bold text-white outline-none focus:border-indigo-500"
+                                    >
+                                       <option value="" disabled>Unassigned</option>
+                                       {clinics.map(c => (
+                                          <option key={c.id} value={c.id}>{c.name} ({c.slug})</option>
+                                       ))}
+                                    </select>
+                                 </div>
+
+                                 {/* ROLE */}
+                                 <div className="col-span-2">
+                                    <select
+                                       value={user.role}
+                                       onChange={(e) => handleUpdateUser(user.id, 'role', e.target.value)}
+                                       className={`w-full border border-white/10 rounded-xl px-2 py-2 text-[10px] font-black uppercase tracking-widest outline-none focus:border-indigo-500 cursor-pointer 
+                                                ${user.role === 'ADMIN' ? 'bg-indigo-500/20 text-indigo-300' : 'bg-slate-800/50 text-slate-400'}`}
+                                    >
+                                       <option value="PATIENT">PATIENT</option>
+                                       <option value="ADMIN">ADMIN (Doctor)</option>
+                                       <option value="STAFF">STAFF</option>
+                                    </select>
+                                 </div>
+
+                                 {/* STATUS */}
+                                 <div className="col-span-2">
+                                    <div className="flex items-center gap-2">
+                                       <button
+                                          onClick={() => handleUpdateUser(user.id, 'status', user.status === 'ACTIVE' ? 'PENDING' : 'ACTIVE')}
+                                          className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${user.status === 'ACTIVE' ? 'bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20' : 'bg-amber-500/10 text-amber-500 hover:bg-amber-500/20'
+                                             }`}
+                                       >
+                                          {user.status || 'UNKNOWN'}
+                                       </button>
+                                    </div>
+                                 </div>
+
+                                 {/* ACTIONS */}
+                                 <div className="col-span-2 flex justify-end">
+                                    {user.status === 'PENDING' && (
+                                       <button onClick={() => handleUpdateUser(user.id, 'status', 'ACTIVE')} className="text-[10px] bg-emerald-500 hover:bg-emerald-400 text-slate-900 px-3 py-2 rounded-lg font-bold uppercase tracking-wider shadow-lg">
+                                          Approve
+                                       </button>
+                                    )}
+                                 </div>
+                              </div>
+                           ))}
+
+                           {allUsers.length === 0 && (
+                              <div className="bg-white/5 border border-white/5 rounded-3xl p-12 text-center text-slate-500">
+                                 <div className="animate-spin h-8 w-8 border-2 border-indigo-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+                                 Loading Registry...
+                              </div>
+                           )}
+                        </div>
                      </div>
                   </div>
                )}
