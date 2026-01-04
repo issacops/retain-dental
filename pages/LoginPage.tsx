@@ -49,7 +49,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ clinics = [], activeClinic
                 if (error) throw error;
 
                 if (data.session) {
-                    alert("Account activated successfully!");
+                    alert("Account Activated! The Administrator must approve your access before you can log in.");
                 } else {
                     // Start of Email Confirmation Flow
                     alert("Account created! If you don't get logged in automatically, please check your email for a confirmation link, or ask Admin to disable 'Confirm Email' setting.");
@@ -141,17 +141,23 @@ export const LoginPage: React.FC<LoginPageProps> = ({ clinics = [], activeClinic
                         <div className="space-y-4">
                             <div className="bg-slate-800/80 p-4 rounded-2xl border border-slate-700/50 flex items-center gap-3 focus-within:border-indigo-400 transition-colors">
                                 <Command size={18} className="text-slate-400" />
-                                <input type="email" placeholder="Official Email ID"
+                                <input type="email" placeholder={isSignUp ? "Email (Must match Admin Invite)" : "Official Email ID"}
                                     value={authEmail} onChange={e => setAuthEmail(e.target.value)}
                                     className="bg-transparent w-full outline-none text-white font-bold placeholder:text-slate-600" />
                             </div>
                             <div className="bg-slate-800/80 p-4 rounded-2xl border border-slate-700/50 flex items-center gap-3 focus-within:border-indigo-400 transition-colors">
                                 <Lock size={18} className="text-slate-400" />
-                                <input type="password" placeholder="Password"
+                                <input type="password" placeholder={isSignUp ? "Create a Secure Password" : "Password"}
                                     value={authPassword} onChange={e => setAuthPassword(e.target.value)}
                                     className="bg-transparent w-full outline-none text-white font-bold placeholder:text-slate-600" />
                             </div>
                         </div>
+
+                        {isSignUp && (
+                            <p className="text-[10px] text-amber-500 font-bold text-center bg-amber-500/10 p-2 rounded-lg border border-amber-500/20">
+                                Important: You must use the EXACT email address provided to the Super Admin.
+                            </p>
+                        )}
 
                         <button onClick={handleEmailAuth} disabled={loading}
                             className="w-full py-4 text-white rounded-[20px] font-black text-sm uppercase tracking-widest transition-all flex items-center justify-center gap-3 shadow-lg hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
