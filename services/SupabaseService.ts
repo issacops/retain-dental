@@ -200,6 +200,50 @@ export class SupabaseService implements IBackendService {
         }
     }
 
+    // --- PROVISIONING HELPERS ---
+
+    public async provisionOnboardedUser(userId: string, email: string, clinicSlug?: string): Promise<ServiceResponse> {
+        try {
+            // 1. Determine Clinic
+            let clinicId = null;
+            let role = 'PATIENT'; // Default
+            let status = 'ACTIVE'; // Patients are active by default
+
+            if (clinicSlug) {
+                const { data: clinic } = await this.supabase.from('clinics').select('id').eq('slug', clinicSlug).single();
+                if (clinic) {
+                    clinicId = clinic.id;
+                    role = 'ADMIN'; // If signing up via Clinic Link, they request Admin access
+                    status = 'PENDING'; // Must be approved by Super Admin
+                }
+            }
+
+            // 2. Check if Profile exists
+            const { data: existing } = await this.supabase.from('profiles').select('id').eq('id', userId).single();
+            if (existing) {
+                return { success: true, message: 'Profile already exists' };
+            }
+
+            // 3. Insert Profile explicitly
+            const { error } = await this.supabase.from('profiles').insert({
+                id: userId,
+                email: email,
+                clinic_id: clinicId, // Can be NULL now
+                full_name: 'New User', // Placeholder, user can update later
+                role: role,
+                status: status,
+                mobile: 'PENDING'
+            });
+
+            if (error) throw error;
+            return { success: true, message: 'Provisioning Complete' };
+
+        } catch (e: any) {
+            console.error("Provisioning Error:", e);
+            return { success: false, message: e.message };
+        }
+    }
+
     // --- OPS ---
 
     async getDashboardStats(clinicId: string): Promise<any> {

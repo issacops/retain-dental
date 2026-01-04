@@ -84,7 +84,8 @@ const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, o
    const fetchAllUsers = async () => {
       setIsLoading(true);
       setFetchError('');
-      const { data, error } = await supabase.from('profiles').select('*, clinics(id, name)').order('created_at', { ascending: false });
+      // Using Left Join syntax explicitly or just raw data to Ensure Visibility even if clinic_id is null
+      const { data, error } = await supabase.from('profiles').select('*').order('created_at', { ascending: false });
 
       if (error) {
          setFetchError(error.message);

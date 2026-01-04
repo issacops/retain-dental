@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import { SupabaseService } from '../services/SupabaseService'; // Add Import
 import { ArrowRight, Smartphone, Lock, Activity, Command, Loader2 } from 'lucide-react';
 import { Clinic } from '../types';
 
@@ -48,11 +49,23 @@ export const LoginPage: React.FC<LoginPageProps> = ({ clinics = [], activeClinic
                 });
                 if (error) throw error;
 
-                if (data.session) {
-                    alert("Account Activated! The Administrator must approve your access before you can log in.");
+                if (data.session && data.user) {
+                    // NEW: Explicitly provision user profile (No Triggers!)
+                    const svc = SupabaseService.getInstance();
+                    const res = await svc.provisionOnboardedUser(
+                        data.user.id,
+                        authEmail,
+                        targetClinic?.slug // Pass the current clinic slug (e.g. 'apex')
+                    );
+
+                    if (res.success) {
+                        alert(`Account Created for ${targetClinic?.slug ? targetClinic.name : 'Platform'}! Please wait for Admin Approval.`);
+                    } else {
+                        alert("Account created, but profile failed: " + res.message);
+                    }
                 } else {
-                    // Start of Email Confirmation Flow
-                    alert("Account created! If you don't get logged in automatically, please check your email for a confirmation link, or ask Admin to disable 'Confirm Email' setting.");
+                    // Confirmation flow
+                    alert("Verification email sent! Please verify to complete setup.");
                 }
             } else {
                 // LOGIN
