@@ -16,9 +16,6 @@ interface RouterProps {
     backendService: IBackendService;
 }
 
-backendService: IBackendService;
-}
-
 // Fallback for empty state (prevents crashes when no clinics exist yet)
 const SAFE_CLINIC_FALLBACK: any = {
     id: 'fallback',
