@@ -72,11 +72,12 @@ const App = () => {
       const hostname = window.location.hostname;
       const parts = hostname.split('.');
       let subdomain = parts.length > 2 ? parts[0] : null;
-      if (hostname.includes('localhost')) {
-        const params = new URLSearchParams(window.location.search);
-        const subParam = params.get('subdomain');
-        if (subParam) subdomain = subParam;
-      }
+
+      // Allow testing via ?subdomain= query param on ANY host (Vercel or Localhost)
+      // This is crucial for verifying "Subdomains" without DNS wildcards
+      const params = new URLSearchParams(window.location.search);
+      const subParam = params.get('subdomain');
+      if (subParam) subdomain = subParam;
 
       const IGNORED_SUBDOMAINS = ['www', 'app', 'platform', 'api'];
       let tenantClinic: Clinic | undefined;
@@ -91,7 +92,8 @@ const App = () => {
 
       if (session) {
         const email = session.user.email;
-        if (email === 'issaciconnect@gmail.com') {
+        // Case-insensitive check and Optional Chaining
+        if (email?.toLowerCase() === 'issaciconnect@gmail.com') {
           activeUser = {
             id: session.user.id,
             name: 'Isaac Thomas',

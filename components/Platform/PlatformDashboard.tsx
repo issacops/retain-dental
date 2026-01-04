@@ -332,10 +332,13 @@ const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, o
                         <div className="space-y-4">
                            <div className="bg-black/40 rounded-3xl p-6 border border-white/10 flex justify-between items-center group">
                               <div>
-                                 <p className="text-[9px] font-black text-slate-600 uppercase tracking-widest mb-1">Staff Admin Portal</p>
-                                 <p className="font-mono text-xs text-slate-400">practiceprime.os/c/{selectedClinicForManifest.slug}/staff</p>
+                                 <p className="text-[9px] font-black text-slate-600 uppercase tracking-widest mb-1">Clinic Portal Link</p>
+                                 <p className="font-mono text-xs text-slate-400">
+                                    {/* PROD: Use login path since we don't have wildcard DNS on free Vercel */}
+                                    {window.location.origin}/login/{selectedClinicForManifest.slug}
+                                 </p>
                               </div>
-                              <button onClick={() => { navigator.clipboard.writeText(`practiceprime.os/c/${selectedClinicForManifest.slug}/staff`); alert('Copied'); }} className="p-3 bg-white/5 hover:bg-indigo-600 rounded-xl transition-all opacity-0 group-hover:opacity-100"><Copy size={16} /></button>
+                              <button onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/login/${selectedClinicForManifest.slug}`); alert('Copied'); }} className="p-3 bg-white/5 hover:bg-indigo-600 rounded-xl transition-all opacity-0 group-hover:opacity-100"><Copy size={16} /></button>
                            </div>
                         </div>
                      </div>
