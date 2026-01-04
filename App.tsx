@@ -176,6 +176,9 @@ const App = () => {
     const result = await backendService.createClinic(name, color, texture, ownerName, logoUrl);
     if (result.success && result.updatedData) {
       setData(prev => ({ ...prev, ...result.updatedData }));
+      addToast("Clinic Deployed Successfully", "success");
+    } else {
+      addToast(`Deployment Failed: ${result.message}`, "error");
     }
     return result;
   };
