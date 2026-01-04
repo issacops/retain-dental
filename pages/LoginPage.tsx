@@ -47,10 +47,13 @@ export const LoginPage: React.FC<LoginPageProps> = ({ clinics = [], activeClinic
                     password: authPassword,
                 });
                 if (error) throw error;
-                // Auto-login happens usually, or verification required.
-                // Assuming "Disable Confirm Email" is ON in Supabase for MVP speed, 
-                // or user checks email.
-                alert("Account activated! logging you in...");
+
+                if (data.session) {
+                    alert("Account activated successfully!");
+                } else {
+                    // Start of Email Confirmation Flow
+                    alert("Account created! If you don't get logged in automatically, please check your email for a confirmation link, or ask Admin to disable 'Confirm Email' setting.");
+                }
             } else {
                 // LOGIN
                 const { data, error } = await supabase.auth.signInWithPassword({
@@ -61,6 +64,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ clinics = [], activeClinic
             }
         } catch (e: any) {
             alert(e.message || "Authentication Failed");
+        } finally {
             setLoading(false);
         }
     };
