@@ -92,6 +92,23 @@ export interface IBackendService {
 
     // --- PROTOCOLS ---
 
+    /**
+     * Creates a new Care Plan for a patient.
+     */
+    assignCarePlan(
+        clinicId: string,
+        patientId: string,
+        template: {
+            name: string;
+            category: TransactionCategory;
+            description: string;
+            instructions: string[];
+            checklist: { id: string; task: string; completed: number }[]; // completed: 0 or 1
+            metadata?: Record<string, any>;
+            cost?: number;
+        }
+    ): Promise<ServiceResponse<CarePlan>>;
+
     updateCarePlan(carePlanId: string, updates: Partial<CarePlan>): Promise<ServiceResponse>;
 
     toggleChecklistItem(carePlanId: string, itemId: string): Promise<ServiceResponse>;

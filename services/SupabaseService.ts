@@ -423,16 +423,6 @@ export class SupabaseService implements IBackendService {
                 description = type + ' - ' + category; // Simple concatenation
             }
 
-            const { data, error } = await this.supabase.rpc('process_transaction_atomic', {
-                p_clinic_id: clinicId,
-                p_user_id: patientId,
-                p_amount: amount,
-                p_points: points,
-                p_category: category,
-                p_type: type,
-                p_description: description
-            });
-
             if (error) throw error;
             return { success: true, message: 'Transaction Processed', updatedData: await this.getData() };
         } catch (e: any) {
@@ -440,30 +430,66 @@ export class SupabaseService implements IBackendService {
         }
     }
 
-    async updateCarePlan(carePlanId: string, updates: Partial<CarePlan>): Promise<ServiceResponse> {
+    // --- PROTOCOLS ---
+
+    async assignCarePlan(
+        clinicId: string,
+        patientId: string,
+        template: {
+            name: string;
+            category: TransactionCategory;
+            description: string;
+            instructions: string[];
+            checklist: { id: string; task: string; completed: number }[];
+            metadata?: Record<string, any>;
+            cost?: number;
+        }
+    ): Promise<ServiceResponse> {
+        // Implement Standard Care Plan Creation
         try {
-            const { error } = await this.supabase.from('care_plans').update({
-                treatment_name: updates.treatmentName,
-                is_active: updates.isActive
-            }).eq('id', carePlanId);
+            // If checklist is missing but instructions exist, generate one
+            const finalChecklist = template.checklist || (template.instructions || []).map((inst, i) => ({
+                id: `auto-${Date.now()}-${i}`,
+                task: inst,
+                completed: 0
+            }));
+
+            const { data, error } = await this.supabase.from('care_plans').insert({
+                user_id: patientId,
+                clinic_id: clinicId,
+                treatment_name: template.name,
+                category: template.category,
+                // description: template.description, // Added in SQL
+                // cost: template.cost, // Added in SQL
+                checklist: finalChecklist,
+                instructions: template.instructions || [],
+                metadata: template.metadata,
+                is_active: true
+            }).select().single();
 
             if (error) throw error;
-            return { success: true, message: 'Plan Updated', updatedData: await this.getData() };
+            return { success: true, message: 'Care Plan Assigned', updatedData: await this.getData() };
         } catch (e: any) {
-            return { success: false, message: e.message };
+            return { success: false, message: e.message || 'Failed to assign plan' };
         }
+    }
+
+    async updateCarePlan(carePlanId: string, updates: Partial<CarePlan>): Promise<ServiceResponse> {
+        const { error } = await this.supabase.from('care_plans').update(updates).eq('id', carePlanId);
+        if (error) return { success: false, message: error.message };
+        return { success: true, message: 'Plan Updated', updatedData: await this.getData() };
     }
 
     async toggleChecklistItem(carePlanId: string, itemId: string): Promise<ServiceResponse> {
         try {
             // Fetch current plan
-            const { data: plan, error: fetchError } = await this.supabase.from('care_plans').select('checklist').eq('id', carePlanId).single();
-            if (fetchError) throw fetchError;
+            const { data: plan, error } = await this.supabase.from('care_plans').select('checklist').eq('id', carePlanId).single();
+            if (error) throw error;
 
-            const currentList = (plan.checklist as any[]) || [];
-            const updatedList = currentList.map(item =>
-                item.id === itemId ? { ...item, completed: !item.completed } : item
-            );
+            const updatedList = (plan.checklist || []).map((item: any) => {
+                if (item.id === itemId) return { ...item, completed: !item.completed };
+                return item;
+            });
 
             const { error: updateError } = await this.supabase.from('care_plans').update({
                 checklist: updatedList

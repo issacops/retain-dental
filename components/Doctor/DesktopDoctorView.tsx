@@ -23,6 +23,7 @@ interface Props {
    onUpdateCarePlan: (carePlanId: string, updates: Partial<CarePlan>) => Promise<any>;
    onLinkFamily: (headUserId: string, memberMobile: string) => Promise<any>;
    onAddPatient: (name: string, mobile: string, pin?: string) => Promise<{ success: boolean; message: string; user?: User }>;
+   onAssignPlan: (clinicId: string, patientId: string, template: any) => Promise<any>;
    onSchedule: (patientId: string, start: string, end: string, type: AppointmentType, notes: string) => Promise<any>;
    onUpdateAppointmentStatus: (id: string, status: AppointmentStatus) => Promise<any>;
 }
@@ -30,7 +31,7 @@ interface Props {
 const DesktopDoctorView: React.FC<Props> = ({
    currentUser, allUsers, wallets, transactions, familyGroups, carePlans, clinic,
    onProcessTransaction, onUpdateCarePlan, onLinkFamily, onAddPatient, backendService,
-   appointments, onSchedule, onUpdateAppointmentStatus
+   appointments, onSchedule, onUpdateAppointmentStatus, onAssignPlan
 }) => {
    const [activeSection, setActiveSection] = useState('Operational Hub');
    const [selectedPatient, setSelectedPatient] = useState<User | null>(null);
@@ -41,6 +42,21 @@ const DesktopDoctorView: React.FC<Props> = ({
    const [newPatientPin, setNewPatientPin] = useState('');
 
    const [stats, setStats] = useState<any>({ totalRevenue: 0 });
+
+   // ... (Rest of code)
+
+   // In Render:
+   <PatientProfile
+      selectedPatient={selectedPatient}
+      clinic={clinic}
+      wallets={wallets}
+      carePlans={carePlans}
+      transactions={transactions}
+      allUsers={allUsers}
+      familyGroups={familyGroups}
+      onProcessTransaction={onProcessTransaction}
+      onAssignPlan={onAssignPlan}
+   />
 
    // Async Stats Fetch
    React.useEffect(() => {

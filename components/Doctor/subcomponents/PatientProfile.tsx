@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { Share2, Microscope, BarChart, GraduationCap, ClipboardCheck, Bell, Activity, Check, HeartPulse, History, Filter, CreditCard, Layers, IndianRupee, Sparkles } from 'lucide-react';
+import { Share2, Microscope, BarChart, GraduationCap, ClipboardCheck, Bell, Activity, Check, HeartPulse, History, Filter, CreditCard, Layers, IndianRupee, Sparkles, Plus } from 'lucide-react';
 import { ResponsiveContainer, BarChart as ReBarChart, Bar, Cell, CartesianGrid, XAxis, Tooltip, LineChart, Line } from 'recharts';
 import { User, Wallet, Transaction, CarePlan, Clinic, FamilyGroup, TransactionCategory, TransactionType } from '../../../types';
 import { TREATMENT_TEMPLATES, TreatmentTemplate } from '../../../constants';
@@ -14,10 +14,11 @@ interface Props {
     allUsers: User[];
     familyGroups: FamilyGroup[];
     onProcessTransaction: (patientId: string, amount: number, category: TransactionCategory, type: TransactionType, carePlanTemplate?: any) => any;
+    onAssignPlan: (clinicId: string, patientId: string, template: any) => Promise<any>;
 }
 
 const PatientProfile: React.FC<Props> = ({
-    selectedPatient, clinic, wallets, carePlans, transactions, allUsers, familyGroups, onProcessTransaction
+    selectedPatient, clinic, wallets, carePlans, transactions, allUsers, familyGroups, onProcessTransaction, onAssignPlan
 }) => {
     const [txAmount, setTxAmount] = useState('');
     const [txCategory, setTxCategory] = useState<TransactionCategory>(TransactionCategory.GENERAL);
@@ -70,8 +71,7 @@ const PatientProfile: React.FC<Props> = ({
             <div className="bg-white p-10 rounded-[48px] shadow-sm border border-slate-100 relative overflow-hidden group">
                 <div className="absolute top-0 left-0 w-full h-2" style={{ backgroundColor: clinic.primaryColor }}></div>
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 relative z-10">
-
-                    {/* LEFT: IDENTITY */}
+                    {/* LEFT: IDENTITY & HEADER CONTENT */}
                     <div className="flex-1 space-y-6">
                         <div className="flex items-center gap-4">
                             <div className={`h-3 w-3 rounded-full ${selectedPatient.currentTier === 'GOLD' ? 'bg-amber-400' : 'bg-emerald-400'} animate-pulse`}></div>
@@ -86,7 +86,6 @@ const PatientProfile: React.FC<Props> = ({
                             <button className="px-8 py-4 bg-white border border-slate-200 text-slate-500 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-50 hover:text-slate-800 transition-all">Vault</button>
                         </div>
                     </div>
-
                     {/* RIGHT: SMILE CREDITS */}
                     <div className="p-8 bg-slate-50 rounded-[32px] border border-slate-100 min-w-[300px] text-center">
                         <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Smile Credits Available</p>
@@ -94,12 +93,12 @@ const PatientProfile: React.FC<Props> = ({
                             {wallets.find(w => w.userId === selectedPatient.id)?.balance || 0}
                         </h2>
                     </div>
-
                 </div>
             </div>
 
             {/* 2. NEXUS TERMINAL (FULL WIDTH) */}
             <div className="relative p-12 rounded-[48px] overflow-hidden group shadow-2xl shadow-slate-200/40 border border-white/60 transition-all duration-500 hover:shadow-3xl hover:shadow-indigo-500/10 bg-white/60 backdrop-blur-2xl">
+                {/* ... (Terminal visuals) ... */}
                 <div className="absolute inset-0 bg-gradient-to-br from-white/80 via-white/40 to-indigo-50/20 opacity-80"></div>
                 <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-slate-200 to-transparent"></div>
                 <div className="absolute top-0 right-0 p-20 opacity-[0.03] rotate-12 pointer-events-none blur-sm"><IndianRupee size={200} /></div>
@@ -109,23 +108,23 @@ const PatientProfile: React.FC<Props> = ({
                         <div className="p-3 bg-white rounded-2xl shadow-lg shadow-indigo-100 text-indigo-600"><CreditCard size={28} /></div>
                         Nexus Terminal
                     </h3>
+                    {/* Status Dot */}
                     <div className="flex gap-2 bg-white/50 p-2 rounded-full backdrop-blur-sm border border-white/40">
                         <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]"></div>
                     </div>
                 </div>
 
                 <div className="flex flex-col gap-12 relative z-10">
-                    {/* TOP: AMOUNT INPUT */}
+                    {/* INPUTS AND CONTROLS */}
+                    {/* ... (Amount Input remains same) ... */}
                     <div className="relative group w-full">
                         <span className="absolute left-0 top-1/2 -translate-y-1/2 text-slate-300/50 text-5xl xl:text-6xl font-black px-6 transition-colors group-focus-within:text-slate-400">₹</span>
                         <input type="number" placeholder="0.00" value={txAmount} onChange={(e) => setTxAmount(e.target.value)}
                             className="w-full text-7xl xl:text-8xl font-black outline-none border-b-[6px] border-slate-100 bg-transparent pb-6 pl-20 xl:pl-32 focus:border-slate-800 transition-all duration-300 placeholder:text-slate-100/50 text-slate-900 tracking-tighter" />
                     </div>
 
-                    {/* BOTTOM: CONTROLS & CONFIGURATION */}
                     <div className="space-y-8 w-full">
-
-                        {/* ROW 1: CLASSIFICATION & ACTIONS */}
+                        {/* ROW 1... */}
                         <div className="flex flex-col xl:flex-row gap-8 items-end w-full">
                             {/* CLASSIFICATION */}
                             <div className="space-y-4 flex-1 w-full relative z-20">
@@ -155,9 +154,10 @@ const PatientProfile: React.FC<Props> = ({
                             </div>
                         </div>
 
-                        {/* ROW 2: CLINICAL PROTOCOL */}
+                        {/* ROW 2: PROTOCOL SELECTOR */}
                         <div className="space-y-4 w-full relative z-10">
                             <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] px-2 flex items-center gap-2"><Microscope size={12} /> Clinical Protocol</label>
+                            {/* ... Select ... */}
                             <div className="relative group/select">
                                 <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 rounded-[28px] opacity-0 group-hover/select:opacity-100 transition-opacity"></div>
                                 <select className="w-full p-8 bg-white/50 border border-slate-200/60 rounded-[28px] outline-none font-black text-lg appearance-none cursor-pointer hover:bg-white hover:shadow-xl hover:shadow-slate-200/50 hover:-translate-y-0.5 transition-all duration-300 text-slate-700 uppercase tracking-widest backdrop-blur-sm truncate"
@@ -175,9 +175,21 @@ const PatientProfile: React.FC<Props> = ({
                         {/* ROW 3: REAL-TIME PROTOCOL STATUS & CONFIGURATION */}
                         {selectedTemplateName && (
                             <div className="bg-white/40 backdrop-blur-xl border border-white/60 p-8 rounded-[36px] shadow-xl animate-in fade-in slide-in-from-top-4 space-y-8">
-                                <div className="flex items-center gap-4 text-emerald-600 mb-2">
-                                    <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
-                                    <h4 className="font-black text-xs uppercase tracking-widest">Live Protocol Configuration</h4>
+                                <div className="flex items-center justify-between gap-4 mb-2">
+                                    <div className="flex items-center gap-4 text-emerald-600">
+                                        <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                                        <h4 className="font-black text-xs uppercase tracking-widest">Live Protocol Configuration</h4>
+                                    </div>
+                                    <button onClick={() => {
+                                        const template = TREATMENT_TEMPLATES.find(t => t.name === selectedTemplateName);
+                                        if (template) {
+                                            onAssignPlan(clinic.id, selectedPatient.id, { ...template, customValues });
+                                            setSelectedTemplateName(''); // Reset after assign
+                                            setCustomValues({});
+                                        }
+                                    }} className="px-5 py-2.5 bg-indigo-600 text-white rounded-xl shadow-lg shadow-indigo-200 font-bold text-[10px] uppercase tracking-widest hover:bg-indigo-700 transition-all hover:scale-105 active:scale-95 flex items-center gap-2">
+                                        <Plus size={14} /> Start Treatment
+                                    </button>
                                 </div>
 
                                 {/* Custom Fields Input Grid */}

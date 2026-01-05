@@ -87,8 +87,9 @@ export interface CarePlan {
   clinicId: string;
   treatmentName: string;
   category: TransactionCategory;
-  instructions: string[];
-  checklist?: { id: string; task: string; completed: boolean }[];
+  instructions: string[]; // Patient-friendly protocol steps
+  checklist?: { id: string; task: string; completed: boolean }[]; // Tasks (e.g. daily habits)
+  status: 'ACTIVE' | 'COMPLETED' | 'CANCELLED'; // Added status
   assignedAt: string;
   isActive: boolean;
   metadata?: Record<string, any>; // Used for Aligner Trays, Unit counts, etc.
