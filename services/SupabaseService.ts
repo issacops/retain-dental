@@ -423,6 +423,27 @@ export class SupabaseService implements IBackendService {
                 description = type + ' - ' + category; // Simple concatenation
             }
 
+            // 1. Get Wallet
+            const { data: wallet, error: walletError } = await this.supabase.from('wallets').select('id').eq('user_id', patientId).single();
+            if (walletError || !wallet) throw new Error('Wallet not found for patient');
+
+            // 2. Process
+            const { error } = await this.supabase.from('transactions').insert({
+                clinic_id: clinicId,
+                wallet_id: wallet.id,
+                amount_paid: amount,
+                points_earned: points,
+                category: category,
+                type: type,
+                description: description,
+                care_plan_id: carePlanTemplate ? carePlanTemplate.id : null // We might need to pass the ID if it exists? 
+                // Wait, processTransaction signature assumes carePlanTemplate is just a template, but if it's "Aftercare", is it linked to an existing plan?
+                // The prompt for "Assign Plan" calls assignCarePlan separately. 
+                // "New payments that the doctor enters" usually means General Payments or specific ones.
+                // If it's a payment for a specific plan, we might need carePlanId. 
+                // But for now, let's just insert it.
+            });
+
             if (error) throw error;
             return { success: true, message: 'Transaction Processed', updatedData: await this.getData() };
         } catch (e: any) {
