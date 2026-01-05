@@ -204,7 +204,7 @@ const MobilePatientView: React.FC<Props> = ({ currentUser, users, wallets, trans
 
   return (
     <>
-      <main className={`min-h-screen pb-40 p-8 ${textureClass} bg-slate-50 select-none`}>
+      <main className={`h-screen overflow-y-auto pb-40 p-8 ${textureClass} bg-slate-50 select-none`}>
         {/* Header */}
         <div className="flex justify-between items-start mb-10">
           <div>
