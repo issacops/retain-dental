@@ -64,7 +64,7 @@ export interface IBackendService {
 
     // --- MEMBER & LOYALTY ---
 
-    addPatient(clinicId: string, name: string, mobile: string): Promise<ServiceResponse>;
+    addPatient(clinicId: string, name: string, mobile: string, pin?: string): Promise<ServiceResponse>;
 
     addFamilyMember(
         headUserId: string,

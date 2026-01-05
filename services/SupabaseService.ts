@@ -350,16 +350,17 @@ export class SupabaseService implements IBackendService {
     async updateAppointmentStatus(appointmentId: string, status: AppointmentStatus): Promise<ServiceResponse> {
         const { error } = await this.supabase.from('appointments').update({ status }).eq('id', appointmentId);
         if (error) return { success: false, message: error.message };
+        ```
         return { success: true, message: 'Updated', updatedData: await this.getData() };
     }
 
     // --- MEMBER ---
 
-    async addPatient(clinicId: string, name: string, mobile: string): Promise<ServiceResponse> {
+    async addPatient(clinicId: string, name: string, mobile: string, pin: string = '123456'): Promise<ServiceResponse> {
         try {
             // New Flow: Call Serverless Function to create Auth User + Profile + Wallet
-            const pin = '123456'; // Default PIN for MVP
-
+            // Pin is now passed from UI or defaults to '123456'
+            
             const response = await fetch('/api/create-patient', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -416,7 +417,7 @@ export class SupabaseService implements IBackendService {
                 points = -amount; // Redemptions consume points
             }
 
-            const description = carePlanTemplate ? `Treatment: ${carePlanTemplate.name}` : `${type} - ${category}`;
+            const description = carePlanTemplate ? `Treatment: ${ carePlanTemplate.name } ` : `${ type } - ${ category } `;
 
             const { data, error } = await this.supabase.rpc('process_transaction_atomic', {
                 p_clinic_id: clinicId,

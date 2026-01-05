@@ -22,7 +22,7 @@ interface Props {
    onProcessTransaction: (patientId: string, amount: number, category: any, type: any, carePlanTemplate?: any) => Promise<any>;
    onUpdateCarePlan: (carePlanId: string, updates: Partial<CarePlan>) => Promise<any>;
    onLinkFamily: (headUserId: string, memberMobile: string) => Promise<any>;
-   onAddPatient: (name: string, mobile: string) => Promise<{ success: boolean; message: string; user?: User }>;
+   onAddPatient: (name: string, mobile: string, pin?: string) => Promise<{ success: boolean; message: string; user?: User }>;
    onSchedule: (patientId: string, start: string, end: string, type: AppointmentType, notes: string) => Promise<any>;
    onUpdateAppointmentStatus: (id: string, status: AppointmentStatus) => Promise<any>;
 }
@@ -38,6 +38,7 @@ const DesktopDoctorView: React.FC<Props> = ({
    const [isAddPatientModalOpen, setIsAddPatientModalOpen] = useState(false);
    const [newPatientName, setNewPatientName] = useState('');
    const [newPatientMobile, setNewPatientMobile] = useState('');
+   const [newPatientPin, setNewPatientPin] = useState('');
 
    const [stats, setStats] = useState<any>({ totalRevenue: 0 });
 
@@ -294,13 +295,21 @@ const DesktopDoctorView: React.FC<Props> = ({
                                        <input type="tel" placeholder="+91 0000 000 000" value={newPatientMobile} onChange={(e) => setNewPatientMobile(e.target.value)}
                                           className="glass-input w-full px-10 py-7 bg-slate-50 border border-slate-100 rounded-[32px] text-2xl font-black outline-none focus:border-black transition-all" />
                                     </div>
+                                    <div className="space-y-4">
+                                       <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-4">Access PIN (Optional)</label>
+                                       <input type="text" placeholder="Default: 123456" value={newPatientPin} onChange={(e) => setNewPatientPin(e.target.value)}
+                                          maxLength={6}
+                                          className="glass-input w-full px-10 py-7 bg-slate-50 border border-slate-100 rounded-[32px] text-2xl font-black outline-none focus:border-black transition-all" />
+                                    </div>
                                     <button onClick={async () => {
                                        if (!newPatientName || !newPatientMobile) return;
-                                       const res = await onAddPatient(newPatientName, newPatientMobile);
+                                       // Pass PIN if provided, otherwise letting the service/default handle it
+                                       const res = await onAddPatient(newPatientName, newPatientMobile, newPatientPin || '123456');
                                        if (res.success) {
                                           setIsAddPatientModalOpen(false);
                                           setNewPatientName('');
                                           setNewPatientMobile('');
+                                          setNewPatientPin(''); // Reset PIN
                                           // Data sync happens via App.tsx setData 
                                        } else {
                                           alert("Onboarding Failed: " + res.message);
