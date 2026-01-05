@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { SupabaseService } from '../services/SupabaseService'; // Add Import
 import { ArrowRight, Smartphone, Lock, Activity, Command, Loader2 } from 'lucide-react';
@@ -12,7 +11,33 @@ interface LoginPageProps {
 
 export const LoginPage: React.FC<LoginPageProps> = ({ clinics = [], activeClinic }) => {
     const { slug } = useParams();
+    const navigate = useNavigate();
     const [mode, setMode] = useState<'CHOICE' | 'PATIENT' | 'DOCTOR'>('CHOICE');
+    // ... (keep state)
+
+    // ...
+
+    const handlePatientLogin = async () => {
+        if (!mobile || !pin) return;
+        setLoading(true);
+
+        // If branded, we might want to prioritize that clinic, but for auth we check global user
+        const email = `${mobile}@retain.dental`;
+        const { error } = await supabase.auth.signInWithPassword({
+            email,
+            password: pin
+        });
+
+        if (error) {
+            alert("Invalid Credentials or Network Error");
+            setLoading(false);
+        } else {
+            // Success! The AuthHandler in App.tsx might redirect, but we force it here for clarity.
+            // Also, we might want to check if they belong to this clinic?
+            // For now, let generic auth succeed.
+            navigate('/patient');
+        }
+    };
     const [loading, setLoading] = useState(false);
     const [mobile, setMobile] = useState('');
     const [pin, setPin] = useState('');
