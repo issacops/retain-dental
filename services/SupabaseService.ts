@@ -417,7 +417,7 @@ export class SupabaseService implements IBackendService {
                 points = -amount; // Redemptions consume points
             }
 
-            const description = carePlanTemplate ? `Treatment: ${ carePlanTemplate.name } ` : `${ type } - ${ category } `;
+            const description = carePlanTemplate ? ('Treatment: ' + carePlanTemplate.name) : (type + ' - ' + category);
 
             const { data, error } = await this.supabase.rpc('process_transaction_atomic', {
                 p_clinic_id: clinicId,
