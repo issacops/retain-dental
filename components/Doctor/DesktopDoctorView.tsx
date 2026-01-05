@@ -26,6 +26,7 @@ interface Props {
    onAssignPlan: (clinicId: string, patientId: string, template: any) => Promise<any>;
    onSchedule: (patientId: string, start: string, end: string, type: AppointmentType, notes: string) => Promise<any>;
    onUpdateAppointmentStatus: (id: string, status: AppointmentStatus) => Promise<any>;
+   onToggleChecklistItem: (carePlanId: string, itemId: string) => Promise<any>;
 }
 
 const DesktopDoctorView: React.FC<Props> = ({
@@ -275,6 +276,8 @@ const DesktopDoctorView: React.FC<Props> = ({
                                     allUsers={allUsers}
                                     familyGroups={familyGroups}
                                     onProcessTransaction={onProcessTransaction}
+                                    onAssignPlan={onAssignPlan}
+                                    onToggleChecklistItem={onToggleChecklistItem}
                                  />
                               ) : (
                                  <div className="h-full flex flex-col items-center justify-center animate-in zoom-in-95 duration-1000">

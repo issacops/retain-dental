@@ -271,13 +271,15 @@ const PatientProfile: React.FC<Props> = ({
                         </div>
 
                         <div className="space-y-4">
-                            {activeCarePlan.checklist?.slice(0, 4).map((item, i) => (
-                                <div key={item.id} className="flex items-center gap-6 p-6 rounded-[28px] bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:scale-[1.01] hover:border-emerald-100 transition-all duration-300 group/item cursor-pointer">
+                            {activeCarePlan.checklist?.map((item, i) => (
+                                <div key={item.id} onClick={() => onToggleChecklistItem && onToggleChecklistItem(activeCarePlan.id, item.id)} className="flex items-center gap-6 p-6 rounded-[28px] bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:scale-[1.01] hover:border-emerald-100 transition-all duration-300 group/item cursor-pointer">
                                     <div className={`h-10 w-10 rounded-2xl flex items-center justify-center transition-all duration-300 ${item.completed ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30 rotate-0' : 'bg-slate-50 text-slate-300 rotate-12 group-hover/item:rotate-0'}`}>
                                         {item.completed ? <Check size={20} strokeWidth={4} /> : <span className="text-xs font-black">{i + 1}</span>}
                                     </div>
                                     <span className={`text-sm font-bold tracking-tight transition-colors ${item.completed ? 'text-slate-400 line-through decoration-emerald-500/50' : 'text-slate-700 group-hover/item:text-slate-900'}`}>{item.task}</span>
-                                    <div className="ml-auto opacity-0 group-hover/item:opacity-100 transition-all text-slate-300"><Sparkles size={16} /></div>
+                                    <div className="ml-auto opacity-0 group-hover/item:opacity-100 transition-all text-emerald-500 font-bold text-[10px] uppercase tracking-widest flex items-center gap-2">
+                                        <Sparkles size={16} /> Mark {item.completed ? 'Pending' : 'Done'}
+                                    </div>
                                 </div>
                             ))}
                         </div>
