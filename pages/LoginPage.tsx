@@ -107,22 +107,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ clinics = [], activeClinic
         }
     };
 
-    const handlePatientLogin = async () => {
-        if (!mobile || !pin) return;
-        setLoading(true);
 
-        // If branded, we might want to prioritize that clinic, but for auth we check global user
-        const email = `${mobile}@retain.dental`;
-        const { error } = await supabase.auth.signInWithPassword({
-            email,
-            password: pin
-        });
-
-        if (error) {
-            alert("Invalid Credentials or Network Error");
-            setLoading(false);
-        }
-    };
 
     return (
         <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden font-sans text-slate-200 transition-colors duration-1000"
