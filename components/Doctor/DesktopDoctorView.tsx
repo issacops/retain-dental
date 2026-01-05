@@ -29,7 +29,8 @@ interface Props {
    onToggleChecklistItem: (carePlanId: string, itemId: string) => Promise<any>;
 }
 
-currentUser, allUsers, wallets, transactions, familyGroups, carePlans, clinic,
+const DesktopDoctorView: React.FC<Props> = ({
+   currentUser, allUsers, wallets, transactions, familyGroups, carePlans, clinic,
    onProcessTransaction, onUpdateCarePlan, onLinkFamily, onAddPatient, backendService,
    appointments, onSchedule, onUpdateAppointmentStatus, onAssignPlan, onToggleChecklistItem
 }) => {
