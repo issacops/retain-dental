@@ -22,8 +22,10 @@ export const LoginPage: React.FC<LoginPageProps> = ({ clinics = [], activeClinic
         if (!mobile || !pin) return;
         setLoading(true);
 
-        // If branded, we might want to prioritize that clinic, but for auth we check global user
-        const email = `${mobile}@retain.dental`;
+        // SANITIZE: Strip all non-digit characters to ensure consistent Auth Identifier
+        const cleanMobile = mobile.toString().replace(/\D/g, '');
+        const email = `${cleanMobile}@retain.dental`;
+
         const { error } = await supabase.auth.signInWithPassword({
             email,
             password: pin

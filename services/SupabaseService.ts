@@ -360,10 +360,13 @@ export class SupabaseService implements IBackendService {
             // New Flow: Call Serverless Function to create Auth User + Profile + Wallet
             // Pin is now passed from UI or defaults to '123456'
 
+            // SANITIZE: Strip all non-digit characters to ensure consistent Auth Identifier
+            const cleanMobile = mobile.replace(/\D/g, '');
+
             const response = await fetch('/api/create-patient', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ clinicId, name, mobile, pin })
+                body: JSON.stringify({ clinicId, name, mobile: cleanMobile, pin })
             });
 
             const data = await response.json();
