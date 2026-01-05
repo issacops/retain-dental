@@ -29,10 +29,9 @@ interface Props {
    onToggleChecklistItem: (carePlanId: string, itemId: string) => Promise<any>;
 }
 
-const DesktopDoctorView: React.FC<Props> = ({
-   currentUser, allUsers, wallets, transactions, familyGroups, carePlans, clinic,
+currentUser, allUsers, wallets, transactions, familyGroups, carePlans, clinic,
    onProcessTransaction, onUpdateCarePlan, onLinkFamily, onAddPatient, backendService,
-   appointments, onSchedule, onUpdateAppointmentStatus, onAssignPlan
+   appointments, onSchedule, onUpdateAppointmentStatus, onAssignPlan, onToggleChecklistItem
 }) => {
    const [activeSection, setActiveSection] = useState('Operational Hub');
    const [selectedPatient, setSelectedPatient] = useState<User | null>(null);
