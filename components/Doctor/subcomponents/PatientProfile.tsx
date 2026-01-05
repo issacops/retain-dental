@@ -17,8 +17,7 @@ interface Props {
     onAssignPlan: (clinicId: string, patientId: string, template: any) => Promise<any>;
 }
 
-const PatientProfile: React.FC<Props> = ({
-    selectedPatient, clinic, wallets, carePlans, transactions, allUsers, familyGroups, onProcessTransaction, onAssignPlan
+selectedPatient, clinic, wallets, carePlans, transactions, allUsers, familyGroups, onProcessTransaction, onAssignPlan, onToggleChecklistItem
 }) => {
     const [txAmount, setTxAmount] = useState('');
     const [txCategory, setTxCategory] = useState<TransactionCategory>(TransactionCategory.GENERAL);
