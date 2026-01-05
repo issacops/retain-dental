@@ -39,76 +39,115 @@ const TreatmentComplianceRing = ({ progress, color }: { progress: number, color:
 
 const SpecialtyCareModule = ({ plan, primaryColor, onToggle }: { plan: CarePlan, primaryColor: string, onToggle?: (id: string, item: string) => void }) => {
   const meta = plan.metadata || {};
+  const [showInstructions, setShowInstructions] = useState(false);
 
-  if (meta.totalTrays) {
-    const current = Number(meta.currentTray || 1);
-    const total = Number(meta.totalTrays);
-    const progress = (current / total) * 100;
-    const trayWindow = Array.from({ length: 5 }, (_, i) => current - 2 + i).filter(t => t > 0 && t <= total);
-
-    return (
-      <div className="space-y-6 animate-in slide-in-from-bottom-6 duration-700">
-        <div className="p-8 bg-slate-900 rounded-[48px] border border-white/10 shadow-2xl space-y-8 relative overflow-hidden group">
-          <div className="absolute bottom-[-20%] right-[-10%] w-48 h-48 bg-white/5 blur-[50px] rounded-full"></div>
-          <div className="flex items-center justify-between relative z-10">
-            <div className="flex items-center gap-4">
-              <div className="h-14 w-14 rounded-2xl bg-white/5 flex items-center justify-center text-white border border-white/10"><Zap size={24} /></div>
-              <div>
-                <h5 className="font-black text-white text-lg leading-tight">Smile Journey</h5>
-                <p className="text-[9px] text-white/40 uppercase font-black tracking-widest mt-1">Active Ortho Protocol</p>
-              </div>
-            </div>
-            <TreatmentComplianceRing progress={progress} color={primaryColor} />
-          </div>
-
-          <div className="flex justify-between items-center px-4 relative z-10">
-            {trayWindow.map((t) => (
-              <div key={t} className={`flex flex-col items-center gap-2 transition-all duration-700 ${t === current ? 'scale-125' : 'opacity-40'}`}>
-                <div className={`h-11 w-11 rounded-2xl flex items-center justify-center text-xs font-black transition-all ${t === current ? 'bg-white text-black shadow-[0_10px_30px_rgba(255,255,255,0.3)]' : 'bg-white/5 text-white/80'}`}>
-                  {t}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="pt-6 border-t border-white/5 flex justify-between items-center text-[9px] font-black uppercase tracking-widest text-white/30 relative z-10">
-            <span className="flex items-center gap-2"><Timer size={14} className="text-white/20" /> {meta.changeInterval || 10} Day Cycle</span>
-            <span className="bg-white/5 px-4 py-2 rounded-full border border-white/10">Tray {current} of {total}</span>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // Calculate overall progress across all treatment aspects if possible, 
+  // but for now, checklist completion is the primary metric.
+  const completedCount = plan.checklist?.filter(i => i.completed).length || 0;
+  const totalCount = plan.checklist?.length || 1;
+  const progress = (completedCount / totalCount) * 100;
 
   return (
-    <div className="space-y-6 animate-in slide-in-from-bottom-6 duration-700">
-      <div className="bg-white/80 backdrop-blur-xl p-8 rounded-[48px] border border-slate-100 shadow-sm flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <div className="h-14 w-14 rounded-[24px] bg-slate-50 flex items-center justify-center text-slate-400 border border-slate-100"><ClipboardList size={28} /></div>
-          <div>
-            <h5 className="font-black text-slate-800 text-lg">Daily Regimen</h5>
-            <p className="text-[9px] text-slate-400 uppercase font-black tracking-widest mt-1">Post-{plan.treatmentName}</p>
+    <div className="space-y-8 animate-in slide-in-from-bottom-8 duration-1000">
+      {/* 1. PROGRESS ARC & STATUS */}
+      <div className="p-10 bg-slate-900 rounded-[56px] border border-white/10 shadow-2xl relative overflow-hidden group">
+        <div className="absolute top-[-20%] right-[-10%] w-64 h-64 bg-indigo-500/10 blur-[80px] rounded-full"></div>
+        <div className="absolute bottom-[-20%] left-[-10%] w-48 h-48 bg-emerald-500/5 blur-[60px] rounded-full"></div>
+
+        <div className="flex flex-col items-center text-center relative z-10">
+          <TreatmentComplianceRing progress={progress} color={primaryColor} />
+          <div className="mt-6">
+            <h4 className="text-3xl font-black text-white tracking-tighter leading-none">{plan.treatmentName}</h4>
+            <p className="text-[10px] text-white/40 uppercase font-black tracking-[0.3em] mt-3">Live Clinical Protocol</p>
           </div>
         </div>
-        <ActivityIcon className="text-slate-100" size={32} />
+
+        <div className="grid grid-cols-2 gap-4 mt-10 pt-8 border-t border-white/5 relative z-10">
+          <div className="space-y-1">
+            <p className="text-[8px] font-black text-white/30 uppercase tracking-widest">Ritual Completion</p>
+            <p className="text-xl font-black text-white">{completedCount} of {totalCount}</p>
+          </div>
+          <div className="space-y-1 text-right">
+            <p className="text-[8px] font-black text-white/30 uppercase tracking-widest">Current Phase</p>
+            <p className="text-xl font-black text-emerald-400">Stabilization</p>
+          </div>
+        </div>
       </div>
-      <div className="space-y-4">
-        {plan.checklist?.map((item) => (
+
+      {/* 2. DAILY RITUALS (ACTUAL CHECKLIST) */}
+      <div className="space-y-6">
+        <div className="flex justify-between items-end px-4">
+          <div>
+            <h5 className="text-xl font-black text-slate-900 tracking-tight">Today's Rituals</h5>
+            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Daily Habit Sync</p>
+          </div>
+          <div className="h-10 w-10 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400">
+            <Clock size={20} />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 gap-4">
+          {plan.checklist?.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => onToggle?.(plan.id, item.id)}
+              className={`group relative overflow-hidden p-6 rounded-[36px] border-2 transition-all flex items-center gap-6 active:scale-[0.97] ${item.completed ? 'bg-slate-50 border-transparent' : 'bg-white border-slate-100 shadow-sm'}`}
+            >
+              <div className={`h-12 w-12 rounded-[20px] flex items-center justify-center shrink-0 border-2 transition-all duration-500 ${item.completed ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-100 bg-white'}`}>
+                {item.completed ? <CircleCheck size={28} /> : <div className="h-2 w-2 rounded-full bg-slate-200 group-hover:scale-150 transition-transform" />}
+              </div>
+              <div className="flex-1 text-left">
+                <p className={`text-base font-black leading-tight ${item.completed ? 'text-slate-400 line-through' : 'text-slate-800'}`}>{item.task}</p>
+                {!item.completed && <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest mt-1.5">Pending Action</p>}
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* 3. AFTER-CARE GUIDELINES (INSTRUCTIONS) */}
+      {plan.instructions && plan.instructions.length > 0 && (
+        <div className="bg-white rounded-[44px] border border-slate-100 shadow-sm overflow-hidden">
           <button
-            key={item.id}
-            onClick={() => onToggle?.(plan.id, item.id)}
-            className={`w-full text-left p-6 rounded-[32px] border transition-all flex gap-5 shadow-sm group active:scale-[0.98] ${item.completed ? 'bg-slate-50/50 border-slate-100 opacity-60' : 'bg-white border-slate-100'}`}
+            onClick={() => setShowInstructions(!showInstructions)}
+            className="w-full flex items-center justify-between p-8 active:bg-slate-50 transition-colors"
           >
-            <div className={`h-8 w-8 rounded-full flex items-center justify-center shrink-0 mt-0.5 border-2 transition-all ${item.completed ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-100 bg-white group-active:border-slate-300'}`}>
-              {item.completed && <CircleCheck size={20} />}
+            <div className="flex items-center gap-5">
+              <div className="h-14 w-14 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-500">
+                <Sparkles size={28} />
+              </div>
+              <div className="text-left">
+                <h5 className="text-lg font-black text-slate-900 leading-none">After Care</h5>
+                <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-2">{plan.instructions.length} Essential Rules</p>
+              </div>
             </div>
-            <p className={`text-base font-bold leading-relaxed pr-4 ${item.completed ? 'text-slate-400 line-through' : 'text-slate-700'}`}>{item.task}</p>
+            <div className={`transition-transform duration-500 ${showInstructions ? 'rotate-180' : ''}`}>
+              <ChevronRight size={24} className="text-slate-300" />
+            </div>
           </button>
-        ))}
-      </div>
+
+          <div className={`overflow-hidden transition-all duration-700 ease-in-out ${showInstructions ? 'max-h-[1000px] border-t border-slate-50' : 'max-h-0'}`}>
+            <div className="p-8 space-y-6">
+              {plan.instructions.map((inst, idx) => (
+                <div key={idx} className="flex gap-5 group">
+                  <div className="text-sm font-black text-indigo-200 group-hover:text-indigo-500 transition-colors pt-1">0{idx + 1}</div>
+                  <p className="text-sm font-bold text-slate-600 leading-relaxed">{inst}</p>
+                </div>
+              ))}
+              <div className="pt-6 mt-6 border-t border-slate-50">
+                <p className="p-6 bg-rose-50 rounded-3xl text-[10px] font-bold text-rose-500 leading-relaxed">
+                  <span className="font-black uppercase block mb-1">Emergency Protocol</span>
+                  If you experience persistent pain or swelling, use the Priority SOS button below immediately.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
+
 
 const MobilePatientView: React.FC<Props> = ({ currentUser, users, wallets, transactions, carePlans, clinic, onToggleChecklistItem, onSchedule, onAddFamilyMember, onSwitchProfile, onRedeem }) => {
   const [activeTab, setActiveTab] = useState<'HOME' | 'WALLET' | 'CARE' | 'PROFILE'>('HOME');
@@ -205,16 +244,25 @@ const MobilePatientView: React.FC<Props> = ({ currentUser, users, wallets, trans
 
             {/* Active Treatment Quick Look */}
             {activeCarePlan && (
-              <button onClick={() => setActiveTab('CARE')} className="w-full text-left p-8 rounded-[40px] bg-gradient-to-br from-indigo-600 to-violet-600 text-white shadow-2xl relative overflow-hidden group active:scale-[0.98] transition-all">
-                <div className="absolute right-0 top-0 p-8 opacity-10 scale-150"><ActivityIcon size={80} /></div>
+              <button onClick={() => setActiveTab('CARE')} className="w-full text-left p-8 rounded-[48px] bg-slate-900 text-white shadow-2xl relative overflow-hidden group active:scale-[0.98] transition-all">
+                <div className="absolute top-[-20%] right-[-10%] w-64 h-64 bg-indigo-500/10 blur-[80px] rounded-full"></div>
+                <div className="absolute right-0 top-0 p-8 opacity-10 scale-150 group-hover:scale-125 transition-transform duration-700"><ActivityIcon size={80} /></div>
+
                 <div className="relative z-10">
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/60 mb-2">Live Smile Protocol</p>
-                  <h4 className="text-3xl font-black tracking-tighter mb-6">{activeCarePlan.treatmentName}</h4>
-                  <div className="flex items-center gap-6">
-                    <div className="flex-1 h-3 bg-white/20 rounded-full overflow-hidden backdrop-blur-sm">
-                      <div className="h-full bg-white shadow-[0_0_15px_rgba(255,255,255,0.7)]" style={{ width: `${(activeCarePlan.checklist?.filter(i => i.completed).length || 0) / (activeCarePlan.checklist?.length || 1) * 100}%` }}></div>
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></div>
+                    <p className="text-[10px] font-black uppercase tracking-[0.25em] text-white/50">Live Protocol</p>
+                  </div>
+                  <h4 className="text-3xl font-black tracking-tighter mb-8 leading-tight">{activeCarePlan.treatmentName}</h4>
+
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-end">
+                      <p className="text-[9px] font-black uppercase tracking-widest text-white/30">Journey Progress</p>
+                      <span className="text-xs font-black tracking-widest text-emerald-400">{Math.round((activeCarePlan.checklist?.filter(i => i.completed).length || 0) / (activeCarePlan.checklist?.length || 1) * 100)}%</span>
                     </div>
-                    <span className="text-xs font-black tracking-widest">{Math.round((activeCarePlan.checklist?.filter(i => i.completed).length || 0) / (activeCarePlan.checklist?.length || 1) * 100)}%</span>
+                    <div className="h-2.5 bg-white/10 rounded-full overflow-hidden backdrop-blur-sm">
+                      <div className="h-full bg-emerald-400 shadow-[0_0_15px_rgba(52,211,153,0.5)] transition-all duration-1000" style={{ width: `${(activeCarePlan.checklist?.filter(i => i.completed).length || 0) / (activeCarePlan.checklist?.length || 1) * 100}%` }}></div>
+                    </div>
                   </div>
                 </div>
               </button>
