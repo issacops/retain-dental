@@ -278,6 +278,7 @@ const DesktopDoctorView: React.FC<Props> = ({
                                     onProcessTransaction={onProcessTransaction}
                                     onAssignPlan={onAssignPlan}
                                     onToggleChecklistItem={onToggleChecklistItem}
+                                    onUpdateCarePlan={onUpdateCarePlan}
                                  />
                               ) : (
                                  <div className="h-full flex flex-col items-center justify-center animate-in zoom-in-95 duration-1000">

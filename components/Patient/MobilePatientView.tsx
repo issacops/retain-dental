@@ -203,6 +203,23 @@ const MobilePatientView: React.FC<Props> = ({ currentUser, users, wallets, trans
               </div>
             </div>
 
+            {/* Active Treatment Quick Look */}
+            {activeCarePlan && (
+              <button onClick={() => setActiveTab('CARE')} className="w-full text-left p-8 rounded-[40px] bg-gradient-to-br from-indigo-600 to-violet-600 text-white shadow-2xl relative overflow-hidden group active:scale-[0.98] transition-all">
+                <div className="absolute right-0 top-0 p-8 opacity-10 scale-150"><ActivityIcon size={80} /></div>
+                <div className="relative z-10">
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/60 mb-2">Live Smile Protocol</p>
+                  <h4 className="text-3xl font-black tracking-tighter mb-6">{activeCarePlan.treatmentName}</h4>
+                  <div className="flex items-center gap-6">
+                    <div className="flex-1 h-3 bg-white/20 rounded-full overflow-hidden backdrop-blur-sm">
+                      <div className="h-full bg-white shadow-[0_0_15px_rgba(255,255,255,0.7)]" style={{ width: `${(activeCarePlan.checklist?.filter(i => i.completed).length || 0) / (activeCarePlan.checklist?.length || 1) * 100}%` }}></div>
+                    </div>
+                    <span className="text-xs font-black tracking-widest">{Math.round((activeCarePlan.checklist?.filter(i => i.completed).length || 0) / (activeCarePlan.checklist?.length || 1) * 100)}%</span>
+                  </div>
+                </div>
+              </button>
+            )}
+
             {/* Quick Actions */}
             <div className="grid grid-cols-2 gap-4">
               <button onClick={() => setShowBookingModal(true)} className="p-6 bg-slate-900 text-white rounded-[32px] flex flex-col items-center gap-3 active:scale-95 transition-all shadow-xl" style={{ backgroundColor: clinic.primaryColor }}>

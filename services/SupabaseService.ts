@@ -427,11 +427,11 @@ export class SupabaseService implements IBackendService {
             }
 
             // 1. Get Wallet
-            const { data: wallet, error: walletError } = await this.supabase.from('wallets').select('id').eq('user_id', patientId).single();
+            const { data: wallet, error: walletError } = await this.supabase.from('wallets').select('*').eq('user_id', patientId).single();
             if (walletError || !wallet) throw new Error('Wallet not found for patient');
 
-            // 2. Process
-            const { error } = await this.supabase.from('transactions').insert({
+            // 2. Insert Transaction
+            const { error: txError } = await this.supabase.from('transactions').insert({
                 clinic_id: clinicId,
                 wallet_id: wallet.id,
                 amount_paid: amount,
@@ -439,16 +439,30 @@ export class SupabaseService implements IBackendService {
                 category: category,
                 type: type,
                 description: description,
-                care_plan_id: carePlanTemplate ? carePlanTemplate.id : null // We might need to pass the ID if it exists? 
-                // Wait, processTransaction signature assumes carePlanTemplate is just a template, but if it's "Aftercare", is it linked to an existing plan?
-                // The prompt for "Assign Plan" calls assignCarePlan separately. 
-                // "New payments that the doctor enters" usually means General Payments or specific ones.
-                // If it's a payment for a specific plan, we might need carePlanId. 
-                // But for now, let's just insert it.
+                care_plan_id: carePlanTemplate ? carePlanTemplate.id : null
             });
 
-            if (error) throw error;
-            return { success: true, message: 'Transaction Processed', updatedData: await this.getData() };
+            if (txError) throw txError;
+
+            // 3. Update Wallet Balance
+            const newBalance = Number(wallet.balance || 0) + points;
+            const { error: walletUpdateError } = await this.supabase
+                .from('wallets')
+                .update({ balance: newBalance, last_transaction_at: new Date().toISOString() })
+                .eq('id', wallet.id);
+
+            if (walletUpdateError) throw walletUpdateError;
+
+            // 4. Update Patient Lifetime Spend (If EARN)
+            if (type === TransactionType.EARN) {
+                const { data: profile } = await this.supabase.from('profiles').select('lifetime_spend').eq('id', patientId).single();
+                if (profile) {
+                    const newSpend = Number(profile.lifetime_spend || 0) + amount;
+                    await this.supabase.from('profiles').update({ lifetime_spend: newSpend }).eq('id', patientId);
+                }
+            }
+
+            return { success: true, message: 'Transaction Processed & Balanced', updatedData: await this.getData() };
         } catch (e: any) {
             return { success: false, message: e.message, error: 'RPC_ERR' };
         }

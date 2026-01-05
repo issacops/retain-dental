@@ -47,6 +47,8 @@ export const AppRouter: React.FC<RouterProps> = ({ appState, handlers, backendSe
                     data={appState}
                     clinic={activeClinic}
                     backendService={backendService}
+                    onUpdateCarePlan={handlers.onUpdateCarePlan}
+                    onToggleChecklistItem={handlers.onToggleChecklistItem}
                     {...handlers}
                 />
             } />
@@ -61,6 +63,7 @@ export const AppRouter: React.FC<RouterProps> = ({ appState, handlers, backendSe
                     carePlans={appState.carePlans}
                     clinic={activeClinic}
                     onToggleChecklistItem={handlers.onToggleChecklistItem}
+                    onUpdateCarePlan={handlers.onUpdateCarePlan}
                     onSchedule={handlers.onSchedule}
                     onAddFamilyMember={handlers.onAddFamilyMember}
                     onSwitchProfile={handlers.onSwitchProfile}

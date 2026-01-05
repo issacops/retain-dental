@@ -15,15 +15,19 @@ interface Props {
     familyGroups: FamilyGroup[];
     onProcessTransaction: (patientId: string, amount: number, category: TransactionCategory, type: TransactionType, carePlanTemplate?: any) => any;
     onAssignPlan: (clinicId: string, patientId: string, template: any) => Promise<any>;
+    onToggleChecklistItem: (carePlanId: string, itemId: string) => Promise<any>;
+    onUpdateCarePlan: (carePlanId: string, updates: Partial<CarePlan>) => Promise<any>;
 }
 
 const PatientProfile: React.FC<Props> = ({
-    selectedPatient, clinic, wallets, carePlans, transactions, allUsers, familyGroups, onProcessTransaction, onAssignPlan, onToggleChecklistItem
+    selectedPatient, clinic, wallets, carePlans, transactions, allUsers, familyGroups, onProcessTransaction, onAssignPlan, onToggleChecklistItem, onUpdateCarePlan
 }) => {
     const [txAmount, setTxAmount] = useState('');
     const [txCategory, setTxCategory] = useState<TransactionCategory>(TransactionCategory.GENERAL);
     const [selectedTemplateName, setSelectedTemplateName] = useState<string>('');
     const [customValues, setCustomValues] = useState<Record<string, any>>({});
+    const [isEditingPlan, setIsEditingPlan] = useState(false);
+    const [editValues, setEditValues] = useState<Partial<CarePlan>>({});
 
     // Auto-set category and defaults based on selected protocol
     useEffect(() => {
@@ -254,20 +258,69 @@ const PatientProfile: React.FC<Props> = ({
                             <div className="absolute right-0 top-0 p-12 opacity-10 scale-150 group-hover/card:scale-125 transition-transform duration-700 ease-out"><Activity size={120} /></div>
 
                             <p className="text-[10px] font-black uppercase text-emerald-100 tracking-[0.25em] mb-4">Active Treatment</p>
-                            <h4 className="text-5xl font-black tracking-tighter mb-12">{activeCarePlan.treatmentName}</h4>
+                            <div className="flex justify-between items-start mb-12">
+                                <h4 className="text-5xl font-black tracking-tighter">{activeCarePlan.treatmentName}</h4>
+                                <button
+                                    onClick={() => { setEditValues(activeCarePlan); setIsEditingPlan(true); }}
+                                    className="px-6 py-3 bg-white/20 hover:bg-white/30 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all"
+                                >
+                                    Edit Protocol
+                                </button>
+                            </div>
 
-                            <div className="flex items-end justify-between">
-                                <div className="space-y-2">
-                                    <p className="text-[9px] font-black uppercase text-emerald-200/80 tracking-widest">Adhesion Score</p>
-                                    <div className="flex items-baseline gap-1">
-                                        <p className="text-6xl font-black">98</p>
-                                        <span className="text-xl font-bold opacity-60">%</span>
+                            {isEditingPlan ? (
+                                <div className="space-y-6 animate-in slide-in-from-top-4 duration-300">
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                            <label className="text-[9px] font-black uppercase text-emerald-100">Treatment Name</label>
+                                            <input
+                                                value={editValues.treatmentName || ''}
+                                                onChange={e => setEditValues(prev => ({ ...prev, treatmentName: e.target.value }))}
+                                                className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-sm font-bold text-white outline-none focus:bg-white/20"
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-[9px] font-black uppercase text-emerald-100">Investment (₹)</label>
+                                            <input
+                                                type="number"
+                                                value={editValues.cost || 0}
+                                                onChange={e => setEditValues(prev => ({ ...prev, cost: Number(e.target.value) }))}
+                                                className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-sm font-bold text-white outline-none focus:bg-white/20"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-4">
+                                        <button
+                                            onClick={async () => {
+                                                await onUpdateCarePlan(activeCarePlan.id, editValues);
+                                                setIsEditingPlan(false);
+                                            }}
+                                            className="flex-1 py-4 bg-white text-emerald-600 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl"
+                                        >
+                                            Synchronize Changes
+                                        </button>
+                                        <button
+                                            onClick={() => setIsEditingPlan(false)}
+                                            className="px-8 py-4 bg-emerald-700/50 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest"
+                                        >
+                                            Discard
+                                        </button>
                                     </div>
                                 </div>
-                                <div className="flex-1 max-w-[140px] h-4 bg-black/20 rounded-full overflow-hidden backdrop-blur-sm border border-white/10">
-                                    <div className="h-full bg-white w-[98%] shadow-[0_0_20px_rgba(255,255,255,0.5)]"></div>
+                            ) : (
+                                <div className="flex items-end justify-between">
+                                    <div className="space-y-2">
+                                        <p className="text-[9px] font-black uppercase text-emerald-200/80 tracking-widest">Adhesion Score</p>
+                                        <div className="flex items-baseline gap-1">
+                                            <p className="text-6xl font-black">98</p>
+                                            <span className="text-xl font-bold opacity-60">%</span>
+                                        </div>
+                                    </div>
+                                    <div className="flex-1 max-w-[140px] h-4 bg-black/20 rounded-full overflow-hidden backdrop-blur-sm border border-white/10">
+                                        <div className="h-full bg-white w-[98%] shadow-[0_0_20px_rgba(255,255,255,0.5)]"></div>
+                                    </div>
                                 </div>
-                            </div>
+                            )}
                         </div>
 
                         <div className="space-y-4">
