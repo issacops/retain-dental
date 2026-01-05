@@ -480,8 +480,8 @@ export class SupabaseService implements IBackendService {
                 clinic_id: clinicId,
                 treatment_name: template.name,
                 category: template.category,
-                // description: template.description, // Added in SQL
-                // cost: template.cost, // Added in SQL
+                description: template.description,
+                cost: template.cost || 0,
                 checklist: finalChecklist,
                 instructions: template.instructions || [],
                 metadata: template.metadata,
@@ -489,7 +489,24 @@ export class SupabaseService implements IBackendService {
             }).select().single();
 
             if (error) throw error;
-            return { success: true, message: 'Care Plan Assigned', updatedData: await this.getData() };
+
+            // 2. Automatically log a transaction in the Clinical Journal (Ledger)
+            // This ensures "Assigning Treatment" registers in the history.
+            const { data: wallet } = await this.supabase.from('wallets').select('id').eq('user_id', patientId).single();
+            if (wallet) {
+                await this.supabase.from('transactions').insert({
+                    clinic_id: clinicId,
+                    wallet_id: wallet.id,
+                    amount_paid: template.cost || 0,
+                    points_earned: 0, // Assignment doesn't earn points by default unless paid
+                    category: template.category,
+                    type: TransactionType.EARN, // EARN is used for general journal entries
+                    description: `Assigned Protocol: ${template.name}`,
+                    care_plan_id: data.id
+                });
+            }
+
+            return { success: true, message: 'Care Plan Assigned & Logged', updatedData: await this.getData() };
         } catch (e: any) {
             return { success: false, message: e.message || 'Failed to assign plan' };
         }
