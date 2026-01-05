@@ -335,16 +335,24 @@ export class SupabaseService implements IBackendService {
 
     async addPatient(clinicId: string, name: string, mobile: string): Promise<ServiceResponse> {
         try {
-            const { data, error } = await this.supabase.rpc('create_patient_atomic', {
-                p_clinic_id: clinicId,
-                p_name: name,
-                p_mobile: mobile
+            // New Flow: Call Serverless Function to create Auth User + Profile + Wallet
+            const pin = '123456'; // Default PIN for MVP
+
+            const response = await fetch('/api/create-patient', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ clinicId, name, mobile, pin })
             });
 
-            if (error) throw error;
-            return { success: true, message: 'Patient Onboarded', updatedData: await this.getData() };
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Failed to create patient identity');
+            }
+
+            return { success: true, message: 'Patient Identity & CRM Linked', updatedData: await this.getData() };
         } catch (e: any) {
-            return { success: false, message: e.message, error: 'RPC_ERR' };
+            return { success: false, message: e.message, error: 'API_ERR' };
         }
     }
 
