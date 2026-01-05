@@ -8,8 +8,8 @@ interface Props {
     [key: string]: any;
 }
 
-export const PatientPage: React.FC<Props> = (props) => {
-    if (!props.data?.currentUser || !props.clinic) {
+export const PatientPage: React.FC<any> = (props) => {
+    if (!props.currentUser || !props.clinic) {
         return (
             <div className="h-screen w-full bg-slate-950 flex items-center justify-center">
                 <div className="text-white text-opacity-50 animate-pulse font-bold tracking-widest uppercase text-xs">
@@ -21,7 +21,7 @@ export const PatientPage: React.FC<Props> = (props) => {
 
     return (
         <div className="h-screen w-full bg-slate-950">
-            <MobilePatientView {...props} currentUser={props.data.currentUser} clinic={props.clinic} />
+            <MobilePatientView {...props} />
         </div>
     );
 };
