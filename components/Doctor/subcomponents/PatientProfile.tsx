@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { Share2, Microscope, BarChart, GraduationCap, ClipboardCheck, Bell, Activity, Check, HeartPulse, History, Filter, CreditCard, Layers, IndianRupee, Sparkles, Plus } from 'lucide-react';
+import { Share2, Microscope, BarChart, GraduationCap, ClipboardCheck, Bell, Activity, Check, HeartPulse, History, Filter, CreditCard, Layers, IndianRupee, Sparkles } from 'lucide-react';
 import { ResponsiveContainer, BarChart as ReBarChart, Bar, Cell, CartesianGrid, XAxis, Tooltip, LineChart, Line } from 'recharts';
 import { User, Wallet, Transaction, CarePlan, Clinic, FamilyGroup, TransactionCategory, TransactionType } from '../../../types';
 import { TREATMENT_TEMPLATES, TreatmentTemplate } from '../../../constants';
@@ -188,7 +188,7 @@ const PatientProfile: React.FC<Props> = ({
                                             setCustomValues({});
                                         }
                                     }} className="px-5 py-2.5 bg-indigo-600 text-white rounded-xl shadow-lg shadow-indigo-200 font-bold text-[10px] uppercase tracking-widest hover:bg-indigo-700 transition-all hover:scale-105 active:scale-95 flex items-center gap-2">
-                                        <Plus size={14} /> Start Treatment
+                                        <Sparkles size={14} /> Start Treatment
                                     </button>
                                 </div>
 

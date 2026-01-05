@@ -80,7 +80,7 @@ export class SupabaseService implements IBackendService {
             ...cp,
             userId: cp.user_id,
             clinicId: cp.clinic_id,
-            treatmentName: cp.treatment_name,
+            checklist: cp.checklist || [],
             isActive: cp.is_active,
             assignedAt: cp.created_at
         };
