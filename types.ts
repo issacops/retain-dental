@@ -33,6 +33,7 @@ export interface Clinic {
   slug: string; // URL-friendly name
   logoUrl?: string;
   ownerName?: string;
+  adminEmail?: string; // Contact email for notifications
   subscriptionTier: 'STARTER' | 'PRO' | 'ENTERPRISE';
   createdAt: string;
   adminUserId: string;
