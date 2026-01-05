@@ -9,23 +9,19 @@ interface Props {
 }
 
 export const PatientPage: React.FC<Props> = (props) => {
-    return (
-        <div className="h-screen w-full bg-slate-950">
-            if (!props.data?.currentUser || !props.clinic) {
+    if (!props.data?.currentUser || !props.clinic) {
         return (
             <div className="h-screen w-full bg-slate-950 flex items-center justify-center">
                 <div className="text-white text-opacity-50 animate-pulse font-bold tracking-widest uppercase text-xs">
                     Loading Identity...
                 </div>
             </div>
-            );
+        );
     }
 
-            return (
-            <div className="h-screen w-full bg-slate-950">
-                <MobilePatientView {...props} currentUser={props.data.currentUser} clinic={props.clinic} />
-            </div>
-            );
+    return (
+        <div className="h-screen w-full bg-slate-950">
+            <MobilePatientView {...props} currentUser={props.data.currentUser} clinic={props.clinic} />
         </div>
     );
 };
