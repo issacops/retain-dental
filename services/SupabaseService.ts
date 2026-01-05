@@ -489,7 +489,7 @@ export class SupabaseService implements IBackendService {
             const finalChecklist = template.checklist || (template.instructions || []).map((inst, i) => ({
                 id: `auto-${Date.now()}-${i}`,
                 task: inst,
-                completed: 0
+                completed: false
             }));
 
             const { data, error } = await this.supabase.from('care_plans').insert({

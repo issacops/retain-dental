@@ -8,6 +8,7 @@ import PatientList from './subcomponents/PatientList';
 import DashboardAnalytics from './subcomponents/DashboardAnalytics';
 import PatientProfile from './subcomponents/PatientProfile';
 import AppointmentScheduler from './subcomponents/AppointmentScheduler';
+import LiveProtocolMonitor from './subcomponents/LiveProtocolMonitor';
 
 interface Props {
    currentUser: User;
@@ -233,8 +234,14 @@ const DesktopDoctorView: React.FC<Props> = ({
                            </div>
 
                            <div className="col-span-4 space-y-8">
-                              <div className="bg-white/60 backdrop-blur-xl rounded-[32px] p-8 border border-white/60 shadow-xl h-full">
-                                 <h3 className="text-xl font-black text-slate-800 mb-6">Patient Queue</h3>
+                              <LiveProtocolMonitor
+                                 carePlans={carePlans}
+                                 users={allUsers}
+                                 clinic={clinic}
+                                 onUpdateCarePlan={onUpdateCarePlan}
+                              />
+                              <div className="bg-white/60 backdrop-blur-xl rounded-[32px] p-8 border border-white/60 shadow-xl">
+                                 <h3 className="text-xl font-black text-slate-800 mb-6 font-display">Patient Queue</h3>
                                  {/* Placeholder for waiting list */}
                                  <div className="space-y-4">
                                     <div className="p-4 bg-white rounded-2xl border border-slate-100 flex items-center gap-4 shadow-sm">

@@ -100,7 +100,112 @@ const PatientProfile: React.FC<Props> = ({
                 </div>
             </div>
 
-            {/* 2. NEXUS TERMINAL (FULL WIDTH) */}
+            {/* 2. LIVE CLINICAL PROTOCOL (FULL WIDTH) */}
+            <div className="relative p-12 rounded-[48px] overflow-hidden bg-white shadow-xl shadow-slate-200/50 border border-slate-100/60 group hover:shadow-2xl transition-all duration-500">
+                <div className="absolute inset-0 opacity-[0.4] bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:24px_24px]"></div>
+
+                <div className="flex justify-between items-center relative z-10 mb-10">
+                    <h3 className="font-black text-3xl tracking-tighter flex items-center gap-5 text-slate-900">
+                        <div className="p-3 bg-emerald-50 rounded-2xl text-emerald-600 shadow-sm border border-emerald-100"><ClipboardCheck size={28} /></div>
+                        Active Clinical Protocol
+                    </h3>
+                    {activeCarePlan && <div className="bg-emerald-500 text-white px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-emerald-200 flex items-center gap-3"><div className="h-2 w-2 rounded-full bg-white animate-pulse" /> Live Treatment</div>}
+                </div>
+
+                {activeCarePlan ? (
+                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-12 relative z-10">
+                        <div className="p-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-[40px] relative overflow-hidden shadow-2xl shadow-emerald-500/20 text-white group/card">
+                            <div className="absolute right-0 top-0 p-12 opacity-10 scale-150 group-hover/card:scale-125 transition-transform duration-700 ease-out"><Activity size={120} /></div>
+
+                            <p className="text-[10px] font-black uppercase text-emerald-100 tracking-[0.25em] mb-4">Patient Regime</p>
+                            <div className="flex justify-between items-start mb-12">
+                                <h4 className="text-5xl font-black tracking-tighter">{activeCarePlan.treatmentName}</h4>
+                                <button
+                                    onClick={() => { setEditValues(activeCarePlan); setIsEditingPlan(true); }}
+                                    className="px-6 py-3 bg-white/20 hover:bg-white/30 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all"
+                                >
+                                    Edit Protocol
+                                </button>
+                            </div>
+
+                            {isEditingPlan ? (
+                                <div className="space-y-6 animate-in slide-in-from-top-4 duration-300">
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                            <label className="text-[9px] font-black uppercase text-emerald-100">Treatment Name</label>
+                                            <input
+                                                value={editValues.treatmentName || ''}
+                                                onChange={e => setEditValues(prev => ({ ...prev, treatmentName: e.target.value }))}
+                                                className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-sm font-bold text-white outline-none focus:bg-white/20"
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-[9px] font-black uppercase text-emerald-100">Investment (₹)</label>
+                                            <input
+                                                type="number"
+                                                value={editValues.cost || 0}
+                                                onChange={e => setEditValues(prev => ({ ...prev, cost: Number(e.target.value) }))}
+                                                className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-sm font-bold text-white outline-none focus:bg-white/20"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-4">
+                                        <button
+                                            onClick={async () => {
+                                                await onUpdateCarePlan(activeCarePlan.id, editValues);
+                                                setIsEditingPlan(false);
+                                            }}
+                                            className="flex-1 py-4 bg-white text-emerald-600 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl"
+                                        >
+                                            Synchronize Changes
+                                        </button>
+                                        <button
+                                            onClick={() => setIsEditingPlan(false)}
+                                            className="px-8 py-4 bg-emerald-700/50 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest"
+                                        >
+                                            Discard
+                                        </button>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="flex items-end justify-between">
+                                    <div className="space-y-2">
+                                        <p className="text-[9px] font-black uppercase text-emerald-200/80 tracking-widest">Protocol Adherence</p>
+                                        <div className="flex items-baseline gap-1">
+                                            <p className="text-6xl font-black">98</p>
+                                            <span className="text-xl font-bold opacity-60">%</span>
+                                        </div>
+                                    </div>
+                                    <div className="flex-1 max-w-[140px] h-4 bg-black/20 rounded-full overflow-hidden backdrop-blur-sm border border-white/10">
+                                        <div className="h-full bg-white w-[98%] shadow-[0_0_20px_rgba(255,255,255,0.5)]"></div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="space-y-4">
+                            {activeCarePlan.checklist?.map((item, i) => (
+                                <div key={item.id} onClick={() => onToggleChecklistItem && onToggleChecklistItem(activeCarePlan.id, item.id)} className="flex items-center gap-6 p-6 rounded-[28px] bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:scale-[1.01] hover:border-emerald-100 transition-all duration-300 group/item cursor-pointer">
+                                    <div className={`h-10 w-10 rounded-2xl flex items-center justify-center transition-all duration-300 ${item.completed ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30 rotate-0' : 'bg-slate-50 text-slate-300 rotate-12 group-hover/item:rotate-0'}`}>
+                                        {item.completed ? <Check size={20} strokeWidth={4} /> : <span className="text-xs font-black">{i + 1}</span>}
+                                    </div>
+                                    <span className={`text-sm font-bold tracking-tight transition-colors ${item.completed ? 'text-slate-400 line-through decoration-emerald-500/50' : 'text-slate-700 group-hover/item:text-slate-900'}`}>{item.task}</span>
+                                    <div className="ml-auto opacity-0 group-hover/item:opacity-100 transition-all text-emerald-500 font-bold text-[10px] uppercase tracking-widest flex items-center gap-2">
+                                        <Sparkles size={16} /> Mark {item.completed ? 'Pending' : 'Done'}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                ) : (
+                    <div className="py-24 text-center border-2 border-dashed border-slate-200 rounded-[40px] group/empty hover:border-slate-300 transition-colors">
+                        <div className="inline-flex p-6 bg-slate-50 rounded-full mb-6 group-hover/empty:scale-110 transition-transform duration-300"><HeartPulse size={48} className="text-slate-200 group-hover/empty:text-slate-300 transition-colors" /></div>
+                        <p className="font-bold text-xl text-slate-300 italic tracking-tight">No active protocols initialized.</p>
+                    </div>
+                )}
+            </div>
+
+            {/* 3. NEXUS TERMINAL (FULL WIDTH) */}
             <div className="relative p-12 rounded-[48px] overflow-hidden group shadow-2xl shadow-slate-200/40 border border-white/60 transition-all duration-500 hover:shadow-3xl hover:shadow-indigo-500/10 bg-white/60 backdrop-blur-2xl">
                 {/* ... (Terminal visuals) ... */}
                 <div className="absolute inset-0 bg-gradient-to-br from-white/80 via-white/40 to-indigo-50/20 opacity-80"></div>
@@ -238,111 +343,6 @@ const PatientProfile: React.FC<Props> = ({
                         )}
                     </div>
                 </div>
-            </div>
-
-            {/* 3. ACTIVE MONITOR (FULL WIDTH) */}
-            <div className="relative p-12 rounded-[48px] overflow-hidden bg-white shadow-xl shadow-slate-200/50 border border-slate-100/60 group hover:shadow-2xl transition-all duration-500">
-                <div className="absolute inset-0 opacity-[0.4] bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:24px_24px]"></div>
-
-                <div className="flex justify-between items-center relative z-10 mb-10">
-                    <h3 className="font-black text-3xl tracking-tighter flex items-center gap-5 text-slate-900">
-                        <div className="p-3 bg-emerald-50 rounded-2xl text-emerald-600 shadow-sm border border-emerald-100"><ClipboardCheck size={28} /></div>
-                        Waitlist & Monitoring
-                    </h3>
-                    {activeCarePlan && <div className="bg-emerald-500 text-white px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-emerald-200 flex items-center gap-3"><div className="h-2 w-2 rounded-full bg-white animate-pulse" /> Live Protocol</div>}
-                </div>
-
-                {activeCarePlan ? (
-                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-12 relative z-10">
-                        <div className="p-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-[40px] relative overflow-hidden shadow-2xl shadow-emerald-500/20 text-white group/card">
-                            <div className="absolute right-0 top-0 p-12 opacity-10 scale-150 group-hover/card:scale-125 transition-transform duration-700 ease-out"><Activity size={120} /></div>
-
-                            <p className="text-[10px] font-black uppercase text-emerald-100 tracking-[0.25em] mb-4">Active Treatment</p>
-                            <div className="flex justify-between items-start mb-12">
-                                <h4 className="text-5xl font-black tracking-tighter">{activeCarePlan.treatmentName}</h4>
-                                <button
-                                    onClick={() => { setEditValues(activeCarePlan); setIsEditingPlan(true); }}
-                                    className="px-6 py-3 bg-white/20 hover:bg-white/30 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all"
-                                >
-                                    Edit Protocol
-                                </button>
-                            </div>
-
-                            {isEditingPlan ? (
-                                <div className="space-y-6 animate-in slide-in-from-top-4 duration-300">
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div className="space-y-2">
-                                            <label className="text-[9px] font-black uppercase text-emerald-100">Treatment Name</label>
-                                            <input
-                                                value={editValues.treatmentName || ''}
-                                                onChange={e => setEditValues(prev => ({ ...prev, treatmentName: e.target.value }))}
-                                                className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-sm font-bold text-white outline-none focus:bg-white/20"
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <label className="text-[9px] font-black uppercase text-emerald-100">Investment (₹)</label>
-                                            <input
-                                                type="number"
-                                                value={editValues.cost || 0}
-                                                onChange={e => setEditValues(prev => ({ ...prev, cost: Number(e.target.value) }))}
-                                                className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-sm font-bold text-white outline-none focus:bg-white/20"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="flex gap-4">
-                                        <button
-                                            onClick={async () => {
-                                                await onUpdateCarePlan(activeCarePlan.id, editValues);
-                                                setIsEditingPlan(false);
-                                            }}
-                                            className="flex-1 py-4 bg-white text-emerald-600 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl"
-                                        >
-                                            Synchronize Changes
-                                        </button>
-                                        <button
-                                            onClick={() => setIsEditingPlan(false)}
-                                            className="px-8 py-4 bg-emerald-700/50 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest"
-                                        >
-                                            Discard
-                                        </button>
-                                    </div>
-                                </div>
-                            ) : (
-                                <div className="flex items-end justify-between">
-                                    <div className="space-y-2">
-                                        <p className="text-[9px] font-black uppercase text-emerald-200/80 tracking-widest">Adhesion Score</p>
-                                        <div className="flex items-baseline gap-1">
-                                            <p className="text-6xl font-black">98</p>
-                                            <span className="text-xl font-bold opacity-60">%</span>
-                                        </div>
-                                    </div>
-                                    <div className="flex-1 max-w-[140px] h-4 bg-black/20 rounded-full overflow-hidden backdrop-blur-sm border border-white/10">
-                                        <div className="h-full bg-white w-[98%] shadow-[0_0_20px_rgba(255,255,255,0.5)]"></div>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="space-y-4">
-                            {activeCarePlan.checklist?.map((item, i) => (
-                                <div key={item.id} onClick={() => onToggleChecklistItem && onToggleChecklistItem(activeCarePlan.id, item.id)} className="flex items-center gap-6 p-6 rounded-[28px] bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:scale-[1.01] hover:border-emerald-100 transition-all duration-300 group/item cursor-pointer">
-                                    <div className={`h-10 w-10 rounded-2xl flex items-center justify-center transition-all duration-300 ${item.completed ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30 rotate-0' : 'bg-slate-50 text-slate-300 rotate-12 group-hover/item:rotate-0'}`}>
-                                        {item.completed ? <Check size={20} strokeWidth={4} /> : <span className="text-xs font-black">{i + 1}</span>}
-                                    </div>
-                                    <span className={`text-sm font-bold tracking-tight transition-colors ${item.completed ? 'text-slate-400 line-through decoration-emerald-500/50' : 'text-slate-700 group-hover/item:text-slate-900'}`}>{item.task}</span>
-                                    <div className="ml-auto opacity-0 group-hover/item:opacity-100 transition-all text-emerald-500 font-bold text-[10px] uppercase tracking-widest flex items-center gap-2">
-                                        <Sparkles size={16} /> Mark {item.completed ? 'Pending' : 'Done'}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                ) : (
-                    <div className="py-24 text-center border-2 border-dashed border-slate-200 rounded-[40px] group/empty hover:border-slate-300 transition-colors">
-                        <div className="inline-flex p-6 bg-slate-50 rounded-full mb-6 group-hover/empty:scale-110 transition-transform duration-300"><HeartPulse size={48} className="text-slate-200 group-hover/empty:text-slate-300 transition-colors" /></div>
-                        <p className="font-bold text-xl text-slate-300 italic tracking-tight">No active protocols initialized.</p>
-                    </div>
-                )}
             </div>
 
             {/* 4. CLINICAL JOURNAL (FULL WIDTH) */}

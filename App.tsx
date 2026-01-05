@@ -287,6 +287,17 @@ const App = () => {
     return result;
   };
 
+  const handleAssignPlan = async (clinicId: string, patientId: string, template: any) => {
+    const result = await backendService.assignCarePlan(clinicId, patientId, template);
+    if (result.success && result.updatedData) {
+      setData(prev => ({ ...prev, ...result.updatedData }));
+      addToast("Clinical Protocol Initialized", "success");
+    } else {
+      addToast(`Failed to initialize protocol: ${result.message}`, "error");
+    }
+    return result;
+  };
+
   const handleUpdateAppointmentStatus = async (id: string, status: AppointmentStatus) => {
     const result = await backendService.updateAppointmentStatus(id, status);
     if (result.success && result.updatedData) {
@@ -345,6 +356,7 @@ const App = () => {
     onSwitchProfile: handleSwitchProfile,
     onProcessTransaction: handleTransaction,
     onUpdateCarePlan: handleUpdateCarePlan,
+    onAssignPlan: handleAssignPlan,
     onLinkFamily: handleLinkFamily,
     onAddPatient: handleAddPatient,
     onOnboardClinic: handleOnboardClinic,
