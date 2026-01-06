@@ -261,7 +261,12 @@ const DesktopDoctorView: React.FC<Props> = ({
                                                       {isNow && <span className="text-indigo-500">• In Chair</span>}
                                                    </p>
                                                 </div>
-                                                <button onClick={() => { setActiveSection('Schedule'); /* Ideally scroll to slot */ }} className="px-3 py-1.5 bg-slate-900 text-white text-[10px] font-bold rounded-lg hover:bg-primary transition-colors">View</button>
+                                                <button onClick={() => {
+                                                   if (patient) {
+                                                      setSelectedPatient(patient);
+                                                      setActiveSection('Patient Records');
+                                                   }
+                                                }} className="px-3 py-1.5 bg-slate-900 text-white text-[10px] font-bold rounded-lg hover:bg-primary transition-colors">View</button>
                                              </div>
                                           );
                                        })}
@@ -281,6 +286,10 @@ const DesktopDoctorView: React.FC<Props> = ({
                         patients={allUsers.filter(u => u.role === 'PATIENT' && u.clinicId === clinic.id)}
                         onSchedule={onSchedule}
                         onUpdateStatus={onUpdateAppointmentStatus}
+                        onViewProfile={(patient) => {
+                           setSelectedPatient(patient);
+                           setActiveSection('Patient Records');
+                        }}
                      />
                   )}
                   {activeSection === 'Patient Records' && (

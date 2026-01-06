@@ -8,9 +8,10 @@ interface Props {
     patients: User[];
     onSchedule: (patientId: string, start: string, end: string, type: AppointmentType, notes: string) => any;
     onUpdateStatus: (id: string, status: AppointmentStatus) => any;
+    onViewProfile?: (patient: User) => void;
 }
 
-const AppointmentScheduler: React.FC<Props> = ({ clinic, appointments, patients, onSchedule, onUpdateStatus }) => {
+const AppointmentScheduler: React.FC<Props> = ({ clinic, appointments, patients, onSchedule, onUpdateStatus, onViewProfile }) => {
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [showBookingModal, setShowBookingModal] = useState(false);
 
@@ -112,7 +113,13 @@ const AppointmentScheduler: React.FC<Props> = ({ clinic, appointments, patients,
                                                 <h4 className="font-black text-xl text-slate-900">{patient?.name || 'Unknown Patient'}</h4>
                                                 <p className="text-sm text-slate-500 mt-1">{appt.notes || 'No clinical notes added.'}</p>
                                             </div>
-                                            <div className="flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity mt-4">
+                                                {onViewProfile && (
+                                                    <button onClick={() => onViewProfile(patient!)} className="px-3 py-2 bg-slate-900 text-white text-[10px] font-bold rounded-xl flex items-center gap-2 hover:bg-black whitespace-nowrap">
+                                                        <UserIcon size={12} /> Profile
+                                                    </button>
+                                                )}
+                                                <div className="flex-1"></div>
                                                 <button onClick={() => onUpdateStatus(appt.id, AppointmentStatus.CONFIRMED)} className="p-2 bg-emerald-50 text-emerald-600 rounded-xl hover:bg-emerald-100"><Check size={16} /></button>
                                                 <button onClick={() => onUpdateStatus(appt.id, AppointmentStatus.CANCELLED)} className="p-2 bg-rose-50 text-rose-600 rounded-xl hover:bg-rose-100"><X size={16} /></button>
                                             </div>
