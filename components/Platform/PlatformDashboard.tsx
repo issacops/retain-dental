@@ -44,7 +44,12 @@ interface Props {
    onEnterClinic: (clinicId: string) => void; // Sync nav wrapper
    onDeleteClinic: (clinicId: string) => Promise<any>;
    onUpdateConfig: (updates: any) => Promise<any>;
-   onUpdateClinic: (clinicId: string, updates: any) => Promise<any>;
+   onOnboardClinic: (data: any) => Promise<any>;
+   onEnterClinic: (clinicId: string) => void;
+   onUpdateConfig: (config: any) => Promise<any>;
+   onDeleteClinic: (clinicId: string) => void;
+   onUpdateClinic: (clinicId: string, updates: Partial<Clinic>) => Promise<any>;
+   onUpdateAdminAuth: (clinicId: string, email: string, password?: string) => Promise<any>;
 }
 
 const LiveHeartbeat = () => (
@@ -56,22 +61,53 @@ const LiveHeartbeat = () => (
    </div>
 );
 
-const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, onEnterClinic, onUpdateConfig, onDeleteClinic, onUpdateClinic }) => {
+const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, onEnterClinic, onUpdateConfig, onDeleteClinic, onUpdateClinic, onUpdateAdminAuth }) => {
    const [activeView, setActiveView] = useState<'HUB' | 'REVENUE' | 'SECURITY' | 'DEPLOYMENTS' | 'CONFIG'>('HUB');
    const [showOnboardModal, setShowOnboardModal] = useState(false);
    const [selectedClinicForManifest, setSelectedClinicForManifest] = useState<PerformanceMetric | null>(null);
+   const [isEditing, setIsEditing] = useState(false); // NEW: Toggle Edit Mode
+   const [editDraft, setEditDraft] = useState<any>({}); // NEW: Form Data
    const [searchQuery, setSearchQuery] = useState('');
 
-   const handleEditClinic = async (clinic: Clinic) => {
-      const newOwner = window.prompt("Enter new Clinic Director Name:", clinic.ownerName);
-      if (newOwner === null) return; // Cancelled
-
-      const newEmail = window.prompt("Enter new Admin Email (Login Credential):", clinic.adminEmail);
-      if (newEmail === null) return; // Cancelled
-
-      if (newOwner !== clinic.ownerName || newEmail !== clinic.adminEmail) {
-         await onUpdateClinic(clinic.id, { ownerName: newOwner || '', adminEmail: newEmail || '' });
+   // Initialize draft when editing starts
+   useEffect(() => {
+      if (selectedClinicForManifest) {
+         setEditDraft({
+            name: selectedClinicForManifest.name,
+            slug: selectedClinicForManifest.slug,
+            ownerName: 'Loading...', // Ideally passed in props or fetched. The metric interface is limited.
+            // We need the full Clinic object to edit properly. 
+            // 'clinics' prop has the full data. Let's find it.
+         });
+         const fullClinic = clinics.find(c => c.id === selectedClinicForManifest.id);
+         if (fullClinic) {
+            setEditDraft({
+               name: fullClinic.name,
+               slug: fullClinic.slug,
+               ownerName: fullClinic.ownerName,
+               adminEmail: fullClinic.adminEmail,
+               subscriptionTier: fullClinic.subscriptionTier,
+               primaryColor: fullClinic.primaryColor,
+               themeTexture: fullClinic.themeTexture,
+               logoUrl: fullClinic.logoUrl
+            });
+         }
       }
+   }, [selectedClinicForManifest, clinics]);
+
+   const handleSaveEdit = async () => {
+      if (!selectedClinicForManifest) return;
+
+      // 1. Update Core Clinic Data
+      await onUpdateClinic(selectedClinicForManifest.id, editDraft);
+
+      // 2. Update Auth Credentials
+      if (editDraft.adminEmail || editDraft.password) {
+         await onUpdateAdminAuth(selectedClinicForManifest.id, editDraft.adminEmail, editDraft.password);
+      }
+
+      setIsEditing(false);
+      setSelectedClinicForManifest(null); // Close to refresh
    };
 
 
@@ -256,9 +292,11 @@ const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, o
                   <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-8">
                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         <div className="bg-white/[0.02] border border-white/5 p-12 rounded-[56px] h-[500px]">
-                           <h4 className="text-2xl font-black text-white tracking-tighter mb-10">Network GTV Acceleration</h4>
+                           <h4 className="text-2xl font-black text-white tracking-tighter mb-10">Real-Time Transaction Volume</h4>
                            <ResponsiveContainer width="100%" height="80%">
-                              <AreaChart data={[{ n: 'Jan', r: 450000 }, { n: 'Feb', r: 520000 }, { n: 'Mar', r: 890000 }, { n: 'Apr', r: 1240000 }, { n: 'May', r: 1560000 }]}>
+                              <AreaChart data={stats.recentActivity && stats.recentActivity.length > 0
+                                 ? [...stats.recentActivity].reverse().map(t => ({ n: new Date(t.time).toLocaleDateString([], { day: '2-digit', month: 'short' }), r: t.amount }))
+                                 : [{ n: 'No Data', r: 0 }]}>
                                  <defs>
                                     <linearGradient id="colorGtv" x1="0" y1="0" x2="0" y2="1">
                                        <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
@@ -510,69 +548,157 @@ const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, o
             </div>
          </main>
 
-         {/* MANIFEST MODAL */}
+         {/* MANIFEST MODAL (VIEW & EDIT) */}
          {selectedClinicForManifest && (
             <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-3xl p-6">
-               <div className="bg-[#0a0c10] border border-white/10 rounded-[64px] p-16 w-full max-w-3xl shadow-2xl relative overflow-hidden animate-in zoom-in-95 duration-500">
+               <div className="bg-[#0a0c10] border border-white/10 rounded-[64px] p-16 w-full max-w-3xl shadow-2xl relative overflow-hidden animate-in zoom-in-95 duration-500 max-h-[90vh] overflow-y-auto custom-scrollbar">
                   <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-500/10 blur-[150px] rounded-full pointer-events-none"></div>
-                  <div className="flex justify-between items-start mb-16 relative z-10">
+
+                  <div className="flex justify-between items-start mb-10 relative z-10">
                      <div className="flex items-center gap-8">
-                        <div className="h-24 w-24 rounded-[32px] flex items-center justify-center text-5xl font-black text-white shadow-2xl" style={{ backgroundColor: selectedClinicForManifest.color }}>
+                        <div className="h-24 w-24 rounded-[32px] flex items-center justify-center text-5xl font-black text-white shadow-2xl" style={{ backgroundColor: isEditing ? editDraft.primaryColor : selectedClinicForManifest.color }}>
                            {selectedClinicForManifest.logo ? <img src={selectedClinicForManifest.logo} className="w-full h-full object-cover rounded-[32px]" /> : selectedClinicForManifest.name.charAt(0)}
                         </div>
                         <div>
-                           <h3 className="text-5xl font-black text-white tracking-tighter leading-none mb-3">{selectedClinicForManifest.name}</h3>
-                           <p className="text-lg text-slate-500 font-bold uppercase tracking-widest">Instance Manifest v1.0.4</p>
+                           {isEditing ? (
+                              <input
+                                 value={editDraft.name}
+                                 onChange={e => setEditDraft({ ...editDraft, name: e.target.value })}
+                                 className="bg-transparent text-5xl font-black text-white tracking-tighter leading-none mb-3 outline-none border-b border-white/20 focus:border-indigo-500 w-full"
+                              />
+                           ) : (
+                              <h3 className="text-5xl font-black text-white tracking-tighter leading-none mb-3">{selectedClinicForManifest.name}</h3>
+                           )}
+                           <p className="text-lg text-slate-500 font-bold uppercase tracking-widest flex items-center gap-3">
+                              Instance Manifest v1.0.4
+                              {isEditing && <span className="text-indigo-400 bg-indigo-500/10 px-2 py-1 rounded text-xs">EDIT MODE</span>}
+                           </p>
                         </div>
                      </div>
-                     <button onClick={() => setSelectedClinicForManifest(null)} className="p-4 bg-white/5 hover:bg-white/10 text-slate-500 hover:text-white rounded-[24px] transition-all"><X size={32} /></button>
+                     <button onClick={() => { setSelectedClinicForManifest(null); setIsEditing(false); }} className="p-4 bg-white/5 hover:bg-white/10 text-slate-500 hover:text-white rounded-[24px] transition-all"><X size={32} /></button>
                   </div>
 
-                  <div className="space-y-10 relative z-10">
-                     <div className="grid grid-cols-2 gap-6">
-                        <div className="bg-white/5 p-8 rounded-[40px] border border-white/5 space-y-4">
-                           <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest px-1">Network Deployment ID</p>
-                           <p className="font-mono text-xs text-white bg-black/50 p-4 rounded-2xl border border-white/10">{selectedClinicForManifest.id.toUpperCase()}</p>
-                        </div>
-                        <div className="bg-white/5 p-8 rounded-[40px] border border-white/5 space-y-4">
-                           <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest px-1">Provisioning Date</p>
-                           <p className="text-xl font-black text-white">{new Date(selectedClinicForManifest.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
-                        </div>
-                     </div>
-
-                     <div className="bg-white/5 p-10 rounded-[40px] border border-white/5 space-y-8">
-                        <div className="flex justify-between items-center px-2">
-                           <h5 className="font-black text-white text-lg tracking-tight">Access Gateways</h5>
-                           <span className="text-[10px] font-black uppercase text-indigo-400">Identity-Bound URLs</span>
-                        </div>
-                        <div className="space-y-4">
-                           <div className="bg-black/40 rounded-3xl p-6 border border-white/10 flex justify-between items-center group">
-                              <div>
-                                 <p className="text-[9px] font-black text-slate-600 uppercase tracking-widest mb-1">Clinic Portal Link</p>
-                                 <p className="font-mono text-xs text-slate-400">
-                                    {/* PROD: Use login path since we don't have wildcard DNS on free Vercel */}
-                                    {window.location.origin}/login/{selectedClinicForManifest.slug}
-                                 </p>
-                              </div>
-                              <button onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/login/${selectedClinicForManifest.slug}`); alert('Copied'); }} className="p-3 bg-white/5 hover:bg-indigo-600 rounded-xl transition-all opacity-0 group-hover:opacity-100"><Copy size={16} /></button>
+                  {isEditing ? (
+                     // EDIT FORM
+                     <div className="space-y-8 relative z-10 animate-in fade-in slide-in-from-bottom-4">
+                        <div className="grid grid-cols-2 gap-8">
+                           <div className="space-y-4">
+                              <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest px-1">Network Slug</label>
+                              <input
+                                 value={editDraft.slug}
+                                 onChange={e => setEditDraft({ ...editDraft, slug: e.target.value })}
+                                 className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white font-bold text-sm outline-none focus:border-indigo-500"
+                              />
+                           </div>
+                           <div className="space-y-4">
+                              <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest px-1">Subscription Tier</label>
+                              <select
+                                 value={editDraft.subscriptionTier}
+                                 onChange={e => setEditDraft({ ...editDraft, subscriptionTier: e.target.value })}
+                                 className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white font-bold text-sm outline-none focus:border-indigo-500 [&>option]:text-black"
+                              >
+                                 <option value="STARTER">STARTER</option>
+                                 <option value="PROFESSIONAL">PROFESSIONAL</option>
+                                 <option value="ENTERPRISE">ENTERPRISE</option>
+                              </select>
                            </div>
                         </div>
-                     </div>
 
-                     <div className="flex gap-4">
-                        <button onClick={() => onEnterClinic(selectedClinicForManifest.id)} className="flex-1 py-7 bg-indigo-600 hover:bg-indigo-500 text-white rounded-[32px] font-black text-xl shadow-2xl transition-all hover:scale-[1.02]">
-                           Initiate Master Override
-                        </button>
-                        <button onClick={() => {
-                           if (confirm(`CRITICAL WARNING: You are about to Permanently Decommission Node ${selectedClinicForManifest.name.toUpperCase()}.\n\nThis action cannot be undone. All associated data (records, wallets, transactions) will be wiped from the network.\n\nProceed?`)) {
-                              onDeleteClinic(selectedClinicForManifest.id);
-                              setSelectedClinicForManifest(null);
-                           }
-                        }} className="py-7 px-8 bg-rose-950/30 hover:bg-rose-900/50 border border-rose-900/50 text-rose-500 hover:text-rose-400 rounded-[32px] font-black text-lg transition-all hover:scale-[1.02] flex items-center justify-center gap-2">
-                           <LayoutGridIcon size={24} className="animate-pulse" /> Nuke Node
-                        </button>
+                        <div className="grid grid-cols-2 gap-8">
+                           <div className="space-y-4">
+                              <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest px-1">Director Name</label>
+                              <input
+                                 value={editDraft.ownerName}
+                                 onChange={e => setEditDraft({ ...editDraft, ownerName: e.target.value })}
+                                 className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white font-bold text-sm outline-none focus:border-indigo-500"
+                              />
+                           </div>
+                           <div className="space-y-4">
+                              <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest px-1">Admin Email</label>
+                              <input
+                                 value={editDraft.adminEmail}
+                                 onChange={e => setEditDraft({ ...editDraft, adminEmail: e.target.value })}
+                                 className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white font-bold text-sm outline-none focus:border-indigo-500"
+                              />
+                           </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-8">
+                           <div className="space-y-4">
+                              <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest px-1">Primary Color</label>
+                              <div className="flex gap-4">
+                                 <input type="color" value={editDraft.primaryColor} onChange={e => setEditDraft({ ...editDraft, primaryColor: e.target.value })} className="h-12 w-12 rounded-xl bg-transparent border-none cursor-pointer" />
+                                 <input value={editDraft.primaryColor} onChange={e => setEditDraft({ ...editDraft, primaryColor: e.target.value })} className="flex-1 bg-white/5 border border-white/10 rounded-2xl px-4 text-white font-mono text-xs outline-none" />
+                              </div>
+                           </div>
+                           <div className="space-y-4">
+                              <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest px-1">Logo URL</label>
+                              <input
+                                 value={editDraft.logoUrl || ''}
+                                 onChange={e => setEditDraft({ ...editDraft, logoUrl: e.target.value })}
+                                 className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white font-bold text-sm outline-none focus:border-indigo-500"
+                              />
+                           </div>
+                        </div>
+
+                        <div className="pt-8 flex gap-4 border-t border-white/5">
+                           <button onClick={() => setIsEditing(false)} className="px-8 py-4 bg-white/5 hover:bg-white/10 text-slate-300 rounded-[24px] font-bold text-sm transition-all">Cancel</button>
+                           <button onClick={handleSaveEdit} className="flex-1 py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-[24px] font-bold text-sm shadow-xl hover:scale-[1.02] transition-all">
+                              Commit Changes to Core
+                           </button>
+                        </div>
                      </div>
-                  </div>
+                  ) : (
+                     // COMPACT VIEW MODE
+                     <div className="space-y-10 relative z-10 animate-in fade-in slide-in-from-bottom-4">
+                        <div className="grid grid-cols-2 gap-6">
+                           <div className="bg-white/5 p-8 rounded-[40px] border border-white/5 space-y-4">
+                              <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest px-1">Network Deployment ID</p>
+                              <p className="font-mono text-xs text-white bg-black/50 p-4 rounded-2xl border border-white/10">{selectedClinicForManifest.id.toUpperCase()}</p>
+                           </div>
+                           <div className="bg-white/5 p-8 rounded-[40px] border border-white/5 space-y-4">
+                              <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest px-1">Provisioning Date</p>
+                              <p className="text-xl font-black text-white">{new Date(selectedClinicForManifest.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+                           </div>
+                        </div>
+
+                        <div className="bg-white/5 p-10 rounded-[40px] border border-white/5 space-y-8">
+                           <div className="flex justify-between items-center px-2">
+                              <h5 className="font-black text-white text-lg tracking-tight">Access Gateways</h5>
+                              <span className="text-[10px] font-black uppercase text-indigo-400">Identity-Bound URLs</span>
+                           </div>
+                           <div className="space-y-4">
+                              <div className="bg-black/40 rounded-3xl p-6 border border-white/10 flex justify-between items-center group">
+                                 <div>
+                                    <p className="text-[9px] font-black text-slate-600 uppercase tracking-widest mb-1">Clinic Portal Link</p>
+                                    <p className="font-mono text-xs text-slate-400">
+                                       {/* PROD: Use login path since we don't have wildcard DNS on free Vercel */}
+                                       {window.location.origin}/login/{selectedClinicForManifest.slug}
+                                    </p>
+                                 </div>
+                                 <button onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/login/${selectedClinicForManifest.slug}`); alert('Copied'); }} className="p-3 bg-white/5 hover:bg-indigo-600 rounded-xl transition-all opacity-0 group-hover:opacity-100"><Copy size={16} /></button>
+                              </div>
+                           </div>
+                        </div>
+
+                        <div className="flex gap-4">
+                           <button onClick={() => setIsEditing(true)} className="flex-1 py-7 bg-white/5 hover:bg-white/10 text-white rounded-[32px] font-black text-xl border border-white/5 transition-all">
+                              Edit Configuration
+                           </button>
+                           <button onClick={() => onEnterClinic(selectedClinicForManifest.id)} className="flex-1 py-7 bg-indigo-600 hover:bg-indigo-500 text-white rounded-[32px] font-black text-xl shadow-2xl transition-all hover:scale-[1.02]">
+                              Master Override
+                           </button>
+                           <button onClick={() => {
+                              if (confirm(`CRITICAL WARNING: You are about to Permanently Decommission Node ${selectedClinicForManifest.name.toUpperCase()}.\n\nThis action cannot be undone. All associated data (records, wallets, transactions) will be wiped from the network.\n\nProceed?`)) {
+                                 onDeleteClinic(selectedClinicForManifest.id);
+                                 setSelectedClinicForManifest(null);
+                              }
+                           }} className="py-7 px-8 bg-rose-950/30 hover:bg-rose-900/50 border border-rose-900/50 text-rose-500 hover:text-rose-400 rounded-[32px] font-black text-lg transition-all hover:scale-[1.02] flex items-center justify-center gap-2">
+                              <LayoutGridIcon size={24} className="animate-pulse" />
+                           </button>
+                        </div>
+                     </div>
+                  )}
                </div>
             </div>
          )}

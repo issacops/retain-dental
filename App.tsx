@@ -263,6 +263,16 @@ const App = () => {
     }
   };
 
+  const handleUpdateAdminAuth = async (clinicId: string, email: string, password?: string) => {
+    const result = await backendService.updateAdminAuth(clinicId, email, password);
+    if (result.success) {
+      addToast(result.message, "success");
+      // If we are updating ourselves, maybe force logout? Na.
+    } else {
+      addToast(`Auth Update Failed: ${result.message}`, "error");
+    }
+  };
+
   const handleUpdateGlobalConfig = async (updates: any) => {
     const result = await backendService.updateSystemConfig(updates);
     if (result.success) {
@@ -294,6 +304,17 @@ const App = () => {
       addToast("Clinical Protocol Initialized", "success");
     } else {
       addToast(`Failed to initialize protocol: ${result.message}`, "error");
+    }
+    return result;
+  };
+
+  const handleTerminateCarePlan = async (carePlanId: string) => {
+    const result = await backendService.terminateCarePlan(carePlanId);
+    if (result.success && result.updatedData) {
+      setData(prev => ({ ...prev, ...result.updatedData }));
+      addToast("Treatment Protocol Terminated", "success");
+    } else {
+      addToast(`Failed to terminate protocol: ${result.message}`, "error");
     }
     return result;
   };
@@ -357,11 +378,13 @@ const App = () => {
     onProcessTransaction: handleTransaction,
     onUpdateCarePlan: handleUpdateCarePlan,
     onAssignPlan: handleAssignPlan,
+    onTerminateCarePlan: handleTerminateCarePlan,
     onLinkFamily: handleLinkFamily,
     onAddPatient: handleAddPatient,
     onOnboardClinic: handleOnboardClinic,
     onEnterClinic: handleEnterClinic,
     onDeleteClinic: handleDeleteClinic,
+    onUpdateAdminAuth: handleUpdateAdminAuth,
     onLogin: handleLogin,
     onRedeem: (amount: number, description: string) => handleTransaction(data.currentUser?.id!, amount, TransactionCategory.REWARD, TransactionType.REDEEM, { name: description } as any),
   };

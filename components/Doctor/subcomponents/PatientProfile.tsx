@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { Share2, Microscope, BarChart, GraduationCap, ClipboardCheck, Bell, Activity, Check, HeartPulse, History, Filter, CreditCard, Layers, IndianRupee, Sparkles } from 'lucide-react';
+import { Share2, Microscope, BarChart, GraduationCap, ClipboardCheck, Bell, Activity, Check, HeartPulse, History, Filter, CreditCard, Layers, IndianRupee, Sparkles, X, Save } from 'lucide-react';
 import { ResponsiveContainer, BarChart as ReBarChart, Bar, Cell, CartesianGrid, XAxis, Tooltip, LineChart, Line } from 'recharts';
 import { User, Wallet, Transaction, CarePlan, Clinic, FamilyGroup, TransactionCategory, TransactionType } from '../../../types';
 import { TREATMENT_TEMPLATES, TreatmentTemplate } from '../../../constants';
@@ -15,12 +15,13 @@ interface Props {
     familyGroups: FamilyGroup[];
     onProcessTransaction: (patientId: string, amount: number, category: TransactionCategory, type: TransactionType, carePlanTemplate?: any) => any;
     onAssignPlan: (clinicId: string, patientId: string, template: any) => Promise<any>;
+    onTerminateCarePlan: (carePlanId: string) => Promise<any>;
     onToggleChecklistItem: (carePlanId: string, itemId: string) => Promise<any>;
     onUpdateCarePlan: (carePlanId: string, updates: Partial<CarePlan>) => Promise<any>;
 }
 
 const PatientProfile: React.FC<Props> = ({
-    selectedPatient, clinic, wallets, carePlans, transactions, allUsers, familyGroups, onProcessTransaction, onAssignPlan, onToggleChecklistItem, onUpdateCarePlan
+    selectedPatient, clinic, wallets, carePlans, transactions, allUsers, familyGroups, onProcessTransaction, onAssignPlan, onTerminateCarePlan, onToggleChecklistItem, onUpdateCarePlan
 }) => {
     const [txAmount, setTxAmount] = useState('');
     const [txCategory, setTxCategory] = useState<TransactionCategory>(TransactionCategory.GENERAL);
@@ -148,22 +149,74 @@ const PatientProfile: React.FC<Props> = ({
                                                 className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-sm font-bold text-white outline-none focus:bg-white/20"
                                             />
                                         </div>
+                                        <div className="space-y-4">
+                                            <div className="flex justify-between items-end">
+                                                <label className="text-[9px] font-black uppercase text-emerald-100">Aftercare Guidelines</label>
+                                                <button
+                                                    onClick={() => setEditValues(prev => ({ ...prev, instructions: [...(prev.instructions || []), ""] }))}
+                                                    className="text-[8px] font-black uppercase bg-white/10 px-3 py-1 rounded-lg hover:bg-white/20"
+                                                >
+                                                    + Add Rule
+                                                </button>
+                                            </div>
+                                            <div className="space-y-2 max-h-40 overflow-y-auto custom-scrollbar pr-2">
+                                                {(editValues.instructions || []).map((inst: string, idx: number) => (
+                                                    <div key={idx} className="flex gap-2">
+                                                        <input
+                                                            value={inst}
+                                                            onChange={e => {
+                                                                const newInst = [...(editValues.instructions || [])];
+                                                                newInst[idx] = e.target.value;
+                                                                setEditValues(prev => ({ ...prev, instructions: newInst }));
+                                                            }}
+                                                            className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-xs font-medium text-white outline-none focus:bg-white/15"
+                                                            placeholder={`Instruction ${idx + 1}`}
+                                                        />
+                                                        <button
+                                                            onClick={() => {
+                                                                const newInst = [...(editValues.instructions || [])];
+                                                                newInst.splice(idx, 1);
+                                                                setEditValues(prev => ({ ...prev, instructions: newInst }));
+                                                            }}
+                                                            className="p-2 text-rose-300 hover:text-rose-100"
+                                                        >
+                                                            <X size={14} />
+                                                        </button>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="flex gap-4">
+
+                                    <div className="flex gap-3 pt-6">
                                         <button
                                             onClick={async () => {
                                                 await onUpdateCarePlan(activeCarePlan.id, editValues);
                                                 setIsEditingPlan(false);
                                             }}
-                                            className="flex-1 py-4 bg-white text-emerald-600 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl"
+                                            className="flex-1 py-4 bg-white text-emerald-600 rounded-[20px] text-[10px] font-black uppercase tracking-widest shadow-xl shadow-emerald-900/20 active:scale-95 transition-all flex items-center justify-center gap-2"
                                         >
-                                            Synchronize Changes
+                                            <Save size={14} /> Update Protocol
                                         </button>
                                         <button
                                             onClick={() => setIsEditingPlan(false)}
-                                            className="px-8 py-4 bg-emerald-700/50 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest"
+                                            className="px-8 py-4 bg-emerald-700/50 hover:bg-emerald-700 rounded-[20px] text-[10px] font-black uppercase tracking-widest text-white/70 hover:text-white transition-all"
                                         >
-                                            Discard
+                                            Cancel
+                                        </button>
+                                    </div>
+
+                                    <div className="pt-6 mt-6 border-t border-white/10">
+                                        <button
+                                            onClick={async () => {
+                                                if (confirm("Are you sure you want to terminate this active clinical protocol? This will remove it from the patient's dashboard.")) {
+                                                    await onTerminateCarePlan(activeCarePlan.id);
+                                                    setIsEditingPlan(false);
+                                                }
+                                            }}
+                                            className="w-full py-4 bg-rose-500/20 hover:bg-rose-500 text-rose-100 rounded-[20px] text-[10px] font-black uppercase tracking-widest border border-rose-500/30 transition-all flex items-center justify-center gap-2"
+                                        >
+                                            Terminate Treatment
                                         </button>
                                     </div>
                                 </div>

@@ -41,6 +41,10 @@ export interface IBackendService {
         adminEmail: string
     ): Promise<ServiceResponse<DatabaseState>>;
 
+    updateClinic(clinicId: string, updates: Partial<Clinic>): Promise<ServiceResponse<DatabaseState>>;
+
+    updateAdminAuth(clinicId: string, email: string, newPassword?: string): Promise<ServiceResponse>;
+
     deleteClinic(clinicId: string): Promise<ServiceResponse<DatabaseState>>;
 
     // --- CLINICAL OPS ---
@@ -112,4 +116,6 @@ export interface IBackendService {
     updateCarePlan(carePlanId: string, updates: Partial<CarePlan>): Promise<ServiceResponse>;
 
     toggleChecklistItem(carePlanId: string, itemId: string): Promise<ServiceResponse>;
+
+    terminateCarePlan(carePlanId: string): Promise<ServiceResponse>;
 }

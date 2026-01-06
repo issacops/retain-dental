@@ -273,6 +273,30 @@ export class MockBackendService implements IBackendService {
     return { success: true, message: 'Network expanded', updatedData: await this.getData() };
   }
 
+  public async updateClinic(clinicId: string, updates: Partial<Clinic>): Promise<ServiceResponse<DatabaseState>> {
+    const index = this.clinics.findIndex(c => c.id === clinicId);
+    if (index === -1) return { success: false, message: 'Node not found', error: 'NOT_FOUND' };
+
+    this.clinics[index] = { ...this.clinics[index], ...updates };
+    this.logActivity(this.clinics[index].name, 'Super Admin', 'Updated Node Configuration', 'INFO');
+    this.persist();
+
+    return { success: true, message: 'Node Updated', updatedData: await this.getData() };
+  }
+
+  public async updateAdminAuth(clinicId: string, email: string, newPassword?: string): Promise<ServiceResponse> {
+    const admin = this.users.find(u => u.clinicId === clinicId && u.role === Role.ADMIN);
+    if (!admin) return { success: false, message: 'Admin not found', error: 'NOT_FOUND' };
+
+    admin.email = email;
+    // In mock, we don't store password, but we simulate the action
+    if (newPassword) {
+      this.logActivity(this.clinics.find(c => c.id === clinicId)?.name || 'System', 'Super Admin', 'Reset Admin Credentials', 'SECURITY');
+    }
+    this.persist();
+    return { success: true, message: 'Credentials Updated', updatedData: await this.getData() };
+  }
+
   public async deleteClinic(clinicId: string): Promise<ServiceResponse<DatabaseState>> {
     const clinicIndex = this.clinics.findIndex(c => c.id === clinicId);
     if (clinicIndex === -1) return { success: false, message: 'Node not found', error: 'NOT_FOUND' };
@@ -421,6 +445,36 @@ export class MockBackendService implements IBackendService {
     this.carePlans[index] = { ...this.carePlans[index], ...updates };
     this.persist();
     return { success: true, message: 'Protocol synchronized', updatedData: await this.getData() };
+  }
+
+  public async assignCarePlan(clinicId: string, patientId: string, template: any): Promise<ServiceResponse> {
+    const newPlan: CarePlan = {
+      id: `cp-${Date.now()}`,
+      userId: patientId,
+      clinicId: clinicId,
+      treatmentName: template.name,
+      category: template.category,
+      instructions: template.instructions || [],
+      checklist: (template.checklist || []).map((i: any) => ({ ...i, completed: !!i.completed })),
+      assignedAt: new Date().toISOString(),
+      isActive: true,
+      status: 'ACTIVE', // Init as Active
+      metadata: template.metadata || {}
+    };
+    this.carePlans.unshift(newPlan);
+    this.persist();
+    return { success: true, message: 'Plan Assigned', updatedData: await this.getData() };
+  }
+
+  public async terminateCarePlan(carePlanId: string): Promise<ServiceResponse> {
+    const plan = this.carePlans.find(cp => cp.id === carePlanId);
+    if (plan) {
+      plan.isActive = false;
+      plan.status = 'CANCELLED';
+      this.persist();
+      return { success: true, message: 'Plan Terminated', updatedData: await this.getData() };
+    }
+    return { success: false, message: 'Plan not found' };
   }
 
   public async addPatient(clinicId: string, name: string, mobile: string): Promise<ServiceResponse> {

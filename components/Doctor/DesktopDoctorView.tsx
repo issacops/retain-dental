@@ -147,7 +147,7 @@ const DesktopDoctorView: React.FC<Props> = ({
 
                   {/* Navigation */}
                   <nav className="space-y-1">
-                     {['Operational Hub', 'Patient Records', 'Financial Ledger', 'Settings'].map((item, i) => (
+                     {['Operational Hub', 'Schedule', 'Patient Records', 'Financial Ledger', 'Settings'].map((item, i) => (
                         <div key={item}
                            onClick={() => setActiveSection(item)}
                            style={{
@@ -218,9 +218,9 @@ const DesktopDoctorView: React.FC<Props> = ({
                                  <div className="grid grid-cols-4 gap-4">
                                     {[
                                        { icon: <UserPlus size={20} />, label: 'Add Patient', action: () => setIsAddPatientModalOpen(true) },
-                                       { icon: <CalendarIcon size={20} />, label: 'Schedule', action: () => alert('Opening Scheduler...') },
+                                       { icon: <CalendarIcon size={20} />, label: 'Schedule', action: () => setActiveSection('Schedule') },
                                        { icon: <CreditCard size={20} />, label: 'Invoice', action: () => alert('New Invoice...') },
-                                       { icon: <MessageSquare size={20} />, label: 'Message', action: () => alert('Blast Message...') }
+                                       { icon: <MessageSquare size={20} />, label: 'Message', action: () => window.open('https://web.whatsapp.com', '_blank') }
                                     ].map((action, i) => (
                                        <button key={i} onClick={action.action} className="flex flex-col items-center gap-3 p-6 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-primary/20 hover:-translate-y-1 transition-all group">
                                           <div className="h-12 w-12 bg-slate-50 rounded-xl flex items-center justify-center text-slate-500 group-hover:bg-primary group-hover:text-white transition-colors">
@@ -242,21 +242,46 @@ const DesktopDoctorView: React.FC<Props> = ({
                               />
                               <div className="bg-white/60 backdrop-blur-xl rounded-[32px] p-8 border border-white/60 shadow-xl">
                                  <h3 className="text-xl font-black text-slate-800 mb-6 font-display">Patient Queue</h3>
-                                 {/* Placeholder for waiting list */}
-                                 <div className="space-y-4">
-                                    <div className="p-4 bg-white rounded-2xl border border-slate-100 flex items-center gap-4 shadow-sm">
-                                       <div className="h-10 w-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center font-bold text-xs">AM</div>
-                                       <div>
-                                          <h5 className="font-bold text-sm text-slate-800">Anita Malik</h5>
-                                          <p className="text-[10px] font-bold text-slate-400 uppercase">Waiting (10m)</p>
-                                       </div>
-                                       <button className="ml-auto px-3 py-1.5 bg-slate-900 text-white text-[10px] font-bold rounded-lg hover:bg-primary transition-colors">Call</button>
-                                    </div>
+                                 <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                                    {appointments
+                                       .filter(a => new Date(a.startTime).toDateString() === new Date().toDateString() && a.clinicId === clinic.id)
+                                       .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime())
+                                       .map(appt => {
+                                          const patient = allUsers.find(u => u.id === appt.patientId);
+                                          const isNow = new Date() >= new Date(appt.startTime) && new Date() <= new Date(appt.endTime);
+                                          return (
+                                             <div key={appt.id} className={`p-4 bg-white rounded-2xl border flex items-center gap-4 shadow-sm transition-all ${isNow ? 'border-indigo-500 ring-1 ring-indigo-500/20' : 'border-slate-100'}`}>
+                                                <div className={`h-10 w-10 rounded-full flex items-center justify-center font-bold text-xs ${isNow ? 'bg-indigo-100 text-indigo-600 animate-pulse' : 'bg-slate-100 text-slate-500'}`}>
+                                                   {new Date(appt.startTime).getHours() < 12 ? 'AM' : 'PM'}
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                   <h5 className="font-bold text-sm text-slate-800 truncate">{patient?.name || 'Unknown'}</h5>
+                                                   <p className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-2">
+                                                      {new Date(appt.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                      {isNow && <span className="text-indigo-500">• In Chair</span>}
+                                                   </p>
+                                                </div>
+                                                <button onClick={() => { setActiveSection('Schedule'); /* Ideally scroll to slot */ }} className="px-3 py-1.5 bg-slate-900 text-white text-[10px] font-bold rounded-lg hover:bg-primary transition-colors">View</button>
+                                             </div>
+                                          );
+                                       })}
+                                    {appointments.filter(a => new Date(a.startTime).toDateString() === new Date().toDateString()).length === 0 && (
+                                       <div className="text-center py-8 text-slate-400 text-xs font-bold uppercase tracking-wider">No Appointments Today</div>
+                                    )}
                                  </div>
                               </div>
                            </div>
                         </div>
                      </>
+                  )}
+                  {activeSection === 'Schedule' && (
+                     <AppointmentScheduler
+                        clinic={clinic}
+                        appointments={appointments}
+                        patients={allUsers.filter(u => u.role === 'PATIENT' && u.clinicId === clinic.id)}
+                        onSchedule={onSchedule}
+                        onUpdateStatus={onUpdateAppointmentStatus}
+                     />
                   )}
                   {activeSection === 'Patient Records' && (
                      <div className="flex overflow-hidden h-full">
