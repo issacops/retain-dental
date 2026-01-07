@@ -26,7 +26,7 @@ const AuthHandler = ({
 
   useEffect(() => {
     // If no user and trying to access protected route, send to Login
-    const publicPaths = ['/login', '/public'];
+    const publicPaths = ['/login', '/public', '/god'];
     const isPublic = publicPaths.some(p => location.pathname.startsWith(p));
 
     if (!currentUser && !isPublic) {
