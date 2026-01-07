@@ -119,6 +119,17 @@ const MobilePatientView: React.FC<Props> = ({ currentUser, users, wallets, trans
         {
           activeTab === 'HOME' && (
             <div className="space-y-6 animate-in fade-in slide-in-from-bottom-6 duration-700">
+              {/* Clinic Header (Logo) */}
+              <div className="flex items-center gap-4 px-2">
+                {clinic.logoUrl && (
+                  <img src={clinic.logoUrl} className="h-12 w-12 object-contain bg-white/5 rounded-xl p-2 border border-white/10" />
+                )}
+                <div>
+                  <h1 className="text-2xl font-black text-slate-800 tracking-tighter">{clinic.name}</h1>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Patient Portal</p>
+                </div>
+              </div>
+
               {/* Loyalty Status Card */}
               <div className="p-8 bg-white rounded-[40px] border border-slate-100 shadow-xl relative overflow-hidden group active:scale-[0.98] transition-all" onClick={() => setActiveTab('WALLET')}>
                 {/* ... (Loyalty Card content) ... */}

@@ -786,24 +786,6 @@ const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, o
                               </div>
                            </div>
                         </div>
-
-                        <div className="space-y-6">
-                           <p className="text-xs font-black text-slate-400 px-3 uppercase tracking-widest">Surface Physics</p>
-                           <div className="grid grid-cols-2 gap-4">
-                              {[
-                                 { id: 'minimal', label: 'Clean Minimal', desc: 'Symmetry & solid-fills' },
-                                 { id: 'grain', label: 'Industrial Grain', desc: 'Analog texture & depth' },
-                                 { id: 'aurora', label: 'Aurora Mesh', desc: 'Vibrant fluid-gradients' },
-                                 { id: 'glass', label: 'Refractive Glass', desc: 'Heavy blur & saturation' }
-                              ].map(tex => (
-                                 <button key={tex.id} onClick={() => setNewClinicTexture(tex.id as ThemeTexture)}
-                                    className={`p-8 rounded-[40px] border text-left transition-all relative overflow-hidden group ${newClinicTexture === tex.id ? 'bg-indigo-600 border-indigo-500 text-white shadow-2xl scale-[1.02]' : 'bg-white/5 border-white/10 text-slate-400 hover:bg-white/[0.08]'}`}>
-                                    <h5 className="font-black text-xl mb-1 tracking-tighter">{tex.label}</h5>
-                                    <p className="text-[10px] font-bold opacity-60 uppercase tracking-widest">{tex.desc}</p>
-                                 </button>
-                              ))}
-                           </div>
-                        </div>
                      </div>
 
                      <button onClick={async () => { await onOnboardClinic(newClinicName, newClinicColor, newClinicTexture, newClinicOwner, newClinicLogo, newClinicSlug || newClinicName.toLowerCase().replace(/\s+/g, '-'), newClinicAdminEmail); setShowOnboardModal(false); }}

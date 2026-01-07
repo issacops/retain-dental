@@ -25,7 +25,7 @@ export const ClinicPage: React.FC<Props> = (props) => {
                 transactions={data.transactions}
                 familyGroups={data.familyGroups}
                 carePlans={data.carePlans}
-                clinic={clinic}
+                clinic={clinic} // Clinic object has logoUrl
                 backendService={backendService}
                 appointments={data.appointments}
                 {...handlers}

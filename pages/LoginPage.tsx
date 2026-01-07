@@ -125,13 +125,19 @@ export const LoginPage: React.FC<LoginPageProps> = ({ clinics = [], activeClinic
 
                 {/* Header */}
                 <div className="text-center mb-12">
-                    <div className="inline-flex p-4 rounded-3xl shadow-lg mb-6 transition-all duration-500"
-                        style={{
-                            background: isBranded ? brandColor : 'linear-gradient(135deg, #6366f1 0%, #0ea5e9 100%)',
-                            boxShadow: `0 10px 30px -10px ${brandColor}60`
-                        }}>
-                        <Activity size={32} className="text-white" />
-                    </div>
+                    {targetClinic?.logoUrl ? (
+                        <div className="inline-flex p-4 rounded-3xl shadow-lg mb-6 transition-all duration-500 bg-white/5 border border-white/10">
+                            <img src={targetClinic.logoUrl} alt="Clinic Logo" className="h-16 w-16 object-contain" />
+                        </div>
+                    ) : (
+                        <div className="inline-flex p-4 rounded-3xl shadow-lg mb-6 transition-all duration-500"
+                            style={{
+                                background: isBranded ? brandColor : 'linear-gradient(135deg, #6366f1 0%, #0ea5e9 100%)',
+                                boxShadow: `0 10px 30px -10px ${brandColor}60`
+                            }}>
+                            <Activity size={32} className="text-white" />
+                        </div>
+                    )}
                     <h1 className="text-3xl font-black tracking-tighter text-white mb-2">{brandName}</h1>
                     <p className="text-slate-400 font-medium text-sm uppercase tracking-widest">{brandSubtitle}</p>
                 </div>
