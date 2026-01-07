@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { AreaChart, Area, XAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Clinic, ThemeTexture } from '../../types';
-import { LayoutGrid, Plus, BarChart3, Lock, Cpu, Settings, Globe, Radio, Search, Palette, X, Copy, Terminal, Monitor, Server, LayoutGrid as LayoutGridIcon } from 'lucide-react';
+import { LayoutGrid, Plus, BarChart3, Lock, Cpu, Settings, Globe, Radio, Search, Palette, X, Copy, Terminal, Monitor, Server, LayoutGrid as LayoutGridIcon, Upload } from 'lucide-react';
 import GlobalStats from './subcomponents/GlobalStats';
 import ClinicCard from './subcomponents/ClinicCard';
 import { supabase } from '../../lib/supabase';
@@ -44,10 +44,6 @@ interface Props {
    onEnterClinic: (clinicId: string) => void; // Sync nav wrapper
    onDeleteClinic: (clinicId: string) => Promise<any>;
    onUpdateConfig: (updates: any) => Promise<any>;
-   onOnboardClinic: (data: any) => Promise<any>;
-   onEnterClinic: (clinicId: string) => void;
-   onUpdateConfig: (config: any) => Promise<any>;
-   onDeleteClinic: (clinicId: string) => void;
    onUpdateClinic: (clinicId: string, updates: Partial<Clinic>) => Promise<any>;
    onUpdateAdminAuth: (clinicId: string, email: string, password?: string) => Promise<any>;
 }
@@ -121,6 +117,22 @@ const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, o
    const [newClinicSlug, setNewClinicSlug] = useState('');
 
    const [newClinicAdminEmail, setNewClinicAdminEmail] = useState('');
+
+   // IMAGE UPLOAD HANDLER
+   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, setter: (val: string) => void) => {
+      const file = e.target.files?.[0];
+      if (file) {
+         if (file.size > 1024 * 1024) { // 1MB Limit
+            alert("File too large. Max 1MB.");
+            return;
+         }
+         const reader = new FileReader();
+         reader.onloadend = () => {
+            setter(reader.result as string);
+         };
+         reader.readAsDataURL(file);
+      }
+   };
 
    // GLOBAL IDENTITY REGISTRY STATE
    const [allUsers, setAllUsers] = useState<any[]>([]);
@@ -758,7 +770,13 @@ const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, o
                            </div>
                            <div className="bg-white/5 p-8 rounded-[40px] border border-white/5 space-y-6">
                               <p className="text-xs font-black text-slate-400 px-1 uppercase tracking-widest">Asset Sync</p>
-                              <input type="text" className="w-full bg-black/50 border border-white/10 rounded-2xl px-6 py-4 text-white text-xs font-bold outline-none focus:border-indigo-500" placeholder="Logo Asset URL" value={newClinicLogo} onChange={e => setNewClinicLogo(e.target.value)} />
+                              <div className="relative">
+                                 <input type="text" className="w-full bg-black/50 border border-white/10 rounded-2xl pl-6 pr-14 py-4 text-white text-xs font-bold outline-none focus:border-indigo-500" placeholder="Logo Asset URL" value={newClinicLogo} onChange={e => setNewClinicLogo(e.target.value)} />
+                                 <label className="absolute right-2 top-2 bottom-2 aspect-square flex items-center justify-center bg-white/10 hover:bg-white/20 rounded-xl cursor-pointer transition-colors" title="Upload Image">
+                                    <Upload size={16} className="text-white" />
+                                    <input type="file" className="hidden" accept="image/*" onChange={(e) => handleImageUpload(e, setNewClinicLogo)} />
+                                 </label>
+                              </div>
                            </div>
                         </div>
 
