@@ -40,7 +40,7 @@ interface Props {
       config: any;
       shards: ShardStatus[];
    };
-   onOnboardClinic: (name: string, color: string, texture: ThemeTexture, ownerName: string, logoUrl: string, slug: string, adminEmail: string) => Promise<any>;
+   onOnboardClinic: (name: string, color: string, texture: ThemeTexture, ownerName: string, logoUrl: string, slug: string, adminEmail?: string) => Promise<any>;
    onEnterClinic: (clinicId: string) => void; // Sync nav wrapper
    onDeleteClinic: (clinicId: string) => Promise<any>;
    onUpdateConfig: (updates: any) => Promise<any>;
@@ -431,7 +431,14 @@ const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, o
                                  </div>
 
                                  {/* ACTIONS */}
-                                 <div className="col-span-2 flex justify-end">
+                                 <div className="col-span-2 flex justify-end gap-2">
+                                    <button onClick={() => {
+                                       const newPass = prompt("Set Temporary Password for " + user.email);
+                                       if (newPass) onUpdateAdminAuth(user.clinic_id, user.email, newPass);
+                                    }} className="text-[10px] bg-white/5 hover:bg-white/10 text-slate-400 px-3 py-2 rounded-lg font-bold uppercase tracking-wider">
+                                       Reset Pass
+                                    </button>
+
                                     {user.status === 'PENDING' && (
                                        <button onClick={() => handleUpdateUser(user.id, 'status', 'ACTIVE')} className="text-[10px] bg-emerald-500 hover:bg-emerald-400 text-slate-900 px-3 py-2 rounded-lg font-bold uppercase tracking-wider shadow-lg">
                                           Approve
@@ -749,8 +756,8 @@ const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, o
                            </div>
                         </div>
                         <div className="space-y-4">
-                           <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest px-3">Administrator Email</label>
-                           <input type="email" className="w-full bg-white/5 border border-white/10 rounded-[32px] px-8 py-5 text-white font-black text-xl outline-none focus:border-indigo-500 transition-all" placeholder="doctor@gmail.com" value={newClinicAdminEmail} onChange={e => setNewClinicAdminEmail(e.target.value)} />
+                           <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest px-3">Administrator Email (Optional)</label>
+                           <input type="email" className="w-full bg-white/5 border border-white/10 rounded-[32px] px-8 py-5 text-white font-black text-xl outline-none focus:border-indigo-500 transition-all" placeholder="doctor@gmail.com (or empty)" value={newClinicAdminEmail} onChange={e => setNewClinicAdminEmail(e.target.value)} />
                         </div>
                      </div>
 

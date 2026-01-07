@@ -1,6 +1,5 @@
-
 import React, { useState, useMemo } from 'react';
-import { User, Wallet, Transaction, Tier, TransactionType, Clinic, CarePlan, TransactionCategory, FamilyGroup, AppointmentType } from '../../types';
+import { User, Wallet, Transaction, Tier, TransactionType, Clinic, CarePlan, TransactionCategory, FamilyGroup, AppointmentType, Appointment } from '../../types';
 import { Home, User as UserIcon, ShieldCheck, History, Calendar, Sparkles, Clock, HeartPulse, ChevronRight, PhoneCall, AlertTriangle, Timer, Smile, Zap, CircleCheck, ClipboardList, ArrowUpRight, ArrowDownLeft, Trophy, Activity as ActivityIcon, Globe, Users, Lock, X, CheckCircle, Gift } from 'lucide-react';
 
 interface Props {
@@ -19,7 +18,38 @@ interface Props {
   onRedeem: (amount: number, description: string) => Promise<any>;
 }
 
-// ... (TreatmentComplianceRing and SpecialtyCareModule components remain unchanged)
+const TreatmentComplianceRing: React.FC<{ percentage: number; color: string }> = ({ percentage, color }) => (
+  <div className="relative h-12 w-12 flex items-center justify-center">
+    <svg className="h-full w-full transform -rotate-90">
+      <circle cx="24" cy="24" r="20" stroke="currentColor" strokeWidth="4" fill="transparent" className="text-slate-100" />
+      <circle cx="24" cy="24" r="20" stroke={color} strokeWidth="4" fill="transparent" strokeDasharray={125.6} strokeDashoffset={125.6 - (125.6 * percentage) / 100} strokeLinecap="round" />
+    </svg>
+    <span className="absolute text-[10px] font-black" style={{ color }}>{Math.round(percentage)}%</span>
+  </div>
+);
+
+const SpecialtyCareModule: React.FC<{ plan: CarePlan; primaryColor: string; onToggle?: (id: string, itemId: string) => Promise<any> }> = ({ plan, primaryColor, onToggle }) => (
+  <div className="bg-white p-6 rounded-[40px] border border-slate-100 shadow-sm space-y-6">
+    <div className="flex justify-between items-center">
+      <div>
+        <h4 className="text-xl font-black text-slate-900 tracking-tight">{plan.treatmentName}</h4>
+        <p className="text-xs font-bold text-slate-400 mt-1">{plan.category} Protocol</p>
+      </div>
+      <TreatmentComplianceRing percentage={(plan.checklist?.filter(i => i.completed).length || 0) / (plan.checklist?.length || 1) * 100} color={primaryColor} />
+    </div>
+
+    <div className="space-y-3">
+      {plan.checklist?.map(item => (
+        <div key={item.id} onClick={() => onToggle && onToggle(plan.id, item.id)} className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100 active:scale-[0.98] transition-all cursor-pointer">
+          <div className={`h-6 w-6 rounded-full border-2 flex items-center justify-center transition-colors ${item.completed ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300'}`}>
+            {item.completed && <CheckCircle size={14} />}
+          </div>
+          <span className={`text-sm font-bold ${item.completed ? 'text-slate-400 line-through' : 'text-slate-700'}`}>{item.task}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+);
 
 const MobilePatientView: React.FC<Props> = ({ currentUser, users, wallets, transactions, carePlans, appointments = [], clinic, onToggleChecklistItem, onSchedule, onAddFamilyMember, onSwitchProfile, onRedeem }) => {
   const [activeTab, setActiveTab] = useState<'HOME' | 'WALLET' | 'CARE' | 'PROFILE'>('HOME');
