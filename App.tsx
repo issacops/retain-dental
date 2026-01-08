@@ -143,6 +143,30 @@ const App = () => {
     }
   };
 
+  // ------------------------------------------------------------------
+  // EFFECTS
+  // ------------------------------------------------------------------
+
+  // Dynamic PWA Manifest Injection
+  useEffect(() => {
+    if (data?.activeClinicId && data?.clinics) {
+      const clinic = data.clinics.find(c => c.id === data.activeClinicId);
+      if (clinic && clinic.slug) {
+        // Update Manifest Link
+        const link = document.querySelector<HTMLLinkElement>('link[rel="manifest"]');
+        if (link) {
+          const newManifestUrl = `/api/manifest?slug=${clinic.slug}`;
+          if (link.href !== new URL(newManifestUrl, window.location.href).href) {
+            link.href = newManifestUrl;
+            console.log('PWA Manifest Updated:', clinic.name);
+          }
+        }
+        // Update Title
+        document.title = clinic.name;
+      }
+    }
+  }, [data?.activeClinicId, data?.clinics]);
+
   // INITIAL LOAD & AUTH LISTENER
   useEffect(() => {
     fetchData();

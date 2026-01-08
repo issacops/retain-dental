@@ -80,10 +80,18 @@ export default async function handler(req, res) {
             name: clinic.name,
             short_name: clinic.name,
             theme_color: clinic.primary_color || '#6366f1',
-            // If they have a custom Logo URL, we ideally want to resize it or use it.
-            // For PWA icons, it needs specific sizes.
-            // MVP: We keep default icons but change the Name/Color.
-            // (To support custom icons, we'd need an image resizer service or predefined sizes uploaded)
+            icons: clinic.logo_url ? [
+                {
+                    src: clinic.logo_url,
+                    sizes: "192x192",
+                    type: "image/png"
+                },
+                {
+                    src: clinic.logo_url,
+                    sizes: "512x512",
+                    type: "image/png"
+                }
+            ] : defaultManifest.icons
         };
 
         return res.status(200).json(customManifest);
