@@ -16,10 +16,21 @@ export const ClinicPage: React.FC<Props> = (props) => {
 
     if (!clinic) return <div className="text-white p-10">Clinic Not Found</div>;
 
+    // Fix: Prevent crash if user is not loaded yet
+    if (!data.currentUser) {
+        return (
+            <div className="h-screen w-full bg-slate-950 flex items-center justify-center">
+                <div className="text-white text-opacity-50 animate-pulse font-bold tracking-widest uppercase text-xs">
+                    Initializing Workspace...
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="h-screen w-full bg-slate-950">
             <DesktopDoctorView
-                currentUser={data.currentUser!}
+                currentUser={data.currentUser}
                 allUsers={data.users}
                 wallets={data.wallets}
                 transactions={data.transactions}
