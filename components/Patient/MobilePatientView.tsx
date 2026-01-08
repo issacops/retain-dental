@@ -160,10 +160,10 @@ const MobilePatientView: React.FC<Props> = ({ currentUser, users, wallets, trans
                   <Trophy size={42} className="text-slate-900 opacity-80 drop-shadow-sm" style={{ color: clinic.primaryColor }} />
                 </div>
 
-                <div className="mt-8 pt-6 border-t border-slate-200/60 flex items-end justify-between">
+                <div className="mt-8 pt-6 border-t border-slate-200/60 flex items-end justify-between relative z-10">
                   <div>
                     <p className="text-[9px] uppercase font-black tracking-widest text-slate-400 mb-1">Rewards Balance</p>
-                    <p className="text-3xl font-black text-slate-900 tracking-tighter">{wallet?.balance.toLocaleString()} <span className="text-sm text-slate-500 font-bold">Pts</span></p>
+                    <p className="text-3xl font-black text-slate-900 tracking-tighter">{(wallet?.balance || 0).toLocaleString()} <span className="text-sm text-slate-500 font-bold">Pts</span></p>
                   </div>
                   <div className="h-8 w-8 rounded-full bg-slate-900 text-white flex items-center justify-center shadow-lg" style={{ backgroundColor: clinic.primaryColor }}>
                     <ChevronRight size={16} />
