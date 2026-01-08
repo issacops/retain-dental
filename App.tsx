@@ -100,6 +100,11 @@ const App = () => {
         }
 
         if (found) {
+          // MERGE: If DB Name is missing/default, try to pull from Auth Metadata
+          // This fixes issues where 'profiles' might lag or miss the full_name sync
+          if ((!found.name || found.name === 'Unknown User') && session.user.user_metadata?.full_name) {
+            found = { ...found, name: session.user.user_metadata.full_name };
+          }
           activeUser = found;
         } else if (session.user.email?.toLowerCase() === 'issaciconnect@gmail.com') {
           // 2. Fallback: God Mode (Only if no specific profile exists)
