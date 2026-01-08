@@ -88,6 +88,15 @@ export const AppRouter: React.FC<RouterProps> = ({ appState, handlers, backendSe
                     />
                 </GodGuard>
             } />
+            <Route path="/platform" element={
+                <GodGuard>
+                    <PlatformPage
+                        data={appState}
+                        onNavigate={() => { }}
+                        {...handlers}
+                    />
+                </GodGuard>
+            } />
 
             {/* DOCTOR / CLINIC OS - Unprotected */}
             <Route path="/doctor" element={
