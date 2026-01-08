@@ -147,6 +147,32 @@ export const LoginPage: React.FC<LoginPageProps> = ({ clinics = [], activeClinic
                 {/* MODE: CHOICE */}
                 {mode === 'CHOICE' && (
                     <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+
+                        {/* Clinic Selector (Only if not branded/locked to a specific clinic) */}
+                        {!isBranded && clinics.length > 0 && (
+                            <div className="mb-6 relative group">
+                                <select
+                                    onChange={(e) => {
+                                        const slug = e.target.value;
+                                        if (slug) {
+                                            // Force reload with new subdomain context
+                                            window.location.href = `/?subdomain=${slug}`;
+                                        }
+                                    }}
+                                    className="w-full p-4 bg-slate-800 border border-slate-700 rounded-2xl text-white appearance-none outline-none focus:border-indigo-500 transition-all font-bold"
+                                    defaultValue=""
+                                >
+                                    <option value="" disabled>Select Your Clinic</option>
+                                    {clinics.map(c => (
+                                        <option key={c.id} value={c.slug}>{c.name}</option>
+                                    ))}
+                                </select>
+                                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                                    <ArrowRight size={16} className="rotate-90" />
+                                </div>
+                            </div>
+                        )}
+
                         <button onClick={() => setMode('PATIENT')}
                             className="w-full p-6 bg-slate-800/50 hover:bg-slate-800 border border-slate-700 hover:border-slate-600 rounded-[24px] text-left transition-all group hover:scale-[1.02] active:scale-[0.98]">
                             <div className="flex justify-between items-center mb-2">

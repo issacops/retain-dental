@@ -66,7 +66,7 @@ const App = () => {
 
       const { data: { session } } = await supabase.auth.getSession();
       let activeUser: User | null = null;
-      let derivedClinicId = dbData.clinics[0]?.id || '';
+      let derivedClinicId = 'platform';
 
       // SUBDOMAIN DETECTION
       const hostname = window.location.hostname;
