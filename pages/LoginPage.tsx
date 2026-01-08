@@ -52,7 +52,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({ clinics = [], activeClinic
 
     // BRANDING LOGIC
     // If slug exists, find specific clinic. If not, use activeClinic (subdomain/context).
-    const slugClinic = slug ? clinics.find(c => c.slug === slug) : undefined;
+    // Also check query param fallback for direct links
+    const querySubdomain = new URLSearchParams(window.location.search).get('subdomain');
+    const slugClinic = slug ? clinics.find(c => c.slug === slug) : (querySubdomain ? clinics.find(c => c.slug === querySubdomain) : undefined);
     const targetClinic = slugClinic || activeClinic;
 
     // If we are effectively "Platform" or no context, we show Default.

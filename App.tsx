@@ -31,7 +31,7 @@ const AuthHandler = ({
 
     if (!currentUser && !isPublic) {
       // Check if we are at root, redirect to login
-      navigate('/login');
+      navigate('/login' + location.search);
     }
 
     // Role-based Redirects (Only if at root or login)
