@@ -183,7 +183,7 @@ const MobilePatientView: React.FC<Props> = ({ currentUser, users, wallets, trans
 
               {/* Active Treatment Quick Look */}
               {activeCarePlan && (
-                <button onClick={() => setActiveTab('CARE')} className="w-full text-left p-8 rounded-[48px] bg-slate-900 text-white shadow-2xl relative overflow-hidden group active:scale-[0.98] transition-all">
+                <button onClick={() => setActiveTab('CARE')} className="w-full text-left p-8 rounded-[48px] bg-slate-900 text-white shadow-2xl relative overflow-hidden group active:scale-[0.98] transition-all border" style={{ borderColor: clinic.primaryColor, borderWidth: '1px' }}>
                   <div className="absolute top-[-20%] right-[-10%] w-64 h-64 bg-indigo-500/10 blur-[80px] rounded-full"></div>
                   <div className="absolute right-0 top-0 p-8 opacity-10 scale-150 group-hover:scale-125 transition-transform duration-700"><ActivityIcon size={80} /></div>
 
@@ -363,8 +363,8 @@ const MobilePatientView: React.FC<Props> = ({ currentUser, users, wallets, trans
       </main >
 
       {/* Navigation */}
-      < div className="fixed bottom-8 left-0 w-full px-8 z-50" >
-        <nav className="bg-slate-900/90 backdrop-blur-3xl border border-white/10 shadow-[0_30px_60px_-10px_rgba(0,0,0,0.4)] rounded-[40px] px-3 py-3 flex justify-between items-center max-w-sm mx-auto overflow-hidden relative">
+      < div className="fixed bottom-8 left-0 w-full px-6 z-50" >
+        <nav className="bg-slate-900/90 backdrop-blur-3xl border border-white/10 shadow-[0_30px_60px_-10px_rgba(0,0,0,0.4)] rounded-[40px] px-3 py-3 flex justify-between items-center max-w-md mx-auto overflow-hidden relative">
           <div className="absolute bottom-0 left-0 w-full h-1 bg-white/5 opacity-50"></div>
           {['HOME', 'WALLET', 'CARE', 'PROFILE'].map((tab) => (
             <button key={tab} onClick={() => setActiveTab(tab as any)} className={`flex-1 flex flex-col items-center justify-center h-16 rounded-[28px] transition-all duration-500 relative group overflow-hidden ${activeTab === tab ? 'text-white' : 'text-slate-500 hover:text-slate-300'}`} style={activeTab === tab ? { backgroundColor: clinic.primaryColor } : {}}>
