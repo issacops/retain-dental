@@ -167,7 +167,7 @@ const App = () => {
           name: clinic.name,
           short_name: clinic.name,
           description: `Patient Portal for ${clinic.name}`,
-          start_url: "/",
+          start_url: `/?subdomain=${clinic.slug}`,
           display: "standalone",
           background_color: "#0f172a",
           theme_color: clinic.primaryColor || '#6366f1',
