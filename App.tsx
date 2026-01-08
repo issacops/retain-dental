@@ -198,8 +198,8 @@ const App = () => {
     return result;
   };
 
-  const handleAddPatient = async (name: string, mobile: string) => {
-    const result = await backendService.addPatient(data.activeClinicId!, name, mobile);
+  const handleAddPatient = async (name: string, mobile: string, pin?: string) => {
+    const result = await backendService.addPatient(data.activeClinicId!, name, mobile, pin);
     if (result.success && result.updatedData) {
       setData(prev => ({ ...prev, ...result.updatedData }));
     }
