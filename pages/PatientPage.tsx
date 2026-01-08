@@ -20,7 +20,7 @@ export const PatientPage: React.FC<any> = (props) => {
     }
 
     return (
-        <div className="h-screen w-full bg-slate-950">
+        <div className="h-screen w-full bg-slate-950 overflow-y-auto overflow-x-hidden">
             <MobilePatientView {...props} />
         </div>
     );
