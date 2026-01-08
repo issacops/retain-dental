@@ -222,7 +222,13 @@ const DesktopDoctorView: React.FC<Props> = ({
                                        { icon: <UserPlus size={20} />, label: 'Add Patient', action: () => setIsAddPatientModalOpen(true) },
                                        { icon: <CalendarIcon size={20} />, label: 'Schedule', action: () => setActiveSection('Schedule') },
                                        { icon: <CreditCard size={20} />, label: 'Invoice', action: () => alert('New Invoice...') },
-                                       { icon: <MessageSquare size={20} />, label: 'Message', action: () => window.open('https://web.whatsapp.com', '_blank') }
+                                       {
+                                          icon: <MessageSquare size={20} />, label: 'Share App', action: () => {
+                                             const url = `${window.location.protocol}//${window.location.host}/?subdomain=${clinic.slug}`;
+                                             navigator.clipboard.writeText(url);
+                                             alert(`Patient Portal Link Copied:\n${url}`);
+                                          }
+                                       }
                                     ].map((action, i) => (
                                        <button key={i} onClick={action.action} className="flex flex-col items-center gap-3 p-6 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-primary/20 hover:-translate-y-1 transition-all group">
                                           <div className="h-12 w-12 bg-slate-50 rounded-xl flex items-center justify-center text-slate-500 group-hover:bg-primary group-hover:text-white transition-colors">

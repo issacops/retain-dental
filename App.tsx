@@ -128,6 +128,16 @@ const App = () => {
         addToast(`Login Error: No profile found for ${session.user.email}`, "error");
       }
 
+      // CONFLICT RESOLUTION: Sticky Session vs URL Context
+      // If the user accessed a specific clinic link (e.g., ?subdomain=newclinic) but is logged in as a user of 'oldclinic',
+      // we must force a logout to respect the link's intent.
+      if (tenantClinic && activeUser && activeUser.clinicId !== tenantClinic.id) {
+        console.log("Context Mismatch: URL requests", tenantClinic.name, "but User is in", activeUser.clinicId);
+        await supabase.auth.signOut();
+        activeUser = null;
+        addToast(`Switched to ${tenantClinic.name}`, "info");
+      }
+
       setData({
         ...dbData,
         activeClinicId: tenantClinic ? tenantClinic.id : (activeUser?.clinicId || derivedClinicId),
