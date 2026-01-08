@@ -113,6 +113,10 @@ const MobilePatientView: React.FC<Props> = ({ currentUser, users, wallets, trans
 
   return (
     <>
+      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-black pointer-events-none -z-20"></div>
+      <div className="fixed top-[-10%] left-[-10%] w-[500px] h-[500px] bg-indigo-500/20 rounded-full blur-[100px] pointer-events-none -z-10 animate-pulse" style={{ backgroundColor: `${clinic.primaryColor}20` }}></div>
+      <div className="fixed bottom-[-10%] right-[-10%] w-[300px] h-[300px] bg-emerald-500/10 rounded-full blur-[80px] pointer-events-none -z-10"></div>
+
       <main className="pb-32 px-6 pt-12 max-w-md mx-auto min-h-screen transition-all duration-700">
 
         {/* --- HOME TAB --- */}
@@ -122,29 +126,47 @@ const MobilePatientView: React.FC<Props> = ({ currentUser, users, wallets, trans
               {/* Clinic Header (Logo) */}
               <div className="flex items-center gap-4 px-2">
                 {clinic.logoUrl && (
-                  <img src={clinic.logoUrl} className="h-12 w-12 object-contain bg-white/5 rounded-xl p-2 border border-white/10" />
+                  <img src={clinic.logoUrl} className="h-12 w-12 object-contain bg-white/10 rounded-xl p-2 border border-white/20 backdrop-blur-sm" />
                 )}
                 <div>
-                  <h1 className="text-2xl font-black text-slate-800 tracking-tighter">{clinic.name}</h1>
+                  <h1 className="text-2xl font-black text-white tracking-tighter shadow-black drop-shadow-lg">{clinic.name}</h1>
                   <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Patient Portal</p>
                 </div>
               </div>
 
               {/* Loyalty Status Card */}
-              <div className="p-8 bg-white rounded-[40px] border border-slate-100 shadow-xl relative overflow-hidden group active:scale-[0.98] transition-all" onClick={() => setActiveTab('WALLET')}>
-                {/* ... (Loyalty Card content) ... */}
-                <div className="absolute top-0 right-0 w-32 h-32 bg-slate-50 rounded-bl-[40px] flex items-center justify-center">
-                  <Trophy size={48} className="text-slate-200" />
-                </div>
-                <div className="relative z-10">
-                  <p className="text-[10px] uppercase font-black tracking-widest text-slate-400 mb-2">Member Tier</p>
-                  <h3 className="text-4xl font-black text-slate-900 tracking-tighter mb-1">{currentUser.currentTier}</h3>
-                  <p className="font-bold text-slate-400 text-sm">Valid until Dec 2026</p>
-                </div>
-                <div className="mt-8 pt-6 border-t border-slate-100 flex gap-8">
+              {/* Loyalty Status Card - Premium Redesign */}
+              <div className="p-8 relative rounded-[40px] overflow-hidden group active:scale-[0.98] transition-all shadow-2xl" onClick={() => setActiveTab('WALLET')}>
+                {/* Background composed of gradients */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white via-slate-100 to-slate-200"></div>
+
+                {/* Texture/Noise Overlay (simulated with opacity) */}
+                <div className="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
+
+                {/* Brand Glow */}
+                <div className="absolute top-[-50%] right-[-50%] w-[150%] h-[150%] bg-gradient-to-b from-transparent to-black/5 rotate-12"></div>
+                <div className="absolute top-0 right-0 w-64 h-64 rounded-full blur-[60px] opacity-20" style={{ backgroundColor: clinic.primaryColor }}></div>
+
+                <div className="relative z-10 flex justify-between items-start">
                   <div>
-                    <p className="text-[9px] uppercase font-black tracking-widest text-slate-400 mb-1">Balance</p>
-                    <p className="text-2xl font-black text-slate-900">{wallet?.balance.toLocaleString()} <span className="text-sm text-slate-400 font-bold">Pts</span></p>
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="px-3 py-1 bg-black/5 rounded-full text-[9px] font-black uppercase tracking-widest text-slate-600 border border-black/5">
+                        {currentUser.currentTier} Tier
+                      </span>
+                    </div>
+                    <h3 className="text-3xl font-black text-slate-900 tracking-tighter mb-1 leading-none">{currentUser.name}</h3>
+                    <p className="font-bold text-slate-400 text-xs mt-1">ID: {currentUser.mobile.slice(-4) || '####'}</p>
+                  </div>
+                  <Trophy size={42} className="text-slate-900 opacity-80 drop-shadow-sm" style={{ color: clinic.primaryColor }} />
+                </div>
+
+                <div className="mt-8 pt-6 border-t border-slate-200/60 flex items-end justify-between">
+                  <div>
+                    <p className="text-[9px] uppercase font-black tracking-widest text-slate-400 mb-1">Rewards Balance</p>
+                    <p className="text-3xl font-black text-slate-900 tracking-tighter">{wallet?.balance.toLocaleString()} <span className="text-sm text-slate-500 font-bold">Pts</span></p>
+                  </div>
+                  <div className="h-8 w-8 rounded-full bg-slate-900 text-white flex items-center justify-center shadow-lg" style={{ backgroundColor: clinic.primaryColor }}>
+                    <ChevronRight size={16} />
                   </div>
                 </div>
               </div>
