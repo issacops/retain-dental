@@ -77,7 +77,22 @@ const App = () => {
       // This is crucial for verifying "Subdomains" without DNS wildcards
       const params = new URLSearchParams(window.location.search);
       const subParam = params.get('subdomain');
-      if (subParam) subdomain = subParam;
+
+      // PERSISTENT TENANT CONTEXT (The White Label Fix)
+      // If a user visits a specific link, we lock the device to that clinic context via LocalStorage.
+      // This ensures that subsequent launches (PWA start_url failures or generic opens) still remember the intended clinic.
+      if (subParam) {
+        // User explicitly requested a clinic -> Update Sticky Context
+        localStorage.setItem('retain_tenant_slug', subParam);
+        subdomain = subParam;
+      } else {
+        // No explicit request -> Check Sticky Context
+        const storedSlug = localStorage.getItem('retain_tenant_slug');
+        if (storedSlug) {
+          console.log("Restoring Sticky Tenant Context:", storedSlug);
+          subdomain = storedSlug;
+        }
+      }
 
       const IGNORED_SUBDOMAINS = ['www', 'app', 'platform', 'api'];
       let tenantClinic: Clinic | undefined;
