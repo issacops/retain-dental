@@ -147,21 +147,47 @@ const App = () => {
   // EFFECTS
   // ------------------------------------------------------------------
 
-  // Dynamic PWA Manifest Injection
+  // Dynamic PWA Manifest Injection (Client-Side Blob)
   useEffect(() => {
     if (data?.activeClinicId && data?.clinics) {
       const clinic = data.clinics.find(c => c.id === data.activeClinicId);
-      if (clinic && clinic.slug) {
-        // Update Manifest Link
+      if (clinic) {
+        // 1. Construct Manifest Object
+        const manifest = {
+          name: clinic.name,
+          short_name: clinic.name,
+          description: `Patient Portal for ${clinic.name}`,
+          start_url: "/",
+          display: "standalone",
+          background_color: "#0f172a",
+          theme_color: clinic.primaryColor || '#6366f1',
+          icons: clinic.logoUrl ? [
+            { src: clinic.logoUrl, sizes: "192x192", type: "image/png" },
+            { src: clinic.logoUrl, sizes: "512x512", type: "image/png" }
+          ] : [
+            { src: "/icon-192.png", sizes: "192x192", type: "image/png" },
+            { src: "/icon-512.png", sizes: "512x512", type: "image/png" }
+          ]
+        };
+
+        // 2. Create Blob & URL
+        const stringManifest = JSON.stringify(manifest);
+        const blob = new Blob([stringManifest], { type: 'application/json' });
+        const manifestUrl = URL.createObjectURL(blob);
+
+        // 3. Update Link Tag
         const link = document.querySelector<HTMLLinkElement>('link[rel="manifest"]');
         if (link) {
-          const newManifestUrl = `/api/manifest?slug=${clinic.slug}`;
-          if (link.href !== new URL(newManifestUrl, window.location.href).href) {
-            link.href = newManifestUrl;
-            console.log('PWA Manifest Updated:', clinic.name);
-          }
+          link.href = manifestUrl;
+          console.log('PWA Manifest Updated (Blob):', clinic.name);
+        } else {
+          const newLink = document.createElement('link');
+          newLink.rel = 'manifest';
+          newLink.href = manifestUrl;
+          document.head.appendChild(newLink);
         }
-        // Update Title
+
+        // 4. Update Document Title
         document.title = clinic.name;
       }
     }
