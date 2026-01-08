@@ -236,6 +236,7 @@ export const INITIAL_CLINICS: Clinic[] = [
     primaryColor: '#0ea5e9',
     // Fix: Added missing themeTexture property
     themeTexture: 'minimal',
+    logoUrl: 'https://cdn-icons-png.flaticon.com/512/3063/3063321.png',
     subscriptionTier: 'PRO',
     createdAt: '2023-01-01T00:00:00Z',
     adminUserId: 'doc-1'
