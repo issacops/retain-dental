@@ -189,6 +189,25 @@ const App = () => {
 
         // 4. Update Document Title
         document.title = clinic.name;
+
+        // 5. iOS Specific Tags (Crucial for "Add to Home Screen" on iPhone)
+        // Update Apple Touch Icon
+        let appleIcon = document.querySelector<HTMLLinkElement>('link[rel="apple-touch-icon"]');
+        if (!appleIcon) {
+          appleIcon = document.createElement('link');
+          appleIcon.rel = 'apple-touch-icon';
+          document.head.appendChild(appleIcon);
+        }
+        appleIcon.href = clinic.logoUrl || "/icon-192.png";
+
+        // Update Apple Mobile Title
+        let appleTitle = document.querySelector<HTMLMetaElement>('meta[name="apple-mobile-web-app-title"]');
+        if (!appleTitle) {
+          appleTitle = document.createElement('meta');
+          appleTitle.name = 'apple-mobile-web-app-title';
+          document.head.appendChild(appleTitle);
+        }
+        appleTitle.content = clinic.name;
       }
     }
   }, [data?.activeClinicId, data?.clinics]);
