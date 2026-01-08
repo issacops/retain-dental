@@ -1,122 +1,148 @@
-
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>PracticePrime | High-End Dental Loyalty OS</title>
-    <link rel="manifest" href="/api/manifest" />
-    <meta name="theme-color" content="#6366f1" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-              mono: ['"JetBrains Mono"', 'monospace'],
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Retain OS</title>
+  <meta name="apple-mobile-web-app-title" content="Retain OS" />
+  <link rel="apple-touch-icon" href="/icon-192.png" />
+  <link rel="manifest" href="/api/manifest" />
+  <meta name="theme-color" content="#6366f1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap"
+    rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          animation: {
+            'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'float': 'float 6s ease-in-out infinite',
+            'spin-slow': 'spin 12s linear infinite',
+            'glow': 'glow 2s ease-in-out infinite alternate',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-10px)' },
             },
-            animation: {
-              'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-              'float': 'float 6s ease-in-out infinite',
-              'spin-slow': 'spin 12s linear infinite',
-              'glow': 'glow 2s ease-in-out infinite alternate',
-            },
-            keyframes: {
-              float: {
-                '0%, 100%': { transform: 'translateY(0px)' },
-                '50%': { transform: 'translateY(-10px)' },
-              },
-              glow: {
-                'from': { boxShadow: '0 0 10px -5px var(--tw-shadow-color)' },
-                'to': { boxShadow: '0 0 20px 2px var(--tw-shadow-color)' },
-              }
+            glow: {
+              'from': { boxShadow: '0 0 10px -5px var(--tw-shadow-color)' },
+              'to': { boxShadow: '0 0 20px 2px var(--tw-shadow-color)' },
             }
           }
         }
       }
-    </script>
-    <style>
-      :root {
-        --noise-url: url("https://www.transparenttextures.com/patterns/stardust.png");
-      }
+    }
+  </script>
+  <style>
+    :root {
+      --noise-url: url("https://www.transparenttextures.com/patterns/stardust.png");
+    }
 
-      * { cursor: default; }
-      
-      ::-webkit-scrollbar { width: 4px; height: 4px; }
-      ::-webkit-scrollbar-track { background: transparent; }
-      ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 10px; }
-      .dark-mode ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
+    * {
+      cursor: default;
+    }
 
-      body {
-        overflow: hidden;
-        background: #f8fafc;
-      }
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
 
-      /* Awwwards Style Grain Overlay */
-      body::after {
-        content: "";
-        position: fixed;
-        top: 0; left: 0; width: 100%; height: 100%;
-        opacity: 0.03;
-        z-index: 9999;
-        pointer-events: none;
-        background-image: var(--noise-url);
-      }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
 
-      .glass-panel {
-        background: rgba(255, 255, 255, 0.6);
-        backdrop-filter: blur(20px) saturate(180%);
-        -webkit-backdrop-filter: blur(20px) saturate(180%);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-      }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+    }
 
-      .bento-grid {
-        display: grid;
-        grid-template-columns: repeat(12, 1fr);
-        gap: 1.5rem;
-      }
+    .dark-mode ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+    }
 
-      .mask-radial {
-        mask-image: radial-gradient(circle, black 40%, transparent 100%);
-      }
+    body {
+      overflow: hidden;
+      background: #f8fafc;
+    }
 
-      /* Specific Texture Enhancements */
-      .texture-grain { position: relative; }
-      .texture-grain::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        opacity: 0.07;
-        background-image: var(--noise-url);
-        z-index: 1;
-      }
+    /* Awwwards Style Grain Overlay */
+    body::after {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.03;
+      z-index: 9999;
+      pointer-events: none;
+      background-image: var(--noise-url);
+    }
 
-      .texture-aurora {
-        background: 
-          radial-gradient(circle at 10% 10%, var(--primary-glow) 0%, transparent 40%),
-          radial-gradient(circle at 90% 90%, var(--primary-glow) 0%, transparent 40%),
-          radial-gradient(circle at 50% 50%, rgba(255,255,255,0.8) 0%, transparent 60%);
-        background-color: #f1f5f9;
-      }
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
 
-      .text-glow {
-        text-shadow: 0 0 15px currentColor;
-      }
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 1.5rem;
+    }
 
-      .neo-card {
-        transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-      }
-      .neo-card:hover {
-        transform: translateY(-4px) scale(1.01);
-        box-shadow: 0 20px 40px -10px rgba(0,0,0,0.05);
-      }
-    </style>
+    .mask-radial {
+      mask-image: radial-gradient(circle, black 40%, transparent 100%);
+    }
+
+    /* Specific Texture Enhancements */
+    .texture-grain {
+      position: relative;
+    }
+
+    .texture-grain::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.07;
+      background-image: var(--noise-url);
+      z-index: 1;
+    }
+
+    .texture-aurora {
+      background:
+        radial-gradient(circle at 10% 10%, var(--primary-glow) 0%, transparent 40%),
+        radial-gradient(circle at 90% 90%, var(--primary-glow) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.8) 0%, transparent 60%);
+      background-color: #f1f5f9;
+    }
+
+    .text-glow {
+      text-shadow: 0 0 15px currentColor;
+    }
+
+    .neo-card {
+      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    .neo-card:hover {
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.05);
+    }
+  </style>
   <script type="importmap">
 {
   "imports": {
@@ -128,10 +154,12 @@
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
+  <link rel="stylesheet" href="/index.css">
 </head>
-  <body class="antialiased selection:bg-blue-100 selection:text-blue-900">
-    <div id="root"></div>
+
+<body class="antialiased selection:bg-blue-100 selection:text-blue-900">
+  <div id="root"></div>
   <script type="module" src="/index.tsx"></script>
 </body>
+
 </html>
