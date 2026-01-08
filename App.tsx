@@ -68,33 +68,40 @@ const App = () => {
       let activeUser: User | null = null;
       let derivedClinicId = 'platform';
 
-      // SUBDOMAIN DETECTION
+      // SUBDOMAIN DETECTION (DNS LEVEL)
+      // This is the "Proper Solution": clinic.platform.com
       const hostname = window.location.hostname;
       const parts = hostname.split('.');
-      let subdomain = parts.length > 2 ? parts[0] : null;
+      let subdomain = null;
 
-      // Allow testing via ?subdomain= query param on ANY host (Vercel or Localhost)
-      // This is crucial for verifying "Subdomains" without DNS wildcards
+      // 1. Handle Localhost (e.g. city.localhost)
+      if (hostname.includes('localhost') && parts.length > 1) {
+        subdomain = parts[0];
+      }
+      // 2. Handle Custom Domains (e.g. city.dentalos.com)
+      // We must exclude 'vercel.app' because 'retain-dental.vercel.app' -> 'retain-dental' is NOT a clinic.
+      else if (parts.length > 2 && !hostname.endsWith('vercel.app')) {
+        subdomain = parts[0];
+      }
+      // 3. Fallback: Query Param (for testing/sharing without wildcards)
       const params = new URLSearchParams(window.location.search);
       const subParam = params.get('subdomain');
+      if (subParam) subdomain = subParam;
 
-      // PERSISTENT TENANT CONTEXT (The White Label Fix)
-      // If a user visits a specific link, we lock the device to that clinic context via LocalStorage.
-      // This ensures that subsequent launches (PWA start_url failures or generic opens) still remember the intended clinic.
-      if (subParam) {
-        // User explicitly requested a clinic -> Update Sticky Context
-        localStorage.setItem('retain_tenant_slug', subParam);
-        subdomain = subParam;
-      } else {
-        // No explicit request -> Check Sticky Context
+      // PERSISTENT TENANT CONTEXT (LocalStorage)
+      // Only use this if we don't have a REAL subdomain already.
+      // If I am at 'city.dentalos.com', I AM 'city'. LocalStorage shouldn't override DNS.
+      if (!subdomain) {
         const storedSlug = localStorage.getItem('retain_tenant_slug');
         if (storedSlug) {
-          console.log("Restoring Sticky Tenant Context:", storedSlug);
           subdomain = storedSlug;
         }
+      } else {
+        // If we HAVE a subdomain (link or DNS), save it for next time (if used in fallback mode)
+        localStorage.setItem('retain_tenant_slug', subdomain);
       }
 
-      const IGNORED_SUBDOMAINS = ['www', 'app', 'platform', 'api'];
+      const IGNORED_SUBDOMAINS = ['www', 'app', 'platform', 'api', 'localhost'];
       let tenantClinic: Clinic | undefined;
 
       if (subdomain === 'platform') {
