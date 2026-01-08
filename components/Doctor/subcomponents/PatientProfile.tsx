@@ -18,10 +18,11 @@ interface Props {
     onTerminateCarePlan: (carePlanId: string) => Promise<any>;
     onToggleChecklistItem: (carePlanId: string, itemId: string) => Promise<any>;
     onUpdateCarePlan: (carePlanId: string, updates: Partial<CarePlan>) => Promise<any>;
+    onDeletePatient: (patientId: string) => Promise<any>;
 }
 
 const PatientProfile: React.FC<Props> = ({
-    selectedPatient, clinic, wallets, carePlans, transactions, allUsers, familyGroups, onProcessTransaction, onAssignPlan, onTerminateCarePlan, onToggleChecklistItem, onUpdateCarePlan
+    selectedPatient, clinic, wallets, carePlans, transactions, allUsers, familyGroups, onProcessTransaction, onAssignPlan, onTerminateCarePlan, onToggleChecklistItem, onUpdateCarePlan, onDeletePatient
 }) => {
     const [txAmount, setTxAmount] = useState('');
     const [txCategory, setTxCategory] = useState<TransactionCategory>(TransactionCategory.GENERAL);
@@ -89,6 +90,11 @@ const PatientProfile: React.FC<Props> = ({
                         <div className="flex gap-4 pt-2">
                             <button className="px-8 py-4 bg-slate-900 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-black transition-all shadow-xl shadow-slate-200 hover:scale-105 active:scale-95">Health Key</button>
                             <button className="px-8 py-4 bg-white border border-slate-200 text-slate-500 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-50 hover:text-slate-800 transition-all">Vault</button>
+                            <button onClick={() => {
+                                if (confirm("DANGER: Are you sure you want to permanently delete this patient identity? This cannot be undone.")) {
+                                    onDeletePatient(selectedPatient.id);
+                                }
+                            }} className="px-8 py-4 bg-rose-50 border border-rose-100 text-rose-500 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-rose-500 hover:text-white transition-all">Delete Identity</button>
                         </div>
                     </div>
                     {/* RIGHT: SMILE CREDITS */}

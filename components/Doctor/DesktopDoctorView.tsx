@@ -9,6 +9,7 @@ import DashboardAnalytics from './subcomponents/DashboardAnalytics';
 import PatientProfile from './subcomponents/PatientProfile';
 import AppointmentScheduler from './subcomponents/AppointmentScheduler';
 import LiveProtocolMonitor from './subcomponents/LiveProtocolMonitor';
+import FinancialLedger from './subcomponents/FinancialLedger';
 
 interface Props {
    currentUser: User;
@@ -28,12 +29,13 @@ interface Props {
    onSchedule: (patientId: string, start: string, end: string, type: AppointmentType, notes: string) => Promise<any>;
    onUpdateAppointmentStatus: (id: string, status: AppointmentStatus) => Promise<any>;
    onToggleChecklistItem: (carePlanId: string, itemId: string) => Promise<any>;
+   onDeletePatient: (patientId: string) => Promise<any>;
 }
 
 const DesktopDoctorView: React.FC<Props> = ({
    currentUser, allUsers, wallets, transactions, familyGroups, carePlans, clinic,
    onProcessTransaction, onUpdateCarePlan, onLinkFamily, onAddPatient, backendService,
-   appointments, onSchedule, onUpdateAppointmentStatus, onAssignPlan, onToggleChecklistItem
+   appointments, onSchedule, onUpdateAppointmentStatus, onAssignPlan, onToggleChecklistItem, onDeletePatient
 }) => {
    const [activeSection, setActiveSection] = useState('Operational Hub');
    const [selectedPatient, setSelectedPatient] = useState<User | null>(null);
@@ -292,6 +294,9 @@ const DesktopDoctorView: React.FC<Props> = ({
                         }}
                      />
                   )}
+                  {activeSection === 'Financial Ledger' && (
+                     <FinancialLedger clinic={clinic} transactions={transactions} />
+                  )}
                   {activeSection === 'Patient Records' && (
                      <div className="flex overflow-hidden h-full">
                         <PatientList
@@ -320,6 +325,7 @@ const DesktopDoctorView: React.FC<Props> = ({
                                     onAssignPlan={onAssignPlan}
                                     onToggleChecklistItem={onToggleChecklistItem}
                                     onUpdateCarePlan={onUpdateCarePlan}
+                                    onDeletePatient={onDeletePatient}
                                  />
                               ) : (
                                  <div className="h-full flex flex-col items-center justify-center animate-in zoom-in-95 duration-1000">

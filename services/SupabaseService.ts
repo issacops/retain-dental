@@ -443,6 +443,29 @@ export class SupabaseService implements IBackendService {
         }
     }
 
+    async deletePatient(clinicId: string, patientId: string): Promise<ServiceResponse> {
+        try {
+            // Hard Delete: This relies on CASCADE policies in Supabase to remove related data 
+            // (wallets, appointments, transactions) if properly configured.
+            // If not cascading, this might fail or leave orphans. 
+            // Ideally, we should also call admin.auth.deleteUser via an edge function, 
+            // but for now we delete the profile which is the app-level access point.
+
+            const { error } = await this.supabase
+                .from('profiles')
+                .delete()
+                .eq('id', patientId)
+                .eq('clinic_id', clinicId); // Safety check
+
+            if (error) throw error;
+
+            return { success: true, message: 'Patient Identity Purged', updatedData: await this.getData() };
+        } catch (e: any) {
+            console.error("Delete Patient Error", e);
+            return { success: false, message: e.message || 'Failed to delete patient', error: 'DB_ERR' };
+        }
+    }
+
     async addFamilyMember(headUserId: string, name: string, relation: string, age: string): Promise<ServiceResponse> {
         try {
             // 1. Get Head User

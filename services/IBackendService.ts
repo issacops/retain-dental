@@ -70,6 +70,8 @@ export interface IBackendService {
 
     addPatient(clinicId: string, name: string, mobile: string, pin?: string): Promise<ServiceResponse>;
 
+    deletePatient(clinicId: string, patientId: string): Promise<ServiceResponse>;
+
     addFamilyMember(
         headUserId: string,
         name: string,
