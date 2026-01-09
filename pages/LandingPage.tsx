@@ -1,13 +1,31 @@
-
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Activity, Shield, Zap, CheckCircle, ChevronRight, Lock } from 'lucide-react';
-import { getBackendService } from '../services/BackendFactory';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+    Check,
+    ChevronRight,
+    X,
+    Globe,
+    ShieldCheck,
+    LayoutGrid,
+    Zap,
+    Smartphone,
+    Stethoscope,
+    Trophy,
+    Users
+} from 'lucide-react';
+import { IBackendService, ServiceResponse } from '../services/IBackendService';
+import HeroSection from '../components/landing/HeroSection';
+import FeatureSection from '../components/landing/FeatureSection';
+import PhoneMockup from '../components/landing/PhoneMockup';
 
-export const LandingPage = () => {
-    const navigate = useNavigate();
-    const backend = getBackendService();
+interface LandingPageProps {
+    backend: IBackendService;
+}
 
+const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
+    // Waitlist Form State
+    const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
+    const [status, setStatus] = useState<'IDLE' | 'LOADING' | 'SUCCESS' | 'ERROR'>('IDLE');
     const [formData, setFormData] = useState({
         name: '',
         clinic: '',
