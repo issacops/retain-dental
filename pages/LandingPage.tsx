@@ -11,12 +11,17 @@ import {
     Smartphone,
     Stethoscope,
     Trophy,
-    Users
+    Users,
+    Activity,
+    ArrowRight
 } from 'lucide-react';
 import { IBackendService, ServiceResponse } from '../services/IBackendService';
 import HeroSection from '../components/landing/HeroSection';
 import FeatureSection from '../components/landing/FeatureSection';
 import PhoneMockup from '../components/landing/PhoneMockup';
+import Comparison from '../components/landing/Comparison';
+import BentoGrid from '../components/landing/BentoGrid';
+import DeepDive from '../components/landing/DeepDive';
 
 interface LandingPageProps {
     backend: IBackendService;

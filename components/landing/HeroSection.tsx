@@ -31,8 +31,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onJoinWaitlist }) => {
 
                     <p className="text-xl text-slate-400 font-medium leading-relaxed max-w-xl">
                         Your existing patients are your biggest asset. <br />
-                        Turn them into lifetime advocates with your own
-                        <span className="text-white font-bold"> White-Label Clinic App</span>, automated aftercare, and a loyalty system that actually works.
+                        Turn them into lifetime advocates with your <span className="text-white font-bold">Own Clinic App</span>, automated aftercare, and a loyalty system that actually works.
                     </p>
 
                     <div className="flex flex-col sm:flex-row gap-4 pt-4">
