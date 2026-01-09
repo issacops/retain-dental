@@ -518,7 +518,7 @@ const App = () => {
   }
 
   return (
-    <div className="h-screen w-full relative overflow-hidden bg-slate-950">
+    <div className="w-full relative bg-slate-950 min-h-screen">
       <BrowserRouter>
         <Routes>
           {/* Public Landing Page at Root (No Auth Required) */}
