@@ -4,8 +4,6 @@ import {
     Check,
     X,
     LayoutGrid,
-    Smartphone,
-    Stethoscope,
     Trophy,
     ArrowRight,
     ScanFace,
