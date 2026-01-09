@@ -180,6 +180,7 @@ export class MockBackendService implements IBackendService {
           checklist: carePlanTemplate.instructions.map(ins => ({ id: Math.random().toString(36).substr(2, 9), task: ins, completed: false })),
           assignedAt: new Date().toISOString(),
           isActive: true,
+          status: 'ACTIVE',
           metadata: carePlanTemplate.metadata || {}
         });
       }
@@ -235,7 +236,7 @@ export class MockBackendService implements IBackendService {
     return { success: false, message: 'Item not found', error: 'NOT_FOUND' };
   }
 
-  public async createClinic(name: string, color: string, texture: ThemeTexture, ownerName: string, logoUrl: string): Promise<ServiceResponse<DatabaseState>> {
+  public async createClinic(name: string, color: string, texture: ThemeTexture, ownerName: string, logoUrl: string, slug: string, adminEmail?: string): Promise<ServiceResponse<DatabaseState>> {
     const newClinicId = `clinic-${Date.now()}`;
     const newAdminId = `doc-${Date.now()}`;
 
@@ -245,11 +246,12 @@ export class MockBackendService implements IBackendService {
       ownerName,
       logoUrl,
       themeTexture: texture,
-      slug: name.toLowerCase().replace(/\s+/g, '-'),
+      slug: slug || name.toLowerCase().replace(/\s+/g, '-'),
       primaryColor: color,
       subscriptionTier: Math.random() > 0.5 ? 'PRO' : 'STARTER',
       createdAt: new Date().toISOString(),
-      adminUserId: newAdminId
+      adminUserId: newAdminId,
+      adminEmail: adminEmail // Ensure this is saved
     };
 
     const newAdmin: User = {
@@ -488,6 +490,17 @@ export class MockBackendService implements IBackendService {
     this.wallets.push({ id: `w-${Date.now()}`, userId: newUserId, balance: 0, lastTransactionAt: new Date().toISOString() });
     this.persist();
     return { success: true, message: 'Patient onboarded', updatedData: await this.getData() };
+  }
+
+  public async deletePatient(clinicId: string, patientId: string): Promise<ServiceResponse> {
+    this.users = this.users.filter(u => u.id !== patientId);
+    this.wallets = this.wallets.filter(w => w.userId !== patientId);
+    // Cleanup related data
+    this.carePlans = this.carePlans.filter(cp => cp.userId !== patientId);
+    this.appointments = this.appointments.filter(a => a.patientId !== patientId);
+
+    this.persist();
+    return { success: true, message: 'Patient Removed' };
   }
 
   public async linkFamilyMember(headUserId: string, memberMobile: string): Promise<ServiceResponse> {

@@ -71,7 +71,7 @@ const GodGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 };
 
 export const AppRouter: React.FC<RouterProps> = ({ appState, handlers, backendService }) => {
-    const activeClinic = appState.clinics.find(c => c.id === appState.activeClinicId) || appState.clinics[0] || SAFE_CLINIC_FALLBACK;
+    const activeClinic = appState.clinics.find(c => c.id === appState.activeClinicId);
     return (
         <Routes>
             {/* PUBLIC: UNIFIED LOGIN & BRANDED LOGIN */}
