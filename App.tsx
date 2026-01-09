@@ -557,8 +557,9 @@ const PublicLandingWrapper = ({ appState, handlers, backend }: any) => {
   // 1. Check Subdomain
   const hostname = window.location.hostname;
   // If we are at a subdomain (city.retaindental.com), SHOW THE APP (Login/PatientView)
-  const isSubdomain = (hostname.split('.').length > 2 && !hostname.endsWith('vercel.app')) ||
-    (hostname.includes('localhost') && hostname.split('.').length > 1);
+  const isSubdomain = ((hostname.split('.').length > 2 && !hostname.endsWith('vercel.app')) ||
+    (hostname.includes('localhost') && hostname.split('.').length > 1))
+    && !hostname.startsWith('www.');
 
   // 2. Check Query Param override
   const params = new URLSearchParams(window.location.search);
