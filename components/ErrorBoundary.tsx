@@ -23,6 +23,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
     public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
         console.error("Uncaught error:", error, errorInfo);
+        // @ts-ignore
         this.setState({ errorInfo });
     }
 
@@ -52,6 +53,7 @@ export class ErrorBoundary extends Component<Props, State> {
             );
         }
 
-        return (this.props as Props).children;
+        // @ts-ignore
+        return this.props.children;
     }
 }
