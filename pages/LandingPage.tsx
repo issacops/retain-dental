@@ -58,12 +58,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
         {
             id: 'patient-os',
             title: 'PatientOS',
-            subtitle: 'The Experience Layer',
-            description: 'A dedicated, branded app on your patient’s home screen. Replace fragmented tools with a single, frictionless interface.',
+            subtitle: 'The Brand Dominance Layer',
+            description: 'Don’t just give them a toothbrush. Give them YOUR clinic on their home screen. Prevent patients from drifting to competitors by owning the digital relationship.',
             features: [
-                { icon: <ScanFace />, label: 'Biometric Access', desc: 'FaceID login. No more forgotten passwords.' },
-                { icon: <Calendar />, label: 'One-Tap Booking', desc: 'Real-time sync with your practice management software.' },
-                { icon: <Wallet />, label: 'Medical Wallet', desc: 'Invoices, receipts, and treatment plans in one place.' }
+                { icon: <ScanFace />, label: 'Biometric Login', desc: 'FaceID access. Zero friction, zero forgotten passwords.' },
+                { icon: <Calendar />, label: 'One-Tap Booking', desc: 'Real-time sync. Remove the friction of calling the front desk.' },
+                { icon: <Wallet />, label: 'Medical Wallet', desc: 'Centralize invoices and treatment plans. Total transparency.' }
             ],
             visual: (
                 <PhoneMockup className="shadow-2xl rotate-1">
@@ -96,12 +96,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
         {
             id: 'clinic-os',
             title: 'ClinicOS',
-            subtitle: 'The Intelligence Layer',
-            description: 'Automate 80% of routine follow-ups. Our AI constantly analyzes patient behavior to predict churn and intervene automatically.',
+            subtitle: 'The Efficiency Layer',
+            description: 'Stop chasing patients. Let the OS handle the nagging. Automate 80% of routine follow-ups and eliminate admin fatigue.',
             features: [
-                { icon: <Activity />, label: 'Automated Triage', desc: 'AI reviews scan photos and flags issues to your team.' },
-                { icon: <Bell />, label: 'Smart Recall', desc: 'Algorithmically determined reactivation campaigns.' },
-                { icon: <Shield />, label: 'Clinical Guardrails', desc: 'Protocols that ensure compliance with treatment plans.' }
+                { icon: <Activity />, label: 'Automated Triage', desc: 'AI reviews scan photos and only flags actual issues to your team.' },
+                { icon: <Bell />, label: 'Smart Recall', desc: 'Algorithmically determined reactivation. Fill your schedule automatically.' },
+                { icon: <Shield />, label: 'Compliance Guardrails', desc: 'Ensure patients follow protocols without manual intervention.' }
             ],
             visual: (
                 <div className="w-full aspect-[4/3] bg-slate-900 rounded-2xl border border-white/10 p-6 relative overflow-hidden shadow-2xl flex flex-col items-center justify-center">
@@ -119,12 +119,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
                             <p className="text-rose-400 text-[10px] mt-1">3 High-Value Patients</p>
                         </div>
                         <div className="w-1/3 h-24 bg-white/5 rounded-xl border border-white/5 p-4 flex flex-col justify-center">
-                            <p className="text-slate-500 text-[10px] uppercase tracking-widest">Active Plans</p>
-                            <p className="text-2xl font-black text-white mt-1">1,204</p>
+                            <p className="text-slate-500 text-[10px] uppercase tracking-widest">Admin Hours Saved</p>
+                            <p className="text-2xl font-black text-white mt-1">42 hrs</p>
                         </div>
                     </div>
                     <div className="w-full bg-white/5 rounded-xl border border-white/5 flex items-center justify-center text-slate-600 p-8 h-32">
-                        <Activity className="animate-pulse mr-2" /> Live Compliance Feed
+                        <Activity className="animate-pulse mr-2" /> Live Protocol Feed
                     </div>
                 </div>
             )
@@ -132,12 +132,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
         {
             id: 'loyalty-engine',
             title: 'LoyaltyEngine',
-            subtitle: 'The Financial Layer',
-            description: 'Gamify compliance. Turn patient behavior into a currency that drives LTV and referrals.',
+            subtitle: 'The Growth Layer',
+            description: 'The "Amex Effect" for dentistry. Use status tiers to lock patients in, then use Family Pooling to acquire their entire household for free.',
             features: [
-                { icon: <Trophy />, label: 'Behavioral Points', desc: 'Reward wearing aligners, not just spending money.' },
-                { icon: <Users />, label: 'Referral Flywheel', desc: 'Automated rewards for bringing in family members.' },
-                { icon: <Globe />, label: 'Network Effect', desc: 'Link family accounts to pool points and increase household LTV.' }
+                { icon: <Trophy />, label: 'Status Tiers', desc: 'Drive behavior with Gold & Platinum status. Create addiction to progress.' },
+                { icon: <Users />, label: 'The Household Multiplier', desc: 'Families pool points together. One patient brings three more.' },
+                { icon: <Globe />, label: 'Viral Referrals', desc: 'Turn your patient base into your most effective marketing team.' }
             ],
             visual: (
                 <div className="relative w-64 h-64 md:w-96 md:h-96 flex items-center justify-center">
@@ -155,10 +155,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
                         <div className="bg-slate-800 p-6 rounded-2xl shadow-xl transform rotate-3 border border-white/10 text-white translate-x-8 w-64">
                             <div className="flex justify-between items-center">
                                 <div>
-                                    <p className="font-bold text-sm">Referral Bonus</p>
-                                    <p className="text-xs text-slate-400">Invite Sent</p>
+                                    <p className="font-bold text-sm">Family Pool</p>
+                                    <p className="text-xs text-slate-400">The Smiths</p>
                                 </div>
-                                <span className="text-emerald-400 font-bold">+1,000 pts</span>
+                                <span className="text-emerald-400 font-bold">12,500 pts</span>
                             </div>
                         </div>
                     </div>
