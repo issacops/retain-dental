@@ -22,6 +22,9 @@ import HeroSection from '../components/landing/HeroSection';
 import PhoneMockup from '../components/landing/PhoneMockup';
 import RoiCalculator from '../components/landing/RoiCalculator';
 import ScrollyTell from '../components/landing/ScrollyTell';
+import AutomationDiagram from '../components/landing/visuals/AutomationDiagram';
+import LoyaltyFlywheel from '../components/landing/visuals/LoyaltyFlywheel';
+import FamilyNetwork from '../components/landing/visuals/FamilyNetwork';
 
 interface LandingPageProps {
     backend: IBackendService;
@@ -103,31 +106,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
                 { icon: <Bell />, label: 'Smart Recall', desc: 'Algorithmically determined reactivation. Fill your schedule automatically.' },
                 { icon: <Shield />, label: 'Compliance Guardrails', desc: 'Ensure patients follow protocols without manual intervention.' }
             ],
-            visual: (
-                <div className="w-full aspect-[4/3] bg-slate-900 rounded-2xl border border-white/10 p-6 relative overflow-hidden shadow-2xl flex flex-col items-center justify-center">
-                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-rose-500"></div>
-                    {/* Dashboard Mock */}
-                    <div className="flex gap-4 mb-6 w-full">
-                        <div className="w-1/3 h-24 bg-white/5 rounded-xl border border-white/5 p-4 flex flex-col justify-center">
-                            <p className="text-slate-500 text-[10px] uppercase tracking-widest">Retention Rate</p>
-                            <p className="text-2xl font-black text-white mt-1">94.2%</p>
-                            <p className="text-emerald-400 text-[10px] mt-1 flex items-center gap-1"><Activity size={10} /> +2.4% this week</p>
-                        </div>
-                        <div className="w-1/3 h-24 bg-white/5 rounded-xl border border-white/5 p-4 flex flex-col justify-center">
-                            <p className="text-slate-500 text-[10px] uppercase tracking-widest">Revenue at Risk</p>
-                            <p className="text-2xl font-black text-white mt-1">$12k</p>
-                            <p className="text-rose-400 text-[10px] mt-1">3 High-Value Patients</p>
-                        </div>
-                        <div className="w-1/3 h-24 bg-white/5 rounded-xl border border-white/5 p-4 flex flex-col justify-center">
-                            <p className="text-slate-500 text-[10px] uppercase tracking-widest">Admin Hours Saved</p>
-                            <p className="text-2xl font-black text-white mt-1">42 hrs</p>
-                        </div>
-                    </div>
-                    <div className="w-full bg-white/5 rounded-xl border border-white/5 flex items-center justify-center text-slate-600 p-8 h-32">
-                        <Activity className="animate-pulse mr-2" /> Live Protocol Feed
-                    </div>
-                </div>
-            )
+            visual: <AutomationDiagram />
         },
         {
             id: 'loyalty-engine',
@@ -140,28 +119,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
                 { icon: <Globe />, label: 'Viral Referrals', desc: 'Turn your patient base into your most effective marketing team.' }
             ],
             visual: (
-                <div className="relative w-64 h-64 md:w-96 md:h-96 flex items-center justify-center">
-                    <div className="absolute inset-0 bg-amber-500/20 blur-[100px] rounded-full"></div>
-                    <div className="relative z-10 w-full h-full flex flex-col gap-4 items-center justify-center">
-                        <div className="bg-amber-500 p-6 rounded-2xl shadow-xl transform -rotate-6 border border-amber-400/50 w-64">
-                            <div className="flex justify-between items-start text-black">
-                                <div>
-                                    <p className="font-bold uppercase text-[10px] tracking-widest opacity-70">Membership Tier</p>
-                                    <h3 className="text-2xl font-black">PLATINUM</h3>
-                                </div>
-                                <Trophy size={24} />
-                            </div>
-                        </div>
-                        <div className="bg-slate-800 p-6 rounded-2xl shadow-xl transform rotate-3 border border-white/10 text-white translate-x-8 w-64">
-                            <div className="flex justify-between items-center">
-                                <div>
-                                    <p className="font-bold text-sm">Family Pool</p>
-                                    <p className="text-xs text-slate-400">The Smiths</p>
-                                </div>
-                                <span className="text-emerald-400 font-bold">12,500 pts</span>
-                            </div>
-                        </div>
-                    </div>
+                <div className="grid grid-cols-1 gap-4 w-full h-full">
+                    <div className="h-1/2 min-h-[200px]"><LoyaltyFlywheel /></div>
+                    <div className="h-1/2 min-h-[200px]"><FamilyNetwork /></div>
                 </div>
             )
         }
