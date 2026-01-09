@@ -27,40 +27,44 @@ const ScrollyTell: React.FC<ScrollyTellProps> = ({ pillars }) => {
     return (
         <div ref={containerRef} className="relative bg-slate-950">
             {pillars.map((pillar, index) => (
-                <div key={pillar.id} className="relative min-h-[150vh] flex flex-col lg:flex-row">
+                // CHANGED: Increased min-h from 150vh to 180vh for more breathing room
+                // CHANGED: Added pb-32 on mobile to separate sections
+                <div key={pillar.id} className="relative min-h-[180vh] flex flex-col lg:flex-row pb-32 lg:pb-0 border-b lg:border-none border-white/5 last:border-none">
 
                     {/* LEFT: Content (Scrolls) */}
-                    <div className="w-full lg:w-1/2 p-8 lg:p-24 flex items-center z-10 pointer-events-none">
+                    {/* CHANGED: Padded heavily (p-32 on desktop) */}
+                    {/* CHANGED: Mobile padding increased to p-8 */}
+                    <div className="w-full lg:w-1/2 p-8 py-24 lg:p-32 flex items-center z-10 pointer-events-none">
                         <motion.div
                             initial={{ opacity: 0, x: -50 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.8, ease: "easeOut" }}
                             viewport={{ margin: "-20% 0px -20% 0px" }}
-                            className="space-y-8 max-w-xl pointer-events-auto"
+                            className="space-y-10 max-w-xl pointer-events-auto"
                         >
-                            <div className="flex items-center gap-3">
-                                <span className="w-12 h-[1px] bg-indigo-500"></span>
-                                <span className="text-indigo-400 font-bold tracking-[0.2em] uppercase text-sm">
+                            <div className="flex items-center gap-4">
+                                <span className="w-16 h-[1px] bg-indigo-500/50"></span>
+                                <span className="text-indigo-400 font-bold tracking-[0.3em] uppercase text-xs">
                                     {pillar.subtitle}
                                 </span>
                             </div>
 
-                            <h2 className="text-5xl md:text-7xl font-black text-white tracking-tighter leading-none">
+                            <h2 className="text-5xl md:text-8xl font-black text-white tracking-tighter leading-[0.9]">
                                 {pillar.title}
                             </h2>
 
-                            <p className="text-xl text-slate-400 font-medium leading-relaxed">
+                            <p className="text-xl md:text-2xl text-slate-400 font-medium leading-relaxed max-w-lg">
                                 {pillar.description}
                             </p>
 
-                            <div className="grid gap-6 pt-8">
+                            <div className="grid gap-8 pt-12">
                                 {pillar.features.map((feat, i) => (
-                                    <div key={i} className="flex gap-4 items-start">
-                                        <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 text-indigo-400">
+                                    <div key={i} className="flex gap-6 items-start group">
+                                        <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 group-hover:border-indigo-500/50 group-hover:bg-indigo-500/10 transition-colors flex items-center justify-center shrink-0 text-indigo-400">
                                             {feat.icon}
                                         </div>
                                         <div>
-                                            <h4 className="text-white font-bold text-lg">{feat.label}</h4>
+                                            <h4 className="text-white font-bold text-xl mb-1">{feat.label}</h4>
                                             <p className="text-slate-500 text-sm leading-relaxed">{feat.desc}</p>
                                         </div>
                                     </div>
@@ -70,16 +74,18 @@ const ScrollyTell: React.FC<ScrollyTellProps> = ({ pillars }) => {
                     </div>
 
                     {/* RIGHT: Visual (Sticky) */}
-                    <div className="w-full lg:w-1/2 h-[50vh] lg:h-screen lg:sticky lg:top-0 flex items-center justify-center p-8 lg:p-24 bg-slate-900/10 lg:bg-transparent overflow-hidden">
+                    {/* CHANGED: Sticky alignment tweaks for mobile */}
+                    {/* CHANGED: h-[60vh] on mobile to give it significance */}
+                    <div className="w-full lg:w-1/2 h-[60vh] lg:h-screen sticky top-0 lg:top-0 flex items-center justify-center p-6 lg:p-24 bg-gradient-to-b from-slate-900/0 to-slate-900/20 lg:bg-transparent overflow-hidden">
                         <div className="relative w-full h-full max-w-2xl max-h-[800px] flex items-center justify-center">
                             {/* Background Glow */}
-                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%] bg-indigo-600/10 blur-[120px] rounded-full"></div>
+                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] h-[140%] bg-indigo-600/5 blur-[100px] rounded-full"></div>
 
                             <motion.div
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                transition={{ duration: 0.8 }}
-                                viewport={{ margin: "-20% 0px -20% 0px" }}
+                                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                                transition={{ duration: 1, ease: "easeOut" }}
+                                viewport={{ margin: "-10% 0px -10% 0px" }}
                                 className="relative z-10 w-full"
                             >
                                 {pillar.visual}

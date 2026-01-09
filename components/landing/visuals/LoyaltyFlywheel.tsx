@@ -6,17 +6,17 @@ const LoyaltyFlywheel = () => {
     return (
         <div className="w-full aspect-[4/3] relative flex items-center justify-center overflow-hidden">
             {/* Center Core */}
-            <div className="absolute z-20 w-32 h-32 bg-slate-900 rounded-full border-4 border-slate-800 flex flex-col items-center justify-center shadow-2xl">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-32 h-32 bg-slate-900 rounded-full border-4 border-slate-800 flex flex-col items-center justify-center shadow-2xl">
                 <div className="text-lg font-black text-white">LTV</div>
                 <div className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Engine</div>
             </div>
 
             {/* Orbit Path */}
-            <div className="absolute w-64 h-64 rounded-full border border-dashed border-white/10 animate-[spin_20s_linear_infinite]"></div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full border border-dashed border-white/10 animate-[spin_20s_linear_infinite]"></div>
 
             {/* Orbiting Planets */}
             <motion.div
-                className="absolute w-full h-full"
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64"
                 animate={{ rotate: 360 }}
                 transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
             >

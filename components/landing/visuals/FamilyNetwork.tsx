@@ -75,6 +75,8 @@ const ConnectionLine = ({ x1, y1, x2, y2 }: any) => {
         <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
             <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="rgba(255,255,255,0.1)" strokeWidth="2" strokeDasharray="5,5" />
             <motion.circle
+                cx={x1}
+                cy={y1}
                 r="3"
                 fill="#FBBF24"
                 animate={{
