@@ -503,6 +503,14 @@ export class MockBackendService implements IBackendService {
     return { success: true, message: 'Patient Removed' };
   }
 
+  public async joinWaitlist(data: { name: string, clinic: string, mobile: string, email: string }): Promise<ServiceResponse> {
+    return { success: true, message: 'Waitlist joined (Mock)' };
+  }
+
+  public async getWaitlist(): Promise<ServiceResponse<any[]>> {
+    return { success: true, message: 'Waitlist fetched (Mock)', updatedData: [] };
+  }
+
   public async linkFamilyMember(headUserId: string, memberMobile: string): Promise<ServiceResponse> {
     const headUser = this.users.find(u => u.id === headUserId);
     if (!headUser) return { success: false, message: 'Head not found', error: 'NOT_FOUND' };

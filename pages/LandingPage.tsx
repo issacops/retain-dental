@@ -22,7 +22,7 @@ interface LandingPageProps {
     backend: IBackendService;
 }
 
-const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
+export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
     // Waitlist Form State
     const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
     const [status, setStatus] = useState<'IDLE' | 'LOADING' | 'SUCCESS' | 'ERROR'>('IDLE');
