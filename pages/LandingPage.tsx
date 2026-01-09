@@ -26,6 +26,7 @@ import AutomationDiagram from '../components/landing/visuals/AutomationDiagram';
 import LoyaltyFlywheel from '../components/landing/visuals/LoyaltyFlywheel';
 import FamilyNetwork from '../components/landing/visuals/FamilyNetwork';
 import ClinicWorkflowDemo from '../components/landing/visuals/ClinicWorkflowDemo';
+import BrandShowcase from '../components/landing/BrandShowcase';
 
 interface LandingPageProps {
     backend: IBackendService;
@@ -173,7 +174,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
             {/* 3. SCROLLY TELLING (PRODUCT PILLARS) */}
             <ScrollyTell pillars={productPillars} />
 
-            {/* 4. TRUST & SECURITY */}
+            {/* 4. BRAND IDENTITY SHOWCASE (THE CHAMELEON) */}
+            <BrandShowcase />
+
+            {/* 5. TRUST & SECURITY */}
             <section className="py-24 border-t border-white/5 bg-black/40">
                 <div className="max-w-7xl mx-auto px-6 text-center">
                     <p className="text-slate-500 uppercase tracking-widest text-sm font-bold mb-12">Trusted Enterprise Infrastructure</p>
@@ -186,7 +190,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
                 </div>
             </section>
 
-            {/* 5. CTA */}
+            {/* 6. CTA */}
             <section className="py-32 px-6 relative overflow-hidden bg-indigo-950">
                 <div className="absolute inset-0 bg-slate-950 opacity-80"></div>
                 <div className="max-w-4xl mx-auto text-center relative z-10 space-y-8">
