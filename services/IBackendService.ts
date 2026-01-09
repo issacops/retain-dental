@@ -120,4 +120,8 @@ export interface IBackendService {
     toggleChecklistItem(carePlanId: string, itemId: string): Promise<ServiceResponse>;
 
     terminateCarePlan(carePlanId: string): Promise<ServiceResponse>;
+
+    // Landing Page
+    joinWaitlist(data: { name: string, clinic: string, mobile: string, email: string }): Promise<ServiceResponse>;
+    getWaitlist(): Promise<ServiceResponse<any[]>>;
 }

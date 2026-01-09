@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { BrowserRouter, useLocation, Link, useNavigate } from 'react-router-dom';
+import { BrowserRouter, useLocation, Link, useNavigate, Routes, Route } from 'react-router-dom';
+import { LandingPage } from './pages/LandingPage';
 import {
   User, Wallet, Transaction, FamilyGroup, Role, AppState, ViewMode, Clinic, TransactionCategory, TransactionType, CarePlan, ThemeTexture,
   AppointmentType, AppointmentStatus
@@ -519,11 +520,62 @@ const App = () => {
   return (
     <div className="h-screen w-full relative overflow-hidden bg-slate-950">
       <BrowserRouter>
-        <AuthHandler currentUser={data.currentUser} onRoleChange={(r) => { }} />
-        <AppRouter appState={data} handlers={handlers} backendService={backendService} />
+        <Routes>
+          {/* Public Landing Page at Root (No Auth Required) */}
+          <Route path="/" element={
+            data && data.activeClinicId !== 'platform' && !window.location.hostname.startsWith('retaindental.com') && !window.location.hostname.includes('localhost') ?
+              // Logic Check: If we have a TENANT context, we show the app.
+              // But simpler: The Router handles this?
+              // Actually, AppRouter expects to handle everything. We need to Wrap Landing Page.
+              <PublicLandingWrapper appState={data} handlers={handlers} backend={backendService} />
+              : <PublicLandingWrapper appState={data} handlers={handlers} backend={backendService} />
+          } />
+
+          {/* Explicit Login Route */}
+          <Route path="/login" element={
+            <>
+              <AuthHandler currentUser={data.currentUser} onRoleChange={() => { }} />
+              <AppRouter appState={data} handlers={handlers} backendService={backendService} />
+            </>
+          } />
+
+          {/* Catch-all for App usage (once logged in or if subdomain exists) */}
+          <Route path="/*" element={
+            <>
+              <AuthHandler currentUser={data.currentUser} onRoleChange={() => { }} />
+              <AppRouter appState={data} handlers={handlers} backendService={backendService} />
+            </>
+          } />
+        </Routes>
       </BrowserRouter>
     </div>
   );
+};
+
+// Helper to determine if we show Landing Page or App
+const PublicLandingWrapper = ({ appState, handlers, backend }: any) => {
+  // 1. Check Subdomain
+  const hostname = window.location.hostname;
+  // If we are at a subdomain (city.retaindental.com), SHOW THE APP (Login/PatientView)
+  const isSubdomain = (hostname.split('.').length > 2 && !hostname.endsWith('vercel.app')) ||
+    (hostname.includes('localhost') && hostname.split('.').length > 1);
+
+  // 2. Check Query Param override
+  const params = new URLSearchParams(window.location.search);
+  const hasSubParam = !!params.get('subdomain');
+
+  if (isSubdomain || hasSubParam) {
+    // Render the Main App Router (which handles Login/Dashboard based on Auth)
+    return (
+      <>
+        <AuthHandler currentUser={appState?.currentUser || null} onRoleChange={() => { }} />
+        <AppRouter appState={appState} handlers={handlers} backendService={backend} />
+      </>
+    );
+  }
+
+  // Default: Show Landing Page
+  return <LandingPage />;
 };
 
 export default App;

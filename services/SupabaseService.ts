@@ -713,4 +713,41 @@ export class SupabaseService implements IBackendService {
         if (error) return { success: false, message: error.message };
         return { success: true, message: 'Treatment Terminated', updatedData: await this.getData() };
     }
+
+    // --- LANDING PAGE ---
+
+    async joinWaitlist(data: { name: string, clinic: string, mobile: string, email: string }): Promise<ServiceResponse> {
+        try {
+            const { error } = await this.supabase.from('waitlist').insert({
+                full_name: data.name,
+                clinic_name: data.clinic,
+                mobile: data.mobile,
+                email: data.email
+            });
+
+            if (error) {
+                if (error.code === '23505') return { success: false, message: 'You have already requested access!' }; // Unique constraint
+                throw error;
+            }
+
+            return { success: true, message: 'Request Received. We will contact you shortly.' };
+        } catch (e: any) {
+            console.error("Waitlist Error", e);
+            return { success: false, message: 'Failed to join waitlist. Please try again.' };
+        }
+    }
+
+    async getWaitlist(): Promise<ServiceResponse<any[]>> {
+        try {
+            const { data, error } = await this.supabase
+                .from('waitlist')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) throw error;
+            return { success: true, message: 'Waitlist Fetched', updatedData: data };
+        } catch (e: any) {
+            return { success: false, message: e.message, error: 'DB_ERR' };
+        }
+    }
 }
