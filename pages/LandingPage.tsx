@@ -25,6 +25,7 @@ import ScrollyTell from '../components/landing/ScrollyTell';
 import AutomationDiagram from '../components/landing/visuals/AutomationDiagram';
 import LoyaltyFlywheel from '../components/landing/visuals/LoyaltyFlywheel';
 import FamilyNetwork from '../components/landing/visuals/FamilyNetwork';
+import ClinicWorkflowDemo from '../components/landing/visuals/ClinicWorkflowDemo';
 
 interface LandingPageProps {
     backend: IBackendService;
@@ -100,13 +101,25 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
             id: 'clinic-os',
             title: 'ClinicOS',
             subtitle: 'The Efficiency Layer',
-            description: 'Stop chasing patients. Let the OS handle the nagging. Automate 80% of routine follow-ups and eliminate admin fatigue.',
+            description: 'Onboard a patient in 12 seconds. No training manual required. Let the OS handle the nagging while you focus on dentistry.',
             features: [
                 { icon: <Activity />, label: 'Automated Triage', desc: 'AI reviews scan photos and only flags actual issues to your team.' },
                 { icon: <Bell />, label: 'Smart Recall', desc: 'Algorithmically determined reactivation. Fill your schedule automatically.' },
                 { icon: <Shield />, label: 'Compliance Guardrails', desc: 'Ensure patients follow protocols without manual intervention.' }
             ],
-            visual: <AutomationDiagram />
+            // Showing both Side-by-Side on large screens, or stacked
+            visual: (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full h-full">
+                    <div className="h-full min-h-[200px] flex flex-col justify-center gap-2">
+                        <span className="text-[10px] uppercase font-bold text-slate-500 text-center">Zero-Touch Triage</span>
+                        <AutomationDiagram />
+                    </div>
+                    <div className="h-full min-h-[200px] flex flex-col justify-center gap-2">
+                        <span className="text-[10px] uppercase font-bold text-slate-500 text-center">3-Click Admin</span>
+                        <ClinicWorkflowDemo />
+                    </div>
+                </div>
+            )
         },
         {
             id: 'loyalty-engine',
@@ -119,9 +132,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
                 { icon: <Globe />, label: 'Viral Referrals', desc: 'Turn your patient base into your most effective marketing team.' }
             ],
             visual: (
-                <div className="grid grid-cols-1 gap-4 w-full h-full">
-                    <div className="h-1/2 min-h-[200px]"><LoyaltyFlywheel /></div>
-                    <div className="h-1/2 min-h-[200px]"><FamilyNetwork /></div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full h-full">
+                    <div className="h-full min-h-[200px] flex flex-col justify-center gap-2">
+                        <span className="text-[10px] uppercase font-bold text-slate-500 text-center">Compounding Value</span>
+                        <LoyaltyFlywheel />
+                    </div>
+                    <div className="h-full min-h-[200px] flex flex-col justify-center gap-2">
+                        <span className="text-[10px] uppercase font-bold text-slate-500 text-center">Viral Acquisition</span>
+                        <FamilyNetwork />
+                    </div>
                 </div>
             )
         }
