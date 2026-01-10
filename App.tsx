@@ -203,10 +203,27 @@ const App = () => {
           ]
         };
 
-        // 2. Create Blob & URL
-        const stringManifest = JSON.stringify(manifest);
-        const blob = new Blob([stringManifest], { type: 'application/json' });
-        const manifestUrl = URL.createObjectURL(blob);
+        // 2. Determine Manifest URL (Server-Side for Prod to fix Chrome Badge, Blob for Localhost)
+        const isLocalhost = window.location.hostname.includes('localhost');
+        let manifestUrl = '';
+
+        if (isLocalhost) {
+          const stringManifest = JSON.stringify(manifest);
+          const blob = new Blob([stringManifest], { type: 'application/json' });
+          manifestUrl = URL.createObjectURL(blob);
+        } else {
+          // Server-Side Reflection (enables WebAPK)
+          const params = new URLSearchParams({
+            mode: 'reflect',
+            name: manifest.name,
+            short_name: manifest.short_name,
+            theme_color: manifest.theme_color,
+            bg_color: manifest.background_color,
+            start_url: manifest.start_url,
+            icon: clinic.logoUrl || ''
+          });
+          manifestUrl = `/api/manifest?${params.toString()}`;
+        }
 
         // 3. Update Link Tag
         const link = document.querySelector<HTMLLinkElement>('link[rel="manifest"]');

@@ -22,6 +22,24 @@ export default async function handler(req, res) {
         subdomain = req.query.slug;
     }
 
+    // REFLECTION MODE: Client passes data, Server signs it as JSON (For Vercel/SPA)
+    // This avoids DB hits and ensures what the Client sees is what the Manifest gets
+    if (req.query.mode === 'reflect') {
+        const { name, short_name, theme_color, bg_color, icon, start_url } = req.query;
+        return res.status(200).json({
+            name: name || "Retain App",
+            short_name: short_name || "Retain",
+            start_url: start_url || "/",
+            display: "standalone",
+            background_color: bg_color || "#0f172a",
+            theme_color: theme_color || "#6366f1",
+            icons: [
+                { src: icon || "/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any maskable" },
+                { src: icon || "/icon-512.png", sizes: "512x512", type: "image/png", purpose: "any maskable" }
+            ]
+        });
+    }
+
     // 3. Default Manifest (Retain OS)
     const defaultManifest = {
         name: "Retain.OS",
