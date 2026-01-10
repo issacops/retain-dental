@@ -284,16 +284,7 @@ const App = () => {
     setIsClient(true);
   }, []);
 
-  if (loading || !data) {
-    return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <Activity size={48} className="text-indigo-500 animate-pulse" />
-          <h2 className="text-white text-xl font-medium tracking-tight">Booting Retain.OS...</h2>
-        </div>
-      </div>
-    );
-  }
+
 
   const handleTransaction = async (patientId: string, amount: number, category: TransactionCategory, type: TransactionType, carePlanTemplate?: any) => {
     const result = await backendService.processTransaction(data.activeClinicId!, patientId, amount, category, type, carePlanTemplate);
@@ -480,7 +471,17 @@ const App = () => {
     }
   };
 
-  if (!isClient) return null;
+  // PRELOADER: Prevent Crash on PWA Cold Start
+  if (loading || !data) {
+    return (
+      <div className="h-screen w-full flex items-center justify-center bg-slate-950">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-slate-500 font-mono text-xs uppercase tracking-widest animate-pulse">Initializing Retain OS...</p>
+        </div>
+      </div>
+    );
+  }
 
   // Bundle handlers for easier passing
   const handlers = {
@@ -505,16 +506,7 @@ const App = () => {
     onRedeem: (amount: number, description: string) => handleTransaction(data.currentUser?.id!, amount, TransactionCategory.REWARD, TransactionType.REDEEM, { name: description } as any),
   };
 
-  if (loading || !data) {
-    return (
-      <div className="h-screen w-full flex items-center justify-center bg-slate-950">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-slate-500 font-mono text-xs uppercase tracking-widest animate-pulse">Initializing Retain OS...</p>
-        </div>
-      </div>
-    );
-  }
+
 
   // CHECK FOR PENDING STATUS (Approval Workflow)
   if (data?.currentUser?.status === 'PENDING') {
