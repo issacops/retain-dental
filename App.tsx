@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { BrowserRouter, useLocation, Link, useNavigate, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, useLocation, Link, useNavigate, Navigate, Routes, Route } from 'react-router-dom';
 import { LandingPage } from './pages/LandingPage';
 import {
   User, Wallet, Transaction, FamilyGroup, Role, AppState, ViewMode, Clinic, TransactionCategory, TransactionType, CarePlan, ThemeTexture,
@@ -620,7 +620,12 @@ const PublicLandingWrapper = ({ appState, handlers, backend }: any) => {
   const hasSubParam = !!params.get('subdomain');
 
   if (isSubdomain || hasSubParam) {
-    // Render the Main App Router (which handles Login/Dashboard based on Auth)
+    // Explicitly Redirect if at root (fixes PWA context loss)
+    if (window.location.pathname === '/') {
+      return <Navigate to={`/login${window.location.search}`} replace />;
+    }
+
+    // Render the Main App Router
     return (
       <>
         <AuthHandler currentUser={appState?.currentUser || null} onRoleChange={() => { }} />
