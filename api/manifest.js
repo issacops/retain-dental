@@ -98,11 +98,16 @@ export default async function handler(req, res) {
         }
 
         // 5. Construct Custom Manifest
+        // 5. Construct Custom Manifest
         const iconUrl = clinic.logo_url;
         const isSvg = iconUrl && (iconUrl.includes('.svg') || iconUrl.includes('dicebear'));
         const iconType = isSvg ? "image/svg+xml" : "image/png";
-        const iconSizes = isSvg ? "any" : "192x192";
-        const iconSizesLg = isSvg ? "any" : "512x512";
+
+        // CRITICAL FIX: Always use "any" for user-uploaded content.
+        // Chrome validates "192x192" strictly. If user uploads 500x500 PNG, manifest fails -> Badge appears.
+        // "any" bypasses strict size check for single-icon deployments.
+        const iconSizes = "any";
+        const iconSizesLg = "any";
 
         const customManifest = {
             ...defaultManifest,
