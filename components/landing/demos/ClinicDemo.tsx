@@ -8,12 +8,12 @@ import {
 
 const ClinicDemo: React.FC = () => {
     return (
-        <div className="w-full h-full bg-slate-900 rounded-2xl overflow-hidden relative border border-slate-800 shadow-2xl">
+        <div className="w-full h-full bg-slate-50 rounded-2xl overflow-hidden relative border border-slate-200 shadow-2xl">
             {/* 
                We render the full desktop view at a fixed large resolution (e.g. 1440x900)
                and scale it down to fit the container using CSS transform.
             */}
-            <div className="absolute top-0 left-0 origin-top-left w-[1400px] h-[900px]" style={{ transform: 'scale(0.45)' }}>
+            <div className="absolute top-1/2 left-1/2 origin-center w-[1400px] h-[900px] -translate-x-1/2 -translate-y-1/2" style={{ transform: 'translate(-50%, -50%) scale(0.45)' }}>
                 <DesktopDoctorView
                     currentUser={MOCK_USER}
                     allUsers={MOCK_ALL_USERS}

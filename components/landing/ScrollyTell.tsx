@@ -39,7 +39,7 @@ const ScrollyTell: React.FC<ScrollyTellProps> = ({ pillars }) => {
                             initial={{ opacity: 0, x: -50 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.8, ease: "easeOut" }}
-                            viewport={{ margin: "-20% 0px -20% 0px" }}
+                            viewport={{ margin: "-10% 0px -10% 0px", once: true }}
                             className="space-y-10 max-w-xl pointer-events-auto"
                         >
                             <div className="flex items-center gap-4">
@@ -85,7 +85,7 @@ const ScrollyTell: React.FC<ScrollyTellProps> = ({ pillars }) => {
                                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
                                 whileInView={{ opacity: 1, scale: 1, y: 0 }}
                                 transition={{ duration: 1, ease: "easeOut" }}
-                                viewport={{ margin: "-10% 0px -10% 0px" }}
+                                viewport={{ margin: "-10% 0px -10% 0px", once: true }}
                                 className="relative z-10 w-full"
                             >
                                 {pillar.visual}
