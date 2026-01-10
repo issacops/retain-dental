@@ -764,11 +764,11 @@ const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, o
                                  <div>
                                     <p className="text-[9px] font-black text-slate-600 uppercase tracking-widest mb-1">Clinic Portal Link</p>
                                     <p className="font-mono text-xs text-slate-400">
-                                       {/* PROD: Use login path since we don't have wildcard DNS on free Vercel */}
-                                       {window.location.origin}/login/{selectedClinicForManifest.slug}
+                                       {/* PROD: Use query param for robust global context loading */}
+                                       {window.location.origin}/?subdomain={selectedClinicForManifest.slug}
                                     </p>
                                  </div>
-                                 <button onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/login/${selectedClinicForManifest.slug}`); alert('Copied'); }} className="p-3 bg-white/5 hover:bg-indigo-600 rounded-xl transition-all opacity-0 group-hover:opacity-100"><Copy size={16} /></button>
+                                 <button onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/?subdomain=${selectedClinicForManifest.slug}`); alert('Copied Link'); }} className="p-3 bg-white/5 hover:bg-indigo-600 rounded-xl transition-all opacity-0 group-hover:opacity-100"><Copy size={16} /></button>
                               </div>
                            </div>
                         </div>
