@@ -51,6 +51,7 @@ export default async function handler(req, res) {
         short_name: "Retain",
         description: "Dental Operating System",
         start_url: "/",
+        scope: "/", // ESSENTIAL for WebAPK
         display: "standalone",
         background_color: "#0f172a",
         theme_color: "#6366f1",
@@ -58,12 +59,14 @@ export default async function handler(req, res) {
             {
                 src: "/icon-192.png",
                 sizes: "192x192",
-                type: "image/png"
+                type: "image/png",
+                purpose: "any maskable"
             },
             {
                 src: "/icon-512.png",
                 sizes: "512x512",
-                type: "image/png"
+                type: "image/png",
+                purpose: "any maskable"
             }
         ]
     };
