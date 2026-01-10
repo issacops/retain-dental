@@ -195,11 +195,11 @@ const App = () => {
           background_color: "#0f172a",
           theme_color: clinic.primaryColor || '#6366f1',
           icons: clinic.logoUrl ? [
-            { src: clinic.logoUrl, sizes: "192x192", type: "image/png" },
-            { src: clinic.logoUrl, sizes: "512x512", type: "image/png" }
+            { src: clinic.logoUrl, sizes: "192x192", type: "image/png", purpose: "any maskable" },
+            { src: clinic.logoUrl, sizes: "512x512", type: "image/png", purpose: "any maskable" }
           ] : [
-            { src: "/icon-192.png", sizes: "192x192", type: "image/png" },
-            { src: "/icon-512.png", sizes: "512x512", type: "image/png" }
+            { src: "/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any maskable" },
+            { src: "/icon-512.png", sizes: "512x512", type: "image/png", purpose: "any maskable" }
           ]
         };
 
