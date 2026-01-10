@@ -118,6 +118,11 @@ export const LoginPage: React.FC<LoginPageProps> = ({ clinics = [], activeClinic
         <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden font-sans text-slate-200 transition-colors duration-1000"
             style={{ backgroundColor: isBranded ? '#0f172a' : '#020617' }}>
 
+            {/* DEBUG OVERLAY for PWA Diagonstics */}
+            <div style={{ position: 'fixed', top: 0, right: 0, padding: '4px', background: 'rgba(255,0,0,0.5)', zIndex: 9999, fontSize: '10px', pointerEvents: 'none' }}>
+                DEBUG: Login | Slug: {slug || 'None'} | Clinic: {targetClinic?.name || 'None'}
+            </div>
+
             {/* Ambient Background - Dynamic Color */}
             <div className="absolute top-[-50%] left-[-20%] w-[1000px] h-[1000px] rounded-full blur-[150px] animate-pulse-slow transition-colors duration-1000"
                 style={{ backgroundColor: `${brandColor}20` }}></div>
