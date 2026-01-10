@@ -1,8 +1,7 @@
 const CACHE_NAME = 'retain-dental-v1';
 const urlsToCache = [
     '/',
-    '/index.html',
-    '/manifest.json'
+    '/index.html'
 ];
 
 self.addEventListener('install', (event) => {
