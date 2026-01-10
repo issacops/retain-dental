@@ -135,6 +135,13 @@ export default async function handler(req, res) {
                     type: iconType,
                     purpose: "any maskable"
                 },
+                // REDUNDANCY: Try direct URL too (in case proxy fails)
+                {
+                    src: clinic.logo_url,
+                    sizes: "any",
+                    type: iconType,
+                    purpose: "any maskable"
+                },
                 ...defaultManifest.icons // Fallback
             ] : defaultManifest.icons
         };
