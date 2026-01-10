@@ -217,17 +217,9 @@ const App = () => {
           const blob = new Blob([stringManifest], { type: 'application/json' });
           manifestUrl = URL.createObjectURL(blob);
         } else {
-          // Server-Side Reflection (enables WebAPK)
-          const params = new URLSearchParams({
-            mode: 'reflect',
-            name: manifest.name,
-            short_name: manifest.short_name,
-            theme_color: manifest.theme_color,
-            bg_color: manifest.background_color,
-            start_url: manifest.start_url,
-            icon: clinic.logoUrl || ''
-          });
-          manifestUrl = `/api/manifest?${params.toString()}`;
+          // Server-Side: Use Slug to fetch clean manifest from DB (Avoids URL length issues)
+          // This relies on api/manifest.js connecting to Supabase, which it does.
+          manifestUrl = `/api/manifest?slug=${clinic.slug}`;
         }
 
         // 3. Update Link Tag

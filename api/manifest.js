@@ -98,6 +98,12 @@ export default async function handler(req, res) {
         }
 
         // 5. Construct Custom Manifest
+        const iconUrl = clinic.logo_url;
+        const isSvg = iconUrl && (iconUrl.includes('.svg') || iconUrl.includes('dicebear'));
+        const iconType = isSvg ? "image/svg+xml" : "image/png";
+        const iconSizes = isSvg ? "any" : "192x192";
+        const iconSizesLg = isSvg ? "any" : "512x512";
+
         const customManifest = {
             ...defaultManifest,
             name: clinic.name,
@@ -106,13 +112,15 @@ export default async function handler(req, res) {
             icons: clinic.logo_url ? [
                 {
                     src: clinic.logo_url,
-                    sizes: "192x192",
-                    type: "image/png"
+                    sizes: iconSizes,
+                    type: iconType,
+                    purpose: "any maskable"
                 },
                 {
                     src: clinic.logo_url,
-                    sizes: "512x512",
-                    type: "image/png"
+                    sizes: iconSizesLg,
+                    type: iconType,
+                    purpose: "any maskable"
                 }
             ] : defaultManifest.icons
         };
