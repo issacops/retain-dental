@@ -1,14 +1,16 @@
 
 import React, { useMemo, useState } from 'react';
 import { Search, DollarSign, Calendar, TrendingUp, Download, Filter, FileText, ArrowUpRight, ArrowDownLeft, CreditCard } from 'lucide-react';
-import { Transaction, TransactionType, TransactionCategory, Clinic } from '../../../types';
+import { Transaction, TransactionType, TransactionCategory, Clinic, Wallet, User } from '../../../types';
 
 interface Props {
     clinic: Clinic;
     transactions: Transaction[];
+    wallets: Wallet[];
+    allUsers: User[];
 }
 
-const FinancialLedger: React.FC<Props> = ({ clinic, transactions }) => {
+const FinancialLedger: React.FC<Props> = ({ clinic, transactions, wallets, allUsers }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [filterCategory, setFilterCategory] = useState<string>('ALL');
 
@@ -41,6 +43,112 @@ const FinancialLedger: React.FC<Props> = ({ clinic, transactions }) => {
 
         return { totalRevenue, todayRevenue, monthlyRevenue };
     }, [filteredTransactions]);
+
+    const handleExportCSV = () => {
+        const headers = ['Transaction ID', 'Date', 'Type', 'Category', 'Description', 'Amount', 'Patient'];
+        const rows = filteredTransactions.map(t => {
+            const wallet = wallets.find(w => w.id === t.walletId);
+            const patient = allUsers.find(u => u.id === wallet?.userId);
+            return [
+                t.id,
+                new Date(t.date).toLocaleDateString(),
+                t.type,
+                t.category,
+                `"${t.description}"`, // Quote description to handle commas
+                t.amountPaid,
+                `"${patient?.name || 'Unknown'}"`
+            ].join(',');
+        });
+
+        const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows].join('\n');
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", `financial_ledger_${clinic.slug}_${new Date().toISOString().split('T')[0]}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    const handlePrintReceipt = (transaction: Transaction) => {
+        const wallet = wallets.find(w => w.id === transaction.walletId);
+        const patient = allUsers.find(u => u.id === wallet?.userId);
+
+        const receiptWindow = window.open('', '_blank');
+        if (receiptWindow) {
+            receiptWindow.document.write(`
+                <html>
+                <head>
+                    <title>Receipt #${transaction.id.slice(0, 8)}</title>
+                    <style>
+                        body { font-family: 'Inter', sans-serif; padding: 40px; color: #1e293b; max-width: 800px; mx-auto; }
+                        .header { text-align: center; margin-bottom: 40px; border-bottom: 2px solid #f1f5f9; padding-bottom: 20px; }
+                        .logo { height: 60px; margin-bottom: 10px; }
+                        .clinic-name { font-size: 24px; font-weight: 900; color: #0f172a; text-transform: uppercase; letter-spacing: 1px; }
+                        .meta { display: flex; justify-content: space-between; margin-bottom: 40px; font-size: 14px; }
+                        .label { font-weight: bold; text-transform: uppercase; color: #64748b; font-size: 10px; letter-spacing: 1px; }
+                        .value { font-weight: bold; margin-top: 4px; }
+                        .table { width: 100%; border-collapse: collapse; margin-bottom: 40px; }
+                        .table th { text-align: left; text-transform: uppercase; font-size: 10px; letter-spacing: 1px; color: #64748b; padding: 10px 0; border-bottom: 1px solid #e2e8f0; }
+                        .table td { padding: 20px 0; border-bottom: 1px solid #f1f5f9; font-weight: bold; }
+                        .total { text-align: right; font-size: 24px; font-weight: 900; color: #0f172a; }
+                        .footer { margin-top: 60px; text-align: center; font-size: 12px; color: #94a3b8; }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        ${clinic.logoUrl ? `<img src="${clinic.logoUrl}" class="logo" />` : ''}
+                        <div class="clinic-name">${clinic.name}</div>
+                        <div style="font-size: 12px; color: #64748b; margin-top: 5px;">Official Payment Receipt</div>
+                    </div>
+
+                    <div class="meta">
+                        <div>
+                            <div class="label">Billed To</div>
+                            <div class="value">${patient?.name || 'Walk-in Patient'}</div>
+                            <div style="font-size: 12px; color: #64748b;">${patient?.mobile || ''}</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div class="label">Receipt Number</div>
+                            <div class="value">#${transaction.id.slice(0, 8).toUpperCase()}</div>
+                            <br/>
+                            <div class="label">Date Issued</div>
+                            <div class="value">${new Date(transaction.date).toLocaleDateString()}</div>
+                        </div>
+                    </div>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>Category</th>
+                                <th style="text-align: right;">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>${transaction.description}</td>
+                                <td>${transaction.category}</td>
+                                <td style="text-align: right;">₹${transaction.amountPaid.toLocaleString()}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="total">
+                        Total: ₹${transaction.amountPaid.toLocaleString()}
+                    </div>
+
+                    <div class="footer">
+                        <p>Thank you for choosing ${clinic.name}.</p>
+                        <p>Generated via Retain OS • ${new Date().toLocaleString()}</p>
+                    </div>
+                    <script>window.print();</script>
+                </body>
+                </html>
+            `);
+            receiptWindow.document.close();
+        }
+    };
 
     return (
         <div className="h-full flex flex-col p-8 space-y-8 animate-in fade-in duration-700">
@@ -96,7 +204,7 @@ const FinancialLedger: React.FC<Props> = ({ clinic, transactions }) => {
                             <option value="ALL">All Categories</option>
                             {Object.values(TransactionCategory).map(c => <option key={c} value={c}>{c}</option>)}
                         </select>
-                        <button className="px-6 py-3 bg-slate-900 text-white rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-black transition-all shadow-lg flex items-center gap-2">
+                        <button onClick={handleExportCSV} className="px-6 py-3 bg-slate-900 text-white rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-black transition-all shadow-lg flex items-center gap-2 active:scale-95">
                             <Download size={16} /> Export
                         </button>
                     </div>
@@ -141,7 +249,7 @@ const FinancialLedger: React.FC<Props> = ({ clinic, transactions }) => {
                                         {new Date(tx.date).toLocaleDateString()} <span className="text-slate-300 mx-1">|</span> {new Date(tx.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                     </td>
                                     <td className="p-6 text-center">
-                                        <button className="p-2 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-slate-900 transition-colors">
+                                        <button onClick={() => handlePrintReceipt(tx)} title="Print Receipt" className="p-2 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-slate-900 transition-colors">
                                             <FileText size={18} />
                                         </button>
                                     </td>

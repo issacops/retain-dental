@@ -278,7 +278,7 @@ const DesktopDoctorView: React.FC<Props> = ({
                      />
                   )}
                   {activeSection === 'Financial Ledger' && (
-                     <FinancialLedger clinic={clinic} transactions={transactions} />
+                     <FinancialLedger clinic={clinic} transactions={transactions} wallets={wallets} allUsers={allUsers} />
                   )}
                   {activeSection === 'Patient Records' && (
                      <div className="flex overflow-hidden h-full">
