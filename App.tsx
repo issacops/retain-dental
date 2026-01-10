@@ -505,6 +505,17 @@ const App = () => {
     onRedeem: (amount: number, description: string) => handleTransaction(data.currentUser?.id!, amount, TransactionCategory.REWARD, TransactionType.REDEEM, { name: description } as any),
   };
 
+  if (loading || !data) {
+    return (
+      <div className="h-screen w-full flex items-center justify-center bg-slate-950">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-slate-500 font-mono text-xs uppercase tracking-widest animate-pulse">Initializing Retain OS...</p>
+        </div>
+      </div>
+    );
+  }
+
   // CHECK FOR PENDING STATUS (Approval Workflow)
   if (data?.currentUser?.status === 'PENDING') {
     return (
