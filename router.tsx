@@ -70,13 +70,18 @@ const GodGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     );
 };
 
+// Safe Router Wrapper
 export const AppRouter: React.FC<RouterProps> = ({ appState, handlers, backendService }) => {
-    const activeClinic = appState.clinics.find(c => c.id === appState.activeClinicId);
+    // Defensive access to clinics array
+    const clinics = appState?.clinics || [];
+    const activeClinic = clinics.find(c => c.id === appState?.activeClinicId);
+
+    if (!appState) return <div className="p-10 text-white">App Error: State Missing</div>;
     return (
         <Routes>
             {/* PUBLIC: UNIFIED LOGIN & BRANDED LOGIN */}
-            <Route path="/login" element={<LoginPage clinics={appState.clinics} activeClinic={activeClinic} />} />
-            <Route path="/login/:slug" element={<LoginPage clinics={appState.clinics} activeClinic={activeClinic} />} />
+            <Route path="/login" element={<LoginPage clinics={clinics} activeClinic={activeClinic} />} />
+            <Route path="/login/:slug" element={<LoginPage clinics={clinics} activeClinic={activeClinic} />} />
 
             {/* SUPER ADMIN PORTAL - Secured */}
             <Route path="/god" element={
