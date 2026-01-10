@@ -4,6 +4,7 @@ import { ResponsiveContainer, BarChart as ReBarChart, Bar, Cell, CartesianGrid, 
 import { User, Wallet, Transaction, CarePlan, Clinic, FamilyGroup, TransactionCategory, TransactionType } from '../../../types';
 import { TREATMENT_TEMPLATES, TreatmentTemplate } from '../../../constants';
 import FamilyEquityVisualizer from './FamilyEquityVisualizer';
+import DoctorTreatmentDetail from './DoctorTreatmentDetail';
 
 interface Props {
     selectedPatient: User;
@@ -30,6 +31,7 @@ const PatientProfile: React.FC<Props> = ({
     const [customValues, setCustomValues] = useState<Record<string, any>>({});
     const [isEditingPlan, setIsEditingPlan] = useState(false);
     const [editValues, setEditValues] = useState<Partial<CarePlan>>({});
+    const [viewingPlan, setViewingPlan] = useState<CarePlan | null>(null);
 
     // Auto-set category and defaults based on selected protocol
     useEffect(() => {
@@ -127,13 +129,31 @@ const PatientProfile: React.FC<Props> = ({
                             <p className="text-[10px] font-black uppercase text-emerald-100 tracking-[0.25em] mb-4">Patient Regime</p>
                             <div className="flex justify-between items-start mb-12">
                                 <h4 className="text-5xl font-black tracking-tighter">{activeCarePlan.treatmentName}</h4>
-                                <button
-                                    onClick={() => { setEditValues(activeCarePlan); setIsEditingPlan(true); }}
-                                    className="px-6 py-3 bg-white/20 hover:bg-white/30 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all"
-                                >
-                                    Edit Protocol
-                                </button>
+                                <div className="flex gap-2">
+                                    <button
+                                        onClick={() => setViewingPlan(activeCarePlan)}
+                                        className="px-6 py-3 bg-white text-emerald-900 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-lg hover:scale-105 transition-all"
+                                    >
+                                        Open Console
+                                    </button>
+                                    <button
+                                        onClick={() => { setEditValues(activeCarePlan); setIsEditingPlan(true); }}
+                                        className="px-6 py-3 bg-white/20 hover:bg-white/30 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all"
+                                    >
+                                        Edit Protocol
+                                    </button>
+                                </div>
                             </div>
+
+                            {viewingPlan && (
+                                <DoctorTreatmentDetail
+                                    plan={viewingPlan}
+                                    patient={selectedPatient}
+                                    clinic={clinic}
+                                    onClose={() => setViewingPlan(null)}
+                                    onUpdatePlan={onUpdateCarePlan}
+                                />
+                            )}
 
                             {isEditingPlan ? (
                                 <div className="space-y-6 animate-in slide-in-from-top-4 duration-300">

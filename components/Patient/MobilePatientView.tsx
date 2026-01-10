@@ -31,25 +31,71 @@ const TreatmentComplianceRing: React.FC<{ percentage: number; color: string }> =
 );
 
 const SpecialtyCareModule: React.FC<{ plan: CarePlan; primaryColor: string; onToggle?: (id: string, itemId: string) => Promise<any> }> = ({ plan, primaryColor, onToggle }) => (
-  <div className="bg-white p-6 rounded-[40px] border border-slate-100 shadow-sm space-y-6">
-    <div className="flex justify-between items-center">
-      <div>
-        <h4 className="text-xl font-black text-slate-900 tracking-tight">{plan.treatmentName}</h4>
-        <p className="text-xs font-bold text-slate-400 mt-1">{plan.category} Protocol</p>
+  <div className="space-y-8 animate-in slide-in-from-bottom-4 duration-700">
+
+    {/* Header Card */}
+    <div className="bg-white p-8 rounded-[40px] border border-slate-100 shadow-xl shadow-slate-200/50 relative overflow-hidden group">
+      <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-50 rounded-bl-[100px] -mr-8 -mt-8 opacity-50"></div>
+
+      <div className="flex justify-between items-start mb-6 relative z-10">
+        <div>
+          <span className="px-3 py-1 bg-slate-50 text-slate-500 rounded-full text-[9px] font-black uppercase tracking-widest border border-slate-100 mb-2 inline-block shadow-sm">
+            {plan.category} Protocol
+          </span>
+          <h4 className="text-3xl font-black text-slate-900 tracking-tighter leading-none mt-1">{plan.treatmentName}</h4>
+        </div>
+        <TreatmentComplianceRing percentage={(plan.checklist?.filter(i => i.completed).length || 0) / (plan.checklist?.length || 1) * 100} color={primaryColor} />
       </div>
-      <TreatmentComplianceRing percentage={(plan.checklist?.filter(i => i.completed).length || 0) / (plan.checklist?.length || 1) * 100} color={primaryColor} />
+
+      {/* Custom Metadata Display (e.g. Tray #) */}
+      {plan.metadata && Object.keys(plan.metadata).length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-6">
+          {Object.entries(plan.metadata).map(([k, v]) => (
+            <div key={k} className="px-4 py-2 bg-slate-900 text-white rounded-xl text-[10px] uppercase font-bold tracking-wider shadow-md">
+              <span className="opacity-50 mr-1">{k}:</span> {v}
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="space-y-3 relative z-10">
+        <p className="text-[10px] font-black uppercase tracking-widest text-slate-300 pl-1">Daily Rituals</p>
+        {(plan.checklist || []).length > 0 ? (plan.checklist?.map(item => (
+          <div key={item.id} onClick={() => onToggle && onToggle(plan.id, item.id)} className={`flex items-center gap-5 p-5 rounded-[24px] border active:scale-[0.98] transition-all cursor-pointer group hover:shadow-lg ${item.completed ? 'bg-emerald-50/50 border-emerald-100' : 'bg-white border-slate-100 hover:border-indigo-100'}`}>
+            <div className={`h-8 w-8 rounded-full flex items-center justify-center transition-all duration-300 shadow-sm ${item.completed ? 'bg-emerald-500 text-white scale-110' : 'bg-slate-50 text-slate-300 group-hover:bg-indigo-50 group-hover:text-indigo-400'}`}>
+              {item.completed ? <CheckCircle size={18} strokeWidth={3} /> : <div className="h-3 w-3 rounded-full bg-slate-200 group-hover:bg-indigo-200 transition-colors" />}
+            </div>
+            <span className={`text-sm font-bold tracking-tight transition-colors ${item.completed ? 'text-slate-400 line-through decoration-emerald-500/30' : 'text-slate-700 group-hover:text-slate-900'}`}>{item.task}</span>
+          </div>
+        ))) : (
+          <p className="text-slate-400 text-xs italic pl-4">No daily tasks defined.</p>
+        )}
+      </div>
     </div>
 
-    <div className="space-y-3">
-      {plan.checklist?.map(item => (
-        <div key={item.id} onClick={() => onToggle && onToggle(plan.id, item.id)} className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100 active:scale-[0.98] transition-all cursor-pointer">
-          <div className={`h-6 w-6 rounded-full border-2 flex items-center justify-center transition-colors ${item.completed ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300'}`}>
-            {item.completed && <CheckCircle size={14} />}
+    {/* Instructions / Guidelines Card */}
+    {plan.instructions && plan.instructions.length > 0 && (
+      <div className="bg-slate-900 p-8 rounded-[40px] shadow-2xl relative overflow-hidden text-white border border-slate-800">
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+        <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-indigo-500/20 rounded-full blur-[80px]"></div>
+
+        <div className="relative z-10">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="p-2 bg-white/10 rounded-xl backdrop-blur-sm shadow-inner"><ShieldCheck size={20} className="text-emerald-400" /></div>
+            <h4 className="text-lg font-black tracking-tight">Care Guidelines</h4>
           </div>
-          <span className={`text-sm font-bold ${item.completed ? 'text-slate-400 line-through' : 'text-slate-700'}`}>{item.task}</span>
+
+          <ul className="space-y-5">
+            {plan.instructions.map((inst, i) => (
+              <li key={i} className="flex gap-4 items-start group">
+                <span className="flex-shrink-0 h-6 w-6 rounded-full bg-white/10 flex items-center justify-center text-[10px] font-black text-slate-400 border border-white/5 group-hover:bg-indigo-500 group-hover:text-white group-hover:border-indigo-400 transition-colors shadow-sm">{i + 1}</span>
+                <p className="text-sm font-medium text-slate-300 leading-relaxed group-hover:text-white transition-colors">{inst}</p>
+              </li>
+            ))}
+          </ul>
         </div>
-      ))}
-    </div>
+      </div>
+    )}
   </div>
 );
 
