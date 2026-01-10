@@ -46,6 +46,41 @@ const AuthHandler = ({
   return null;
 };
 
+// GLOBAL ERROR BOUNDARY to catch "Black Screen" crashes
+class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean, error: Error | null }> {
+  state = { hasError: false, error: null as Error | null }; // TS Fix: Define simple property initializer
+
+  constructor(props: any) {
+    super(props);
+  }
+
+  static getDerivedStateFromError(error: any) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: any, errorInfo: any) {
+    console.error("Uncaught Error:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="h-screen w-full bg-red-900 text-white p-8 overflow-auto flex flex-col items-center justify-center">
+          <h1 className="text-3xl font-bold mb-4">Application Crash</h1>
+          <p className="mb-4 text-center">Please send a screenshot of this to support:</p>
+          <pre className="bg-black/50 p-6 rounded-xl font-mono text-xs max-w-full overflow-x-auto border border-red-500/50">
+            {this.state.error?.toString()}
+          </pre>
+          <button onClick={() => window.location.reload()} className="mt-8 px-8 py-3 bg-white text-red-900 font-bold rounded-full">
+            Reload App
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 const App = () => {
   const [isClient, setIsClient] = useState(false);
   const { addToast } = useToast();
@@ -536,35 +571,37 @@ const App = () => {
 
   return (
     <div className="w-full relative bg-slate-950 min-h-screen">
-      <BrowserRouter>
-        <Routes>
-          {/* Public Landing Page at Root (No Auth Required) */}
-          <Route path="/" element={
-            data && data.activeClinicId !== 'platform' && !window.location.hostname.startsWith('retaindental.com') && !window.location.hostname.includes('localhost') ?
-              // Logic Check: If we have a TENANT context, we show the app.
-              // But simpler: The Router handles this?
-              // Actually, AppRouter expects to handle everything. We need to Wrap Landing Page.
-              <PublicLandingWrapper appState={data} handlers={handlers} backend={backendService} />
-              : <PublicLandingWrapper appState={data} handlers={handlers} backend={backendService} />
-          } />
+      <ErrorBoundary>
+        <BrowserRouter>
+          <Routes>
+            {/* Public Landing Page at Root (No Auth Required) */}
+            <Route path="/" element={
+              data && data.activeClinicId !== 'platform' && !window.location.hostname.startsWith('retaindental.com') && !window.location.hostname.includes('localhost') ?
+                // Logic Check: If we have a TENANT context, we show the app.
+                // But simpler: The Router handles this?
+                // Actually, AppRouter expects to handle everything. We need to Wrap Landing Page.
+                <PublicLandingWrapper appState={data} handlers={handlers} backend={backendService} />
+                : <PublicLandingWrapper appState={data} handlers={handlers} backend={backendService} />
+            } />
 
-          {/* Explicit Login Route */}
-          <Route path="/login" element={
-            <>
-              <AuthHandler currentUser={data.currentUser} onRoleChange={() => { }} />
-              <AppRouter appState={data} handlers={handlers} backendService={backendService} />
-            </>
-          } />
+            {/* Explicit Login Route */}
+            <Route path="/login" element={
+              <>
+                <AuthHandler currentUser={data.currentUser} onRoleChange={() => { }} />
+                <AppRouter appState={data} handlers={handlers} backendService={backendService} />
+              </>
+            } />
 
-          {/* Catch-all for App usage (once logged in or if subdomain exists) */}
-          <Route path="/*" element={
-            <>
-              <AuthHandler currentUser={data.currentUser} onRoleChange={() => { }} />
-              <AppRouter appState={data} handlers={handlers} backendService={backendService} />
-            </>
-          } />
-        </Routes>
-      </BrowserRouter>
+            {/* Catch-all for App usage (once logged in or if subdomain exists) */}
+            <Route path="/*" element={
+              <>
+                <AuthHandler currentUser={data.currentUser} onRoleChange={() => { }} />
+                <AppRouter appState={data} handlers={handlers} backendService={backendService} />
+              </>
+            } />
+          </Routes>
+        </BrowserRouter>
+      </ErrorBoundary>
     </div>
   );
 };
