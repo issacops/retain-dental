@@ -106,6 +106,7 @@ export default async function handler(req, res) {
 
         const customManifest = {
             ...defaultManifest,
+            id: `/?subdomain=${subdomain}`, // Uniquely identifies this PWA
             name: clinic.name,
             short_name: clinic.name,
             theme_color: clinic.primary_color || '#6366f1',
@@ -121,7 +122,8 @@ export default async function handler(req, res) {
                     sizes: iconSizesLg,
                     type: iconType,
                     purpose: "any maskable"
-                }
+                },
+                ...defaultManifest.icons // Fallback: If SVGs fail, generic icons ensure WebAPK creation (no badge)
             ] : defaultManifest.icons
         };
 
