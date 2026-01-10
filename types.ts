@@ -37,6 +37,7 @@ export interface Clinic {
   subscriptionTier: 'STARTER' | 'PRO' | 'ENTERPRISE';
   createdAt: string;
   adminUserId: string;
+  emergencyPhone?: string; // For SOS button
 }
 
 export interface User {

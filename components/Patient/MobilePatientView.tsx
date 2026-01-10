@@ -293,7 +293,7 @@ const MobilePatientView: React.FC<Props> = ({ currentUser, users, wallets, trans
                 <div className="space-y-8">
                   <SpecialtyCareModule plan={activeCarePlan} primaryColor={clinic.primaryColor} onToggle={onToggleChecklistItem} />
                   <div className="grid grid-cols-2 gap-4">
-                    <button className="p-8 bg-slate-900 rounded-[40px] text-white flex flex-col items-center gap-3 active:scale-95 shadow-2xl transition-all shadow-black/20">
+                    <button onClick={() => clinic.emergencyPhone ? window.location.href = `tel:${clinic.emergencyPhone}` : alert("Emergency contact not configured by clinic.")} className="p-8 bg-slate-900 rounded-[40px] text-white flex flex-col items-center gap-3 active:scale-95 shadow-2xl transition-all shadow-black/20">
                       <PhoneCall size={28} style={{ color: clinic.primaryColor }} />
                       <span className="text-[10px] font-black uppercase tracking-[0.2em]">Priority SOS</span>
                     </button>

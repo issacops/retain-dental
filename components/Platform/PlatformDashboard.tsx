@@ -101,10 +101,10 @@ const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, o
                slug: fullClinic.slug,
                ownerName: fullClinic.ownerName,
                adminEmail: fullClinic.adminEmail,
-               subscriptionTier: fullClinic.subscriptionTier,
                primaryColor: fullClinic.primaryColor,
                themeTexture: fullClinic.themeTexture,
-               logoUrl: fullClinic.logoUrl
+               logoUrl: fullClinic.logoUrl,
+               emergencyPhone: fullClinic.emergencyPhone, // Load SOS Phone
             });
          }
       }
@@ -731,6 +731,16 @@ const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, o
                                  className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white font-bold text-sm outline-none focus:border-indigo-500"
                               />
                            </div>
+                        </div>
+
+                        <div className="space-y-4">
+                           <label className="text-[10px] font-black text-rose-400 uppercase tracking-widest px-1">SOS Emergency Phone</label>
+                           <input
+                              value={editDraft.emergencyPhone || ''}
+                              onChange={e => setEditDraft({ ...editDraft, emergencyPhone: e.target.value })}
+                              placeholder="+91 99999 88888"
+                              className="w-full bg-rose-500/10 border border-rose-500/20 rounded-2xl px-6 py-4 text-white font-bold text-sm outline-none focus:border-rose-500 placeholder:text-rose-500/30"
+                           />
                         </div>
 
                         <div className="pt-8 flex gap-4 border-t border-white/5">
