@@ -76,7 +76,7 @@ const PatientProfile: React.FC<Props> = ({
             {/* 1. UNIFIED HEADER: IDENTITY & FINANCE */}
             <div className="bg-white p-10 rounded-[48px] shadow-sm border border-slate-100 relative overflow-hidden group">
                 <div className="absolute top-0 left-0 w-full h-2" style={{ backgroundColor: clinic.primaryColor }}></div>
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 relative z-10">
+                <div className="flex flex-col md:flex-row flex-wrap justify-between items-start md:items-center gap-8 relative z-10">
                     {/* LEFT: IDENTITY & HEADER CONTENT */}
                     <div className="flex-1 space-y-6">
                         <div className="flex items-center gap-4">
@@ -450,4 +450,4 @@ const PatientProfile: React.FC<Props> = ({
     );
 };
 
-export default PatientProfile;
+export default React.memo(PatientProfile);

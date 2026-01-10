@@ -49,4 +49,4 @@ const PatientList: React.FC<Props> = ({
     );
 };
 
-export default PatientList;
+export default React.memo(PatientList);

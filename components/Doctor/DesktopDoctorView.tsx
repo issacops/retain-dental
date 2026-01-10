@@ -71,7 +71,7 @@ const DesktopDoctorView: React.FC<Props> = ({
       return () => { mounted = false; };
    }, [backendService, clinic.id, transactions]);
 
-   const filteredPatients = allUsers.filter(u => u.clinicId === clinic.id && u.role === 'PATIENT' && (u.name.toLowerCase().includes(searchQuery.toLowerCase()) || u.mobile.includes(searchQuery)));
+   const filteredPatients = useMemo(() => allUsers.filter(u => u.clinicId === clinic.id && u.role === 'PATIENT' && (u.name.toLowerCase().includes(searchQuery.toLowerCase()) || u.mobile.includes(searchQuery))), [allUsers, clinic.id, searchQuery]);
 
    // ... (Rest of useMemos same) ...
 
