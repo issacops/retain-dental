@@ -770,6 +770,15 @@ const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, o
                                  </div>
                                  <button onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/?subdomain=${selectedClinicForManifest.slug}`); alert('Copied Link'); }} className="p-3 bg-white/5 hover:bg-indigo-600 rounded-xl transition-all opacity-0 group-hover:opacity-100"><Copy size={16} /></button>
                               </div>
+                              <div className="bg-black/40 rounded-3xl p-6 border border-white/10 flex justify-between items-center group">
+                                 <div>
+                                    <p className="text-[9px] font-black text-indigo-400 uppercase tracking-widest mb-1">PWA App URL (Mobile Install)</p>
+                                    <p className="font-mono text-xs text-indigo-300">
+                                       {window.location.origin}/?subdomain={selectedClinicForManifest.slug}
+                                    </p>
+                                 </div>
+                                 <button onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/?subdomain=${selectedClinicForManifest.slug}`); alert('Copied PWA Link'); }} className="p-3 bg-white/5 hover:bg-indigo-600 rounded-xl transition-all opacity-0 group-hover:opacity-100"><Copy size={16} /></button>
+                              </div>
                            </div>
                         </div>
 

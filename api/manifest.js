@@ -101,54 +101,27 @@ export default async function handler(req, res) {
         }
 
         // 5. Construct Custom Manifest
-        const iconUrl = clinic.logo_url;
-        const isSvg = iconUrl && (iconUrl.includes('.svg') || iconUrl.includes('dicebear'));
-        const iconType = isSvg ? "image/svg+xml" : "image/png";
-
-        // CRITICAL FIX: Always use "any" for user-uploaded content.
-        // Chrome validates "192x192" strictly. If user uploads 500x500 PNG, manifest fails -> Badge appears.
-        // "any" bypasses strict size check for single-icon deployments.
-        const iconSizes = "any";
-        const iconSizesLg = "any";
-
-        // Proxy Logic Refined:
-        // If it's a DATA URI (Base64), use it DIRECTLY. Proxying it causes 414 URL Too Long.
-        // If it's a HTTP URL, Proxy it to fix CORS.
-        let finalIconUrl = iconUrl;
-        if (iconUrl && !iconUrl.startsWith('data:')) {
-            finalIconUrl = `/api/icon?url=${encodeURIComponent(iconUrl)}`;
-        }
+        // The /api/icon endpoint now handles DB lookup, Base64 decoding, and proxying.
+        // We just point to it. This keeps the Manifest JSON small and valid.
+        const iconUrl = `/api/icon?slug=${subdomain}`;
 
         const customManifest = {
             ...defaultManifest,
             id: `/?subdomain=${subdomain}`,
-            start_url: `/?subdomain=${subdomain}`, // Explicit Launch URL checking
+            start_url: `/?subdomain=${subdomain}`,
             name: clinic.name,
             short_name: clinic.name,
             theme_color: clinic.primary_color || '#6366f1',
-            icons: clinic.logo_url ? [
+            icons: [
                 {
-                    src: finalIconUrl,
-                    sizes: iconSizes,
-                    type: iconType,
-                    purpose: "any maskable"
-                },
-                {
-                    src: finalIconUrl,
-                    sizes: iconSizesLg,
-                    type: iconType,
-                    purpose: "any maskable"
-                },
-                // REDUNDANCY: Try direct URL too (in case proxy fails)
-                {
-                    src: clinic.logo_url,
+                    src: iconUrl,
                     sizes: "any",
-                    type: iconType,
+                    type: "image/png",
                     purpose: "any maskable"
-                },
-                ...defaultManifest.icons // Fallback
-            ] : defaultManifest.icons
+                }
+            ]
         };
+
 
         return res.status(200).json(customManifest);
 
