@@ -22,10 +22,15 @@ export default async function handler(req, res) {
         subdomain = req.query.slug;
     }
 
-    // REFLECTION MODE: Client passes data, Server signs it as JSON (For Vercel/SPA)
-    // This avoids DB hits and ensures what the Client sees is what the Manifest gets
     if (req.query.mode === 'reflect') {
         const { name, short_name, theme_color, bg_color, icon, start_url } = req.query;
+
+        // Detect Icon Type
+        const isSvg = icon && icon.includes('.svg') || icon && icon.includes('dicebear');
+        const iconType = isSvg ? "image/svg+xml" : "image/png";
+        const iconSizes = isSvg ? "any" : "192x192";
+        const iconSizesLg = isSvg ? "any" : "512x512";
+
         return res.status(200).json({
             name: name || "Retain App",
             short_name: short_name || "Retain",
@@ -34,8 +39,8 @@ export default async function handler(req, res) {
             background_color: bg_color || "#0f172a",
             theme_color: theme_color || "#6366f1",
             icons: [
-                { src: icon || "/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any maskable" },
-                { src: icon || "/icon-512.png", sizes: "512x512", type: "image/png", purpose: "any maskable" }
+                { src: icon || "/icon-192.png", sizes: iconSizes, type: iconType, purpose: "any maskable" },
+                { src: icon || "/icon-512.png", sizes: iconSizesLg, type: iconType, purpose: "any maskable" }
             ]
         });
     }

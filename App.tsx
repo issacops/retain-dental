@@ -185,6 +185,11 @@ const App = () => {
     if (data?.activeClinicId && data?.clinics) {
       const clinic = data.clinics.find(c => c.id === data.activeClinicId);
       if (clinic) {
+        const isSvg = clinic.logoUrl && (clinic.logoUrl.includes('.svg') || clinic.logoUrl.includes('dicebear'));
+        const iconType = isSvg ? "image/svg+xml" : "image/png";
+        const iconSizes = isSvg ? "any" : "192x192";
+        const iconSizesLg = isSvg ? "any" : "512x512";
+
         // 1. Construct Manifest Object
         const manifest = {
           name: clinic.name,
@@ -195,8 +200,8 @@ const App = () => {
           background_color: "#0f172a",
           theme_color: clinic.primaryColor || '#6366f1',
           icons: clinic.logoUrl ? [
-            { src: clinic.logoUrl, sizes: "192x192", type: "image/png", purpose: "any maskable" },
-            { src: clinic.logoUrl, sizes: "512x512", type: "image/png", purpose: "any maskable" }
+            { src: clinic.logoUrl, sizes: iconSizes, type: iconType, purpose: "any maskable" },
+            { src: clinic.logoUrl, sizes: iconSizesLg, type: iconType, purpose: "any maskable" }
           ] : [
             { src: "/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any maskable" },
             { src: "/icon-512.png", sizes: "512x512", type: "image/png", purpose: "any maskable" }
