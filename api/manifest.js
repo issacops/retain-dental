@@ -101,7 +101,6 @@ export default async function handler(req, res) {
         }
 
         // 5. Construct Custom Manifest
-        // 5. Construct Custom Manifest
         const iconUrl = clinic.logo_url;
         const isSvg = iconUrl && (iconUrl.includes('.svg') || iconUrl.includes('dicebear'));
         const iconType = isSvg ? "image/svg+xml" : "image/png";
@@ -112,8 +111,13 @@ export default async function handler(req, res) {
         const iconSizes = "any";
         const iconSizesLg = "any";
 
-        // Proxy URL construction
-        const proxiedIconUrl = `/api/icon?url=${encodeURIComponent(clinic.logo_url)}`;
+        // Proxy Logic Refined:
+        // If it's a DATA URI (Base64), use it DIRECTLY. Proxying it causes 414 URL Too Long.
+        // If it's a HTTP URL, Proxy it to fix CORS.
+        let finalIconUrl = iconUrl;
+        if (iconUrl && !iconUrl.startsWith('data:')) {
+            finalIconUrl = `/api/icon?url=${encodeURIComponent(iconUrl)}`;
+        }
 
         const customManifest = {
             ...defaultManifest,
@@ -124,13 +128,13 @@ export default async function handler(req, res) {
             theme_color: clinic.primary_color || '#6366f1',
             icons: clinic.logo_url ? [
                 {
-                    src: proxiedIconUrl,
+                    src: finalIconUrl,
                     sizes: iconSizes,
                     type: iconType,
                     purpose: "any maskable"
                 },
                 {
-                    src: proxiedIconUrl,
+                    src: finalIconUrl,
                     sizes: iconSizesLg,
                     type: iconType,
                     purpose: "any maskable"
