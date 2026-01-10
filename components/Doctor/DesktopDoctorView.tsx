@@ -79,8 +79,8 @@ const DesktopDoctorView: React.FC<Props> = ({
       return 'Good Evening';
    };
 
-   // Helper function to get user's first name
-   const getUserName = (fullName: string) => (fullName || 'Doctor').split(' ')[0];
+   // Helper function to get user's display name (strips Dr. prefix if present)
+   const getUserName = (fullName: string) => (fullName || 'Doctor').replace(/^Dr\.?\s*/i, '');
 
    // Helper to convert hex to rgb string for Tailwind alpha support
    const hexToRgb = (hex: string) => {
