@@ -404,9 +404,14 @@ const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, o
                                     <div className={`h-10 w-10 rounded-xl flex items-center justify-center font-bold text-lg ${user.role === 'ADMIN' ? 'bg-indigo-500/10 text-indigo-400' : 'bg-slate-800 text-slate-400'}`}>
                                        {user.email?.charAt(0).toUpperCase()}
                                     </div>
-                                    <div className="overflow-hidden">
-                                       <p className="font-bold text-white text-sm truncate" title={user.email}>{user.email}</p>
-                                       <p className="text-[10px] text-slate-500 font-mono mt-0.5 truncate">{user.id.slice(0, 8)}...</p>
+                                    <div className="overflow-hidden flex-1">
+                                       <input
+                                          className="bg-transparent border-none p-0 font-bold text-white text-sm w-full outline-none placeholder:text-slate-600 focus:text-indigo-400 transition-colors"
+                                          defaultValue={user.full_name || user.name || ''}
+                                          placeholder="Set Name..."
+                                          onBlur={(e) => handleUpdateUser(user.id, 'full_name', e.target.value)}
+                                       />
+                                       <p className="text-[10px] text-slate-500 font-mono mt-0.5 truncate">{user.email}</p>
                                     </div>
                                  </div>
 
