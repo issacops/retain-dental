@@ -117,7 +117,8 @@ export default async function handler(req, res) {
 
         const customManifest = {
             ...defaultManifest,
-            id: `/?subdomain=${subdomain}`, // Uniquely identifies this PWA
+            id: `/?subdomain=${subdomain}`,
+            start_url: `/?subdomain=${subdomain}`, // Explicit Launch URL checking
             name: clinic.name,
             short_name: clinic.name,
             theme_color: clinic.primary_color || '#6366f1',
