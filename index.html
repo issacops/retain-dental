@@ -141,22 +141,34 @@
       box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.05);
     }
   </style>
-  <script type="importmap">
-{
-  "imports": {
-    "recharts": "https://esm.sh/recharts@^3.6.0",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "lucide-react": "https://esm.sh/lucide-react@^0.561.0",
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "react": "https://esm.sh/react@^19.2.3"
-  }
-}
-</script>
+
+  <!-- Removed External CDN ImportMap to ensure PWA Offline reliability via Vite Bundling -->
   <link rel="stylesheet" href="/index.css">
 </head>
 
-<body class="antialiased selection:bg-blue-100 selection:text-blue-900">
-  <div id="root"></div>
+<body class="antialiased selection:bg-blue-100 selection:text-blue-900 bg-slate-950 text-white">
+  <div id="root">
+    <!-- HARDCODED LOADING SHELL: Visible immediately before JS loads or if JS Crashes -->
+    <div
+      style="height: 100vh; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #020617; font-family: sans-serif;">
+      <div
+        style="width: 48px; height: 48px; border: 4px solid #6366f1; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite;">
+      </div>
+      <p style="margin-top: 20px; color: #94a3b8; font-size: 12px; letter-spacing: 2px; text-transform: uppercase;">
+        Loading Application...</p>
+      <style>
+        @keyframes spin {
+          0% {
+            transform: rotate(0deg);
+          }
+
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+      </style>
+    </div>
+  </div>
   <script type="module" src="/index.tsx"></script>
 </body>
 
