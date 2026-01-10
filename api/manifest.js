@@ -112,6 +112,9 @@ export default async function handler(req, res) {
         const iconSizes = "any";
         const iconSizesLg = "any";
 
+        // Proxy URL construction
+        const proxiedIconUrl = `/api/icon?url=${encodeURIComponent(clinic.logo_url)}`;
+
         const customManifest = {
             ...defaultManifest,
             id: `/?subdomain=${subdomain}`, // Uniquely identifies this PWA
@@ -120,18 +123,18 @@ export default async function handler(req, res) {
             theme_color: clinic.primary_color || '#6366f1',
             icons: clinic.logo_url ? [
                 {
-                    src: clinic.logo_url,
+                    src: proxiedIconUrl,
                     sizes: iconSizes,
                     type: iconType,
                     purpose: "any maskable"
                 },
                 {
-                    src: clinic.logo_url,
+                    src: proxiedIconUrl,
                     sizes: iconSizesLg,
                     type: iconType,
                     purpose: "any maskable"
                 },
-                ...defaultManifest.icons // Fallback: If SVGs fail, generic icons ensure WebAPK creation (no badge)
+                ...defaultManifest.icons // Fallback
             ] : defaultManifest.icons
         };
 
