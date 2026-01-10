@@ -584,13 +584,7 @@ const App = () => {
                 : <PublicLandingWrapper appState={data} handlers={handlers} backend={backendService} />
             } />
 
-            {/* Explicit Login Route */}
-            <Route path="/login" element={
-              <>
-                <AuthHandler currentUser={data.currentUser} onRoleChange={() => { }} />
-                <AppRouter appState={data} handlers={handlers} backendService={backendService} />
-              </>
-            } />
+
 
             {/* Catch-all for App usage (once logged in or if subdomain exists) */}
             <Route path="/*" element={
