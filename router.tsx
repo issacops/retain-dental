@@ -134,9 +134,9 @@ export const AppRouter: React.FC<RouterProps> = ({ appState, handlers, backendSe
                 />
             } />
 
-            {/* ROOT REDIRECT - Default to Login */}
+            {/* ROOT REDIRECT - Default to Login (Preserve Query Params for PWA) */}
             <Route path="/auth/callback" element={<Navigate to="/" replace />} />
-            <Route path="/" element={<Navigate to="/login" replace />} />
+            <Route path="/" element={<Navigate to={`/login${window.location.search}`} replace />} />
         </Routes>
     );
 };
