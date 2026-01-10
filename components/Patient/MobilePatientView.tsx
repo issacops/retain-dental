@@ -16,7 +16,9 @@ interface Props {
   onAddFamilyMember: (name: string, relation: string, age: string) => Promise<any>;
   onSwitchProfile: (userId: string) => void;
   onRedeem: (amount: number, description: string) => Promise<any>;
+  defaultTab?: 'HOME' | 'WALLET' | 'CARE' | 'PROFILE';
 }
+
 
 const TreatmentComplianceRing: React.FC<{ percentage: number; color: string }> = ({ percentage, color }) => (
   <div className="relative h-12 w-12 flex items-center justify-center">
@@ -51,8 +53,9 @@ const SpecialtyCareModule: React.FC<{ plan: CarePlan; primaryColor: string; onTo
   </div>
 );
 
-const MobilePatientView: React.FC<Props> = ({ currentUser, users, wallets, transactions, carePlans, appointments = [], clinic, onToggleChecklistItem, onSchedule, onAddFamilyMember, onSwitchProfile, onRedeem }) => {
-  const [activeTab, setActiveTab] = useState<'HOME' | 'WALLET' | 'CARE' | 'PROFILE'>('HOME');
+
+const MobilePatientView: React.FC<Props> = ({ currentUser, users, wallets, transactions, carePlans, appointments = [], clinic, onToggleChecklistItem, onSchedule, onAddFamilyMember, onSwitchProfile, onRedeem, defaultTab = 'HOME' }) => {
+  const [activeTab, setActiveTab] = useState<'HOME' | 'WALLET' | 'CARE' | 'PROFILE'>(defaultTab);
   const [showBookingModal, setShowBookingModal] = useState(false);
   const today = new Date();
   const localDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;

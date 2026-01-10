@@ -20,10 +20,8 @@ import HeroSection from '../components/landing/HeroSection';
 import PhoneMockup from '../components/landing/PhoneMockup';
 import RoiCalculator from '../components/landing/RoiCalculator';
 import ScrollyTell from '../components/landing/ScrollyTell';
-import AutomationDiagram from '../components/landing/visuals/AutomationDiagram';
-import LoyaltyFlywheel from '../components/landing/visuals/LoyaltyFlywheel';
-import FamilyNetwork from '../components/landing/visuals/FamilyNetwork';
-import ClinicWorkflowDemo from '../components/landing/visuals/ClinicWorkflowDemo';
+import PatientDemo from '../components/landing/demos/PatientDemo';
+import ClinicDemo from '../components/landing/demos/ClinicDemo';
 import BrandShowcase from '../components/landing/BrandShowcase';
 
 interface LandingPageProps {
@@ -70,29 +68,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
             ],
             visual: (
                 <PhoneMockup className="shadow-2xl rotate-1">
-                    <div className="bg-slate-50 w-full h-full flex flex-col pt-12">
-                        <div className="px-6 mb-6">
-                            <h2 className="text-2xl font-black text-slate-900">Good Morning, <br />Sarah.</h2>
-                            <p className="text-slate-500 text-sm mt-1">You have 2 tasks today.</p>
-                        </div>
-                        <div className="flex-1 bg-white rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.05)] p-6 space-y-4">
-                            <div className="p-4 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center gap-4">
-                                <div className="w-10 h-10 bg-indigo-500 text-white rounded-full flex items-center justify-center"><ScanFace size={20} /></div>
-                                <div className="flex-1">
-                                    <h4 className="font-bold text-slate-800">Weekly Scan</h4>
-                                    <p className="text-xs text-slate-500">Due by 8:00 PM</p>
-                                </div>
-                                <button className="px-3 py-1 bg-indigo-500 text-white text-xs font-bold rounded-lg">Start</button>
-                            </div>
-                            <div className="p-4 rounded-xl bg-white border border-slate-100 flex items-center gap-4">
-                                <div className="w-10 h-10 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center"><Calendar size={20} /></div>
-                                <div className="flex-1">
-                                    <h4 className="font-bold text-slate-800">Hygiene Visit</h4>
-                                    <p className="text-xs text-slate-500">Tomorrow, 10:00 AM</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <PatientDemo initialTab='HOME' />
                 </PhoneMockup>
             )
         },
@@ -106,17 +82,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
                 { icon: <Bell />, label: 'Smart Recall', desc: 'Algorithmically determined reactivation. Fill your schedule automatically.' },
                 { icon: <Shield />, label: 'Compliance Guardrails', desc: 'Ensure patients follow protocols without manual intervention.' }
             ],
-            // Showing both Side-by-Side on large screens, or stacked
             visual: (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full h-full">
-                    <div className="h-full min-h-[200px] flex flex-col justify-center gap-2">
-                        <span className="text-[10px] uppercase font-bold text-slate-500 text-center">Zero-Touch Triage</span>
-                        <AutomationDiagram />
-                    </div>
-                    <div className="h-full min-h-[200px] flex flex-col justify-center gap-2">
-                        <span className="text-[10px] uppercase font-bold text-slate-500 text-center">3-Click Admin</span>
-                        <ClinicWorkflowDemo />
-                    </div>
+                <div className="w-full h-full flex items-center justify-center p-4">
+                    <ClinicDemo />
                 </div>
             )
         },
@@ -131,16 +99,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
                 { icon: <Globe />, label: 'Viral Referrals', desc: 'Turn your patient base into your most effective marketing team.' }
             ],
             visual: (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full h-full">
-                    <div className="h-full min-h-[200px] flex flex-col justify-center gap-2">
-                        <span className="text-[10px] uppercase font-bold text-slate-500 text-center">Compounding Value</span>
-                        <LoyaltyFlywheel />
-                    </div>
-                    <div className="h-full min-h-[200px] flex flex-col justify-center gap-2">
-                        <span className="text-[10px] uppercase font-bold text-slate-500 text-center">Viral Acquisition</span>
-                        <FamilyNetwork />
-                    </div>
-                </div>
+                <PhoneMockup className="shadow-2xl -rotate-1">
+                    <PatientDemo initialTab='WALLET' />
+                </PhoneMockup>
             )
         }
     ];
