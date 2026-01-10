@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { LayoutGrid, TrendingUp, Bell, Settings, Smile, LayoutGrid as LayoutGridIcon, Plus, X, Calendar as CalendarIcon, Activity, Grid, Zap, Search, UserPlus, CreditCard, MessageSquare } from 'lucide-react';
+import { LayoutGrid, TrendingUp, Bell, Settings, Smile, LayoutGrid as LayoutGridIcon, Plus, X, Calendar as CalendarIcon, Activity, Grid, Zap, Search, UserPlus, CreditCard, MessageSquare, QrCode } from 'lucide-react';
 import { IBackendService } from '../../services/IBackendService';
 import { User, Wallet, Transaction, FamilyGroup, Clinic, CarePlan, TransactionCategory, TransactionType, Appointment, AppointmentStatus, AppointmentType } from '../../types';
 import MorningBriefTicker from './subcomponents/MorningBrief';
@@ -41,28 +41,13 @@ const DesktopDoctorView: React.FC<Props> = ({
    const [selectedPatient, setSelectedPatient] = useState<User | null>(null);
    const [searchQuery, setSearchQuery] = useState('');
    const [isAddPatientModalOpen, setIsAddPatientModalOpen] = useState(false);
+   const [isQRModalOpen, setIsQRModalOpen] = useState(false); // NEW STATE
    const [newPatientName, setNewPatientName] = useState('');
    const [newPatientMobile, setNewPatientMobile] = useState('');
    const [newPatientPin, setNewPatientPin] = useState('');
 
    const [stats, setStats] = useState<any>({ totalRevenue: 0 });
 
-   // ... (Rest of code)
-
-   // In Render:
-   <PatientProfile
-      selectedPatient={selectedPatient}
-      clinic={clinic}
-      wallets={wallets}
-      carePlans={carePlans}
-      transactions={transactions}
-      allUsers={allUsers}
-      familyGroups={familyGroups}
-      onProcessTransaction={onProcessTransaction}
-      onAssignPlan={onAssignPlan}
-   />
-
-   // Async Stats Fetch
    React.useEffect(() => {
       let mounted = true;
       backendService.getDashboardStats(clinic.id).then(res => {
@@ -72,13 +57,6 @@ const DesktopDoctorView: React.FC<Props> = ({
    }, [backendService, clinic.id, transactions]);
 
    const filteredPatients = useMemo(() => allUsers.filter(u => u.clinicId === clinic.id && u.role === 'PATIENT' && (u.name.toLowerCase().includes(searchQuery.toLowerCase()) || u.mobile.includes(searchQuery))), [allUsers, clinic.id, searchQuery]);
-
-   // ... (Rest of useMemos same) ...
-
-   // ... (Render) ...
-
-   // In the Add Patient button handler:
-   // <button onClick={async () => { if (!newPatientName || !newPatientMobile) return; const res = await onAddPatient(newPatientName, newPatientMobile); ... }}
 
    const activeCarePlan = useMemo(() => {
       return carePlans.find(cp => cp.userId === selectedPatient?.id && cp.isActive && cp.clinicId === clinic.id);
@@ -191,9 +169,12 @@ const DesktopDoctorView: React.FC<Props> = ({
                      </p>
                   </div>
                   <div className="flex items-center gap-4">
+                     <button onClick={() => setIsQRModalOpen(true)} className="h-10 px-4 bg-indigo-600 text-white rounded-xl shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition-all flex items-center gap-2 font-black text-xs uppercase tracking-widest active:scale-95">
+                        <QrCode size={16} /> Patient App
+                     </button>
                      <div className="h-10 px-4 bg-white rounded-xl border border-slate-200 flex items-center gap-2 text-slate-400 focus-within:border-primary focus-within:text-primary transition-colors shadow-sm">
                         <Search size={16} />
-                        <input type="text" placeholder="Search patients..." className="bg-transparent outline-none text-sm font-semibold text-slate-800 placeholder:text-slate-300 w-64" />
+                        <input type="text" placeholder="Search patients..." className="bg-transparent outline-none text-sm font-semibold text-slate-800 placeholder:text-slate-300 w-64" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
                      </div>
                      <button className="h-10 w-10 bg-white rounded-xl border border-slate-200 flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary transition-all shadow-sm relative">
                         <Bell size={18} />
@@ -223,11 +204,7 @@ const DesktopDoctorView: React.FC<Props> = ({
                                        { icon: <CalendarIcon size={20} />, label: 'Schedule', action: () => setActiveSection('Schedule') },
                                        { icon: <CreditCard size={20} />, label: 'Invoice', action: () => alert('New Invoice...') },
                                        {
-                                          icon: <MessageSquare size={20} />, label: 'Share App', action: () => {
-                                             const url = `${window.location.protocol}//${window.location.host}/?subdomain=${clinic.slug}`;
-                                             navigator.clipboard.writeText(url);
-                                             alert(`Patient Portal Link Copied:\n${url}`);
-                                          }
+                                          icon: <MessageSquare size={20} />, label: 'Share App', action: () => setIsQRModalOpen(true)
                                        }
                                     ].map((action, i) => (
                                        <button key={i} onClick={action.action} className="flex flex-col items-center gap-3 p-6 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-primary/20 hover:-translate-y-1 transition-all group">
@@ -344,8 +321,6 @@ const DesktopDoctorView: React.FC<Props> = ({
                                  </div>
                               )}
                            </div>
-
-                           {/* Sidebar Removed for cleaner UX per user request */}
                         </div>
 
                         {/* ADD PATIENT MODAL - Premium Minimalist */}
@@ -398,6 +373,39 @@ const DesktopDoctorView: React.FC<Props> = ({
                      </div>
                   )}
                </div >
+
+               {/* QR CODE MODAL */}
+               {isQRModalOpen && (
+                  <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md p-6 animate-in fade-in duration-200">
+                     <div className="bg-white rounded-[48px] p-12 max-w-md w-full shadow-2xl relative overflow-hidden text-center animate-in zoom-in-95 duration-300">
+                        <div className="absolute top-0 left-0 w-full h-2" style={{ backgroundColor: clinic.primaryColor }}></div>
+                        <button onClick={() => setIsQRModalOpen(false)} className="absolute top-6 right-6 p-2 bg-slate-50 hover:bg-slate-100 rounded-full transition-colors"><X size={20} className="text-slate-400" /></button>
+
+                        <div className="mb-8">
+                           <div className="h-16 w-16 mx-auto bg-slate-50 rounded-[20px] flex items-center justify-center mb-6 shadow-sm">
+                              <QrCode size={32} style={{ color: clinic.primaryColor }} />
+                           </div>
+                           <h3 className="text-2xl font-black text-slate-900 tracking-tight">Patient Access Portal</h3>
+                           <p className="text-sm font-bold text-slate-400 mt-2">Scan to install the App</p>
+                        </div>
+
+                        <div className="bg-slate-900 p-8 rounded-[32px] inline-block shadow-2xl mb-8 group relative overflow-hidden">
+                           <div className="absolute inset-0 bg-gradient-to-tr from-indigo-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                           <img
+                              src={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&bgcolor=ffffff&color=000000&margin=0&data=${encodeURIComponent(`${window.location.origin}/?subdomain=${clinic.slug}`)}`}
+                              alt="Patient Portal QR"
+                              className="w-48 h-48 rounded-xl bg-white"
+                           />
+                        </div>
+
+                        <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100">
+                           <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-1">Direct Link</p>
+                           <p className="font-mono text-xs font-bold text-slate-600 break-all select-all">{window.location.origin}/?subdomain={clinic.slug}</p>
+                        </div>
+                     </div>
+                  </div>
+               )}
+
             </main >
          </div >
       </div >
