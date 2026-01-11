@@ -37,178 +37,152 @@ const SocialPostGenerator: React.FC<SocialPostGeneratorProps> = ({ clinic, onClo
 
         setIsGenerating(true);
 
-        // 1. Background Fill (Clinic Primary Color Gradient)
-        const gradient = ctx.createLinearGradient(0, 0, 0, CANVAS_HEIGHT);
-        gradient.addColorStop(0, '#0f172a'); // Slate-900 top
-        gradient.addColorStop(1, clinic.primaryColor || '#4f46e5'); // Clinic color bottom
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-
-        // 2. Noise Texture Overlay (Simulated)
-        // We'll draw semi-transparent noise if we had an image, but for canvas perf, 
-        // let's just do a subtle pattern or overlay if possible. 
-        // For now, let's keep it clean gradient.
-
-        // 3. Header Branding
-        ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 40px "Inter", sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText(clinic.name.toUpperCase(), CANVAS_WIDTH / 2, 120);
-
-        ctx.font = '30px "Inter", sans-serif';
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-        ctx.fillText('Transformation Story', CANVAS_WIDTH / 2, 170);
-
-        // 4. Images Layout (Vertical Stack)
-        const margin = 80;
-        const imgWidth = CANVAS_WIDTH - (margin * 2);
-        const imgHeight = (CANVAS_HEIGHT - 400) / 2; // Approximate height available for each
+        const PADDING = 60;
+        const HEADER_HEIGHT = 180;
+        const FOOTER_HEIGHT = 150;
+        const CONTENT_WIDTH = CANVAS_WIDTH - (PADDING * 2);
 
         // Helper to load image
         const loadImage = (src: string): Promise<HTMLImageElement> => {
             return new Promise((resolve, reject) => {
                 const img = new Image();
-                img.crossOrigin = "Anonymous"; // CRITICAL: Allow cross-origin images to not taint canvas
+                img.crossOrigin = "Anonymous";
                 img.onload = () => resolve(img);
-                img.onerror = (e) => {
-                    console.error("Failed to load image for canvas:", src, e);
-                    reject(e);
-                };
+                img.onerror = (e) => reject(e);
                 img.src = src;
             });
         };
 
-        const drawImageContainer = (img: HTMLImageElement | null, x: number, y: number, label: string) => {
-            // Shadow
-            ctx.shadowColor = "rgba(0, 0, 0, 0.4)";
-            ctx.shadowBlur = 40;
-            ctx.shadowOffsetX = 0;
-            ctx.shadowOffsetY = 20;
+        // 1. Background (Light Editorial Look)
+        const gradient = ctx.createLinearGradient(0, 0, 0, CANVAS_HEIGHT);
+        gradient.addColorStop(0, '#f8fafc');
+        gradient.addColorStop(1, '#f1f5f9');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-            // Border/Bg
+        // 2. Accent Shapes (Subtle)
+        ctx.fillStyle = clinic.primaryColor || '#4f46e5';
+        ctx.globalAlpha = 0.05;
+        ctx.beginPath();
+        ctx.arc(CANVAS_WIDTH, 0, 600, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1.0;
+
+        // 3. HEADER: Logo + Name (Top Left)
+        if (clinic.logoUrl) {
+            try {
+                const logoImg = await loadImage(clinic.logoUrl);
+                const logoSize = 100;
+                const scale = Math.min(logoSize / logoImg.width, logoSize / logoImg.height);
+                const w = logoImg.width * scale;
+                const h = logoImg.height * scale;
+                ctx.drawImage(logoImg, PADDING, PADDING, w, h);
+
+                ctx.fillStyle = '#0f172a';
+                ctx.font = 'bold 45px "Inter", sans-serif';
+                ctx.textAlign = 'left';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(clinic.name.toUpperCase(), PADDING + w + 30, PADDING + (logoSize / 2));
+            } catch (e) {
+                ctx.fillStyle = clinic.primaryColor || '#000';
+                ctx.font = 'black 60px "Inter", sans-serif';
+                ctx.textAlign = 'left';
+                ctx.fillText(clinic.name, PADDING, PADDING + 50);
+            }
+        } else {
+            ctx.fillStyle = clinic.primaryColor || '#000';
+            ctx.font = 'black 60px "Inter", sans-serif';
+            ctx.textAlign = 'left';
+            ctx.fillText(clinic.name, PADDING, PADDING + 50);
+        }
+
+
+
+        const drawImageCard = (img: HTMLImageElement | null, yPos: number, label: string) => {
+            const cardHeight = ((CANVAS_HEIGHT - HEADER_HEIGHT - FOOTER_HEIGHT - 100) / 2) - 40;
+
+            // Shadow & Card
+            ctx.shadowColor = "rgba(0, 0, 0, 0.1)";
+            ctx.shadowBlur = 40;
+            ctx.shadowOffsetY = 20;
             ctx.fillStyle = '#ffffff';
             ctx.beginPath();
-            ctx.roundRect(x - 10, y - 10, imgWidth + 20, imgHeight + 20, 30);
+            ctx.roundRect(PADDING, yPos, CONTENT_WIDTH, cardHeight, 40);
             ctx.fill();
+            ctx.shadowColor = "transparent";
 
-            // Image clipping
+            // Image Clip
+            const imgPad = 20;
+            const imgW = CONTENT_WIDTH - (imgPad * 2);
+            const imgH = cardHeight - (imgPad * 2);
             ctx.save();
             ctx.beginPath();
-            ctx.roundRect(x, y, imgWidth, imgHeight, 20);
+            ctx.roundRect(PADDING + imgPad, yPos + imgPad, imgW, imgH, 24);
             ctx.clip();
 
             if (img) {
-                // Object Fit: Cover simulation
-                const scale = Math.max(imgWidth / img.width, imgHeight / img.height);
-                const xOffset = (imgWidth - (img.width * scale)) / 2;
-                const yOffset = (imgHeight - (img.height * scale)) / 2;
-                ctx.drawImage(img, x + xOffset, y + yOffset, img.width * scale, img.height * scale);
+                const scale = Math.max(imgW / img.width, imgH / img.height);
+                const xOffset = (imgW - (img.width * scale)) / 2;
+                const yOffset = (imgH - (img.height * scale)) / 2;
+                ctx.drawImage(img, PADDING + imgPad + xOffset, yPos + imgPad + yOffset, img.width * scale, img.height * scale);
             } else {
-                // Placeholder
-                ctx.fillStyle = '#f1f5f9';
-                ctx.fillRect(x, y, imgWidth, imgHeight);
+                ctx.fillStyle = '#f8fafc';
+                ctx.fillRect(PADDING + imgPad, yPos + imgPad, imgW, imgH);
                 ctx.fillStyle = '#cbd5e1';
-                ctx.font = 'bold 40px sans-serif';
-                ctx.fillText("Upload Photo", x + imgWidth / 2, y + imgHeight / 2);
+                ctx.font = 'bold 30px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText("Upload Photo", PADDING + (CONTENT_WIDTH / 2), yPos + (cardHeight / 2));
             }
             ctx.restore();
 
-            // Reset Shadow
-            ctx.shadowColor = "transparent";
-            ctx.shadowBlur = 0;
+            // Floating Label
+            const labelW = 180;
+            const labelH = 50;
+            const labelX = PADDING + 40;
+            const labelY = yPos - 25;
 
-            // Label Badge
-            const badgeW = 200;
-            const badgeH = 60;
-            const badgeX = x + 30;
-            const badgeY = y + 30;
-
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+            ctx.fillStyle = clinic.primaryColor || '#4f46e5';
+            ctx.shadowColor = "rgba(0,0,0,0.2)";
+            ctx.shadowBlur = 10;
+            ctx.shadowOffsetY = 5;
             ctx.beginPath();
-            ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 15);
+            ctx.roundRect(labelX, labelY, labelW, labelH, 25);
             ctx.fill();
+            ctx.shadowColor = "transparent";
 
             ctx.fillStyle = '#ffffff';
-            ctx.font = 'bold 24px "Inter", sans-serif';
-            ctx.textAlign = 'left';
-            ctx.fillText(label, badgeX + 30, badgeY + 38);
+            ctx.font = 'bold 22px "Inter", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(label, labelX + (labelW / 2), labelY + (labelH / 2) + 2);
         };
 
         try {
             const img1 = beforeImage ? await loadImage(beforeImage) : null;
             const img2 = afterImage ? await loadImage(afterImage) : null;
 
-            drawImageContainer(img1, margin, 250, "BEFORE");
-            drawImageContainer(img2, margin, 250 + imgHeight + 60, "AFTER");
+            const cardH = ((CANVAS_HEIGHT - HEADER_HEIGHT - FOOTER_HEIGHT - 100) / 2) - 40;
+            drawImageCard(img1, HEADER_HEIGHT + 60, "BEFORE");
+            drawImageCard(img2, HEADER_HEIGHT + 60 + cardH + 80, "AFTER");
 
-            // 5. Footer Branding
-            const footerY = CANVAS_HEIGHT - 120;
+            // 5. Footer CTA
+            const footerStart = CANVAS_HEIGHT - FOOTER_HEIGHT;
+            ctx.fillStyle = '#334155';
+            ctx.font = '500 28px "Inter", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText("Ready for your new smile?", CANVAS_WIDTH / 2, footerStart + 40);
 
-            if (clinic.logoUrl) {
-                // Draw actual logo
-                try {
-                    const logoImg = await loadImage(clinic.logoUrl);
-
-                    // Circular clip for logo
-                    ctx.save();
-                    ctx.beginPath();
-                    ctx.arc(CANVAS_WIDTH / 2, footerY - 50, 50, 0, Math.PI * 2);
-                    ctx.clip();
-
-                    // Draw white background behind logo
-                    ctx.fillStyle = '#ffffff';
-                    ctx.fill();
-
-                    // Draw logo
-                    // Aspect ratio safe draw cover/contain
-                    const logoSize = 100;
-                    const scale = Math.max(logoSize / logoImg.width, logoSize / logoImg.height);
-                    const xOffset = (logoSize - (logoImg.width * scale)) / 2;
-                    const yOffset = (logoSize - (logoImg.height * scale)) / 2;
-
-                    // Draw image centered in the circle
-                    ctx.drawImage(logoImg, (CANVAS_WIDTH / 2) - 50, footerY - 100, 100, 100);
-                    ctx.restore();
-
-                    // Add a white ring border
-                    ctx.strokeStyle = '#ffffff';
-                    ctx.lineWidth = 4;
-                    ctx.beginPath();
-                    ctx.arc(CANVAS_WIDTH / 2, footerY - 50, 52, 0, Math.PI * 2);
-                    ctx.stroke();
-
-                } catch (e) {
-                    // Fallback if logo load fails
-                    console.error("Failed to load logo", e);
-                    drawFallbackLogo(ctx, footerY);
-                }
-            } else {
-                drawFallbackLogo(ctx, footerY);
-            }
-
-            ctx.fillStyle = '#ffffff';
-            ctx.font = '24px "Inter", sans-serif';
-            ctx.fillText("Start your journey today.", CANVAS_WIDTH / 2, footerY + 40);
+            ctx.fillStyle = clinic.primaryColor || '#4f46e5';
+            ctx.font = 'bold 36px "Inter", sans-serif';
+            ctx.fillText(`Book now at ${clinic.slug}.retain.os`, CANVAS_WIDTH / 2, footerStart + 90);
 
         } catch (err) {
             console.error("Canvas draw error", err);
         }
 
         setIsGenerating(false);
-    };
-
-    const drawFallbackLogo = (ctx: CanvasRenderingContext2D, footerY: number) => {
-        // Logo placeholder circle
-        ctx.fillStyle = '#ffffff';
-        ctx.beginPath();
-        ctx.arc(CANVAS_WIDTH / 2, footerY - 50, 40, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Clinic Logo inside (if available) - simplified as text/icon for now
-        ctx.fillStyle = clinic.primaryColor || '#000';
-        ctx.font = 'bold 40px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText(clinic.name.charAt(0), CANVAS_WIDTH / 2, footerY - 35);
     };
 
     useEffect(() => {
