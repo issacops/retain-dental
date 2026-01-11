@@ -127,18 +127,18 @@ const PatientProfile: React.FC<Props> = ({
                             <div className="absolute right-0 top-0 p-12 opacity-10 scale-150 group-hover/card:scale-125 transition-transform duration-700 ease-out"><Activity size={120} /></div>
 
                             <p className="text-[10px] font-black uppercase text-emerald-100 tracking-[0.25em] mb-4">Patient Regime</p>
-                            <div className="flex justify-between items-start mb-12">
+                            <div className="flex justify-between items-start mb-12 relative z-20">
                                 <h4 className="text-5xl font-black tracking-tighter">{activeCarePlan.treatmentName}</h4>
                                 <div className="flex gap-2">
                                     <button
                                         onClick={() => setViewingPlan(activeCarePlan)}
-                                        className="px-6 py-3 bg-white text-emerald-900 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-lg hover:scale-105 transition-all"
+                                        className="px-6 py-3 bg-white text-emerald-900 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-lg hover:scale-105 transition-all cursor-pointer"
                                     >
                                         Open Console
                                     </button>
                                     <button
                                         onClick={() => { setEditValues(activeCarePlan); setIsEditingPlan(true); }}
-                                        className="px-6 py-3 bg-white/20 hover:bg-white/30 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all"
+                                        className="px-6 py-3 bg-white/20 hover:bg-white/30 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all cursor-pointer"
                                     >
                                         Edit Protocol
                                     </button>
