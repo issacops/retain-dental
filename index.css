@@ -5,16 +5,20 @@
 @tailwind utilities;
 
 @layer base {
-  body {
-    @apply font-sans antialiased text-slate-800 bg-slate-50;
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
+  html {
+    scroll-behavior: smooth;
   }
 
-  /* Modern Scrollbar */
+  body {
+    @apply font-sans antialiased text-slate-800 bg-slate-50;
+    /* Remove forced overflow to allow app-level control */
+    overflow: hidden;
+  }
+
+  /* Sleek Modern Scrollbar */
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
   }
 
   ::-webkit-scrollbar-track {
@@ -22,17 +26,14 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 4px;
+    @apply bg-slate-200/50 rounded-full transition-colors;
+    border: 2px solid transparent;
+    /* padding effect */
+    background-clip: content-box;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
-  }
-
-  /* Dark mode scrollbar support if needed (based on parent class, usually manual in tailwind) */
-  .dark ::-webkit-scrollbar-thumb {
-    background: #475569;
+    @apply bg-slate-400/80;
   }
 }
 
