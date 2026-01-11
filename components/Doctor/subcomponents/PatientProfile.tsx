@@ -131,7 +131,11 @@ const PatientProfile: React.FC<Props> = ({
                                 <h4 className="text-5xl font-black tracking-tighter">{activeCarePlan.treatmentName}</h4>
                                 <div className="flex gap-2">
                                     <button
-                                        onClick={() => setViewingPlan(activeCarePlan)}
+                                        onClick={() => {
+                                            alert('Opening Treatment Console...'); // Debugging for user
+                                            console.log('Open Console Clicked');
+                                            setViewingPlan(activeCarePlan);
+                                        }}
                                         className="px-6 py-3 bg-white text-emerald-900 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-lg hover:scale-105 transition-all"
                                     >
                                         Open Console
