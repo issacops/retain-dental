@@ -288,8 +288,23 @@ const DesktopDoctorView: React.FC<Props> = ({
                            searchQuery={searchQuery}
                            setSearchQuery={setSearchQuery}
                            selectedPatient={selectedPatient}
-                           setSelectedPatient={setSelectedPatient}
+                           setSelectedPatient={(u) => {
+                              setSelectedPatient(u);
+                              // Auto-collapse sidebar on mobile or smaller screens if desired, 
+                              // or just let user toggle. For now, let's keep it manual or user-choice.
+                           }}
                            setIsAddPatientModalOpen={setIsAddPatientModalOpen}
+                           isCollapsed={!!selectedPatient} // Auto-collapse when a patient is selected
+                           onToggleCollapse={() => {
+                              // If there's a selected patient, clicking toggle clears selection to show expanded list?
+                              // Or simply toggles view? Let's assume toggle view. 
+                              // Wait, if we use !!selectedPatient, we can't manually toggle.
+                              // Let's create a local state for this if requested, but for now
+                              // the requirement is "when ... patient profile is clicked ... minimize".
+                              // So deriving from selectedPatient is the simplest MVP.
+                              // If user wants to see list again, they can hit back.
+                              if (selectedPatient) setSelectedPatient(null);
+                           }}
                         />
 
                         {/* WORKSPACE PANEL */}
