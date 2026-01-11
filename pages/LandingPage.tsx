@@ -24,6 +24,7 @@ import PatientDemo from '../components/landing/demos/PatientDemo';
 import ClinicDemo from '../components/landing/demos/ClinicDemo';
 import BrandShowcase from '../components/landing/BrandShowcase';
 import Comparison from '../components/landing/Comparison'; // ADDED
+import FAQSection from '../components/landing/FAQSection'; // ADDED
 
 interface LandingPageProps {
     backend: IBackendService;
@@ -218,28 +219,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
             <BrandShowcase />
 
             {/* 6. FAQ (OBJECTION HANDLING) */}
-            <section className="py-32 px-6 bg-slate-950 border-t border-white/5">
-                <div className="max-w-3xl mx-auto">
-                    <div className="text-center mb-16">
-                        <h2 className="text-4xl font-black text-white tracking-tighter mb-4">Common Questions</h2>
-                    </div>
-                    <div className="grid md:grid-cols-2 gap-8">
-                        {[
-                            { q: "Does this replace Dentrix / Eaglesoft?", a: "No. We sit on top of your PMS as the 'Experience Layer'. We read your schedule and patient data in real-time, but we handle the communication, booking, and loyalty." },
-                            { q: "How do I move my patients to the app?", a: "We have an automated 'Onboarding Engine'. We send a magic link via SMS. Patients click once, FaceID activates, and they are logged in. We see 40-50% adoption in Week 1." },
-                            { q: "What about older patients?", a: "They can still use SMS/Email. But for families, the 'Head of Household' feature allows one mom to manage appointments for her 3 kids and husband from one app. They love it." },
-                            { q: "Is there a contract?", a: "We operate on a month-to-month basis for single clinics. For DSOs with >5 locations, we offer annual enterprise agreements with volume discounts." },
-                            { q: "Does it work for Specialty (Ortho/Implants)?", a: "Specially designed for it. Our 'Treatment Tracks' feature automates the specific aftercare instructions for Invisalign, Implants, and Veneers." },
-                            { q: "Is my data secure?", a: "Bank-grade security. AES-256 encryption. HIPAA compliant infrastructure. We undergo annual SOC2 audits." }
-                        ].map((item, i) => (
-                            <div key={i} className="p-8 rounded-[2rem] bg-white/5 border border-white/5 hover:bg-white/10 hover:border-indigo-500/30 transition-all group">
-                                <h4 className="text-lg font-bold text-white mb-3 group-hover:text-indigo-400 transition-colors">{item.q}</h4>
-                                <p className="text-slate-400 leading-relaxed text-sm">{item.a}</p>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
+            <FAQSection />
 
             {/* 5.5 IMPLEMENTATION TIMELINE - NEW SECTION */}
             <section className="py-32 border-t border-white/5 bg-slate-950">
