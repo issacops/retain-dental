@@ -25,6 +25,9 @@ import ClinicDemo from '../components/landing/demos/ClinicDemo';
 import BrandShowcase from '../components/landing/BrandShowcase';
 import Comparison from '../components/landing/Comparison'; // ADDED
 import FAQSection from '../components/landing/FAQSection'; // ADDED
+import ConsolidationSection from '../components/landing/ConsolidationSection'; // ADDED
+import Footer from '../components/landing/Footer'; // ADDED
+import CaseStudySection from '../components/landing/CaseStudySection'; // ADDED
 
 interface LandingPageProps {
     backend: IBackendService;
@@ -61,12 +64,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
         {
             id: 'patient-os',
             title: 'PatientOS',
-            subtitle: 'The Brand Dominance Layer',
-            description: 'Don’t just give them a toothbrush. Give them a 24/7 digital companion. From automated aftercare checklists to instant biometric login, you own the home screen.',
+            subtitle: 'The Experience Layer',
+            description: 'Don’t just give them a toothbrush. Give them a 24/7 digital companion. Whether it’s tracking Invisalign trays or monitoring Implant healing, you own the home screen.',
             features: [
-                { icon: <Check />, label: 'Automated Aftercare', desc: 'Daily interactive checklists for Aligners, Implants, and more. Zero nagging required.' },
-                { icon: <ScanFace />, label: 'Biometric Access', desc: 'FaceID login. Zero friction, zero forgotten passwords.' },
-                { icon: <Calendar />, label: 'One-Tap Booking', desc: 'Real-time sync. Remove the friction of calling the front desk.' }
+                { icon: <Check />, label: 'Clinical Care Tracks', desc: 'Automated aftercare for Invisalign, Implants, and Veneers. Tracking tray switches and post-op hygiene.' },
+                { icon: <ScanFace />, label: 'Biometric Access', desc: 'FaceID login. Zero friction. 50% higher adoption than portal apps.' },
+                { icon: <Calendar />, label: 'Real-Time Booking', desc: 'Direct write-back to Dentrix/EagleSoft. No double bookings. No "request mode".' }
             ],
             visual: (
                 <PhoneMockup className="shadow-2xl rotate-1">
@@ -78,11 +81,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
             id: 'clinic-os',
             title: 'ClinicOS',
             subtitle: 'The "Million Dollar" Dashboard',
-            description: 'The cockpit for modern dental entrepreneurs. Process payments, track retention health, and monitor patient adherence in real-time.',
+            description: 'The cockpit for modern DSOs. Centralize operations across 50 locations or run a single private practice with the efficiency of a Fortune 500 company.',
             features: [
-                { icon: <Wallet />, label: 'Integrated Billing', desc: 'Collect payments directly from the dashboard. One-click receipts and ledger tracking.' },
-                { icon: <Activity />, label: 'Adherence Monitoring', desc: 'See exactly who is wearing their aligners and who is falling behind.' },
-                { icon: <Bell />, label: 'Smart Recall', desc: 'Algorithmically determined reactivation. Fill your schedule automatically.' }
+                { icon: <Wallet />, label: 'Centralized Billing', desc: 'Collect payments via text/app. Reconcile ledgers across multiple locations in one click.' },
+                { icon: <Activity />, label: 'Retention Health', desc: 'Monitor "Active Patient" vs "Recall Due" in real-time. Spot leaky buckets instantly.' },
+                { icon: <Bell />, label: 'Automated Reactivation', desc: 'Algorithmically fill your hygiene schedule. Replace your full-time recall coordinator.' }
             ],
             visual: (
                 <div className="w-full h-full flex items-center justify-center p-4">
@@ -96,9 +99,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
             subtitle: 'The Growth Layer',
             description: 'The "Amex Effect" for dentistry. Use status tiers to lock patients in, then use Family Pooling to acquire their entire household for free.',
             features: [
-                { icon: <Trophy />, label: 'Status Tiers', desc: 'Drive behavior with Gold & Platinum status. Create addiction to progress.' },
-                { icon: <Users />, label: 'The Household Multiplier', desc: 'Families pool points together. One patient brings three more.' },
-                { icon: <Globe />, label: 'Viral Referrals', desc: 'Turn your patient base into your most effective marketing team.' }
+                { icon: <Trophy />, label: 'Status Tiers', desc: 'Drive behavior with Gold & Platinum status. Gamify oral health adherence.' },
+                { icon: <Users />, label: 'Household Multiplier', desc: 'Families pool points together. One patient brings three more (Mom, Dad, Kids).' },
+                { icon: <Globe />, label: 'Viral Referrals', desc: 'Turn your patient base into your most effective marketing team. $0 CAC.' }
             ],
             visual: (
                 <PhoneMockup className="shadow-2xl -rotate-1">
@@ -212,11 +215,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
             {/* 3. ROI CALCULATOR (THE ECONOMIC ARGUMENT) */}
             <RoiCalculator />
 
+            {/* 3.5 CONSOLIDATION (THE PLATFORM ARGUMENT) */}
+            <ConsolidationSection />
+
             {/* 4. SCROLLY TELLING (PRODUCT PILLARS) */}
             <ScrollyTell pillars={productPillars} />
 
             {/* 5. BRAND IDENTITY SHOWCASE (THE CHAMELEON) */}
             <BrandShowcase />
+
+            {/* 5.5 CASE STUDY (SOCIAL PROOF) */}
+            <CaseStudySection />
 
             {/* 6. FAQ (OBJECTION HANDLING) */}
             <FAQSection />
@@ -371,6 +380,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
                     </motion.div>
                 )}
             </AnimatePresence>
+
+            {/* 7. FOOTER */}
+            <Footer />
 
         </div>
     );
