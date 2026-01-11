@@ -138,18 +138,49 @@ const SocialPostGenerator: React.FC<SocialPostGeneratorProps> = ({ clinic, onClo
             drawImageContainer(img2, margin, 250 + imgHeight + 60, "AFTER");
 
             // 5. Footer Branding
-            // Logo placeholder circle
             const footerY = CANVAS_HEIGHT - 120;
-            ctx.fillStyle = '#ffffff';
-            ctx.beginPath();
-            ctx.arc(CANVAS_WIDTH / 2, footerY - 50, 40, 0, Math.PI * 2);
-            ctx.fill();
 
-            // Clinic Logo inside (if available) - simplified as text/icon for now
-            ctx.fillStyle = clinic.primaryColor;
-            ctx.font = 'bold 40px sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText(clinic.name.charAt(0), CANVAS_WIDTH / 2, footerY - 35);
+            if (clinic.logoUrl) {
+                // Draw actual logo
+                try {
+                    const logoImg = await loadImage(clinic.logoUrl);
+
+                    // Circular clip for logo
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.arc(CANVAS_WIDTH / 2, footerY - 50, 50, 0, Math.PI * 2);
+                    ctx.clip();
+
+                    // Draw white background behind logo
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fill();
+
+                    // Draw logo
+                    // Aspect ratio safe draw cover/contain
+                    const logoSize = 100;
+                    const scale = Math.max(logoSize / logoImg.width, logoSize / logoImg.height);
+                    const xOffset = (logoSize - (logoImg.width * scale)) / 2;
+                    const yOffset = (logoSize - (logoImg.height * scale)) / 2;
+
+                    // Draw image centered in the circle
+                    ctx.drawImage(logoImg, (CANVAS_WIDTH / 2) - 50, footerY - 100, 100, 100);
+                    ctx.restore();
+
+                    // Add a white ring border
+                    ctx.strokeStyle = '#ffffff';
+                    ctx.lineWidth = 4;
+                    ctx.beginPath();
+                    ctx.arc(CANVAS_WIDTH / 2, footerY - 50, 52, 0, Math.PI * 2);
+                    ctx.stroke();
+
+                } catch (e) {
+                    // Fallback if logo load fails
+                    console.error("Failed to load logo", e);
+                    drawFallbackLogo(ctx, footerY);
+                }
+            } else {
+                drawFallbackLogo(ctx, footerY);
+            }
 
             ctx.fillStyle = '#ffffff';
             ctx.font = '24px "Inter", sans-serif';
@@ -160,6 +191,20 @@ const SocialPostGenerator: React.FC<SocialPostGeneratorProps> = ({ clinic, onClo
         }
 
         setIsGenerating(false);
+    };
+
+    const drawFallbackLogo = (ctx: CanvasRenderingContext2D, footerY: number) => {
+        // Logo placeholder circle
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(CANVAS_WIDTH / 2, footerY - 50, 40, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Clinic Logo inside (if available) - simplified as text/icon for now
+        ctx.fillStyle = clinic.primaryColor || '#000';
+        ctx.font = 'bold 40px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(clinic.name.charAt(0), CANVAS_WIDTH / 2, footerY - 35);
     };
 
     useEffect(() => {
