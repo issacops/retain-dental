@@ -145,15 +145,7 @@ const PatientProfile: React.FC<Props> = ({
                                 </div>
                             </div>
 
-                            {viewingPlan && (
-                                <DoctorTreatmentDetail
-                                    plan={viewingPlan}
-                                    patient={selectedPatient}
-                                    clinic={clinic}
-                                    onClose={() => setViewingPlan(null)}
-                                    onUpdatePlan={onUpdateCarePlan}
-                                />
-                            )}
+
 
                             {isEditingPlan ? (
                                 <div className="space-y-6 animate-in slide-in-from-top-4 duration-300">
@@ -466,6 +458,17 @@ const PatientProfile: React.FC<Props> = ({
                     {patientTransactions.length === 0 && <p className="text-center py-10 text-slate-300 font-bold italic">No history logged.</p>}
                 </div>
             </div>
+
+            {/* Treatment Detail Overlay - Moved to root for z-index containment */}
+            {viewingPlan && (
+                <DoctorTreatmentDetail
+                    plan={viewingPlan}
+                    patient={selectedPatient}
+                    clinic={clinic}
+                    onClose={() => setViewingPlan(null)}
+                    onUpdatePlan={onUpdateCarePlan}
+                />
+            )}
         </div>
     );
 };
