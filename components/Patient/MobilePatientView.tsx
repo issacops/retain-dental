@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { User, Wallet, Transaction, Tier, TransactionType, Clinic, CarePlan, TransactionCategory, FamilyGroup, AppointmentType, Appointment } from '../../types';
 import { Home, User as UserIcon, ShieldCheck, History, Calendar, Sparkles, Clock, HeartPulse, ChevronRight, PhoneCall, AlertTriangle, Timer, Smile, Zap, CircleCheck, ClipboardList, ArrowUpRight, ArrowDownLeft, Trophy, Activity as ActivityIcon, Globe, Users, Lock, X, CheckCircle, Gift } from 'lucide-react';
 
@@ -16,6 +16,7 @@ interface Props {
   onAddFamilyMember: (name: string, relation: string, age: string) => Promise<any>;
   onSwitchProfile: (userId: string) => void;
   onRedeem: (amount: number, description: string) => Promise<any>;
+  onUpdateCarePlan?: (planId: string, updates: Partial<CarePlan>) => Promise<any>;
   defaultTab?: 'HOME' | 'WALLET' | 'CARE' | 'PROFILE';
 }
 
@@ -100,7 +101,7 @@ const SpecialtyCareModule: React.FC<{ plan: CarePlan; primaryColor: string; onTo
 );
 
 
-const MobilePatientView: React.FC<Props> = ({ currentUser, users, wallets, transactions, carePlans, appointments = [], clinic, onToggleChecklistItem, onSchedule, onAddFamilyMember, onSwitchProfile, onRedeem, defaultTab = 'HOME' }) => {
+const MobilePatientView: React.FC<Props> = ({ currentUser, users, wallets, transactions, carePlans, appointments = [], clinic, onToggleChecklistItem, onSchedule, onAddFamilyMember, onSwitchProfile, onRedeem, onUpdateCarePlan, defaultTab = 'HOME' }) => {
   const [activeTab, setActiveTab] = useState<'HOME' | 'WALLET' | 'CARE' | 'PROFILE'>(defaultTab);
   const [showBookingModal, setShowBookingModal] = useState(false);
   const today = new Date();
@@ -128,6 +129,38 @@ const MobilePatientView: React.FC<Props> = ({ currentUser, users, wallets, trans
   const activeCarePlan = useMemo(() => {
     return carePlans.find(cp => cp.userId === currentUser.id && cp.isActive && cp.clinicId === clinic.id);
   }, [carePlans, currentUser, clinic]);
+
+  // DAILY CHECKLIST RESET LOGIC
+  useEffect(() => {
+    if (!activeCarePlan || !activeCarePlan.checklist || !onUpdateCarePlan) return;
+
+    // Check if we need to reset for a new day
+    const lastReset = activeCarePlan.lastChecklistReset;
+    if (lastReset && lastReset !== localDate) {
+      console.log(`Daily Reset Triggered for ${activeCarePlan.treatmentName}. Last: ${lastReset}, Today: ${localDate}`);
+
+      // Calculate Adherence for the LAST active day (accumulate history)
+      const totalItems = activeCarePlan.checklist.length;
+      const completedItems = activeCarePlan.checklist.filter(i => i.completed).length;
+      const score = totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
+
+      const resetChecklist = activeCarePlan.checklist.map(item => ({ ...item, completed: false }));
+
+      onUpdateCarePlan(activeCarePlan.id, {
+        checklist: resetChecklist,
+        lastChecklistReset: localDate,
+        adherenceRecord: {
+          ...(activeCarePlan.adherenceRecord || {}),
+          [lastReset]: score
+        }
+      });
+    } else if (!lastReset) {
+      // Initialization
+      onUpdateCarePlan(activeCarePlan.id, {
+        lastChecklistReset: localDate
+      });
+    }
+  }, [activeCarePlan, onUpdateCarePlan, localDate]);
 
   const familyMembers = useMemo(() => {
     if (!currentUser.familyGroupId) return [];

@@ -94,6 +94,8 @@ export interface CarePlan {
   assignedAt: string;
   isActive: boolean;
   metadata?: Record<string, any>; // Used for Aligner Trays, Unit counts, etc.
+  lastChecklistReset?: string; // ISO Date YYYY-MM-DD for daily refresh tracking
+  adherenceRecord?: Record<string, number>; // Key: Date (YYYY-MM-DD), Value: Percentage (0-100)
 }
 
 // Appointment Types
