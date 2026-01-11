@@ -8,14 +8,16 @@ interface HeroSectionProps {
 
 const HeroSection: React.FC<HeroSectionProps> = ({ onJoinWaitlist }) => {
     return (
-        <section className="relative min-h-[90vh] flex items-center justify-center pt-32 pb-20 overflow-hidden">
-            {/* Background Effects */}
-            <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
-                <div className="absolute top-[-10%] right-[-10%] w-[800px] h-[800px] bg-indigo-600/20 rounded-full blur-[120px] mix-blend-screen opacity-50 animate-blob"></div>
-                <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-violet-600/20 rounded-full blur-[120px] mix-blend-screen opacity-50 animate-blob animation-delay-2000"></div>
+        <section className="relative min-h-[90vh] flex items-center pt-20 overflow-hidden bg-slate-950">
+            {/* Background Texture & Gradients */}
+            <div className="absolute inset-0 bg-slate-950">
+                <div className="absolute inset-0 bg-noise opacity-[0.03]"></div>
+                {/* Aurora Effect */}
+                <div className="absolute top-[-20%] left-[-10%] w-[70vw] h-[70vw] bg-indigo-600/20 rounded-full blur-[120px] mix-blend-screen animate-aurora filter"></div>
+                <div className="absolute bottom-[-20%] right-[-10%] w-[60vw] h-[60vw] bg-violet-600/10 rounded-full blur-[100px] mix-blend-screen animate-aurora" style={{ animationDelay: '-5s' }}></div>
             </div>
 
-            <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
+            <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center relative z-10">
 
                 {/* Copy Side */}
                 <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-1000">
