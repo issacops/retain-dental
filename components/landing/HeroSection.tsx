@@ -25,8 +25,8 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onJoinWaitlist }) => {
                     </div>
 
                     <h1 className="text-6xl md:text-7xl font-black text-white tracking-tighter leading-[1.1]">
-                        Stop Chasing.<br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-violet-400">Start Retaining.</span>
+                        The Operating System that<br />
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-violet-400">Guarantees Retention.</span>
                     </h1>
 
                     <p className="text-xl text-slate-400 font-medium leading-relaxed max-w-xl">

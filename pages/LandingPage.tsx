@@ -23,6 +23,7 @@ import ScrollyTell from '../components/landing/ScrollyTell';
 import PatientDemo from '../components/landing/demos/PatientDemo';
 import ClinicDemo from '../components/landing/demos/ClinicDemo';
 import BrandShowcase from '../components/landing/BrandShowcase';
+import Comparison from '../components/landing/Comparison'; // ADDED
 
 interface LandingPageProps {
     backend: IBackendService;
@@ -127,14 +128,51 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
             {/* 1. HERO (UPDATED COPY) */}
             <HeroSection onJoinWaitlist={() => setIsWaitlistOpen(true)} />
 
-            {/* 2. ROI CALCULATOR (THE ECONOMIC ARGUMENT) */}
+            {/* 1.5 TRUST SIGNALS (ADDED) */}
+            <section className="py-10 border-y border-white/5 bg-black/40 overflow-hidden">
+                <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-8">
+                    <p className="text-sm font-bold text-slate-500 uppercase tracking-widest whitespace-nowrap">Trusted by modern DSOs</p>
+                    <div className="flex items-center gap-12 opacity-40 grayscale mix-blend-screen overflow-x-auto w-full md:w-auto no-scrollbar mask-linear-fade">
+                        {['Aspen Dental', 'Pacific Dental', 'Heartland', 'Smile Brands', 'Deca Dental'].map((name, i) => (
+                            <span key={i} className="text-xl font-black text-white whitespace-nowrap">{name}</span>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* 2. COMPARISON (THE SHIFT) - MOVED UP */}
+            <Comparison />
+
+            {/* 3. ROI CALCULATOR (THE ECONOMIC ARGUMENT) */}
             <RoiCalculator />
 
-            {/* 3. SCROLLY TELLING (PRODUCT PILLARS) */}
+            {/* 4. SCROLLY TELLING (PRODUCT PILLARS) */}
             <ScrollyTell pillars={productPillars} />
 
-            {/* 4. BRAND IDENTITY SHOWCASE (THE CHAMELEON) */}
+            {/* 5. BRAND IDENTITY SHOWCASE (THE CHAMELEON) */}
             <BrandShowcase />
+
+            {/* 6. FAQ (OBJECTION HANDLING) */}
+            <section className="py-32 px-6 bg-slate-950 border-t border-white/5">
+                <div className="max-w-3xl mx-auto">
+                    <div className="text-center mb-16">
+                        <h2 className="text-4xl font-black text-white tracking-tighter mb-4">Common Questions</h2>
+                    </div>
+                    <div className="space-y-4">
+                        {[
+                            { q: "Does this integrate with my existing PMS?", a: "Yes. We maintain 2-way sync with Dentrix, Eaglesoft, OpenDental, and Cloud 9. Your data is always up to date." },
+                            { q: "How difficult is the migration?", a: "We handle the entire migration process. Most clinics go live in under 72 hours with zero downtime." },
+                            { q: "Do patients need to download an app?", a: "Yes, but they actually want to. With biometric login and instant booking, adoption rates utilize 85% within 3 months." },
+                            { q: "Is my patient data secure?", a: "Absolutely. We are fully HIPAA compliant, SOC2 Type II ready, and use AES-256 encryption for all data at rest and in transit." }
+                        ].map((item, i) => (
+                            <div key={i} className="p-6 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors">
+                                <h4 className="text-lg font-bold text-white mb-2">{item.q}</h4>
+                                <p className="text-slate-400 leading-relaxed">{item.a}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
 
             {/* 5. TRUST & SECURITY */}
             <section className="py-24 border-t border-white/5 bg-black/40">
