@@ -170,369 +170,324 @@ const SocialPostGenerator: React.FC<SocialPostGeneratorProps> = ({ clinic, onClo
 
     // --- TEMPLATE DRAWERS ---
 
-    const drawTransformation = async (ctx: CanvasRenderingContext2D, data: any, clinic: Clinic, loadImg: any) => {
-        const PADDING = 50;
-
-        // Background: Subtle modern gradient
-        const grad = ctx.createLinearGradient(0, 0, 0, CANVAS_HEIGHT);
-        grad.addColorStop(0, '#f8fafc');
-        grad.addColorStop(1, '#e2e8f0');
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-
-        // Header: Minimal & Clean
-        ctx.shadowColor = 'rgba(0,0,0,0.1)';
-        ctx.shadowBlur = 20;
-        ctx.fillStyle = 'white';
-        ctx.beginPath();
-        ctx.roundRect(40, 40, CANVAS_WIDTH - 80, 160, 80);
-        ctx.fill();
-        ctx.shadowColor = 'transparent';
-
-        // Logo in Header
-        if (clinic.logoUrl) {
-            try {
-                const logo = await loadImg(clinic.logoUrl);
-                const size = 100;
-                const scale = Math.min(size / logo.width, size / logo.height);
-                ctx.drawImage(logo, 80, 70, logo.width * scale, logo.height * scale);
-
-                ctx.fillStyle = '#0f172a';
-                ctx.font = 'bold 36px "Inter"';
-                ctx.textAlign = 'left';
-                ctx.fillText(clinic.name.toUpperCase(), 200, 125);
-            } catch (e) { }
-        }
-
-        // Title 
-        ctx.fillStyle = '#64748b';
-        ctx.font = 'bold 28px "Inter"';
-        ctx.textAlign = 'center';
-        ctx.fillText((data.procedure || "SMILE TRANSFORMATION").toUpperCase(), CANVAS_WIDTH / 2, 260);
-
-        // Image Cards (Vertical Stack)
-        const cardW = CANVAS_WIDTH - (PADDING * 2);
-        const cardH = 620;
-
-        const drawImgCard = (img: HTMLImageElement | null, y: number, label: string) => {
-            // Card Base
-            ctx.shadowColor = 'rgba(0,0,0,0.15)';
-            ctx.shadowBlur = 40; ctx.shadowOffsetY = 20;
-            ctx.fillStyle = 'white';
-            ctx.beginPath();
-            ctx.roundRect(PADDING, y, cardW, cardH, 40);
-            ctx.fill();
-            ctx.shadowColor = 'transparent';
-
-            // Image Clip
-            const innerPad = 15;
-            const imgX = PADDING + innerPad;
-            const imgY = y + innerPad;
-            const imgW = cardW - (innerPad * 2);
-            const imgH = cardH - (innerPad * 2);
-
-            ctx.save();
-            ctx.beginPath();
-            ctx.roundRect(imgX, imgY, imgW, imgH, 25);
-            ctx.clip();
-
-            if (img) {
-                // Object Fit: Cover (Critical Fix)
-                const scale = Math.max(imgW / img.width, imgH / img.height);
-                const xOffset = (imgW - (img.width * scale)) / 2;
-                const yOffset = (imgH - (img.height * scale)) / 2;
-                ctx.drawImage(img, imgX + xOffset, imgY + yOffset, img.width * scale, img.height * scale);
-            } else {
-                ctx.fillStyle = '#f1f5f9';
-                ctx.fillRect(imgX, imgY, imgW, imgH);
-                ctx.fillStyle = '#cbd5e1';
-                ctx.textAlign = 'center';
-                ctx.fillText("Upload Photo", imgX + imgW / 2, imgY + imgH / 2);
+    // --- UTILS ---
+    const drawNoise = (ctx: CanvasRenderingContext2D) => {
+        const w = ctx.canvas.width;
+        const h = ctx.canvas.height;
+        const idata = ctx.getImageData(0, 0, w, h);
+        const buffer32 = new Uint32Array(idata.data.buffer);
+        const len = buffer32.length;
+        for (let i = 0; i < len; i++) {
+            if (Math.random() < 0.1) {
+                // Add subtle noise 
+                idata.data[i * 4] = Math.min(255, idata.data[i * 4] + 5);
+                idata.data[i * 4 + 1] = Math.min(255, idata.data[i * 4 + 1] + 5);
+                idata.data[i * 4 + 2] = Math.min(255, idata.data[i * 4 + 2] + 5);
             }
-            ctx.restore();
+        }
+        ctx.putImageData(idata, 0, 0);
+    };
 
-            // Glassmorphism Badge
-            const badgeW = 220;
-            const badgeH = 70;
-            const badgeX = PADDING + 40;
-            const badgeY = y - 35; // Floating overlap
+    // --- V4 WORLD CLASS TEMPLATES ---
 
-            // Glass BG
-            ctx.fillStyle = 'rgba(255,255,255,0.85)';
-            ctx.shadowColor = 'rgba(0,0,0,0.1)';
-            ctx.shadowBlur = 20;
-            ctx.beginPath();
-            ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 35);
-            ctx.fill();
-            ctx.shadowColor = 'transparent';
-
-            // Text
-            ctx.fillStyle = clinic.primaryColor || '#000';
-            ctx.font = 'bold 28px "Inter"';
-            ctx.textAlign = 'center';
-            ctx.fillText(label, badgeX + (badgeW / 2), badgeY + 45);
-        };
+    // 1. TRANSFORMATION: "The Split" (Maximized Visuals)
+    const drawTransformation = async (ctx: CanvasRenderingContext2D, data: any, clinic: Clinic, loadImg: any) => {
+        // Fill BG
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
         const img1 = data.beforeImage ? await loadImg(data.beforeImage) : null;
         const img2 = data.afterImage ? await loadImg(data.afterImage) : null;
 
-        drawImgCard(img1, 320, "BEFORE");
-        drawImgCard(img2, 1020, "AFTER");
-    };
+        // Layout: Top Half (Before), Bottom Half (After)
+        // Split Point
+        const splitY = CANVAS_HEIGHT / 2;
 
-    // 2. HERO REVIEW (Yelp/Google Style Refined)
-    const drawReview = async (ctx: CanvasRenderingContext2D, data: any, clinic: Clinic, loadImg: any) => {
-        // Background Photo (Blurred)
-        if (data.mainImage) {
-            const img = await loadImg(data.mainImage);
-            const scale = Math.max(CANVAS_WIDTH / img.width, CANVAS_HEIGHT / img.height);
-            ctx.drawImage(img, 0, 0, img.width * scale, img.height * scale);
+        const drawHalf = (img: HTMLImageElement | null, y: number, h: number, label: string, isTop: boolean) => {
+            if (img) {
+                ctx.save();
+                ctx.beginPath();
+                ctx.rect(0, y, CANVAS_WIDTH, h);
+                ctx.clip();
+                // Objective: Cover
+                const scale = Math.max(CANVAS_WIDTH / img.width, h / img.height);
+                const xOff = (CANVAS_WIDTH - (img.width * scale)) / 2;
+                const yOff = y + (h - (img.height * scale)) / 2;
+                ctx.drawImage(img, xOff, yOff, img.width * scale, img.height * scale);
+                ctx.restore();
+            } else {
+                ctx.fillStyle = isTop ? '#f1f5f9' : '#e2e8f0';
+                ctx.fillRect(0, y, CANVAS_WIDTH, h);
+                ctx.fillStyle = '#94a3b8';
+                ctx.font = 'bold 40px "Inter"';
+                ctx.textAlign = 'center';
+                ctx.fillText("Upload Photo", CANVAS_WIDTH / 2, y + h / 2);
+            }
 
-            // Heavy Blur Overlay
-            ctx.fillStyle = 'rgba(0,0,0,0.6)'; // Darker for contrast
-            ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-        } else {
-            // Gradient fallback
-            const grad = ctx.createLinearGradient(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-            grad.addColorStop(0, '#1e293b');
-            grad.addColorStop(1, '#0f172a');
-            ctx.fillStyle = grad;
-            ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-        }
+            // Tag (High Contrast)
+            const tagY = isTop ? y + 60 : y + h - 140;
+            const tagX = 60;
 
-        // The Card
-        const cardY = 600;
-        const cardW = 900;
-        const cardH = 900;
-        const x = (CANVAS_WIDTH - cardW) / 2;
+            ctx.shadowColor = 'rgba(0,0,0,0.5)';
+            ctx.shadowBlur = 20;
+            ctx.fillStyle = clinic.primaryColor || 'black';
+            ctx.beginPath();
+            ctx.roundRect(tagX, tagY, 240, 80, 40);
+            ctx.fill();
+            ctx.shadowColor = 'transparent';
 
-        ctx.shadowColor = 'rgba(0,0,0,0.3)';
-        ctx.shadowBlur = 60; ctx.shadowOffsetY = 30;
-        ctx.fillStyle = 'white';
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 30px "Inter"';
+            ctx.textAlign = 'center';
+            ctx.fillText(label, tagX + 120, tagY + 50);
+        };
+
+        drawHalf(img1, 0, splitY, "BEFORE", true);
+        drawHalf(img2, splitY, splitY, "AFTER", false);
+
+        // The "Split" Interface Line
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 20;
         ctx.beginPath();
-        ctx.roundRect(x, cardY, cardW, cardH, 50);
+        ctx.moveTo(0, splitY);
+        ctx.lineTo(CANVAS_WIDTH, splitY);
+        ctx.stroke();
+
+        // Center "Slider" Icon
+        ctx.fillStyle = '#fff';
+        ctx.shadowColor = 'rgba(0,0,0,0.3)';
+        ctx.shadowBlur = 30;
+        ctx.beginPath();
+        ctx.arc(CANVAS_WIDTH / 2, splitY, 80, 0, Math.PI * 2);
         ctx.fill();
         ctx.shadowColor = 'transparent';
 
-        // Giant Quote Icon
-        ctx.fillStyle = '#f1f5f9';
-        ctx.font = 'bold 300px "Inter"';
+        // Arrows / Icon
+        ctx.fillStyle = clinic.primaryColor || 'black';
+        ctx.beginPath();
+        // Simple arrows
+        ctx.font = 'bold 60px "Inter"';
         ctx.textAlign = 'center';
-        ctx.fillText('“', CANVAS_WIDTH / 2, cardY + 250);
+        ctx.textBaseline = 'middle';
+        ctx.fillText("↕", CANVAS_WIDTH / 2, splitY + 5);
 
-        // Stars
-        const stars = parseInt(data.stars) || 5;
-        let starStr = "";
-        for (let i = 0; i < stars; i++) starStr += "★ ";
-        ctx.fillStyle = '#f59e0b'; // Amber-500
-        ctx.font = '60px "Inter"';
-        ctx.fillText(starStr.trim(), CANVAS_WIDTH / 2, cardY + 120);
+        // Header (Floating Overlay)
+        if (clinic.logoUrl) {
+            try {
+                const logo = await loadImg(clinic.logoUrl);
+                ctx.save();
+                // Draw logo top right with white glow
+                ctx.shadowColor = 'white'; ctx.shadowBlur = 20;
+                const size = 120;
+                const scale = Math.min(size / logo.width, size / logo.height);
+                ctx.drawImage(logo, CANVAS_WIDTH - 150, 50, logo.width * scale, logo.height * scale);
+                ctx.restore();
+            } catch (e) { }
+        }
+    };
 
-        // Review Text
-        ctx.fillStyle = '#1e293b';
-        ctx.font = 'medium 52px "Inter"';
-        // We need a tighter wrap for the card
-        drawTextMultiline(ctx, data.reviewText || "Write your review here...", CANVAS_WIDTH / 2, cardY + 400, cardW - 100, 75);
+    // 2. HERO REVIEW (Yelp/Google Style Refined)
+    // 2. REVIEW: "The Editorial Quote"
+    const drawReview = async (ctx: CanvasRenderingContext2D, data: any, clinic: Clinic, loadImg: any) => {
+        // Deep Brand Background
+        const bgParams = clinic.primaryColor || '#4f46e5';
+        ctx.fillStyle = bgParams; // Solid Brand Color
+        ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-        // Patient Name
-        ctx.fillStyle = clinic.primaryColor || '#4f46e5';
-        ctx.font = 'bold 40px "Inter"';
-        ctx.fillText("- " + (data.patientName || "Patient Name"), CANVAS_WIDTH / 2, cardY + cardH - 100);
+        // Gradient Overlay (Top to Bottom: Light to Dark)
+        const grad = ctx.createLinearGradient(0, 0, 0, CANVAS_HEIGHT);
+        grad.addColorStop(0, 'rgba(255,255,255,0.1)');
+        grad.addColorStop(1, 'rgba(0,0,0,0.4)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-        // Patient Photo (Avatar)
+        // Background Watermark (Quote Mark)
+        ctx.fillStyle = 'rgba(255,255,255,0.05)';
+        ctx.font = 'bold 1000px "Times New Roman"'; // Serif for class
+        ctx.textAlign = 'center';
+        ctx.fillText("”", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 200);
+
+        // Patient Photo (Large circle top)
         if (data.mainImage) {
             const img = await loadImg(data.mainImage);
             ctx.save();
             ctx.beginPath();
-            ctx.arc(CANVAS_WIDTH / 2, cardY - 80, 80, 0, Math.PI * 2);
+            ctx.arc(CANVAS_WIDTH / 2, 400, 150, 0, Math.PI * 2);
             ctx.clip();
-            const sc = Math.max(160 / img.width, 160 / img.height);
-            ctx.drawImage(img, (CANVAS_WIDTH / 2) - (img.width * sc / 2), cardY - 80 - (img.height * sc / 2), img.width * sc, img.height * sc);
+            // Cover
+            const s = Math.max(300 / img.width, 300 / img.height);
+            ctx.drawImage(img, (CANVAS_WIDTH / 2) - (img.width * s) / 2, 400 - (img.height * s) / 2, img.width * s, img.height * s);
             ctx.restore();
-            // Border
-            ctx.strokeStyle = 'white';
-            ctx.lineWidth = 10;
+
+            // Gold Border
+            ctx.strokeStyle = 'rgba(255,255,255,0.8)';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.arc(CANVAS_WIDTH / 2, 400, 154, 0, Math.PI * 2);
             ctx.stroke();
         }
+
+        // Stars
+        const stars = parseInt(data.stars) || 5;
+        let starStr = "";
+        for (let i = 0; i < stars; i++) starStr += "★";
+        ctx.fillStyle = '#fbbf24';
+        ctx.font = '80px "Inter"';
+        ctx.textAlign = 'center';
+        ctx.fillText(starStr, CANVAS_WIDTH / 2, 650);
+
+        // The Quote
+        ctx.fillStyle = 'white';
+        // Elegant Serif for quote
+        ctx.font = '400 italic 70px "Georgia", serif';
+        // We use slightly smaller width to create "Air"
+        drawTextMultiline(ctx, `"${data.reviewText || "Best dental experience."}"`, CANVAS_WIDTH / 2, 850, 850, 100);
+
+        // Name
+        ctx.fillStyle = 'rgba(255,255,255,0.8)';
+        ctx.font = 'bold 40px "Inter"';
+        ctx.fillText((data.patientName || "Satisfied Patient").toUpperCase(), CANVAS_WIDTH / 2, 1400);
+
+        // Clinic Branding (Bottom)
+        ctx.font = '30px "Inter"';
+        ctx.fillText(clinic.name, CANVAS_WIDTH / 2, 1460);
+
+        drawNoise(ctx);
     };
 
     // 3. MYTH BUSTER (Modern Split Cards)
+    // 3. MYTH: "Infographic Style"
     const drawMyth = async (ctx: CanvasRenderingContext2D, data: any, clinic: Clinic) => {
-        // Bg
         ctx.fillStyle = '#f8fafc';
         ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-        // Header
-        ctx.fillStyle = clinic.primaryColor || 'black';
-        ctx.font = 'bold 50px "Inter"';
-        ctx.textAlign = 'center';
-        ctx.fillText("DENTAL TRUTHS", CANVAS_WIDTH / 2, 150);
-
-        // Myth Card (Red Scheme)
-        const cardW = 900;
-        const cardH = 650;
-
-        // Card 1
-        ctx.fillStyle = '#fef2f2'; // Red-50
-        ctx.beginPath();
-        ctx.roundRect((CANVAS_WIDTH - cardW) / 2, 250, cardW, cardH, 40);
-        ctx.fill();
-        // Accent stroke
-        ctx.strokeStyle = '#fee2e2'; ctx.lineWidth = 6; ctx.stroke();
-
-        ctx.fillStyle = '#ef4444'; // Red-500
-        ctx.font = 'bold 30px "Inter"';
-        ctx.fillText("MYTH", CANVAS_WIDTH / 2, 320);
-
-        ctx.fillStyle = '#7f1d1d';
-        ctx.font = 'bold 60px "Inter"';
-        drawTextMultiline(ctx, data.myth || "Wearing braces hurts all the time", CANVAS_WIDTH / 2, 450, 800, 80);
-
-        // VS Check
+        // Header Bar
+        ctx.fillStyle = '#0f172a';
+        ctx.fillRect(0, 0, CANVAS_WIDTH, 200);
         ctx.fillStyle = 'white';
-        ctx.beginPath();
-        ctx.arc(CANVAS_WIDTH / 2, 250 + cardH + 60, 60, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = '#cbd5e1';
-        ctx.font = 'bold 40px "Inter"';
-        ctx.fillText("VS", CANVAS_WIDTH / 2, 250 + cardH + 75);
-
-        // Fact Card (Teal/Green Scheme)
-        const y2 = 250 + cardH + 120;
-        ctx.fillStyle = '#f0fdf4'; // Green-50
-        ctx.beginPath();
-        ctx.roundRect((CANVAS_WIDTH - cardW) / 2, y2, cardW, cardH, 40);
-        ctx.fill();
-        ctx.strokeStyle = '#dcfce7'; ctx.stroke();
-
-        ctx.fillStyle = '#22c55e'; // Green-500
-        ctx.font = 'bold 30px "Inter"';
-        ctx.fillText("FACT", CANVAS_WIDTH / 2, y2 + 70);
-
-        ctx.fillStyle = '#14532d';
         ctx.font = 'bold 60px "Inter"';
-        drawTextMultiline(ctx, data.fact || "New tech makes it comfortable!", CANVAS_WIDTH / 2, y2 + 200, 800, 80);
+        ctx.textAlign = 'center';
+        ctx.fillText("DENTAL FACTS 101", CANVAS_WIDTH / 2, 120);
+
+        // Section 1: The Myth (X)
+        const y1 = 300;
+        ctx.fillStyle = '#ef4444'; // Red Icon
+        ctx.font = 'bold 120px "Inter"';
+        ctx.fillText("✕", 150, y1 + 100);
+
+        ctx.textAlign = 'left';
+        ctx.fillStyle = '#991b1b';
+        ctx.font = 'bold 40px "Inter"';
+        ctx.fillText("THE MYTH", 300, y1 + 50);
+
+        ctx.fillStyle = '#1e293b';
+        ctx.font = 'bold 60px "Inter"';
+        drawTextMultiline(ctx, data.myth || "Wait...", 300, y1 + 140, 700, 80);
+
+        // Divider
+        ctx.strokeStyle = '#cbd5e1';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(100, 800);
+        ctx.lineTo(CANVAS_WIDTH - 100, 800);
+        ctx.stroke();
+
+        // Section 2: The Fact (Check)
+        const y2 = 900;
+        ctx.textAlign = 'center'; // Reset for icon
+        ctx.fillStyle = '#22c55e';
+        ctx.fillText("✓", 150, y2 + 100);
+
+        ctx.textAlign = 'left';
+        ctx.fillStyle = '#166534';
+        ctx.font = 'bold 40px "Inter"';
+        ctx.fillText("THE REALITY", 300, y2 + 50);
+
+        ctx.fillStyle = '#1e293b';
+        ctx.font = 'bold 60px "Inter"';
+        drawTextMultiline(ctx, data.fact || "Truth!", 300, y2 + 140, 700, 80);
+
+        // Bottom Callout
+        ctx.fillStyle = clinic.primaryColor || 'black';
+        ctx.fillRect(100, 1400, CANVAS_WIDTH - 200, 200);
+        ctx.fillStyle = 'white';
+        ctx.textAlign = 'center';
+        ctx.font = 'bold 50px "Inter"';
+        ctx.fillText("Don't believe everything you hear.", CANVAS_WIDTH / 2, 1515);
     };
 
     // 4. OFFER (Premium Gift Card Style)
+    // 4. OFFER: "Swiss Grid"
     const drawOffer = async (ctx: CanvasRenderingContext2D, data: any, clinic: Clinic) => {
-        // Dark Luxury Bg
-        const bg = ctx.createLinearGradient(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-        bg.addColorStop(0, '#0f172a');
-        bg.addColorStop(1, '#1e293b');
-        ctx.fillStyle = bg;
+        // Bright Vibrant BG
+        ctx.fillStyle = '#fff';
         ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-        // Gold Confetti (Dots)
-        ctx.fillStyle = '#d4af37'; // Gold
-        for (let i = 0; i < 50; i++) {
-            ctx.beginPath();
-            ctx.arc(Math.random() * CANVAS_WIDTH, Math.random() * CANVAS_HEIGHT, Math.random() * 4, 0, Math.PI * 2);
-            ctx.fill();
-        }
+        // Huge Typography Layout
+        ctx.fillStyle = '#000';
+        ctx.font = 'bold 350px "Inter"';
+        ctx.textAlign = 'center';
+        // E.g. "50%"
+        const title = data.offerTitle || "SALE";
+        ctx.fillText(title, CANVAS_WIDTH / 2, 600);
 
-        // The Ticket
-        const cardW = 900;
-        const cardH = 1000;
-        const x = (CANVAS_WIDTH - cardW) / 2;
-        const y = (CANVAS_HEIGHT - cardH) / 2 - 100;
+        // Background box for subtitle
+        ctx.fillStyle = clinic.primaryColor || 'blue';
+        ctx.fillRect(0, 700, CANVAS_WIDTH, 400);
 
-        // Gold Border Gradient
-        const borderGrad = ctx.createLinearGradient(x, y, x + cardW, y + cardH);
-        borderGrad.addColorStop(0, '#fcd34d');
-        borderGrad.addColorStop(0.5, '#fffbeb');
-        borderGrad.addColorStop(1, '#d97706');
+        ctx.fillStyle = 'white';
+        ctx.font = 'bold 100px "Inter"';
+        drawTextMultiline(ctx, (data.offerSub || "Special Offer").toUpperCase(), CANVAS_WIDTH / 2, 900, 900, 120);
 
-        ctx.lineWidth = 20;
-        ctx.strokeStyle = borderGrad;
+        // Grid lines
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 5;
+        ctx.strokeRect(40, 40, CANVAS_WIDTH - 80, CANVAS_HEIGHT - 80);
         ctx.beginPath();
-        ctx.roundRect(x, y, cardW, cardH, 40);
+        ctx.moveTo(40, 1200);
+        ctx.lineTo(CANVAS_WIDTH - 40, 1200);
         ctx.stroke();
 
-        // Inner Dark Card
-        ctx.fillStyle = '#1e1b4b'; // Indigo-950 (Rich)
-        ctx.beginPath();
-        ctx.roundRect(x + 10, y + 10, cardW - 20, cardH - 20, 30);
-        ctx.fill();
+        // Footer details
+        ctx.fillStyle = '#000';
+        ctx.font = '50px "Inter"';
+        ctx.fillText("VALID UNTIL " + (data.expiry || "FOREVER"), CANVAS_WIDTH / 2, 1400);
 
-        // Content
-        ctx.fillStyle = '#fbbf24'; // Amber-400
-        ctx.font = 'bold 40px "Inter"';
-        ctx.fillText("EXCLUSIVE OFFER", CANVAS_WIDTH / 2, y + 150);
-
-        ctx.fillStyle = 'white';
-        ctx.font = 'bold 160px "Inter"';
-        ctx.fillText(data.offerTitle || "50% OFF", CANVAS_WIDTH / 2, y + 450);
-
-        ctx.fillStyle = '#94a3b8';
-        ctx.font = '40px "Inter"';
-        ctx.fillText(data.offerSub || "On Dental Implants", CANVAS_WIDTH / 2, y + 600);
-
-        // Button style
-        ctx.fillStyle = 'white';
-        ctx.beginPath();
-        ctx.roundRect((CANVAS_WIDTH - 400) / 2, y + 750, 400, 100, 50);
-        ctx.fill();
-
-        ctx.fillStyle = 'black';
-        ctx.font = 'bold 36px "Inter"';
-        ctx.fillText("CLAIM NOW", CANVAS_WIDTH / 2, y + 815);
-
-        // Expiry
-        ctx.fillStyle = '#64748b';
-        ctx.font = '30px "Inter"';
-        ctx.fillText("Valid until " + (data.expiry || "soon"), CANVAS_WIDTH / 2, y + 930);
+        drawNoise(ctx);
     };
 
-    // 5. ANNOUNCEMENT (Frosted Glass)
+    // 5. ANNOUNCEMENT: "Blur & Type"
     const drawAnnouncement = async (ctx: CanvasRenderingContext2D, data: any, clinic: Clinic, loadImg: any) => {
         if (data.mainImage) {
             const img = await loadImg(data.mainImage);
             const scale = Math.max(CANVAS_WIDTH / img.width, CANVAS_HEIGHT / img.height);
             ctx.drawImage(img, 0, 0, img.width * scale, img.height * scale);
         } else {
-            ctx.fillStyle = clinic.primaryColor || '#4f46e5';
+            ctx.fillStyle = clinic.primaryColor || '#000';
             ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-            // Pattern
-            ctx.fillStyle = 'rgba(255,255,255,0.1)';
-            ctx.beginPath();
-            ctx.arc(0, 0, 800, 0, Math.PI * 2);
-            ctx.fill();
         }
 
-        // Frosted Card
-        const cardY = 800;
-        const cardH = 900;
+        // Heavy frost
+        ctx.fillStyle = 'rgba(255,255,255,0.85)';
+        ctx.fillRect(50, 50, CANVAS_WIDTH - 100, CANVAS_HEIGHT - 100);
 
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-        ctx.shadowColor = 'rgba(0,0,0,0.2)';
-        ctx.shadowBlur = 40;
-        ctx.beginPath();
-        ctx.roundRect(50, cardY, CANVAS_WIDTH - 100, cardH, 50);
-        ctx.fill();
-        ctx.shadowColor = 'transparent';
+        // Border
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 4;
+        ctx.strokeRect(80, 80, CANVAS_WIDTH - 160, CANVAS_HEIGHT - 160);
 
-        // Icon
-        ctx.fillStyle = clinic.primaryColor || '#000';
-        ctx.beginPath();
-        ctx.arc(CANVAS_WIDTH / 2, cardY - 80, 80, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.fillStyle = 'white';
-        // Simplified Bell/Megaphone shape
-        ctx.fillStyle = 'white';
-        ctx.font = 'bold 100px "Inter"';
-        ctx.fillText("!", CANVAS_WIDTH / 2, cardY - 45);
-
-        // Text
-        ctx.fillStyle = '#0f172a';
-        ctx.font = 'bold 70px "Inter"';
+        ctx.fillStyle = '#000';
         ctx.textAlign = 'center';
-        drawTextMultiline(ctx, (data.title || "We Have News").toUpperCase(), CANVAS_WIDTH / 2, cardY + 150, 800, 90);
+        ctx.font = 'bold 60px "Inter"';
+        ctx.fillText(clinic.name.toUpperCase(), CANVAS_WIDTH / 2, 200);
 
-        ctx.fillStyle = '#475569';
-        ctx.font = '45px "Inter"';
-        drawTextMultiline(ctx, data.message || "Message here...", CANVAS_WIDTH / 2, cardY + 350, 800, 70);
+        ctx.font = 'bold 150px "Inter"';
+        drawTextMultiline(ctx, data.title || "UPDATE", CANVAS_WIDTH / 2, 600, 900, 160);
+
+        ctx.font = '50px "Inter"';
+        drawTextMultiline(ctx, data.message || "Details...", CANVAS_WIDTH / 2, 1000, 800, 80);
+
+        drawNoise(ctx);
     };
 
     const drawFooter = async (ctx: CanvasRenderingContext2D, clinic: Clinic, loadImg: any) => {
