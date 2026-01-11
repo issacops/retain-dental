@@ -10,6 +10,7 @@ import PatientProfile from './subcomponents/PatientProfile';
 import AppointmentScheduler from './subcomponents/AppointmentScheduler';
 import LiveProtocolMonitor from './subcomponents/LiveProtocolMonitor';
 import FinancialLedger from './subcomponents/FinancialLedger';
+import SocialPostGenerator from './subcomponents/SocialPostGenerator';
 
 interface Props {
    currentUser: User;
@@ -41,7 +42,8 @@ const DesktopDoctorView: React.FC<Props> = ({
    const [selectedPatient, setSelectedPatient] = useState<User | null>(null);
    const [searchQuery, setSearchQuery] = useState('');
    const [isAddPatientModalOpen, setIsAddPatientModalOpen] = useState(false);
-   const [isQRModalOpen, setIsQRModalOpen] = useState(false); // NEW STATE
+   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
+   const [isSocialModalOpen, setIsSocialModalOpen] = useState(false); // NEW
    const [newPatientName, setNewPatientName] = useState('');
    const [newPatientMobile, setNewPatientMobile] = useState('');
    const [newPatientPin, setNewPatientPin] = useState('');
@@ -204,7 +206,7 @@ const DesktopDoctorView: React.FC<Props> = ({
                                        { icon: <CalendarIcon size={20} />, label: 'Schedule', action: () => setActiveSection('Schedule') },
                                        { icon: <CreditCard size={20} />, label: 'Invoice', action: () => alert('New Invoice...') },
                                        {
-                                          icon: <MessageSquare size={20} />, label: 'Share App', action: () => setIsQRModalOpen(true)
+                                          icon: <Zap size={20} />, label: 'Social Studio', action: () => setIsSocialModalOpen(true)
                                        }
                                     ].map((action, i) => (
                                        <button key={i} onClick={action.action} className="flex flex-col items-center gap-3 p-6 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-primary/20 hover:-translate-y-1 transition-all group">
@@ -419,6 +421,14 @@ const DesktopDoctorView: React.FC<Props> = ({
                         </div>
                      </div>
                   </div>
+               )}
+
+               {/* SOCIAL POST GENERATOR MODAL */}
+               {isSocialModalOpen && (
+                  <SocialPostGenerator
+                     clinic={clinic}
+                     onClose={() => setIsSocialModalOpen(false)}
+                  />
                )}
 
             </main >
