@@ -117,7 +117,7 @@ const DoctorTreatmentDetail: React.FC<Props> = ({ plan, patient, clinic, onClose
                                 </div>
 
                                 {/* Specific Modules based on Category */}
-                                {plan.treatmentName.includes('Invisalign') && (
+                                {(plan.treatmentName || '').includes('Invisalign') && (
                                     <div className="bg-slate-900 text-white p-8 rounded-[40px] relative overflow-hidden">
                                         <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/20 rounded-full blur-[80px]"></div>
                                         <h3 className="text-2xl font-black mb-6 relative z-10">Aligner Tracking</h3>
