@@ -128,7 +128,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
             {/* 1. HERO (UPDATED COPY) */}
             <HeroSection onJoinWaitlist={() => setIsWaitlistOpen(true)} />
 
-            {/* 1.5 TRUST SIGNALS (ADDED) */}
+            {/* 1.5 TRUST SIGNALS */}
             <section className="py-10 border-y border-white/5 bg-black/40 overflow-hidden">
                 <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-8">
                     <p className="text-sm font-bold text-slate-500 uppercase tracking-widest whitespace-nowrap">Trusted by modern DSOs</p>
@@ -136,6 +136,71 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
                         {['Aspen Dental', 'Pacific Dental', 'Heartland', 'Smile Brands', 'Deca Dental'].map((name, i) => (
                             <span key={i} className="text-xl font-black text-white whitespace-nowrap">{name}</span>
                         ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* 1.75 THE AGITATE (THE LEAKY BUCKET) - NEW SECTION */}
+            <section className="py-24 px-6 bg-slate-950 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-red-500/5 blur-[120px] rounded-full"></div>
+                <div className="max-w-7xl mx-auto relative z-10">
+                    <div className="flex flex-col md:flex-row gap-16 items-center">
+                        <div className="flex-1 space-y-8">
+                            <h2 className="text-4xl md:text-5xl font-black text-white tracking-tighter leading-tight">
+                                Your clinic has a <br />
+                                <span className="text-red-500">Leaky Bucket</span> problem.
+                            </h2>
+                            <p className="text-xl text-slate-400 leading-relaxed">
+                                For every 10 new patients you acquire with expensive ads, <strong>6 will never return</strong> for a second visit.
+                                You aren't building a practice. You're running a hamster wheel.
+                            </p>
+                            <div className="grid grid-cols-2 gap-8 pt-4">
+                                <div>
+                                    <div className="text-3xl font-black text-white mb-1">~$50k</div>
+                                    <div className="text-sm text-slate-500 font-bold uppercase tracking-wide">Lost Monthly Revenue</div>
+                                </div>
+                                <div>
+                                    <div className="text-3xl font-black text-white mb-1">45%</div>
+                                    <div className="text-sm text-slate-500 font-bold uppercase tracking-wide">Empty Chair Time</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex-1">
+                            {/* Visual representation of 'The Old Way' failure */}
+                            <div className="p-8 rounded-[2.5rem] bg-slate-900 border border-slate-800 relative">
+                                <div className="space-y-4 opacity-50 grayscale">
+                                    <div className="flex items-center justify-between p-4 bg-slate-800 rounded-xl border border-slate-700">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 rounded-full bg-slate-700"></div>
+                                            <div className="h-4 w-32 bg-slate-700 rounded-full"></div>
+                                        </div>
+                                        <div className="h-4 w-12 bg-slate-700 rounded-full opacity-50"></div>
+                                    </div>
+                                    <div className="flex items-center justify-between p-4 bg-slate-800 rounded-xl border border-slate-700">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 rounded-full bg-slate-700"></div>
+                                            <div className="h-4 w-32 bg-slate-700 rounded-full"></div>
+                                        </div>
+                                        <div className="h-4 w-12 bg-slate-700 rounded-full opacity-50"></div>
+                                    </div>
+                                    <div className="flex items-center justify-between p-4 bg-slate-800 rounded-xl border border-slate-700">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 rounded-full bg-slate-700"></div>
+                                            <div className="h-4 w-32 bg-slate-700 rounded-full"></div>
+                                        </div>
+                                        <div className="h-4 w-12 bg-slate-700 rounded-full opacity-50"></div>
+                                    </div>
+                                </div>
+                                {/* The Warning */}
+                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-slate-950 border border-red-500/30 p-6 rounded-2xl shadow-2xl text-center w-[80%]">
+                                    <div className="w-12 h-12 bg-red-500/10 text-red-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                                        <X size={24} />
+                                    </div>
+                                    <h4 className="text-white font-bold text-lg">Recall Failed</h4>
+                                    <p className="text-slate-400 text-sm mt-1">Manual SMS ignored. Patient lost to competitor.</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -158,16 +223,54 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
                     <div className="text-center mb-16">
                         <h2 className="text-4xl font-black text-white tracking-tighter mb-4">Common Questions</h2>
                     </div>
-                    <div className="space-y-4">
+                    <div className="grid md:grid-cols-2 gap-8">
                         {[
-                            { q: "Does this integrate with my existing PMS?", a: "Yes. We maintain 2-way sync with Dentrix, Eaglesoft, OpenDental, and Cloud 9. Your data is always up to date." },
-                            { q: "How difficult is the migration?", a: "We handle the entire migration process. Most clinics go live in under 72 hours with zero downtime." },
-                            { q: "Do patients need to download an app?", a: "Yes, but they actually want to. With biometric login and instant booking, adoption rates utilize 85% within 3 months." },
-                            { q: "Is my patient data secure?", a: "Absolutely. We are fully HIPAA compliant, SOC2 Type II ready, and use AES-256 encryption for all data at rest and in transit." }
+                            { q: "Does this replace Dentrix / Eaglesoft?", a: "No. We sit on top of your PMS as the 'Experience Layer'. We read your schedule and patient data in real-time, but we handle the communication, booking, and loyalty." },
+                            { q: "How do I move my patients to the app?", a: "We have an automated 'Onboarding Engine'. We send a magic link via SMS. Patients click once, FaceID activates, and they are logged in. We see 40-50% adoption in Week 1." },
+                            { q: "What about older patients?", a: "They can still use SMS/Email. But for families, the 'Head of Household' feature allows one mom to manage appointments for her 3 kids and husband from one app. They love it." },
+                            { q: "Is there a contract?", a: "We operate on a month-to-month basis for single clinics. For DSOs with >5 locations, we offer annual enterprise agreements with volume discounts." },
+                            { q: "Does it work for Specialty (Ortho/Implants)?", a: "Specially designed for it. Our 'Treatment Tracks' feature automates the specific aftercare instructions for Invisalign, Implants, and Veneers." },
+                            { q: "Is my data secure?", a: "Bank-grade security. AES-256 encryption. HIPAA compliant infrastructure. We undergo annual SOC2 audits." }
                         ].map((item, i) => (
-                            <div key={i} className="p-6 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors">
-                                <h4 className="text-lg font-bold text-white mb-2">{item.q}</h4>
-                                <p className="text-slate-400 leading-relaxed">{item.a}</p>
+                            <div key={i} className="p-8 rounded-[2rem] bg-white/5 border border-white/5 hover:bg-white/10 hover:border-indigo-500/30 transition-all group">
+                                <h4 className="text-lg font-bold text-white mb-3 group-hover:text-indigo-400 transition-colors">{item.q}</h4>
+                                <p className="text-slate-400 leading-relaxed text-sm">{item.a}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* 5.5 IMPLEMENTATION TIMELINE - NEW SECTION */}
+            <section className="py-32 border-t border-white/5 bg-slate-950">
+                <div className="max-w-7xl mx-auto px-6">
+                    <div className="text-center mb-20 space-y-4">
+                        <span className="text-emerald-500 font-bold tracking-widest uppercase text-sm">Speed to Value</span>
+                        <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter">
+                            Live in 72 Hours.
+                        </h2>
+                        <p className="text-slate-400 max-w-2xl mx-auto text-lg">
+                            We don't disrupt your workflow. We simply turn on the revenue engine.
+                        </p>
+                    </div>
+
+                    <div className="grid md:grid-cols-4 gap-8 relative">
+                        {/* Connecting Line */}
+                        <div className="hidden md:block absolute top-12 left-0 w-full h-1 bg-gradient-to-r from-emerald-500/0 via-emerald-500/20 to-emerald-500/0 -z-10"></div>
+
+                        {[
+                            { step: "01", title: "Sync", desc: "We connect to your PMS (Dentrix/EagleSoft) via API." },
+                            { step: "02", title: "Configure", desc: "We map your appointment types and retention protocols." },
+                            { step: "03", title: "Invite", desc: "We send a 'Magic Link' blast to your active patient base." },
+                            { step: "04", title: "Revenue", desc: "Patients download the app, book recare, and pay invoices." }
+                        ].map((item, i) => (
+                            <div key={i} className="relative pt-8 group">
+                                <div className="w-8 h-8 rounded-full bg-slate-900 border-4 border-slate-800 group-hover:border-emerald-500 transition-colors absolute top-8 left-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:block"></div>
+                                <div className="text-center space-y-4 p-6 rounded-3xl bg-white/5 border border-white/5 hover:bg-white/10 transition-all">
+                                    <div className="text-4xl font-black text-slate-700 group-hover:text-emerald-500/50 transition-colors">{item.step}</div>
+                                    <h3 className="text-xl font-bold text-white">{item.title}</h3>
+                                    <p className="text-slate-400 text-sm leading-relaxed">{item.desc}</p>
+                                </div>
                             </div>
                         ))}
                     </div>
