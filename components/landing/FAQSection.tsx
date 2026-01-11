@@ -16,7 +16,7 @@ const FAQ_DATA = [
             },
             {
                 q: "How long does the implementation process take?",
-                a: "Our white-glove onboarding typically takes 72 hours. Day 1 is data sync and verification. Day 2 is configuring your custom protocols and branding. Day 3 is staff training (usually 60 mins) and the 'Go Live' blast to your patients."
+                a: "We get you live in under 20 minutes. It's a simple 3-step wizard: Authenticate your PMS, Select your Protocols, and Click 'Sync'. The system automatically backfills your patient data in the background."
             },
             {
                 q: "Can you migrate my existing patient reward points or membership plans?",

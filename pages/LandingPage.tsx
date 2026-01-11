@@ -227,10 +227,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
                     <div className="text-center mb-20 space-y-4">
                         <span className="text-emerald-500 font-bold tracking-widest uppercase text-sm">Speed to Value</span>
                         <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter">
-                            Live in 72 Hours.
+                            Live in 20 Minutes.
                         </h2>
                         <p className="text-slate-400 max-w-2xl mx-auto text-lg">
-                            We don't disrupt your workflow. We simply turn on the revenue engine.
+                            No downtime. No IT team required. We sync your data while you grab a coffee.
                         </p>
                     </div>
 
