@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { CarePlan, Clinic, User } from '../../../types';
 import { Activity, Calendar, CheckCircle, Clock, FileText, ChevronRight, PlayCircle, AlertCircle, TrendingUp, ShieldCheck } from 'lucide-react';
 
@@ -12,11 +13,20 @@ interface Props {
 
 const DoctorTreatmentDetail: React.FC<Props> = ({ plan, patient, clinic, onClose, onUpdatePlan }) => {
     const [activeTab, setActiveTab] = useState<'OVERVIEW' | 'JOURNEY' | 'MEDIA'>('OVERVIEW');
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+        console.log('DoctorTreatmentDetail mounted for plan:', plan.id);
+        return () => setMounted(false);
+    }, [plan.id]);
+
+    if (!mounted || typeof document === 'undefined') return null;
 
     const progress = (plan.checklist?.filter(i => i.completed).length || 0) / (plan.checklist?.length || 1) * 100;
 
-    return (
-        <div className="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-xl flex items-center justify-center p-8 animate-in fade-in duration-300">
+    return createPortal(
+        <div className="fixed inset-0 z-[9999] bg-slate-900/80 backdrop-blur-xl flex items-center justify-center p-8 animate-in fade-in duration-300">
             <div className="bg-white w-full max-w-6xl h-full max-h-[90vh] rounded-[48px] shadow-2xl relative overflow-hidden flex flex-col">
 
                 {/* Header */}
@@ -161,7 +171,8 @@ const DoctorTreatmentDetail: React.FC<Props> = ({ plan, patient, clinic, onClose
                 </div>
 
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
 
