@@ -2,21 +2,21 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { User, Wallet, Transaction, Tier, TransactionType, Clinic, CarePlan, TransactionCategory, FamilyGroup, AppointmentType, Appointment } from '../../types';
 import { Home, User as UserIcon, ShieldCheck, History, Calendar, Sparkles, Clock, HeartPulse, ChevronRight, PhoneCall, AlertTriangle, Timer, Smile, Zap, CircleCheck, ClipboardList, ArrowUpRight, ArrowDownLeft, Trophy, Activity as ActivityIcon, Globe, Users, Lock, X, CheckCircle, Gift } from 'lucide-react';
 
-interface Props {
+interface MobilePatientViewProps {
   currentUser: User;
   users: User[];
   wallets: Wallet[];
   transactions: Transaction[];
-  familyGroups: FamilyGroup[];
   carePlans: CarePlan[];
-  appointments?: Appointment[]; // Optional to prevent breaking if parent doesn't pass immediately
+  familyGroups: FamilyGroup[];
   clinic: Clinic;
-  onToggleChecklistItem?: (carePlanId: string, itemId: string) => Promise<any>;
-  onSchedule: (patientId: string, start: string, end: string, type: AppointmentType, notes: string) => Promise<any>;
-  onAddFamilyMember: (name: string, relation: string, age: string) => Promise<any>;
+  appointments: Appointment[];
+  onToggleChecklistItem: (planId: string, itemId: string) => void;
+  onUpdateCarePlan?: (planId: string, updates: Partial<CarePlan>) => void;
+  onSchedule: (patientId: string, date: Date, type: AppointmentType, notes?: string) => Promise<{ success: boolean; error?: string }>;
+  onAddFamilyMember: (mainUserId: string, name: string, relationship: string, mobile: string) => Promise<any>;
   onSwitchProfile: (userId: string) => void;
-  onRedeem: (amount: number, description: string) => Promise<any>;
-  onUpdateCarePlan?: (planId: string, updates: Partial<CarePlan>) => Promise<any>;
+  onRedeem: (patientId: string, amount: number, category: TransactionCategory, type: TransactionType, template?: any) => Promise<any>;
   defaultTab?: 'HOME' | 'WALLET' | 'CARE' | 'PROFILE';
 }
 
@@ -101,7 +101,23 @@ const SpecialtyCareModule: React.FC<{ plan: CarePlan; primaryColor: string; onTo
 );
 
 
-const MobilePatientView: React.FC<Props> = ({ currentUser, users, wallets, transactions, carePlans, appointments = [], clinic, onToggleChecklistItem, onSchedule, onAddFamilyMember, onSwitchProfile, onRedeem, onUpdateCarePlan, defaultTab = 'HOME' }) => {
+export default function MobilePatientView({
+  currentUser,
+  users,
+  wallets,
+  transactions,
+  familyGroups,
+  carePlans,
+  clinic,
+  appointments,
+  onToggleChecklistItem,
+  onSchedule,
+  onAddFamilyMember,
+  onSwitchProfile,
+  onRedeem,
+  onUpdateCarePlan,
+  defaultTab = 'HOME'
+}: MobilePatientViewProps) {
   const [activeTab, setActiveTab] = useState<'HOME' | 'WALLET' | 'CARE' | 'PROFILE'>(defaultTab);
   const [showBookingModal, setShowBookingModal] = useState(false);
   const today = new Date();
@@ -514,7 +530,7 @@ const MobilePatientView: React.FC<Props> = ({ currentUser, users, wallets, trans
                       <button
                         disabled={!canAfford}
                         onClick={async () => {
-                          await onRedeem(reward.cost, reward.name);
+                          await onRedeem(currentUser.id, reward.cost, TransactionCategory.REWARD, TransactionType.REDEEM, { name: reward.name });
                           setRedeemSuccess(true);
                           setTimeout(() => {
                             setRedeemSuccess(false);
@@ -608,7 +624,7 @@ const MobilePatientView: React.FC<Props> = ({ currentUser, users, wallets, trans
                     // Proceed
                     const end = new Date(start);
                     end.setMinutes(end.getMinutes() + 30);
-                    await onSchedule(currentUser.id, start.toISOString(), end.toISOString(), bookType, 'Mobile Booking');
+                    await onSchedule(currentUser.id, start, bookType, 'Mobile Booking');
                     setBookSuccess(true);
                   }} className="w-full py-5 bg-indigo-600 text-white rounded-[32px] font-black text-lg shadow-xl shadow-indigo-200 mt-4 active:scale-95 transition-transform" style={{ backgroundColor: clinic.primaryColor }}>
                     Confirm Request
@@ -649,7 +665,8 @@ const MobilePatientView: React.FC<Props> = ({ currentUser, users, wallets, trans
                 </div>
 
                 <button onClick={async () => {
-                  await onAddFamilyMember(newMemberName, newMemberRelation, newMemberAge);
+                  // Mock mobile number for now as it's not in the UI
+                  await onAddFamilyMember(currentUser.id, newMemberName, newMemberRelation, "0000000000");
                   setShowAddFamilyModal(false);
                   setNewMemberName('');
                   setNewMemberAge('');
@@ -665,4 +682,4 @@ const MobilePatientView: React.FC<Props> = ({ currentUser, users, wallets, trans
   );
 };
 
-export default MobilePatientView;
+

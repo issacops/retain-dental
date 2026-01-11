@@ -61,27 +61,27 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
             id: 'patient-os',
             title: 'PatientOS',
             subtitle: 'The Brand Dominance Layer',
-            description: 'Don’t just give them a toothbrush. Give them YOUR clinic on their home screen. Prevent patients from drifting to competitors by owning the digital relationship.',
+            description: 'Don’t just give them a toothbrush. Give them a 24/7 digital companion. From automated aftercare checklists to instant biometric login, you own the home screen.',
             features: [
-                { icon: <ScanFace />, label: 'Biometric Login', desc: 'FaceID access. Zero friction, zero forgotten passwords.' },
-                { icon: <Calendar />, label: 'One-Tap Booking', desc: 'Real-time sync. Remove the friction of calling the front desk.' },
-                { icon: <Wallet />, label: 'Medical Wallet', desc: 'Centralize invoices and treatment plans. Total transparency.' }
+                { icon: <Check />, label: 'Automated Aftercare', desc: 'Daily interactive checklists for Aligners, Implants, and more. Zero nagging required.' },
+                { icon: <ScanFace />, label: 'Biometric Access', desc: 'FaceID login. Zero friction, zero forgotten passwords.' },
+                { icon: <Calendar />, label: 'One-Tap Booking', desc: 'Real-time sync. Remove the friction of calling the front desk.' }
             ],
             visual: (
                 <PhoneMockup className="shadow-2xl rotate-1">
-                    <PatientDemo initialTab='HOME' />
+                    <PatientDemo initialTab='CARE' />
                 </PhoneMockup>
             )
         },
         {
             id: 'clinic-os',
             title: 'ClinicOS',
-            subtitle: 'The Efficiency Layer',
-            description: 'Onboard a patient in 12 seconds. No training manual required. Let the OS handle the nagging while you focus on dentistry.',
+            subtitle: 'The "Million Dollar" Dashboard',
+            description: 'The cockpit for modern dental entrepreneurs. Process payments, track retention health, and monitor patient adherence in real-time.',
             features: [
-                { icon: <Activity />, label: 'Automated Triage', desc: 'AI reviews scan photos and only flags actual issues to your team.' },
-                { icon: <Bell />, label: 'Smart Recall', desc: 'Algorithmically determined reactivation. Fill your schedule automatically.' },
-                { icon: <Shield />, label: 'Compliance Guardrails', desc: 'Ensure patients follow protocols without manual intervention.' }
+                { icon: <Wallet />, label: 'Integrated Billing', desc: 'Collect payments directly from the dashboard. One-click receipts and ledger tracking.' },
+                { icon: <Activity />, label: 'Adherence Monitoring', desc: 'See exactly who is wearing their aligners and who is falling behind.' },
+                { icon: <Bell />, label: 'Smart Recall', desc: 'Algorithmically determined reactivation. Fill your schedule automatically.' }
             ],
             visual: (
                 <div className="w-full h-full flex items-center justify-center p-4">
@@ -108,7 +108,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
     ];
 
     return (
-        <div className="bg-slate-950 min-h-screen font-sans selection:bg-indigo-500/30 selection:text-indigo-200 overflow-x-hidden">
+        <div className="bg-slate-950 min-h-screen font-sans selection:bg-indigo-500/30 selection:text-indigo-200 overflow-x-hidden h-screen overflow-y-auto">
 
             {/* Navbar */}
             <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-slate-950/80 backdrop-blur-xl">
