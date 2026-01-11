@@ -21,18 +21,6 @@ const DoctorTreatmentDetail: React.FC<Props> = ({ plan, patient, clinic, onClose
         return () => setMounted(false);
     }, []);
 
-    if (!mounted || typeof document === 'undefined') return null;
-
-    const progress = (plan.checklist?.filter(i => i.completed).length || 0) / (plan.checklist?.length || 1) * 100;
-
-    // Journey Calculations
-    const startDate = new Date(plan.assignedAt);
-    const daysElapsed = Math.floor((new Date().getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
-    const duration = plan.metadata?.duration || 30; // Default duration if not set
-    const remaining = Math.max(0, duration - daysElapsed);
-
-    const progressPercent = Math.min(100, (daysElapsed / duration) * 100);
-
     // DAILY CHECKLIST RESET LOGIC (Doctor Side)
     useEffect(() => {
         const today = new Date();
@@ -59,6 +47,20 @@ const DoctorTreatmentDetail: React.FC<Props> = ({ plan, patient, clinic, onClose
             });
         }
     }, [plan.id, plan.checklist, plan.lastChecklistReset, plan.treatmentName, onUpdatePlan]);
+
+    if (!mounted || typeof document === 'undefined') return null;
+
+    const progress = (plan.checklist?.filter(i => i.completed).length || 0) / (plan.checklist?.length || 1) * 100;
+
+    // Journey Calculations
+    const startDate = new Date(plan.assignedAt);
+    const daysElapsed = Math.floor((new Date().getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+    const duration = plan.metadata?.duration || 30; // Default duration if not set
+    const remaining = Math.max(0, duration - daysElapsed);
+
+    const progressPercent = Math.min(100, (daysElapsed / duration) * 100);
+
+
 
     const handleAddItem = async () => {
         if (!newItemText.trim()) return;
