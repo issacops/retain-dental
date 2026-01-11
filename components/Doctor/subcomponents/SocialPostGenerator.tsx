@@ -68,8 +68,12 @@ const SocialPostGenerator: React.FC<SocialPostGeneratorProps> = ({ clinic, onClo
         const loadImage = (src: string): Promise<HTMLImageElement> => {
             return new Promise((resolve, reject) => {
                 const img = new Image();
+                img.crossOrigin = "Anonymous"; // CRITICAL: Allow cross-origin images to not taint canvas
                 img.onload = () => resolve(img);
-                img.onerror = reject;
+                img.onerror = (e) => {
+                    console.error("Failed to load image for canvas:", src, e);
+                    reject(e);
+                };
                 img.src = src;
             });
         };
