@@ -81,7 +81,7 @@ const DoctorTreatmentDetail: React.FC<Props> = ({ plan, patient, clinic, onClose
 
     return createPortal(
         <div className="fixed inset-0 z-[9999] bg-slate-900/80 backdrop-blur-xl flex items-center justify-center p-8 animate-in fade-in duration-300">
-            <div className="bg-white w-full max-w-6xl h-full max-h-[90vh] rounded-[48px] shadow-2xl relative overflow-hidden flex flex-col">
+            <div className="bg-white w-full max-w-6xl h-full max-h-[90dvh] rounded-[48px] shadow-2xl relative overflow-hidden flex flex-col">
 
                 {/* Header */}
                 <div className="p-10 border-b border-slate-100 flex justify-between items-center bg-white relative z-10">
@@ -114,7 +114,7 @@ const DoctorTreatmentDetail: React.FC<Props> = ({ plan, patient, clinic, onClose
 
                 <div className="flex flex-1 overflow-hidden">
                     {/* Sidebar Nav */}
-                    <div className="w-80 bg-slate-50 p-6 flex flex-col gap-2 border-r border-slate-100">
+                    <div className="w-80 bg-slate-50 p-6 flex flex-col gap-2 border-r border-slate-100 overflow-y-auto custom-scrollbar">
                         {[
                             { id: 'OVERVIEW', label: 'Clinical Overview', icon: <Activity size={18} /> },
                             { id: 'JOURNEY', label: 'Patient Journey', icon: <TrendingUp size={18} /> },
@@ -129,7 +129,7 @@ const DoctorTreatmentDetail: React.FC<Props> = ({ plan, patient, clinic, onClose
                             </button>
                         ))}
 
-                        <div className="mt-auto bg-indigo-50 p-6 rounded-3xl border border-indigo-100">
+                        <div className="mt-auto bg-indigo-50 p-6 rounded-3xl border border-indigo-100 shrink-0">
                             <h4 className="font-black text-indigo-900 text-lg mb-2">Doctor Notes</h4>
                             <textarea
                                 className="w-full bg-white border border-indigo-100 rounded-xl p-3 text-xs font-medium text-slate-600 outline-none focus:ring-2 ring-indigo-200"

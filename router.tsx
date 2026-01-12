@@ -44,7 +44,7 @@ const GodGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     };
 
     return (
-        <div className="flex items-center justify-center h-screen bg-slate-950 text-white">
+        <div className="flex items-center justify-center h-[100dvh] bg-slate-950 text-white">
             <form onSubmit={handleLogin} className="p-10 bg-slate-900 rounded-3xl border border-slate-800 shadow-2xl w-full max-w-md space-y-6">
                 <div className="text-center">
                     <h1 className="text-3xl font-black tracking-tighter text-indigo-500 mb-2">GOD MODE</h1>

@@ -65,7 +65,7 @@ class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { has
   render() {
     if (this.state.hasError) {
       return (
-        <div className="h-screen w-full bg-red-900 text-white p-8 overflow-auto flex flex-col items-center justify-center">
+        <div className="h-[100dvh] w-full bg-red-900 text-white p-8 overflow-auto flex flex-col items-center justify-center">
           <h1 className="text-3xl font-bold mb-4">Application Crash</h1>
           <p className="mb-4 text-center">Please send a screenshot of this to support:</p>
           <pre className="bg-black/50 p-6 rounded-xl font-mono text-xs max-w-full overflow-x-auto border border-red-500/50">
@@ -509,7 +509,7 @@ const App = () => {
   // PRELOADER: Prevent Crash on PWA Cold Start
   if (loading || !data) {
     return (
-      <div className="h-screen w-full flex items-center justify-center bg-slate-950">
+      <div className="h-[100dvh] w-full flex items-center justify-center bg-slate-950">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
           <p className="text-slate-500 font-mono text-xs uppercase tracking-widest animate-pulse">Initializing Retain OS...</p>
@@ -546,7 +546,7 @@ const App = () => {
   // CHECK FOR PENDING STATUS (Approval Workflow)
   if (data?.currentUser?.status === 'PENDING') {
     return (
-      <div className="h-screen w-full flex items-center justify-center bg-slate-950 p-6">
+      <div className="h-[100dvh] w-full flex items-center justify-center bg-slate-950 p-6">
         <div className="max-w-md w-full glass-panel border border-amber-500/30 p-8 rounded-3xl text-center shadow-2xl relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-1 bg-amber-500"></div>
           <div className="w-16 h-16 bg-amber-500/10 rounded-full flex items-center justify-center mx-auto mb-6 text-amber-500">
