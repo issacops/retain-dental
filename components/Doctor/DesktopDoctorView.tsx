@@ -342,11 +342,11 @@ const DesktopDoctorView: React.FC<Props> = ({
 
                         {/* ADD PATIENT MODAL - Premium Minimalist */}
                         {isAddPatientModalOpen && (
-                           <div className="fixed inset-0 z-[60] flex items-center justify-center bg-dark-900/60 backdrop-blur-3xl animate-in fade-in duration-500">
-                              <div className="glass-panel bg-white p-20 w-full max-w-2xl shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] relative overflow-hidden">
+                           <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/60 backdrop-blur-3xl animate-in fade-in duration-500 p-4">
+                              <div className="glass-panel bg-white p-10 md:p-20 w-full max-w-2xl shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] relative overflow-y-auto max-h-[90dvh] custom-scrollbar rounded-[40px]">
                                  <div className="absolute top-0 left-0 w-full h-2 bg-black"></div>
                                  <div className="flex justify-between items-center mb-16">
-                                    <h3 className="text-5xl font-black tracking-tighter text-slate-900">New Identity.</h3>
+                                    <h3 className="text-4xl md:text-5xl font-black tracking-tighter text-slate-900">New Identity.</h3>
                                     <button onClick={() => setIsAddPatientModalOpen(false)} className="p-4 rounded-[20px] hover:bg-slate-50 transition-all"><X size={32} /></button>
                                  </div>
                                  <div className="space-y-12">
