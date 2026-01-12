@@ -23,10 +23,17 @@ const PatientList: React.FC<Props> = ({
                 <div className={`flex items-center mb-6 transition-all ${isCollapsed ? 'flex-col gap-4 justify-center' : 'justify-between'}`}>
                     <h2 className={`text-xl font-black tracking-tight text-slate-800 transition-opacity ${isCollapsed ? 'hidden opacity-0' : 'block opacity-100'}`}>Profiles</h2>
 
-                    {/* Toggle Button */}
-                    <button onClick={onToggleCollapse} className={`h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 hover:bg-slate-200 transition-all ${isCollapsed ? 'rotate-180' : ''}`}>
-                        <ChevronRight size={14} />
-                    </button>
+                    <div className="flex items-center gap-2">
+                        {!isCollapsed && (
+                            <button onClick={() => setIsAddPatientModalOpen(true)} className="h-8 w-8 rounded-full bg-slate-900 text-white flex items-center justify-center hover:bg-black transition-all shadow-md active:scale-95 group" title="Add New Patient">
+                                <Plus size={16} className="group-hover:rotate-90 transition-transform" />
+                            </button>
+                        )}
+                        {/* Toggle Button */}
+                        <button onClick={onToggleCollapse} className={`h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 hover:bg-slate-200 transition-all ${isCollapsed ? 'rotate-180' : ''}`}>
+                            <ChevronRight size={14} />
+                        </button>
+                    </div>
                 </div>
 
                 {!isCollapsed ? (

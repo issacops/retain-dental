@@ -367,7 +367,10 @@ const DesktopDoctorView: React.FC<Props> = ({
                                           className="glass-input w-full px-10 py-7 bg-slate-50 border border-slate-100 rounded-[32px] text-2xl font-black outline-none focus:border-black transition-all" />
                                     </div>
                                     <button onClick={async () => {
-                                       if (!newPatientName || !newPatientMobile) return;
+                                       if (!newPatientName || !newPatientMobile) {
+                                          alert("Please enter both Name and Mobile Number");
+                                          return;
+                                       }
                                        // Pass PIN if provided, otherwise letting the service/default handle it
                                        const res = await onAddPatient(newPatientName, newPatientMobile, newPatientPin || '123456');
                                        if (res.success) {
