@@ -106,11 +106,11 @@ const DesktopDoctorView: React.FC<Props> = ({
    console.log("[DesktopDoctorView] Rendering for clinic:", clinic.name, "Texture:", textureClass);
 
    return (
-      <div className={`flex flex-col h-screen text-slate-900 font-sans overflow-hidden transition-all duration-1000 ${textureClass || 'bg-white'} `} style={{ '--primary': clinic.primaryColor, '--primary-rgb': hexToRgb(clinic.primaryColor), '--primary-glow': clinic.primaryColor + '15' } as React.CSSProperties}>
+      <div className={`flex flex-col h-[100dvh] text-slate-900 font-sans overflow-hidden transition-all duration-1000 ${textureClass || 'bg-white'} `} style={{ '--primary': clinic.primaryColor, '--primary-rgb': hexToRgb(clinic.primaryColor), '--primary-glow': clinic.primaryColor + '15' } as React.CSSProperties}>
 
          {/* Sidebar */}
-         <div className="flex h-full">
-            <aside className="w-72 bg-white/70 backdrop-blur-xl border-r border-white/40 flex flex-col justify-between p-6 z-20 relative shadow-2xl">
+         <div className="flex h-full overflow-hidden">
+            <aside className="w-72 bg-white/70 backdrop-blur-xl border-r border-white/40 flex flex-col justify-between p-6 z-20 relative shadow-2xl overflow-y-auto custom-scrollbar">
                <div className="space-y-10">
                   {/* Brand */}
                   <div className="flex items-center gap-4 group cursor-pointer">
@@ -146,7 +146,7 @@ const DesktopDoctorView: React.FC<Props> = ({
                   </nav>
                </div>
 
-               <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-6 text-white relative overflow-hidden group">
+               <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-6 text-white relative overflow-hidden group shrink-0 mt-6">
                   <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity"><Zap size={48} /></div>
                   <h4 className="font-bold text-sm mb-2 relative z-10">System Status</h4>
                   <p className="text-xs text-slate-400 leading-relaxed relative z-10 mb-4">All systems operational. Sync active.</p>
@@ -158,7 +158,7 @@ const DesktopDoctorView: React.FC<Props> = ({
             </aside>
 
             {/* Main Content Area */}
-            <main className="flex-1 relative overflow-y-auto scroll-smooth">
+            <main className="flex-1 relative overflow-y-auto scroll-smooth min-w-0">
                {/* Ambient Glow */}
                <div className="absolute top-[-200px] left-[-200px] w-[600px] h-[600px] bg-primary rounded-full blur-[120px] opacity-[0.08] pointer-events-none mix-blend-multiply animate-pulse-slow"></div>
 

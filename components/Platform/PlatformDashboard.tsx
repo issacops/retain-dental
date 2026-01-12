@@ -212,7 +212,7 @@ const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, o
       new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(val);
 
    return (
-      <div className="flex h-screen bg-[#020406] text-slate-400 font-sans overflow-hidden selection:bg-indigo-500 selection:text-white">
+      <div className="flex h-[100dvh] bg-[#020406] text-slate-400 font-sans overflow-hidden selection:bg-indigo-500 selection:text-white">
          {/* GLOWING BACKGROUND ORBS */}
          <div className="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-900/10 blur-[150px] rounded-full pointer-events-none"></div>
          <div className="fixed bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-900/10 blur-[150px] rounded-full pointer-events-none"></div>

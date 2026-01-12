@@ -55,7 +55,7 @@ export const PlatformPage: React.FC<Props> = (props) => {
     };
 
     return (
-        <div className="h-screen w-full bg-slate-950">
+        <div className="h-[100dvh] w-full bg-slate-950 overflow-hidden">
             <PlatformDashboard
                 clinics={data.clinics}
                 stats={stats}
