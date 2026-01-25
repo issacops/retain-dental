@@ -1,0 +1,36 @@
+name: Deployment Verification
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-verify:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Install Dependencies
+      run: npm ci
+
+    - name: Build Project
+      run: npm run build
+
+    - name: Verify Build Artifacts
+      run: |
+        if [ -d "dist" ]; then
+          echo "Build Successful: 'dist' folder generated."
+        else
+          echo "Build Failed: 'dist' folder missing."
+          exit 1
+        fi
