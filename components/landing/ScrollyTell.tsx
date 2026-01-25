@@ -7,6 +7,7 @@ interface Pillar {
     title: string;
     description: string;
     highlight: string;
+    features?: { icon: React.ReactNode; label: string; desc: string }[];
 }
 
 interface ScrollyTellProps {
@@ -90,9 +91,25 @@ const PillarSection: React.FC<{ pillar: Pillar, index: number, onInView: () => v
                 <h2 className="text-5xl md:text-6xl font-black text-slate-900 tracking-tighter leading-none">
                     {pillar.title}
                 </h2>
-                <p className="text-xl text-slate-500 leading-relaxed">
+                <p className="text-xl text-slate-500 leading-relaxed mb-8">
                     {pillar.description}
                 </p>
+
+                {pillar.features && (
+                    <div className="space-y-6">
+                        {pillar.features.map((feature, idx) => (
+                            <div key={idx} className="flex gap-4">
+                                <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-primary-600 shrink-0 shadow-sm">
+                                    {feature.icon}
+                                </div>
+                                <div>
+                                    <h4 className="text-sm font-bold text-slate-900">{feature.label}</h4>
+                                    <p className="text-sm text-slate-500 leading-relaxed">{feature.desc}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
 
                 {/* Mobile only demo - Static for valid context if needed, or simple image */}
                 <div className="md:hidden mt-8 h-[500px] pointer-events-auto">

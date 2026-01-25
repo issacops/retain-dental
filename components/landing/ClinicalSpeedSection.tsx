@@ -20,7 +20,7 @@ const ClinicalSpeedSection: React.FC = () => {
                 <div className="grid md:grid-cols-3 gap-8">
                     {[
                         { title: "Invisalign Track", items: ["2-Day Check-in", "Tray Switch Reminders", "Chewie Ordering Link"], color: "bg-blue-500" },
-                        { title: "Implant Recovery", items: ["Pain Mgmt Tips", "Soft Food Recipes", "Warning Sign Alerts"], color: "bg-emerald-500" },
+                        { title: "Implant Recovery", items: ["Pain Mgmt Tips", "Soft Food Recipes", "Emergency Triage"], color: "bg-emerald-500" },
                         { title: "Whitening Boost", items: ["Sensitivity Check", "Shade Comparison", "Refill Promotion"], color: "bg-purple-500" }
                     ].map((template, i) => (
                         <div key={i} className="bg-white p-8 rounded-3xl border border-slate-200 shadow-xl shadow-slate-200/50 hover:-translate-y-2 transition-transform duration-300 group">

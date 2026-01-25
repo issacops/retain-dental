@@ -23,7 +23,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onJoinWaitlist }) => {
                 <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-1000">
                     <div className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-full w-fit shadow-sm">
                         <TrendingUp size={16} className="text-secondary-500" />
-                        <span className="text-xs font-bold text-slate-600 uppercase tracking-widest">Growth Machine for DSOs</span>
+                        <span className="text-xs font-bold text-slate-600 uppercase tracking-widest">The Operating System for Growth</span>
                     </div>
 
                     <h1 className="text-5xl md:text-7xl font-black text-slate-900 tracking-tighter leading-[1.1]">

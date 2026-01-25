@@ -89,7 +89,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
             features: [
                 { icon: <Wallet />, label: 'Centralized Billing', desc: 'Collect payments via text/app. Reconcile ledgers across multiple locations in one click.' },
                 { icon: <Activity />, label: 'Retention Health', desc: 'Monitor "Active Patient" vs "Recall Due" in real-time. Spot leaky buckets instantly.' },
-                { icon: <Bell />, label: 'Automated Reactivation', desc: 'Algorithmically fill your hygiene schedule. Replace your full-time recall coordinator.' }
+                { icon: <Bell />, label: 'Automated Reactivation', desc: 'Algorithmically fill your hygiene schedule. Supercharge your front desk efficiency.' }
             ],
             visual: (
                 <div className="w-full h-full flex items-center justify-center p-4">
