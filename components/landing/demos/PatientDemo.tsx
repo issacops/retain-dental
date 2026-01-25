@@ -1,5 +1,4 @@
 import React from 'react';
-import { LandingPatientView } from './visuals/LandingPatientView';
 
 interface PatientDemoProps {
     initialTab?: 'HOME' | 'WALLET' | 'CARE' | 'PROFILE';
