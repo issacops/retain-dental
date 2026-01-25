@@ -30,12 +30,15 @@ import ConsolidationSection from '../components/landing/ConsolidationSection'; /
 import Footer from '../components/landing/Footer'; // ADDED
 import CaseStudySection from '../components/landing/CaseStudySection'; // ADDED
 
+import SocialStudioSection from '../components/landing/SocialStudioSection'; // ADDED
+import ClinicalSpeedSection from '../components/landing/ClinicalSpeedSection'; // ADDED
+
 interface LandingPageProps {
     backend: IBackendService;
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
-    // Waitlist Form State
+    // ... [State Logic Remains Same] ...
     const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
     const [status, setStatus] = useState<'IDLE' | 'LOADING' | 'SUCCESS' | 'ERROR'>('IDLE');
     const [formData, setFormData] = useState({ name: '', clinic: '', mobile: '', email: '' });
@@ -218,11 +221,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
                 </div>
             </section>
 
-            {/* 2. COMPARISON (THE SHIFT) - MOVED UP */}
+            {/* 3. ROI CALCULATOR (MOVED UP FOR VISCERAL IMPACT) */}
+            <RoiCalculator />
+
+            {/* 2. COMPARISON (THE SHIFT) - MOVED DOWN AFTER ROI */}
             <Comparison />
 
-            {/* 3. ROI CALCULATOR (THE ECONOMIC ARGUMENT) */}
-            <RoiCalculator />
+            {/* NEW: SOCIAL STUDIO SECTION */}
+            <SocialStudioSection />
+
+            {/* NEW: CLINICAL SPEED SECTION */}
+            <ClinicalSpeedSection />
 
             {/* 3.5 CONSOLIDATION (THE PLATFORM ARGUMENT) */}
             <ConsolidationSection />

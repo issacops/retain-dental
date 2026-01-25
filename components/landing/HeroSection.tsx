@@ -23,25 +23,25 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onJoinWaitlist }) => {
                 <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-1000">
                     <div className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-full w-fit shadow-sm">
                         <TrendingUp size={16} className="text-secondary-500" />
-                        <span className="text-xs font-bold text-slate-600 uppercase tracking-widest">#1 Patient Retention Platform</span>
+                        <span className="text-xs font-bold text-slate-600 uppercase tracking-widest">Growth Machine for DSOs</span>
                     </div>
 
                     <h1 className="text-5xl md:text-7xl font-black text-slate-900 tracking-tighter leading-[1.1]">
-                        Stop <span className="text-secondary-500">Revenue Leakage</span> in Your  Practice.
+                        Stop <span className="text-secondary-500">Renting</span> Your Audience. <span className="block text-slate-900">Start Owning It.</span>
                     </h1>
 
                     <p className="text-xl text-slate-600 font-medium leading-relaxed max-w-xl">
-                        Acquiring patients is expensive. Keeping them shouldn't be.
+                        Clinics bleed 20% of patients annually. Ads can't fix a leaky bucket.
                         <br />
-                        Automate your <strong>Recall, Aftercare, and Loyalty</strong> with the first Operating System designed for modern DSOs.
+                        Turn your patient base into a <strong>Growth Engine</strong> with the first Operating System for Retention.
                     </p>
 
                     <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                        <button onClick={onJoinWaitlist} className="px-8 py-4 bg-primary-600 text-white rounded-full font-bold text-lg hover:scale-105 hover:bg-primary-700 transition-all shadow-xl shadow-primary-600/20 flex items-center justify-center gap-2">
-                            Request Enterprise Demo <ArrowRight size={20} />
+                        <button onClick={onJoinWaitlist} className="px-8 py-4 bg-indigo-600 text-white rounded-full font-bold text-lg hover:scale-105 hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-600/20 flex items-center justify-center gap-2">
+                            Get My Retention Score <ArrowRight size={20} />
                         </button>
-                        <button className="px-8 py-4 bg-white text-slate-700 border border-slate-200 rounded-full font-bold text-lg hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm">
-                            Calculated ROI
+                        <button className="px-8 py-4 bg-white text-slate-900 border-2 border-slate-200 rounded-full font-bold text-lg hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm">
+                            View Live Demo
                         </button>
                     </div>
 

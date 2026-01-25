@@ -16,29 +16,29 @@ const Comparison: React.FC = () => {
                     {/* OLD WAY */}
                     <div className="p-8 md:p-12 rounded-[2.5rem] bg-slate-900/50 border border-slate-800 backdrop-blur-sm relative group overflow-hidden">
                         <div className="absolute inset-0 bg-gradient-to-br from-red-500/0 to-red-900/0 group-hover:to-red-900/10 transition-all duration-700"></div>
-                        <h3 className="text-xl font-bold text-slate-500 mb-8 uppercase tracking-widest flex items-center gap-3 relative z-10">
-                            <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-red-500 border border-slate-700">
+                        <h3 className="text-xl font-bold text-rose-400 mb-8 uppercase tracking-widest flex items-center gap-3 relative z-10">
+                            <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-rose-500 border border-slate-700">
                                 <X size={20} />
                             </div>
-                            The Legacy Way
+                            The "Ad Spend" Trap
                         </h3>
                         <div className="space-y-6 relative z-10">
-                            <ul className="space-y-6 text-slate-400">
+                            <ul className="space-y-6 text-slate-300 font-medium">
                                 <li className="flex gap-4 items-start">
-                                    <span className="text-red-500/50 font-mono mt-1">01.</span>
-                                    <span>Burning money on generic Meta/Google Ads with low conversion.</span>
+                                    <span className="text-rose-500/50 font-mono mt-1">01.</span>
+                                    <span>Burning $5k/mo on Meta Ads to fill the bucket you are leaking.</span>
                                 </li>
                                 <li className="flex gap-4 items-start">
-                                    <span className="text-red-500/50 font-mono mt-1">02.</span>
-                                    <span>Patient forgets you 2 days after treatment (no brand stickiness).</span>
+                                    <span className="text-rose-500/50 font-mono mt-1">02.</span>
+                                    <span>Transactional patients who forget you 48 hours after treatment.</span>
                                 </li>
                                 <li className="flex gap-4 items-start">
-                                    <span className="text-red-500/50 font-mono mt-1">03.</span>
-                                    <span>Staff wasting 20hrs/week on manual confirmation calls.</span>
+                                    <span className="text-rose-500/50 font-mono mt-1">03.</span>
+                                    <span>Staff wasting 20hrs/week chasing recalls that never answer.</span>
                                 </li>
                                 <li className="flex gap-4 items-start">
-                                    <span className="text-red-500/50 font-mono mt-1">04.</span>
-                                    <span>Competing purely on price, not value or experience.</span>
+                                    <span className="text-rose-500/50 font-mono mt-1">04.</span>
+                                    <span>Competing on price (Groupon/Offers) instead of Brand Loyalty.</span>
                                 </li>
                             </ul>
                         </div>
