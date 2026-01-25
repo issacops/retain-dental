@@ -69,7 +69,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
             id: 'patient-os',
             title: 'PatientOS',
             subtitle: 'The Experience Layer',
-            description: 'Don’t just give them a toothbrush. Give them a 24/7 digital companion. Whether it’s tracking Invisalign trays or monitoring Implant healing, you own the home screen.',
+            description: 'Don’t just give them a toothbrush. Give them a 24/7 digital companion branded to YOUR clinic.',
             features: [
                 { icon: <Check />, label: 'Clinical Care Tracks', desc: 'Automated aftercare for Invisalign, Implants, and Veneers. Tracking tray switches and post-op hygiene.' },
                 { icon: <ScanFace />, label: 'Biometric Access', desc: 'FaceID login. Zero friction. 50% higher adoption than portal apps.' },
@@ -101,7 +101,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
             id: 'loyalty-engine',
             title: 'LoyaltyEngine',
             subtitle: 'The Growth Layer',
-            description: 'The "Amex Effect" for dentistry. Use status tiers to lock patients in, then use Family Pooling to acquire their entire household for free.',
+            description: 'The "Amex Effect" for dentistry. Use status tiers to lock patients in to YOUR ecosystem, not a generic portal.',
             features: [
                 { icon: <Trophy />, label: 'Status Tiers', desc: 'Drive behavior with Gold & Platinum status. Gamify oral health adherence.' },
                 { icon: <Users />, label: 'Household Multiplier', desc: 'Families pool points together. One patient brings three more (Mom, Dad, Kids).' },
@@ -155,6 +155,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
                     </div>
                 </div>
             </section>
+
+            {/* 2. ROI CALCULATOR (The Hook) */}
+            <RoiCalculator />
 
             {/* 1.75 THE AGITATE (THE LEAKY BUCKET) - LIGHT THEME */}
             <section className="py-24 px-6 bg-slate-50 relative overflow-hidden">
@@ -221,8 +224,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
                 </div>
             </section>
 
-            {/* 3. ROI CALCULATOR (MOVED UP FOR VISCERAL IMPACT) */}
-            <RoiCalculator />
+
 
             {/* 2. COMPARISON (THE SHIFT) - MOVED DOWN AFTER ROI */}
             <Comparison />

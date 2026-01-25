@@ -91,8 +91,8 @@ const FAQ_DATA = [
                 a: "Clinics typically see a 15-20% boost in recall show-rates and $120k+ in additional annual revenue per location within the first 6 months."
             },
             {
-                q: "Do you offer white-labeling for DSOs?",
-                a: "Yes. For groups with 20+ locations, we offer a fully white-labeled app with your custom icon and branding in the App Store."
+                q: "Can I use my own clinic branding?",
+                a: "Yes. For groups with 20+ locations, we launch a fully custom app with your icon and branding in the App Store."
             }
         ]
     }

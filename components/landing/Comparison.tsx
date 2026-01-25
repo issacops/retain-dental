@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Check } from 'lucide-react';
+import { X, Check, DollarSign, Clock, XCircle, Tag } from 'lucide-react';
 
 const Comparison: React.FC = () => {
     return (
@@ -24,21 +24,29 @@ const Comparison: React.FC = () => {
                         </h3>
                         <div className="space-y-6 relative z-10">
                             <ul className="space-y-6 text-slate-300 font-medium">
-                                <li className="flex gap-4 items-start">
-                                    <span className="text-rose-500/50 font-mono mt-1">01.</span>
-                                    <span>Burning $5k/mo on Meta Ads to fill the bucket you are leaking.</span>
+                                <li className="flex gap-4 items-start group/item">
+                                    <div className="p-1 bg-red-900/30 rounded text-red-500 mt-1">
+                                        <DollarSign size={16} />
+                                    </div>
+                                    <span className="text-slate-300 group-hover/item:text-red-300 transition-colors">Burning $5k/mo on Meta Ads to fill the bucket you are leaking.</span>
                                 </li>
-                                <li className="flex gap-4 items-start">
-                                    <span className="text-rose-500/50 font-mono mt-1">02.</span>
-                                    <span>Transactional patients who forget you 48 hours after treatment.</span>
+                                <li className="flex gap-4 items-start group/item">
+                                    <div className="p-1 bg-red-900/30 rounded text-red-500 mt-1">
+                                        <XCircle size={16} />
+                                    </div>
+                                    <span className="text-slate-300 group-hover/item:text-red-300 transition-colors">Transactional patients who forget you 48 hours after treatment.</span>
                                 </li>
-                                <li className="flex gap-4 items-start">
-                                    <span className="text-rose-500/50 font-mono mt-1">03.</span>
-                                    <span>Staff wasting 20hrs/week chasing recalls that never answer.</span>
+                                <li className="flex gap-4 items-start group/item">
+                                    <div className="p-1 bg-red-900/30 rounded text-red-500 mt-1">
+                                        <Clock size={16} />
+                                    </div>
+                                    <span className="text-slate-300 group-hover/item:text-red-300 transition-colors">Staff wasting 20hrs/week chasing recalls that never answer.</span>
                                 </li>
-                                <li className="flex gap-4 items-start">
-                                    <span className="text-rose-500/50 font-mono mt-1">04.</span>
-                                    <span>Competing on price (Groupon/Offers) instead of Brand Loyalty.</span>
+                                <li className="flex gap-4 items-start group/item">
+                                    <div className="p-1 bg-red-900/30 rounded text-red-500 mt-1">
+                                        <Tag size={16} />
+                                    </div>
+                                    <span className="text-slate-300 group-hover/item:text-red-300 transition-colors">Competing on price (Groupon/Offers) instead of Brand Loyalty.</span>
                                 </li>
                             </ul>
                         </div>
@@ -58,7 +66,7 @@ const Comparison: React.FC = () => {
                             <ul className="space-y-6 text-white font-medium">
                                 <li className="flex gap-4 items-start">
                                     <span className="text-indigo-300 font-mono mt-1">01.</span>
-                                    <span>Direct access via <b>Your Own White-Label App</b>.</span>
+                                    <span>Direct access via <b>Your Custom App</b>.</span>
                                 </li>
                                 <li className="flex gap-4 items-start">
                                     <span className="text-indigo-300 font-mono mt-1">02.</span>

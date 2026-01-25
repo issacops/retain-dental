@@ -45,7 +45,7 @@ const BrandShowcase = () => {
     const current = themes[activeTheme];
 
     return (
-        <section className="py-32 bg-slate-900 relative overflow-hidden">
+        <section className="py-32 bg-slate-950 relative overflow-hidden">
             {/* Background elements */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
                 <div className={`absolute -top-[20%] -right-[10%] w-[50%] h-[50%] rounded-full blur-[120px] opacity-20 transition-colors duration-1000 ${current.primary}`}></div>
@@ -58,15 +58,16 @@ const BrandShowcase = () => {
                 <div className="flex-1 space-y-8">
                     <div>
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-white/60 text-xs font-bold uppercase tracking-widest mb-6">
-                            <Palette size={14} /> White Label Engine
+                            <Palette size={14} /> Your Brand Identity
                         </div>
                         <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter leading-tight mb-6">
-                            Unapologetically <br />
-                            <span className={`transition-colors duration-500 ${current.text}`}>Yours.</span>
+                            Your Clinic's App. <br />
+                            <span className={`transition-colors duration-500 ${current.text}`}>Zero RetainOS Branding.</span>
                         </h2>
                         <p className="text-lg text-slate-400 max-w-xl">
-                            We don't just put your logo in the corner. We re-engineer the entire interface to match your brand identity.
-                            To your patients, RetainOS doesn't exist. Only <b>You</b> exist.
+                            We are the invisible engine. Your patients download <strong>YOUR</strong> app, see <strong>YOUR</strong> logo, and book with <strong>YOU</strong>.
+                            <br /><br />
+                            We don't get in the middle of the relationship.
                         </p>
                     </div>
 

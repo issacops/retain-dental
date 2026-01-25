@@ -78,7 +78,7 @@ const ConsolidationSection: React.FC = () => {
                         transition={{ delay: 0.5, duration: 0.8 }}
                         className="relative"
                     >
-                        <div className="absolute inset-0 bg-indigo-500/20 blur-[100px] rounded-full"></div>
+                        <div className="absolute inset-0 bg-indigo-500/20 blur-[100px] rounded-full animate-pulse"></div>
 
                         <div className="relative z-10 p-10 rounded-[2.5rem] bg-gradient-to-b from-indigo-900/40 to-slate-900/90 border border-indigo-500/30 backdrop-blur-xl shadow-2xl">
                             <div className="flex items-start justify-between mb-12">
@@ -114,11 +114,17 @@ const ConsolidationSection: React.FC = () => {
                                 </div>
                             </div>
 
-                            <div className="mt-12 pt-12 border-t border-white/10">
-                                <p className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-2">Net Value Created</p>
-                                <div className="flex items-baseline gap-2">
-                                    <span className="text-5xl font-black text-white">Infinite</span>
-                                    <span className="text-slate-500">ROI</span>
+                            <div className="mt-12 pt-12 border-t border-white/10 flex justify-between items-center">
+                                <div>
+                                    <p className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-2">Net Value Created</p>
+                                    <div className="flex items-baseline gap-2">
+                                        <span className="text-5xl font-black text-white">Infinite</span>
+                                        <span className="text-slate-500">ROI</span>
+                                    </div>
+                                </div>
+                                <div className="text-right">
+                                    <p className="text-sm font-bold text-emerald-400 uppercase tracking-widest mb-1">Instant Savings</p>
+                                    <p className="text-2xl font-bold text-white">~$24k/year</p>
                                 </div>
                             </div>
                         </div>

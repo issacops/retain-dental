@@ -27,20 +27,21 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onJoinWaitlist }) => {
                     </div>
 
                     <h1 className="text-5xl md:text-7xl font-black text-slate-900 tracking-tighter leading-[1.1]">
-                        Stop <span className="text-secondary-500">Renting</span> Your Audience. <span className="block text-slate-900">Start Owning It.</span>
+                        Your Brand. <span className="text-indigo-600">Your App.</span> <br />
+                        <span className="text-slate-900">Powered by RetainOS.</span>
                     </h1>
 
                     <p className="text-xl text-slate-600 font-medium leading-relaxed max-w-xl">
-                        Clinics bleed 20% of patients annually. Ads can't fix a leaky bucket.
+                        Stop renting your audience on Instagram.
                         <br />
-                        Turn your patient base into a <strong>Growth Engine</strong> with the first Operating System for Retention.
+                        Launch your own <strong>Custom Loyalty App</strong> in 20 minutes. Automate recall, aftercare, and payments.
                     </p>
 
                     <div className="flex flex-col sm:flex-row gap-4 pt-4">
                         <button onClick={onJoinWaitlist} className="px-8 py-4 bg-indigo-600 text-white rounded-full font-bold text-lg hover:scale-105 hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-600/20 flex items-center justify-center gap-2">
-                            Get My Retention Score <ArrowRight size={20} />
+                            Launch My App <ArrowRight size={20} />
                         </button>
-                        <button className="px-8 py-4 bg-white text-slate-900 border-2 border-slate-200 rounded-full font-bold text-lg hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm">
+                        <button className="px-8 py-4 bg-white text-slate-700 border border-slate-200 rounded-full font-bold text-lg hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm">
                             View Live Demo
                         </button>
                     </div>
@@ -54,6 +55,17 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onJoinWaitlist }) => {
                                 <p className="text-sm font-bold text-slate-900">HIPAA Compliant</p>
                                 <p className="text-xs text-slate-500">SOC2 Ready Infrastructure</p>
                             </div>
+                        </div>
+                    </div>
+
+                    {/* Trusted By Strip (Placeholder) */}
+                    <div className="pt-8 border-t border-slate-200/60 w-full max-w-md">
+                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Trusted by modern DSOs</p>
+                        <div className="flex gap-6 opacity-40 grayscale">
+                            {/* Placeholder generic logos/circles for now */}
+                            <div className="h-6 w-20 bg-slate-400 rounded"></div>
+                            <div className="h-6 w-20 bg-slate-400 rounded"></div>
+                            <div className="h-6 w-20 bg-slate-400 rounded"></div>
                         </div>
                     </div>
                 </div>
