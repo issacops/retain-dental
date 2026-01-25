@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { PlatformPage } from './pages/PlatformPage';
-import { ClinicPage } from './pages/ClinicPage';
-import { PatientPage } from './pages/PatientPage';
-import { LandingPage } from './pages/LandingPage'; // Added Import
 import { AppState, Role } from './types';
-import { LoginPage } from './pages/LoginPage';
 import { IBackendService } from './services/IBackendService';
+import { LandingPage } from './pages/LandingPage'; // Eager Load Landing Page
+
+// Lazy Load Heavy Platform Pages to isolate Marketing Bundle
+const PlatformPage = React.lazy(() => import('./pages/PlatformPage').then(module => ({ default: module.PlatformPage })));
+const ClinicPage = React.lazy(() => import('./pages/ClinicPage').then(module => ({ default: module.ClinicPage })));
+const PatientPage = React.lazy(() => import('./pages/PatientPage').then(module => ({ default: module.PatientPage })));
+const LoginPage = React.lazy(() => import('./pages/LoginPage').then(module => ({ default: module.LoginPage })));
 
 interface RouterProps {
     appState: AppState;
@@ -24,6 +26,13 @@ const SAFE_CLINIC_FALLBACK: any = {
     adminUserId: 'system',
     createdAt: new Date().toISOString()
 };
+
+// Loading Spinner for Code Splitting
+const RouterLoader = () => (
+    <div className="h-screen w-full flex items-center justify-center bg-slate-50">
+        <div className="h-8 w-8 border-4 border-slate-200 border-t-slate-900 rounded-full animate-spin"></div>
+    </div>
+);
 
 // Hardcoded Auth for Super Admin
 const GodGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -79,69 +88,70 @@ export const AppRouter: React.FC<RouterProps> = ({ appState, handlers, backendSe
 
     if (!appState) return <div className="p-10 text-white">App Error: State Missing</div>;
     return (
-        <Routes>
-            {/* PUBLIC: LANDING PAGE */}
-            <Route path="/" element={<LandingPage backend={backendService} />} />
+        <Suspense fallback={<RouterLoader />}>
+            <Routes>
+                {/* PUBLIC: LANDING PAGE */}
+                <Route path="/" element={<LandingPage backend={backendService} />} />
 
-            {/* PUBLIC: UNIFIED LOGIN & BRANDED LOGIN */}
-            <Route path="/login" element={<LoginPage clinics={clinics} activeClinic={activeClinic} />} />
-            <Route path="/login/:slug" element={<LoginPage clinics={clinics} activeClinic={activeClinic} />} />
+                {/* PUBLIC: UNIFIED LOGIN & BRANDED LOGIN */}
+                <Route path="/login" element={<LoginPage clinics={clinics} activeClinic={activeClinic} />} />
+                <Route path="/login/:slug" element={<LoginPage clinics={clinics} activeClinic={activeClinic} />} />
 
-            {/* SUPER ADMIN PORTAL - Secured */}
-            <Route path="/god" element={
-                <GodGuard>
-                    <PlatformPage
+                {/* SUPER ADMIN PORTAL - Secured */}
+                <Route path="/god" element={
+                    <GodGuard>
+                        <PlatformPage
+                            data={appState}
+                            onNavigate={() => { }}
+                            {...handlers}
+                        />
+                    </GodGuard>
+                } />
+                <Route path="/platform" element={
+                    <GodGuard>
+                        <PlatformPage
+                            data={appState}
+                            onNavigate={() => { }}
+                            {...handlers}
+                        />
+                    </GodGuard>
+                } />
+
+                {/* DOCTOR / CLINIC OS - Unprotected */}
+                <Route path="/doctor" element={
+                    <ClinicPage
                         data={appState}
-                        onNavigate={() => { }}
+                        clinic={activeClinic}
+                        backendService={backendService}
+                        onUpdateCarePlan={handlers.onUpdateCarePlan}
+                        onToggleChecklistItem={handlers.onToggleChecklistItem}
                         {...handlers}
                     />
-                </GodGuard>
-            } />
-            <Route path="/platform" element={
-                <GodGuard>
-                    <PlatformPage
-                        data={appState}
-                        onNavigate={() => { }}
-                        {...handlers}
+                } />
+
+                {/* PATIENT APP - Unprotected */}
+                <Route path="/patient" element={
+                    <PatientPage
+                        currentUser={appState.currentUser}
+                        users={appState.users}
+                        wallets={appState.wallets}
+                        transactions={appState.transactions}
+                        carePlans={appState.carePlans}
+                        appointments={appState.appointments}
+                        clinic={activeClinic}
+                        onToggleChecklistItem={handlers.onToggleChecklistItem}
+                        onUpdateCarePlan={handlers.onUpdateCarePlan}
+                        onSchedule={handlers.onSchedule}
+                        onAddFamilyMember={handlers.onAddFamilyMember}
+                        onSwitchProfile={handlers.onSwitchProfile}
+                        onRedeem={handlers.onRedeem}
+                        onLinkFamily={handlers.onLinkFamily}
                     />
-                </GodGuard>
-            } />
+                } />
 
-            {/* DOCTOR / CLINIC OS - Unprotected */}
-            <Route path="/doctor" element={
-                <ClinicPage
-                    data={appState}
-                    clinic={activeClinic}
-                    backendService={backendService}
-                    onUpdateCarePlan={handlers.onUpdateCarePlan}
-                    onToggleChecklistItem={handlers.onToggleChecklistItem}
-                    {...handlers}
-                />
-            } />
-
-            {/* PATIENT APP - Unprotected */}
-            <Route path="/patient" element={
-                <PatientPage
-                    currentUser={appState.currentUser}
-                    users={appState.users}
-                    wallets={appState.wallets}
-                    transactions={appState.transactions}
-                    carePlans={appState.carePlans}
-                    appointments={appState.appointments}
-                    clinic={activeClinic}
-                    onToggleChecklistItem={handlers.onToggleChecklistItem}
-                    onUpdateCarePlan={handlers.onUpdateCarePlan}
-                    onSchedule={handlers.onSchedule}
-                    onAddFamilyMember={handlers.onAddFamilyMember}
-                    onSwitchProfile={handlers.onSwitchProfile}
-                    onRedeem={handlers.onRedeem}
-                    onLinkFamily={handlers.onLinkFamily}
-                />
-            } />
-
-            {/* ROOT REDIRECT - Default to Login (Preserve Query Params for PWA) */}
-            <Route path="/auth/callback" element={<Navigate to="/" replace />} />
-            {/* <Route path="/" element={<Navigate to={`/login${window.location.search}`} replace />} /> */}
-        </Routes>
+                {/* ROOT REDIRECT - Default to Login (Preserve Query Params for PWA) */}
+                <Route path="/auth/callback" element={<Navigate to="/" replace />} />
+            </Routes>
+        </Suspense>
     );
 };
