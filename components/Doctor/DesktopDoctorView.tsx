@@ -12,6 +12,7 @@ import AppointmentScheduler from './subcomponents/AppointmentScheduler';
 import LiveProtocolMonitor from './subcomponents/LiveProtocolMonitor';
 import FinancialLedger from './subcomponents/FinancialLedger';
 import SocialPostGenerator from './subcomponents/SocialPostGenerator';
+import CommandPalette from './subcomponents/CommandPalette';
 
 
 const RetentionDashboard: React.FC<{ clinic: Clinic, backendService: IBackendService, allUsers?: User[], wallets?: Wallet[], transactions?: Transaction[] }> = ({ clinic, backendService, allUsers = [], wallets = [], transactions = [] }) => {
@@ -442,8 +443,8 @@ const DesktopDoctorView: React.FC<Props> = ({
                <header className="sticky top-0 z-10 px-8 py-6 flex justify-between items-center bg-white/40 backdrop-blur-md border-b border-white/20">
                   <div>
                      <h2 className="text-2xl font-black text-slate-800 tracking-tight">{greet()}, Dr. {getUserName(currentUser.name)}</h2>
-                     <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mt-1 flex items-center gap-2">
-                        <CalendarIcon size={12} /> {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+                     <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mt-1 flex items-center gap-2 text-indigo-500">
+                        <Zap size={12} /> Press Cmd+K or Ctrl+K for Command Palette
                      </p>
                   </div>
                   <div className="flex items-center gap-4">

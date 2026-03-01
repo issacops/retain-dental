@@ -1,0 +1,24 @@
+{
+    "name": "Retain OS",
+    "short_name": "Retain",
+    "description": "Premium Dental Health & Rewards Wallet",
+    "start_url": "/?pwa=true",
+    "display": "standalone",
+    "background_color": "#020617",
+    "theme_color": "#6366f1",
+    "orientation": "portrait",
+    "icons": [
+        {
+            "src": "/vite.svg",
+            "sizes": "192x192",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/vite.svg",
+            "sizes": "512x512",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        }
+    ]
+}

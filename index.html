@@ -8,6 +8,7 @@
   <meta name="description" content="Retain Dental is the Dentist's Loyalty Operating System. Convert patient spend into tiered membership status and lock in future revenue." />
   <meta name="apple-mobile-web-app-title" content="Retain OS" />
   <link rel="apple-touch-icon" href="/icon-192.png" />
+  <link rel="manifest" href="/manifest.json" />
   <meta name="theme-color" content="#6366f1" />
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -171,6 +172,17 @@
     </div>
   </div>
   <script type="module" src="/index.tsx"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').then(registration => {
+          console.log('SW registered: ', registration);
+        }).catch(registrationError => {
+          console.log('SW registration failed: ', registrationError);
+        });
+      });
+    }
+  </script>
 </body>
 
 </html>
