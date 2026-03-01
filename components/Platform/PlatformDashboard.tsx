@@ -896,7 +896,14 @@ const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, o
                         </div>
                      </div>
 
-                     <button onClick={async () => { await onOnboardClinic(newClinicName, newClinicColor, newClinicTexture, newClinicOwner, newClinicLogo, newClinicSlug || newClinicName.toLowerCase().replace(/\s+/g, '-'), newClinicAdminEmail); setShowOnboardModal(false); }}
+                     <button onClick={async () => {
+                        if (!newClinicName.trim()) {
+                           alert('Practice Name is required');
+                           return;
+                        }
+                        await onOnboardClinic(newClinicName, newClinicColor, newClinicTexture, newClinicOwner, newClinicLogo, newClinicSlug || newClinicName.toLowerCase().replace(/\s+/g, '-'), newClinicAdminEmail);
+                        setShowOnboardModal(false);
+                     }}
                         className="w-full py-10 bg-indigo-600 hover:bg-indigo-500 text-white rounded-[48px] font-black text-2xl shadow-[0_30px_60px_-10px_rgba(99,102,241,0.4)] transition-all hover:scale-[1.02] active:scale-95">
                         Deploy Optimized Node
                      </button>

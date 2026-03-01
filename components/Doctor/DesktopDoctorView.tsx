@@ -335,7 +335,14 @@ const DesktopDoctorView: React.FC<Props> = ({
       return () => { mounted = false; };
    }, [backendService, clinic.id, transactions]);
 
-   const filteredPatients = useMemo(() => allUsers.filter(u => u.clinicId === clinic.id && u.role === 'PATIENT' && (u.name.toLowerCase().includes(searchQuery.toLowerCase()) || u.mobile.includes(searchQuery))), [allUsers, clinic.id, searchQuery]);
+   const filteredPatients = useMemo(() => {
+      const query = (searchQuery || '').toLowerCase();
+      return (allUsers || []).filter(u =>
+         u.clinicId === clinic.id &&
+         u.role === 'PATIENT' &&
+         ((u.name || '').toLowerCase().includes(query) || (u.mobile || '').includes(query))
+      );
+   }, [allUsers, clinic.id, searchQuery]);
 
    const activeCarePlan = useMemo(() => {
       return carePlans.find(cp => cp.userId === selectedPatient?.id && cp.isActive && cp.clinicId === clinic.id);
@@ -507,7 +514,7 @@ const DesktopDoctorView: React.FC<Props> = ({
                               <div className="bg-white/60 backdrop-blur-xl rounded-[32px] p-8 border border-white/60 shadow-xl">
                                  <h3 className="text-xl font-black text-slate-800 mb-6 font-display">Patient Queue</h3>
                                  <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-                                    {appointments
+                                    {(appointments || [])
                                        .filter(a => new Date(a.startTime).toDateString() === new Date().toDateString() && a.clinicId === clinic.id)
                                        .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime())
                                        .map(appt => {
