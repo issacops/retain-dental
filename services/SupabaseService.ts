@@ -590,110 +590,33 @@ export class SupabaseService implements IBackendService {
         carePlanTemplate?: any
     ): Promise<ServiceResponse> {
         try {
-            // 0. Fetch Clinic Logic
-            const { data: clinic } = await this.supabase.from('clinics').select('loyalty_config').eq('id', clinicId).single();
-            const config = clinic?.loyalty_config || { defaultRate: 10, categoryRates: {}, redemptionRate: 1 };
-
-            // 1. Calculate Points
-            let pointsChange = 0;
-            if (type === TransactionType.EARN) {
-                const rate = config.categoryRates?.[category] ?? config.defaultRate ?? 10;
-                pointsChange = Math.floor(amount * (rate / 100)); // Standard Earning
-            } else {
-                // REDEEM
-                // Assumption: Amount passed is Currency Value to be discounted.
-                // Convert Currency to Points needed.
-                const redemptionRate = config.redemptionRate || 1;
-                pointsChange = -(amount * redemptionRate); // Negative points
-            }
-
+            // DELEGATE TO SECURE SUPABASE RPC
+            // The math, household pool waterfall deduction, and tier upgrades 
+            // are now handled securely on the server via 20260302000001_process_transaction_rpc.sql
+            
             let description = carePlanTemplate ? 'Treatment: ' + carePlanTemplate.name : (type + ' - ' + category);
 
-            // 2. Fetch User Wallet
-            const { data: userWallet, error: walletError } = await this.supabase.from('wallets').select('*').eq('user_id', patientId).single();
-            if (walletError || !userWallet) throw new Error('Wallet not found');
+            const { data, error } = await this.supabase.rpc('process_transaction', {
+                p_clinic_id: clinicId,
+                p_patient_id: patientId,
+                p_amount_paid: amount,
+                p_category: category,
+                p_type: type,
+                p_description: description,
+                p_care_plan_id: carePlanTemplate?.id || null
+            });
 
-            // 3. HOUSEHOLD POOL CHECK (Only for Redemption)
-            if (type === TransactionType.REDEEM) {
-                const requiredPoints = Math.abs(pointsChange);
-                const currentBalance = Number(userWallet.balance || 0);
-
-                if (currentBalance < requiredPoints) {
-                    // Waterfall Logic: Check Family
-                    const { data: userProfile } = await this.supabase.from('profiles').select('family_group_id').eq('id', patientId).single();
-                    if (!userProfile?.family_group_id) {
-                        throw new Error(`Insufficient Points. Balance: ${currentBalance}, Required: ${requiredPoints}`);
-                    }
-
-                    // Fetch Family Wallets
-                    const { data: familyProfiles } = await this.supabase.from('profiles').select('id').eq('family_group_id', userProfile.family_group_id);
-                    const familyUserIds = familyProfiles?.map(p => p.id) || [];
-                    const { data: familyWallets } = await this.supabase.from('wallets').select('*').in('user_id', familyUserIds);
-
-                    const totalFamilyBalance = familyWallets?.reduce((sum, w) => sum + (w.balance || 0), 0) || 0;
-
-                    if (totalFamilyBalance < requiredPoints) {
-                        throw new Error(`Insufficient Household Points. Family Pool: ${totalFamilyBalance}, Required: ${requiredPoints}`);
-                    }
-
-                    // EXECUTE WATERFALL DEDUCTION
-                    // Strategy: Drain requester -> Drain Head -> Drain Others
-                    let remainingToDeduct = requiredPoints;
-
-                    // 1. Deduct from Requester
-                    const requesterDeduction = Math.min(currentBalance, remainingToDeduct);
-                    if (requesterDeduction > 0) {
-                        await this.logTransactionAndBalance(clinicId, userWallet.id, 0, -requesterDeduction, category, type, description + " (Self)", carePlanTemplate?.id);
-                        remainingToDeduct -= requesterDeduction;
-                    }
-
-                    // 2. Deduct from Others
-                    const otherWallets = familyWallets?.filter(w => w.id !== userWallet.id) || [];
-                    // Sort by highest balance to minimize number of transactions? Or separate logic?
-                    // Let's just iterate
-                    for (const wallet of otherWallets) {
-                        if (remainingToDeduct <= 0) break;
-                        const available = Number(wallet.balance || 0);
-                        if (available > 0) {
-                            const deduction = Math.min(available, remainingToDeduct);
-                            await this.logTransactionAndBalance(clinicId, wallet.id, 0, -deduction, category, type, description + ` (Family Share: ${patientId})`, carePlanTemplate?.id);
-                            remainingToDeduct -= deduction;
-                        }
-                    }
-
-                    return { success: true, message: 'Household Pool Redeemed Successfully', updatedData: await this.getData() };
-                }
+            if (error) {
+                console.error("RPC Execution Error:", error);
+                throw new Error(error.message || 'Transaction Failed securely on server');
             }
 
-            // Standard Process (Earn or Sufficient Personal Redeem)
-            await this.logTransactionAndBalance(clinicId, userWallet.id, amount, pointsChange, category, type, description, carePlanTemplate?.id);
-
-            // Update Lifetime Spend & Auto-Tier Upgrade
-            if (type === TransactionType.EARN) {
-                const { data: profile } = await this.supabase.from('profiles').select('lifetime_spend, current_tier').eq('id', patientId).single();
-                const newSpend = Number(profile?.lifetime_spend || 0) + amount;
-
-                // Determine new tier based on spend thresholds
-                let newTier = profile?.current_tier || Tier.MEMBER;
-                if (newSpend >= TIER_THRESHOLDS.PLATINUM) {
-                    newTier = Tier.PLATINUM;
-                } else if (newSpend >= TIER_THRESHOLDS.GOLD) {
-                    newTier = Tier.GOLD;
-                }
-
-                // Update profile with new spend and potentially new tier
-                const tierChanged = newTier !== profile?.current_tier;
-                await this.supabase.from('profiles').update({
-                    lifetime_spend: newSpend,
-                    current_tier: newTier
-                }).eq('id', patientId);
-
-                if (tierChanged) {
-                    console.log(`[Tier Upgrade] Patient ${patientId} upgraded to ${newTier}`);
-                }
+            // The RPC returns a JSON object containing success/message
+            if (data && !data.success) {
+                throw new Error(data.message || 'Transaction rejected by business logic rules');
             }
 
-            return { success: true, message: 'Transaction Processed', updatedData: await this.getData() };
+            return { success: true, message: data?.message || 'Transaction Processed Securely', updatedData: await this.getData() };
         } catch (e: any) {
             console.error("Tx Error", e);
             return { success: false, message: e.message, error: 'RPC_ERR' };
