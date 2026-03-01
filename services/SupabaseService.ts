@@ -504,6 +504,34 @@ export class SupabaseService implements IBackendService {
         }
     }
 
+    async updatePatientMetadata(patientId: string, metadata: Record<string, any>): Promise<ServiceResponse> {
+        try {
+            // First get the current metadata
+            const { data: profile, error: fetchError } = await this.supabase
+                .from('profiles')
+                .select('metadata')
+                .eq('id', patientId)
+                .single();
+
+            if (fetchError) throw fetchError;
+
+            // Merge the new metadata with existing
+            const merged = { ...(profile?.metadata || {}), ...metadata };
+
+            const { error } = await this.supabase
+                .from('profiles')
+                .update({ metadata: merged })
+                .eq('id', patientId);
+
+            if (error) throw error;
+
+            return { success: true, message: 'Patient data updated', updatedData: await this.getData() };
+        } catch (e: any) {
+            console.error("Update Patient Metadata Error", e);
+            return { success: false, message: e.message || 'Failed to update', error: 'DB_ERR' };
+        }
+    }
+
     async addFamilyMember(headUserId: string, name: string, relation: string, age: string): Promise<ServiceResponse> {
         try {
             // 1. Get Head User
@@ -593,7 +621,7 @@ export class SupabaseService implements IBackendService {
             // DELEGATE TO SECURE SUPABASE RPC
             // The math, household pool waterfall deduction, and tier upgrades 
             // are now handled securely on the server via 20260302000001_process_transaction_rpc.sql
-            
+
             let description = carePlanTemplate ? 'Treatment: ' + carePlanTemplate.name : (type + ' - ' + category);
 
             const { data, error } = await this.supabase.rpc('process_transaction', {

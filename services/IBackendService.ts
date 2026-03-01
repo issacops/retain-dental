@@ -72,6 +72,8 @@ export interface IBackendService {
 
     deletePatient(clinicId: string, patientId: string): Promise<ServiceResponse>;
 
+    updatePatientMetadata(patientId: string, metadata: Record<string, any>): Promise<ServiceResponse>;
+
     addFamilyMember(
         headUserId: string,
         name: string,

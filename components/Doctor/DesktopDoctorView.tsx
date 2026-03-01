@@ -605,11 +605,13 @@ const DesktopDoctorView: React.FC<Props> = ({
                                     transactions={transactions}
                                     allUsers={allUsers}
                                     familyGroups={familyGroups}
+                                    backendService={backendService}
                                     onProcessTransaction={onProcessTransaction}
                                     onAssignPlan={onAssignPlan}
                                     onToggleChecklistItem={onToggleChecklistItem}
                                     onUpdateCarePlan={onUpdateCarePlan}
                                     onDeletePatient={onDeletePatient}
+                                    onRefreshData={undefined}
                                  />
                               ) : (
                                  <div className="h-full flex flex-col items-center justify-center animate-in zoom-in-95 duration-1000">

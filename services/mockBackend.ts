@@ -503,6 +503,14 @@ export class MockBackendService implements IBackendService {
     return { success: true, message: 'Patient Removed' };
   }
 
+  public async updatePatientMetadata(patientId: string, metadata: Record<string, any>): Promise<ServiceResponse> {
+    const user = this.users.find(u => u.id === patientId);
+    if (!user) return { success: false, message: 'Patient not found', error: 'NOT_FOUND' };
+    user.metadata = { ...(user.metadata || {}), ...metadata };
+    this.persist();
+    return { success: true, message: 'Metadata updated' };
+  }
+
   public async joinWaitlist(data: { name: string, clinic: string, mobile: string, email: string }): Promise<ServiceResponse> {
     return { success: true, message: 'Waitlist joined (Mock)' };
   }

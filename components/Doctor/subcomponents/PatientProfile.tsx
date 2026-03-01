@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Shield, Sparkles, FolderLock, CreditCard } from 'lucide-react';
 import { User, Wallet, Transaction, CarePlan, Clinic, FamilyGroup, TransactionCategory, TransactionType } from '../../../types';
+import { IBackendService } from '../../../services/IBackendService';
 import DoctorTreatmentDetail from './DoctorTreatmentDetail';
 
 // Import Tabs
@@ -16,19 +17,21 @@ interface Props {
     transactions: Transaction[];
     allUsers: User[];
     familyGroups: FamilyGroup[];
+    backendService: IBackendService;
     onProcessTransaction: (patientId: string, amount: number, category: TransactionCategory, type: TransactionType, carePlanTemplate?: any) => any;
     onAssignPlan: (clinicId: string, patientId: string, template: any) => Promise<any>;
     onTerminateCarePlan: (carePlanId: string) => Promise<any>;
     onToggleChecklistItem: (carePlanId: string, itemId: string) => Promise<any>;
     onUpdateCarePlan: (carePlanId: string, updates: Partial<CarePlan>) => Promise<any>;
     onDeletePatient: (patientId: string) => Promise<any>;
+    onRefreshData?: () => void;
 }
 
 type ProfileTab = 'CLINICAL' | 'PLANNER' | 'LEDGER' | 'VAULT';
 
 const PatientProfile: React.FC<Props> = ({
     selectedPatient, clinic, wallets, carePlans, transactions, allUsers, familyGroups,
-    onProcessTransaction, onAssignPlan, onTerminateCarePlan, onToggleChecklistItem, onUpdateCarePlan, onDeletePatient
+    backendService, onProcessTransaction, onAssignPlan, onTerminateCarePlan, onToggleChecklistItem, onUpdateCarePlan, onDeletePatient, onRefreshData
 }) => {
     const [activeTab, setActiveTab] = useState<ProfileTab>('CLINICAL');
     const [viewingPlan, setViewingPlan] = useState<CarePlan | null>(null);
@@ -112,10 +115,12 @@ const PatientProfile: React.FC<Props> = ({
                         clinic={clinic}
                         patient={selectedPatient}
                         activeCarePlan={activeCarePlan}
+                        backendService={backendService}
                         onUpdateCarePlan={onUpdateCarePlan}
                         onTerminateCarePlan={onTerminateCarePlan}
                         onToggleChecklistItem={onToggleChecklistItem}
                         onOpenConsole={(plan) => setViewingPlan(plan)}
+                        onRefreshData={onRefreshData}
                     />
                 )}
                 {activeTab === 'PLANNER' && (

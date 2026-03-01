@@ -1,20 +1,118 @@
 import React, { useState } from 'react';
-import { ClipboardCheck, Activity, Check, Sparkles, HeartPulse, ShieldAlert, FileText, X } from 'lucide-react';
+import { ClipboardCheck, Activity, Check, Sparkles, HeartPulse, ShieldAlert, FileText, X, Plus, Save } from 'lucide-react';
 import { CarePlan, Clinic, User } from '../../../../types';
+import { IBackendService } from '../../../../services/IBackendService';
 
 interface ClinicalTabProps {
     clinic: Clinic;
     activeCarePlan?: CarePlan;
     patient: User;
+    backendService: IBackendService;
     onUpdateCarePlan: (carePlanId: string, updates: Partial<CarePlan>) => Promise<any>;
     onTerminateCarePlan: (carePlanId: string) => Promise<any>;
     onToggleChecklistItem: (carePlanId: string, itemId: string) => Promise<any>;
     onOpenConsole: (plan: CarePlan) => void;
+    onRefreshData?: () => void;
 }
 
-const ClinicalTab: React.FC<ClinicalTabProps> = ({ clinic, activeCarePlan, patient, onUpdateCarePlan, onTerminateCarePlan, onToggleChecklistItem, onOpenConsole }) => {
-    // Medical alerts are ideally stored in patient.metadata, using mock for now if empty
+// Tooth numbers for standard dental chart (FDI notation)
+const UPPER_TEETH = [18, 17, 16, 15, 14, 13, 12, 11, 21, 22, 23, 24, 25, 26, 27, 28];
+const LOWER_TEETH = [48, 47, 46, 45, 44, 43, 42, 41, 31, 32, 33, 34, 35, 36, 37, 38];
+
+const TOOTH_CONDITIONS: Record<string, { label: string; color: string }> = {
+    healthy: { label: 'Healthy', color: '#10b981' },
+    cavity: { label: 'Cavity', color: '#ef4444' },
+    filling: { label: 'Filling', color: '#6366f1' },
+    crown: { label: 'Crown', color: '#f59e0b' },
+    missing: { label: 'Missing', color: '#94a3b8' },
+    rct: { label: 'RCT', color: '#8b5cf6' },
+    implant: { label: 'Implant', color: '#06b6d4' },
+};
+
+const ClinicalTab: React.FC<ClinicalTabProps> = ({ clinic, activeCarePlan, patient, backendService, onUpdateCarePlan, onTerminateCarePlan, onToggleChecklistItem, onOpenConsole, onRefreshData }) => {
     const medicalAlerts = patient.metadata?.medicalAlerts || ['Penicillin Allergy', 'Requires Pre-medication'];
+    const existingNotes: Array<{ text: string; date: string }> = patient.metadata?.clinicalNotes || [];
+    const [dentalChart, setDentalChart] = useState<Record<number, string>>(patient.metadata?.dentalChart || {});
+
+    // Notes state
+    const [showNoteModal, setShowNoteModal] = useState(false);
+    const [noteText, setNoteText] = useState('');
+    const [savingNote, setSavingNote] = useState(false);
+
+    // Odontogram state
+    const [selectedCondition, setSelectedCondition] = useState('cavity');
+    const [savingChart, setSavingChart] = useState(false);
+    const [chartDirty, setChartDirty] = useState(false);
+
+    const handleAddNote = async () => {
+        if (!noteText.trim()) return;
+        setSavingNote(true);
+        const newNote = { text: noteText.trim(), date: new Date().toISOString() };
+        const updatedNotes = [newNote, ...existingNotes];
+        const result = await backendService.updatePatientMetadata(patient.id, { clinicalNotes: updatedNotes });
+        if (result.success) {
+            setNoteText('');
+            setShowNoteModal(false);
+            onRefreshData?.();
+        }
+        setSavingNote(false);
+    };
+
+    const handleToothClick = (tooth: number) => {
+        const current = dentalChart[tooth];
+        const newChart = { ...dentalChart };
+        if (current === selectedCondition) {
+            delete newChart[tooth];
+        } else {
+            newChart[tooth] = selectedCondition;
+        }
+        setDentalChart(newChart);
+        setChartDirty(true);
+    };
+
+    const handleSaveChart = async () => {
+        setSavingChart(true);
+        const result = await backendService.updatePatientMetadata(patient.id, { dentalChart });
+        if (result.success) {
+            setChartDirty(false);
+            onRefreshData?.();
+        }
+        setSavingChart(false);
+    };
+
+    const formatDate = (iso: string) => {
+        const d = new Date(iso);
+        return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    };
+
+    const renderTooth = (num: number) => {
+        const condition = dentalChart[num];
+        const condInfo = condition ? TOOTH_CONDITIONS[condition] : null;
+        const isSelected = !!condition;
+        return (
+            <div
+                key={num}
+                onClick={() => handleToothClick(num)}
+                className="flex flex-col items-center cursor-pointer group"
+                title={condInfo ? `${num}: ${condInfo.label}` : `Tooth ${num}`}
+            >
+                <div
+                    className={`w-8 h-10 rounded-lg border-2 flex items-center justify-center text-[9px] font-black transition-all duration-200 hover:scale-110 ${isSelected
+                            ? 'shadow-lg scale-105'
+                            : 'border-slate-200 bg-white text-slate-400 hover:border-slate-400'
+                        }`}
+                    style={isSelected ? { borderColor: condInfo!.color, backgroundColor: condInfo!.color + '20', color: condInfo!.color } : {}}
+                >
+                    {condition === 'missing' ? '✕' : num}
+                </div>
+                {isSelected && (
+                    <div className="text-[7px] font-bold mt-0.5 uppercase tracking-wider" style={{ color: condInfo!.color }}>
+                        {condInfo!.label}
+                    </div>
+                )}
+            </div>
+        );
+    };
 
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -38,8 +136,9 @@ const ClinicalTab: React.FC<ClinicalTabProps> = ({ clinic, activeCarePlan, patie
             )}
 
             <div className="grid grid-cols-12 gap-8">
-                {/* LEFT: ACTIVE TREATMENTS */}
+                {/* LEFT: ACTIVE TREATMENTS + ODONTOGRAM */}
                 <div className="col-span-12 xl:col-span-8 space-y-8">
+                    {/* ACTIVE PATHWAY */}
                     <div className="relative p-10 rounded-[48px] overflow-hidden bg-white shadow-xl shadow-slate-200/50 border border-slate-100/60 transition-all duration-500">
                         <div className="flex justify-between items-center relative z-10 mb-10">
                             <h3 className="font-black text-3xl tracking-tighter flex items-center gap-5 text-slate-900">
@@ -53,38 +152,25 @@ const ClinicalTab: React.FC<ClinicalTabProps> = ({ clinic, activeCarePlan, patie
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
                                 <div className="p-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-[32px] relative overflow-hidden shadow-2xl shadow-emerald-500/20 text-white group/card">
                                     <div className="absolute right-0 top-0 p-12 opacity-10 scale-150 group-hover/card:scale-125 transition-transform duration-700 ease-out"><Activity size={120} /></div>
-
                                     <p className="text-[10px] font-black uppercase text-emerald-100 tracking-[0.25em] mb-4">Current Regime</p>
-                                    <div className="flex justify-between items-start mb-8 relative z-20">
-                                        <h4 className="text-4xl font-black tracking-tighter">{activeCarePlan.treatmentName}</h4>
-                                    </div>
-
-                                    <div className="flex gap-2">
-                                        <button
-                                            onClick={() => onOpenConsole(activeCarePlan)}
-                                            className="px-6 py-3 bg-white text-emerald-900 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-lg hover:scale-105 transition-all cursor-pointer"
-                                        >
-                                            View Details
-                                        </button>
-                                    </div>
+                                    <h4 className="text-4xl font-black tracking-tighter mb-8">{activeCarePlan.treatmentName}</h4>
+                                    <button onClick={() => onOpenConsole(activeCarePlan)} className="px-6 py-3 bg-white text-emerald-900 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-lg hover:scale-105 transition-all cursor-pointer">
+                                        View Details
+                                    </button>
                                     <div className="mt-8 pt-8 border-t border-white/10 flex items-end justify-between">
                                         <div className="space-y-2">
                                             <p className="text-[9px] font-black uppercase text-emerald-200/80 tracking-widest">Adherence</p>
-                                            <div className="flex items-baseline gap-1">
-                                                <p className="text-4xl font-black">98</p>
-                                                <span className="text-sm font-bold opacity-60">%</span>
-                                            </div>
+                                            <p className="text-4xl font-black">98<span className="text-sm font-bold opacity-60">%</span></p>
                                         </div>
                                         <div className="flex-1 max-w-[140px] h-3 bg-black/20 rounded-full overflow-hidden backdrop-blur-sm border border-white/10">
                                             <div className="h-full bg-white w-[98%]"></div>
                                         </div>
                                     </div>
                                 </div>
-
                                 <div className="space-y-3">
                                     <p className="text-[10px] font-black text-slate-400 border-b border-slate-100 pb-2 mb-4">DAILY CHECKLIST</p>
                                     {activeCarePlan.checklist?.map((item, i) => (
-                                        <div key={item.id} onClick={() => onToggleChecklistItem(activeCarePlan.id, item.id)} className="flex items-center gap-4 p-4 rounded-[24px] bg-slate-50 border border-slate-100 hover:shadow-md hover:border-emerald-200 transition-all duration-300 cursor-pointer group/item">
+                                        <div key={item.id} onClick={() => onToggleChecklistItem(activeCarePlan.id, item.id)} className={`flex items-center gap-4 p-4 rounded-[24px] bg-slate-50 border border-slate-100 hover:shadow-md hover:border-emerald-200 transition-all duration-300 cursor-pointer`}>
                                             <div className={`h-8 w-8 rounded-xl flex items-center justify-center transition-all ${item.completed ? 'bg-emerald-500 text-white' : 'bg-white text-slate-300'}`}>
                                                 {item.completed ? <Check size={16} strokeWidth={4} /> : <span className="text-[10px] font-black">{i + 1}</span>}
                                             </div>
@@ -102,39 +188,138 @@ const ClinicalTab: React.FC<ClinicalTabProps> = ({ clinic, activeCarePlan, patie
                         )}
                     </div>
 
-                    {/* ODONTOGRAM PLACEHOLDER (To be built further if requested) */}
-                    <div className="p-10 rounded-[48px] border border-slate-100 bg-white shadow-xl shadow-slate-200/50 relative overflow-hidden group">
-                        <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/20 to-transparent"></div>
-                        <h3 className="font-black text-2xl tracking-tighter text-slate-900 mb-8 relative z-10">Dental Charting & Case Sheet</h3>
-                        <div className="h-64 bg-slate-50 rounded-[32px] border border-slate-200 flex flex-col items-center justify-center relative z-10">
-                            <FileText size={48} className="text-slate-200 mb-4" />
-                            <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">Visual Odontogram Render Area</p>
-                            <p className="text-slate-400 text-[10px] mt-2">Charting capabilities initialized. Waiting for 3D API hook...</p>
+                    {/* INTERACTIVE ODONTOGRAM */}
+                    <div className="p-10 rounded-[48px] border border-slate-100 bg-white shadow-xl shadow-slate-200/50 relative overflow-hidden">
+                        <div className="flex justify-between items-center mb-8">
+                            <h3 className="font-black text-2xl tracking-tighter text-slate-900">Dental Charting & Case Sheet</h3>
+                            {chartDirty && (
+                                <button
+                                    onClick={handleSaveChart}
+                                    disabled={savingChart}
+                                    className="flex items-center gap-2 px-5 py-2.5 bg-indigo-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-indigo-700 transition-all disabled:opacity-50 shadow-lg shadow-indigo-200"
+                                >
+                                    <Save size={14} />
+                                    {savingChart ? 'Saving...' : 'Save Chart'}
+                                </button>
+                            )}
+                        </div>
+
+                        {/* Condition Selector */}
+                        <div className="flex flex-wrap gap-2 mb-6">
+                            {Object.entries(TOOTH_CONDITIONS).map(([key, { label, color }]) => (
+                                <button
+                                    key={key}
+                                    onClick={() => setSelectedCondition(key)}
+                                    className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all border-2 ${selectedCondition === key ? 'scale-105 shadow-md' : 'opacity-60 hover:opacity-100'
+                                        }`}
+                                    style={{
+                                        borderColor: color,
+                                        backgroundColor: selectedCondition === key ? color + '20' : 'transparent',
+                                        color: color,
+                                    }}
+                                >
+                                    {label}
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* Upper Jaw */}
+                        <div className="mb-2">
+                            <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-2 text-center">Upper Jaw</p>
+                            <div className="flex justify-center gap-1.5 flex-wrap">
+                                {UPPER_TEETH.map(t => renderTooth(t))}
+                            </div>
+                        </div>
+
+                        <div className="h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent my-4" />
+
+                        {/* Lower Jaw */}
+                        <div>
+                            <div className="flex justify-center gap-1.5 flex-wrap">
+                                {LOWER_TEETH.map(t => renderTooth(t))}
+                            </div>
+                            <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mt-2 text-center">Lower Jaw</p>
+                        </div>
+
+                        {/* Legend counts */}
+                        <div className="mt-6 flex flex-wrap gap-3">
+                            {Object.entries(TOOTH_CONDITIONS).map(([key, { label, color }]) => {
+                                const count = Object.values(dentalChart).filter(v => v === key).length;
+                                if (count === 0) return null;
+                                return (
+                                    <div key={key} className="flex items-center gap-1.5 text-[10px] font-bold" style={{ color }}>
+                                        <div className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: color }} />
+                                        {label}: {count}
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
                 </div>
 
-                {/* RIGHT: CLINICAL TIMELINE */}
+                {/* RIGHT: CLINICAL NOTES TIMELINE */}
                 <div className="col-span-12 xl:col-span-4 space-y-6">
                     <div className="bg-slate-900 rounded-[40px] p-8 text-white relative overflow-hidden shadow-2xl h-full min-h-[500px]">
                         <div className="absolute top-0 right-0 p-8 opacity-5"><Activity size={100} /></div>
                         <h3 className="font-black text-xl mb-8 relative z-10 flex items-center justify-between">
                             Recent Notes
-                            <button className="text-[10px] uppercase font-bold text-emerald-400 tracking-widest bg-emerald-400/10 px-3 py-1.5 rounded-lg hover:bg-emerald-400/20 transition-colors">+ Add Note</button>
+                            <button
+                                onClick={() => setShowNoteModal(true)}
+                                className="text-[10px] uppercase font-bold text-emerald-400 tracking-widest bg-emerald-400/10 px-3 py-1.5 rounded-lg hover:bg-emerald-400/20 transition-colors cursor-pointer"
+                            >
+                                + Add Note
+                            </button>
                         </h3>
 
+                        {/* Add Note Modal */}
+                        {showNoteModal && (
+                            <div className="relative z-20 mb-6 bg-slate-800 rounded-2xl p-5 border border-slate-700 animate-in fade-in slide-in-from-top-2 duration-300">
+                                <div className="flex justify-between items-center mb-3">
+                                    <p className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">New Clinical Note</p>
+                                    <button onClick={() => setShowNoteModal(false)} className="text-slate-500 hover:text-white transition-colors"><X size={16} /></button>
+                                </div>
+                                <textarea
+                                    value={noteText}
+                                    onChange={(e) => setNoteText(e.target.value)}
+                                    placeholder="Patient presented with..."
+                                    className="w-full bg-slate-900 border border-slate-700 rounded-xl p-4 text-sm text-white placeholder-slate-600 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 transition-all resize-none"
+                                    rows={4}
+                                    autoFocus
+                                />
+                                <button
+                                    onClick={handleAddNote}
+                                    disabled={savingNote || !noteText.trim()}
+                                    className="mt-3 w-full py-3 bg-emerald-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-600 transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                >
+                                    <Save size={14} />
+                                    {savingNote ? 'Saving...' : 'Save Note'}
+                                </button>
+                            </div>
+                        )}
+
                         <div className="space-y-6 relative z-10 border-l-2 border-slate-800 pl-6 ml-2">
-                            {/* Mocking Clinical Notes since they aren't fully integrated yet */}
-                            <div className="relative">
-                                <div className="absolute -left-[31px] top-1 h-4 w-4 rounded-full bg-slate-900 border-2 border-emerald-500"></div>
-                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Today, 10:00 AM</p>
-                                <p className="text-sm font-medium text-slate-200 leading-relaxed">Patient presented with mild sensitivity in LR6. Recommend using Sensodyne. Continued with alignment tray 4.</p>
-                            </div>
-                            <div className="relative">
-                                <div className="absolute -left-[31px] top-1 h-4 w-4 rounded-full bg-slate-900 border-2 border-slate-700"></div>
-                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Oct 14, 2025</p>
-                                <p className="text-sm font-medium text-slate-200 leading-relaxed">Comprehensive exam. X-Rays taken. Mild calculus build-up in lingual anteriors. Scheduled hygiene.</p>
-                            </div>
+                            {existingNotes.length > 0 ? (
+                                existingNotes.map((note, i) => (
+                                    <div key={i} className="relative">
+                                        <div className="absolute -left-[31px] top-1 h-4 w-4 rounded-full bg-slate-900 border-2 border-emerald-500"></div>
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">{formatDate(note.date)}</p>
+                                        <p className="text-sm font-medium text-slate-200 leading-relaxed">{note.text}</p>
+                                    </div>
+                                ))
+                            ) : (
+                                <>
+                                    <div className="relative">
+                                        <div className="absolute -left-[31px] top-1 h-4 w-4 rounded-full bg-slate-900 border-2 border-emerald-500"></div>
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Today, 10:00 AM</p>
+                                        <p className="text-sm font-medium text-slate-200 leading-relaxed">Patient presented with mild sensitivity in LR6. Recommend using Sensodyne. Continued with alignment tray 4.</p>
+                                    </div>
+                                    <div className="relative">
+                                        <div className="absolute -left-[31px] top-1 h-4 w-4 rounded-full bg-slate-900 border-2 border-slate-700"></div>
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Oct 14, 2025</p>
+                                        <p className="text-sm font-medium text-slate-200 leading-relaxed">Comprehensive exam. X-Rays taken. Mild calculus build-up in lingual anteriors. Scheduled hygiene.</p>
+                                    </div>
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>
