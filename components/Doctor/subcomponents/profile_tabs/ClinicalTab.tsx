@@ -3,10 +3,11 @@ import {
     ClipboardCheck, Activity, Check, HeartPulse, ShieldAlert, FileText, X, Save, CheckCircle2,
     User as UserIcon, Pill, Stethoscope, Eye, Calendar, Phone, Mail, MapPin, Heart, Droplets,
     AlertTriangle, Syringe, ChevronDown, ChevronUp, Thermometer, Ruler, Weight, Clock,
-    FileImage, FileSignature, Plus, Trash2
+    FileImage, FileSignature, Plus, Trash2, Microscope, Sparkles, CreditCard, Layers
 } from 'lucide-react';
-import { CarePlan, Clinic, User } from '../../../../types';
+import { CarePlan, Clinic, User, TransactionCategory, TransactionType } from '../../../../types';
 import { IBackendService } from '../../../../services/IBackendService';
+import { TREATMENT_TEMPLATES } from '../../../../constants';
 
 // ============================================================
 // TYPES
@@ -21,6 +22,10 @@ interface ClinicalTabProps {
     onToggleChecklistItem: (carePlanId: string, itemId: string) => Promise<any>;
     onOpenConsole: (plan: CarePlan) => void;
     onRefreshData?: () => void;
+
+    // Unified Workflow Props (Checkout & Aftercare)
+    onProcessTransaction?: (patientId: string, amount: number, category: any, type: any, carePlanTemplate?: any) => Promise<any>;
+    onAssignPlan?: (clinicId: string, patientId: string, template: any) => Promise<any>;
 }
 
 type ClinicalNote = { text: string; date: string; type?: string };
@@ -203,8 +208,40 @@ const TagList: React.FC<{ items: string[]; onUpdate: (items: string[]) => void; 
 // ============================================================
 // MAIN COMPONENT
 // ============================================================
-const ClinicalTab: React.FC<ClinicalTabProps> = ({ clinic, activeCarePlan, patient, backendService, onUpdateCarePlan, onTerminateCarePlan, onToggleChecklistItem, onOpenConsole, onRefreshData }) => {
+const ClinicalTab: React.FC<ClinicalTabProps> = ({
+    clinic, activeCarePlan, patient, backendService,
+    onUpdateCarePlan, onTerminateCarePlan, onToggleChecklistItem, onOpenConsole, onRefreshData,
+    onProcessTransaction, onAssignPlan
+}) => {
+    // --------------------------------------------------------
+    // STATE: Checkout & Dispatch (Unified Workflow)
+    // --------------------------------------------------------
+    const [selectedTemplateName, setSelectedTemplateName] = useState<string>('');
+    const [customValues, setCustomValues] = useState<Record<string, any>>({});
+    const [aftercareInstructions, setAftercareInstructions] = useState<string[]>([]);
+    const [txAmount, setTxAmount] = useState('');
+    const [txCategory, setTxCategory] = useState<TransactionCategory>(TransactionCategory.GENERAL);
 
+    // Auto-populate aftercare when template chosen
+    useEffect(() => {
+        if (selectedTemplateName) {
+            const template = TREATMENT_TEMPLATES.find(t => t.name === selectedTemplateName);
+            if (template) {
+                const defaults: Record<string, any> = {};
+                template.customFields?.forEach(f => defaults[f.key] = f.defaultValue);
+                setCustomValues(defaults);
+                setAftercareInstructions([...template.instructions]);
+                setTxCategory(template.category);
+            }
+        } else {
+            setCustomValues({});
+            setAftercareInstructions([]);
+        }
+    }, [selectedTemplateName]);
+
+    // --------------------------------------------------------
+    // RENDER HELPERS
+    // --------------------------------------------------------
     // Local EMR state — initialized from patient metadata
     const [emr, setEmr] = useState<EMRData>(() => ({ ...DEFAULT_EMR, ...(patient.metadata?.emr || {}) }));
     const [notes, setNotes] = useState<ClinicalNote[]>(() => patient.metadata?.clinicalNotes || []);

@@ -1,13 +1,12 @@
 import React, { useMemo, useState } from 'react';
-import { Shield, Sparkles, FolderLock, CreditCard } from 'lucide-react';
+import { Shield, Sparkles, FolderLock, CreditCard, Activity, Calendar, AlertTriangle, ChevronDown, ChevronUp, User as UserIcon } from 'lucide-react';
 import { User, Wallet, Transaction, CarePlan, Clinic, FamilyGroup, TransactionCategory, TransactionType } from '../../../types';
 import { IBackendService } from '../../../services/IBackendService';
 import DoctorTreatmentDetail from './DoctorTreatmentDetail';
 
-// Import Tabs
+// Unified Workspace Flow
 import ClinicalTab from './profile_tabs/ClinicalTab';
-import TreatmentTab from './profile_tabs/TreatmentTab';
-import LedgerTab from './profile_tabs/LedgerTab';
+// Treatment and Ledger will be absorbed into ClinicalTab/Workspace in the next steps.
 
 interface Props {
     selectedPatient: User;
@@ -27,14 +26,14 @@ interface Props {
     onRefreshData?: () => void;
 }
 
-type ProfileTab = 'CLINICAL' | 'PLANNER' | 'LEDGER' | 'VAULT';
+type ViewSection = 'OVERVIEW'; // We'll expand this if we need jump links, but it's a single page now.
 
 const PatientProfile: React.FC<Props> = ({
     selectedPatient, clinic, wallets, carePlans, transactions, allUsers, familyGroups,
     backendService, onProcessTransaction, onAssignPlan, onTerminateCarePlan, onToggleChecklistItem, onUpdateCarePlan, onDeletePatient, onRefreshData
 }) => {
-    const [activeTab, setActiveTab] = useState<ProfileTab>('CLINICAL');
     const [viewingPlan, setViewingPlan] = useState<CarePlan | null>(null);
+    const [showDemographics, setShowDemographics] = useState(false);
 
     // Computed data
     const activeCarePlan = useMemo(() => {
@@ -48,96 +47,137 @@ const PatientProfile: React.FC<Props> = ({
             .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     }, [selectedPatient, transactions, wallets, clinic.id]);
 
+    const emrData = selectedPatient.metadata?.emr;
+
+    // Quick helpers for header
+    const patientAge = useMemo(() => {
+        if (!emrData?.demographics?.dateOfBirth) return null;
+        const dob = new Date(emrData.demographics.dateOfBirth);
+        const ageDifMs = Date.now() - dob.getTime();
+        const ageDate = new Date(ageDifMs);
+        return Math.abs(ageDate.getUTCFullYear() - 1970);
+    }, [emrData?.demographics?.dateOfBirth]);
+
+    const bloodGroup = emrData?.demographics?.bloodGroup;
+    const medicalAlerts = selectedPatient.metadata?.medicalAlerts || [];
+
 
     return (
         <div className="w-full max-w-[1600px] mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20 px-8">
 
-            {/* 1. UNIFIED HEADER: IDENTITY & FINANCE */}
-            <div className="bg-white p-10 rounded-[48px] shadow-sm border border-slate-100 relative overflow-hidden group">
-                <div className="absolute top-0 left-0 w-full h-2" style={{ backgroundColor: clinic.primaryColor }}></div>
-                <div className="flex flex-col md:flex-row flex-wrap justify-between items-start md:items-center gap-8 relative z-10">
-                    {/* LEFT: IDENTITY & HEADER CONTENT */}
-                    <div className="flex-1 space-y-6">
-                        <div className="flex items-center gap-4">
-                            <div className={`h-3 w-3 rounded-full ${selectedPatient.currentTier === 'GOLD' ? 'bg-amber-400' : 'bg-emerald-400'} animate-pulse`}></div>
-                            <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 bg-slate-50 px-4 py-2 rounded-full border border-slate-100">Status: Active</span>
+            {/* 1. UNIFIED HEADER: PATIENT IDENTITY & ALERTS */}
+            <div className="bg-white p-8 rounded-[40px] shadow-sm border border-slate-100 relative overflow-hidden group">
+                <div className="absolute top-0 left-0 w-full h-1.5" style={{ backgroundColor: clinic.primaryColor }}></div>
+
+                <div className="flex flex-col xl:flex-row justify-between items-start gap-8 relative z-10">
+
+                    {/* LEFT: Identity */}
+                    <div className="flex-1 space-y-4">
+                        <div className="flex flex-wrap items-center gap-3">
+                            <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border shadow-sm ${selectedPatient.currentTier === 'GOLD' ? 'bg-amber-50 text-amber-600 border-amber-200' : selectedPatient.currentTier === 'PLATINUM' ? 'bg-slate-800 text-slate-100 border-slate-700' : 'bg-slate-50 text-slate-500 border-slate-200'}`}>
+                                {selectedPatient.currentTier} Tier
+                            </span>
+                            {patientAge && <span className="px-3 py-1.5 bg-indigo-50 text-indigo-600 rounded-full text-[11px] font-bold border border-indigo-100">{patientAge} yrs</span>}
+                            {bloodGroup && <span className="px-3 py-1.5 bg-rose-50 text-rose-600 rounded-full text-[11px] font-bold border border-rose-100 flex items-center gap-1"><Activity size={12} /> {bloodGroup}</span>}
                         </div>
+
                         <div>
-                            <h1 className="text-6xl font-black tracking-tighter text-slate-900 leading-none mb-3">{selectedPatient.name}</h1>
-                            <p className="text-lg font-bold text-slate-400 tracking-tight font-mono">{selectedPatient.mobile}</p>
+                            <h1 className="text-5xl font-black tracking-tighter text-slate-900 leading-tight flex items-center gap-4">
+                                {selectedPatient.name}
+                                {medicalAlerts.length > 0 && (
+                                    <div className="flex -space-x-2">
+                                        <div className="h-8 w-8 rounded-full bg-rose-100 border-2 border-white flex items-center justify-center text-rose-500 shadow-sm" title="Medical Alerts Present">
+                                            <AlertTriangle size={16} strokeWidth={3} />
+                                        </div>
+                                    </div>
+                                )}
+                            </h1>
+                            <div className="flex items-center gap-4 mt-2">
+                                <p className="text-lg font-bold text-slate-500 font-mono bg-slate-50 px-3 py-1 rounded-lg inline-block border border-slate-100">{selectedPatient.mobile}</p>
+                                <button
+                                    onClick={() => setShowDemographics(!showDemographics)}
+                                    className="text-xs font-bold text-indigo-500 hover:text-indigo-600 flex items-center gap-1 transition-colors"
+                                >
+                                    {showDemographics ? 'Hide' : 'View'} Full Demographics {showDemographics ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                                </button>
+                            </div>
                         </div>
-                        <div className="flex gap-4 pt-2">
+
+                        {medicalAlerts.length > 0 && (
+                            <div className="flex flex-wrap gap-2 pt-2">
+                                {medicalAlerts.map((alert: string, i: number) => (
+                                    <span key={i} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black bg-rose-50 text-rose-600 border border-rose-100">
+                                        <AlertTriangle size={12} /> {alert}
+                                    </span>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+
+                    {/* RIGHT: Financials & Quick Actions */}
+                    <div className="flex flex-row xl:flex-col gap-4 min-w-[300px]">
+                        <div className="p-6 bg-slate-50 rounded-[28px] border border-slate-200 shadow-inner flex-1 flex flex-col justify-center">
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Smile Credits</p>
+                            <h2 className="text-5xl font-black tracking-tighter" style={{ color: clinic.primaryColor }}>
+                                {wallets.find(w => w.userId === selectedPatient.id)?.balance || 0}
+                            </h2>
+                        </div>
+                        <div className="flex gap-2">
+                            <button className="flex-1 py-3 bg-white border border-slate-200 text-slate-600 rounded-2xl font-black text-xs uppercase tracking-widest hover:border-slate-300 hover:bg-slate-50 transition-all shadow-sm">
+                                Book Review
+                            </button>
                             <button onClick={() => {
-                                if (confirm("DANGER: Are you sure you want to permanently delete this patient identity? This cannot be undone.")) {
-                                    onDeletePatient(selectedPatient.id);
-                                }
-                            }} className="px-8 py-4 bg-rose-50 border border-rose-100 text-rose-500 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-rose-500 hover:text-white transition-all">Delete Identity</button>
+                                if (confirm("DANGER: Are you sure you want to permanently delete this identity?")) onDeletePatient(selectedPatient.id);
+                            }} className="p-3 bg-white border border-rose-100 text-rose-500 rounded-2xl hover:bg-rose-50 transition-all shadow-sm">
+                                <AlertTriangle size={18} />
+                            </button>
                         </div>
                     </div>
-                    {/* RIGHT: SMILE CREDITS */}
-                    <div className="p-8 bg-slate-50 rounded-[32px] border border-slate-100 min-w-[300px] text-center">
-                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Smile Credits Available</p>
-                        <h2 className="text-7xl font-black tracking-tighter" style={{ color: clinic.primaryColor }}>
-                            {wallets.find(w => w.userId === selectedPatient.id)?.balance || 0}
-                        </h2>
-                    </div>
+
                 </div>
+
+                {/* EXPANDABLE DEMOGRAPHICS BAR */}
+                {showDemographics && (
+                    <div className="mt-8 pt-8 border-t border-slate-100 animate-in slide-in-from-top-4 fade-in duration-300">
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                            <div>
+                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Gender</p>
+                                <p className="text-sm font-bold text-slate-800">{emrData?.demographics?.gender || 'Not specified'}</p>
+                            </div>
+                            <div>
+                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Occupation</p>
+                                <p className="text-sm font-bold text-slate-800">{emrData?.demographics?.occupation || 'Not specified'}</p>
+                            </div>
+                            <div>
+                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Emergency Contact</p>
+                                <p className="text-sm font-bold text-slate-800">{emrData?.demographics?.emergencyContactName ? `${emrData.demographics.emergencyContactName} (${emrData.demographics.emergencyContactPhone})` : 'Not specified'}</p>
+                            </div>
+                            <div>
+                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Insurance Provider</p>
+                                <p className="text-sm font-bold text-slate-800">{emrData?.demographics?.insuranceProvider || 'Self-pay'}</p>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
 
-            {/* TAB NAVIGATION */}
-            <div className="flex gap-2 p-2 bg-slate-50 border border-slate-200/60 rounded-[32px] w-fit shadow-sm overflow-x-auto custom-scrollbar">
-                <button
-                    onClick={() => setActiveTab('CLINICAL')}
-                    className={`px-8 py-4 flex items-center gap-3 rounded-[24px] font-black text-xs uppercase tracking-widest transition-all duration-300 ${activeTab === 'CLINICAL' ? 'bg-white text-slate-900 shadow-md scale-100' : 'text-slate-400 hover:text-slate-700 scale-95 hover:bg-slate-100'}`}>
-                    <Shield size={16} className={activeTab === 'CLINICAL' ? 'text-emerald-500' : ''} /> Clinical Overview
-                </button>
-                <button
-                    onClick={() => setActiveTab('PLANNER')}
-                    className={`px-8 py-4 flex items-center gap-3 rounded-[24px] font-black text-xs uppercase tracking-widest transition-all duration-300 ${activeTab === 'PLANNER' ? 'bg-white text-slate-900 shadow-md scale-100' : 'text-slate-400 hover:text-slate-700 scale-95 hover:bg-slate-100'}`}>
-                    <Sparkles size={16} className={activeTab === 'PLANNER' ? 'text-indigo-500' : ''} /> Treatment Planner
-                </button>
-                <button
-                    onClick={() => setActiveTab('LEDGER')}
-                    className={`px-8 py-4 flex items-center gap-3 rounded-[24px] font-black text-xs uppercase tracking-widest transition-all duration-300 ${activeTab === 'LEDGER' ? 'bg-white text-slate-900 shadow-md scale-100' : 'text-slate-400 hover:text-slate-700 scale-95 hover:bg-slate-100'}`}>
-                    <CreditCard size={16} className={activeTab === 'LEDGER' ? 'text-rose-500' : ''} /> Financial Ledger
-                </button>
-                <button
-                    disabled
-                    className={`px-8 py-4 flex items-center gap-3 rounded-[24px] font-black text-xs uppercase tracking-widest transition-all duration-300 opacity-50 cursor-not-allowed text-slate-400 scale-95`}>
-                    <FolderLock size={16} /> Secure Vault (Soon)
-                </button>
-            </div>
-
-            {/* TAB WORKSPACE CONTENT */}
-            <div className="min-h-[600px] transition-all">
-                {activeTab === 'CLINICAL' && (
-                    <ClinicalTab
-                        clinic={clinic}
-                        patient={selectedPatient}
-                        activeCarePlan={activeCarePlan}
-                        backendService={backendService}
-                        onUpdateCarePlan={onUpdateCarePlan}
-                        onTerminateCarePlan={onTerminateCarePlan}
-                        onToggleChecklistItem={onToggleChecklistItem}
-                        onOpenConsole={(plan) => setViewingPlan(plan)}
-                        onRefreshData={onRefreshData}
-                    />
-                )}
-                {activeTab === 'PLANNER' && (
-                    <TreatmentTab
-                        clinic={clinic}
-                        patient={selectedPatient}
-                        onAssignPlan={onAssignPlan}
-                    />
-                )}
-                {activeTab === 'LEDGER' && (
-                    <LedgerTab
-                        clinic={clinic}
-                        selectedPatient={selectedPatient}
-                        patientTransactions={patientTransactions}
-                        onProcessTransaction={onProcessTransaction}
-                    />
-                )}
+            {/* UNIFIED CLINICAL WORKSPACE */}
+            {/* The ClinicalTab is now the main body of the patient file, not a tab */}
+            <div className="transition-all block">
+                <ClinicalTab
+                    clinic={clinic}
+                    patient={selectedPatient}
+                    activeCarePlan={activeCarePlan}
+                    backendService={backendService}
+                    onUpdateCarePlan={onUpdateCarePlan}
+                    onTerminateCarePlan={onTerminateCarePlan}
+                    onToggleChecklistItem={onToggleChecklistItem}
+                    onOpenConsole={(plan) => setViewingPlan(plan)}
+                    onRefreshData={onRefreshData}
+                    // We will thread Treatment & Payment handlers into ClinicalTab next
+                    onProcessTransaction={onProcessTransaction}
+                    onAssignPlan={onAssignPlan}
+                />
             </div>
 
             {/* Treatment Detail Overlay (Used by Clinical Tab) */}
