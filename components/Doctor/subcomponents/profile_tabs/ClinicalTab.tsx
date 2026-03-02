@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ClipboardCheck, Activity, Check, Sparkles, HeartPulse, ShieldAlert, FileText, X, Plus, Save } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ClipboardCheck, Activity, Check, Sparkles, HeartPulse, ShieldAlert, FileText, X, Plus, Save, CheckCircle2 } from 'lucide-react';
 import { CarePlan, Clinic, User } from '../../../../types';
 import { IBackendService } from '../../../../services/IBackendService';
 
@@ -15,7 +15,7 @@ interface ClinicalTabProps {
     onRefreshData?: () => void;
 }
 
-// Tooth numbers for standard dental chart (FDI notation)
+// Standard FDI dental notation
 const UPPER_TEETH = [18, 17, 16, 15, 14, 13, 12, 11, 21, 22, 23, 24, 25, 26, 27, 28];
 const LOWER_TEETH = [48, 47, 46, 45, 44, 43, 42, 41, 31, 32, 33, 34, 35, 36, 37, 38];
 
@@ -29,33 +29,78 @@ const TOOTH_CONDITIONS: Record<string, { label: string; color: string }> = {
     implant: { label: 'Implant', color: '#06b6d4' },
 };
 
+type ClinicalNote = { text: string; date: string };
+
 const ClinicalTab: React.FC<ClinicalTabProps> = ({ clinic, activeCarePlan, patient, backendService, onUpdateCarePlan, onTerminateCarePlan, onToggleChecklistItem, onOpenConsole, onRefreshData }) => {
     const medicalAlerts = patient.metadata?.medicalAlerts || ['Penicillin Allergy', 'Requires Pre-medication'];
-    const existingNotes: Array<{ text: string; date: string }> = patient.metadata?.clinicalNotes || [];
-    const [dentalChart, setDentalChart] = useState<Record<number, string>>(patient.metadata?.dentalChart || {});
 
-    // Notes state
+    // ==========================================
+    // LOCAL STATE — initialized from props, updated optimistically
+    // ==========================================
+    const [notes, setNotes] = useState<ClinicalNote[]>(() => {
+        return patient.metadata?.clinicalNotes || [];
+    });
+    const [dentalChart, setDentalChart] = useState<Record<number, string>>(() => {
+        return patient.metadata?.dentalChart || {};
+    });
+
+    // Sync from props when patient changes (e.g. switching patients)
+    useEffect(() => {
+        setNotes(patient.metadata?.clinicalNotes || []);
+        setDentalChart(patient.metadata?.dentalChart || {});
+    }, [patient.id]);
+
+    // UI state
     const [showNoteModal, setShowNoteModal] = useState(false);
     const [noteText, setNoteText] = useState('');
     const [savingNote, setSavingNote] = useState(false);
+    const [noteSaved, setNoteSaved] = useState(false);
 
-    // Odontogram state
     const [selectedCondition, setSelectedCondition] = useState('cavity');
     const [savingChart, setSavingChart] = useState(false);
+    const [chartSaved, setChartSaved] = useState(false);
     const [chartDirty, setChartDirty] = useState(false);
+
+    // ==========================================
+    // HANDLERS
+    // ==========================================
 
     const handleAddNote = async () => {
         if (!noteText.trim()) return;
         setSavingNote(true);
-        const newNote = { text: noteText.trim(), date: new Date().toISOString() };
-        const updatedNotes = [newNote, ...existingNotes];
+
+        const newNote: ClinicalNote = {
+            text: noteText.trim(),
+            date: new Date().toISOString()
+        };
+
+        // 1. Optimistic update — show it immediately
+        const updatedNotes = [newNote, ...notes];
+        setNotes(updatedNotes);
+        setNoteText('');
+        setShowNoteModal(false);
+
+        // 2. Persist to database
         const result = await backendService.updatePatientMetadata(patient.id, { clinicalNotes: updatedNotes });
+
         if (result.success) {
-            setNoteText('');
-            setShowNoteModal(false);
+            setNoteSaved(true);
+            setTimeout(() => setNoteSaved(false), 3000);
             onRefreshData?.();
+        } else {
+            // Rollback on failure
+            setNotes(notes);
+            console.error('Failed to save note:', result.message);
         }
+
         setSavingNote(false);
+    };
+
+    const handleDeleteNote = async (index: number) => {
+        const updatedNotes = notes.filter((_, i) => i !== index);
+        setNotes(updatedNotes);
+        await backendService.updatePatientMetadata(patient.id, { clinicalNotes: updatedNotes });
+        onRefreshData?.();
     };
 
     const handleToothClick = (tooth: number) => {
@@ -72,17 +117,28 @@ const ClinicalTab: React.FC<ClinicalTabProps> = ({ clinic, activeCarePlan, patie
 
     const handleSaveChart = async () => {
         setSavingChart(true);
+
         const result = await backendService.updatePatientMetadata(patient.id, { dentalChart });
+
         if (result.success) {
             setChartDirty(false);
+            setChartSaved(true);
+            setTimeout(() => setChartSaved(false), 3000);
             onRefreshData?.();
+        } else {
+            console.error('Failed to save chart:', result.message);
         }
+
         setSavingChart(false);
     };
 
     const formatDate = (iso: string) => {
-        const d = new Date(iso);
-        return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+        try {
+            const d = new Date(iso);
+            return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+        } catch {
+            return iso;
+        }
     };
 
     const renderTooth = (num: number) => {
@@ -94,7 +150,7 @@ const ClinicalTab: React.FC<ClinicalTabProps> = ({ clinic, activeCarePlan, patie
                 key={num}
                 onClick={() => handleToothClick(num)}
                 className="flex flex-col items-center cursor-pointer group"
-                title={condInfo ? `${num}: ${condInfo.label}` : `Tooth ${num}`}
+                title={condInfo ? `${num}: ${condInfo.label}` : `Tooth ${num}: Click to mark`}
             >
                 <div
                     className={`w-8 h-10 rounded-lg border-2 flex items-center justify-center text-[9px] font-black transition-all duration-200 hover:scale-110 ${isSelected
@@ -113,6 +169,9 @@ const ClinicalTab: React.FC<ClinicalTabProps> = ({ clinic, activeCarePlan, patie
             </div>
         );
     };
+
+    // Determine if we should show default placeholder notes
+    const hasRealNotes = notes.length > 0;
 
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -192,16 +251,24 @@ const ClinicalTab: React.FC<ClinicalTabProps> = ({ clinic, activeCarePlan, patie
                     <div className="p-10 rounded-[48px] border border-slate-100 bg-white shadow-xl shadow-slate-200/50 relative overflow-hidden">
                         <div className="flex justify-between items-center mb-8">
                             <h3 className="font-black text-2xl tracking-tighter text-slate-900">Dental Charting & Case Sheet</h3>
-                            {chartDirty && (
-                                <button
-                                    onClick={handleSaveChart}
-                                    disabled={savingChart}
-                                    className="flex items-center gap-2 px-5 py-2.5 bg-indigo-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-indigo-700 transition-all disabled:opacity-50 shadow-lg shadow-indigo-200"
-                                >
-                                    <Save size={14} />
-                                    {savingChart ? 'Saving...' : 'Save Chart'}
-                                </button>
-                            )}
+                            <div className="flex items-center gap-3">
+                                {chartSaved && (
+                                    <div className="flex items-center gap-2 text-emerald-600 text-[10px] font-black uppercase tracking-widest animate-in fade-in slide-in-from-right-4 duration-300">
+                                        <CheckCircle2 size={16} />
+                                        Chart Saved
+                                    </div>
+                                )}
+                                {chartDirty && (
+                                    <button
+                                        onClick={handleSaveChart}
+                                        disabled={savingChart}
+                                        className="flex items-center gap-2 px-5 py-2.5 bg-indigo-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-indigo-700 transition-all disabled:opacity-50 shadow-lg shadow-indigo-200"
+                                    >
+                                        <Save size={14} />
+                                        {savingChart ? 'Saving...' : 'Save Chart'}
+                                    </button>
+                                )}
+                            </div>
                         </div>
 
                         {/* Condition Selector */}
@@ -261,15 +328,23 @@ const ClinicalTab: React.FC<ClinicalTabProps> = ({ clinic, activeCarePlan, patie
                 <div className="col-span-12 xl:col-span-4 space-y-6">
                     <div className="bg-slate-900 rounded-[40px] p-8 text-white relative overflow-hidden shadow-2xl h-full min-h-[500px]">
                         <div className="absolute top-0 right-0 p-8 opacity-5"><Activity size={100} /></div>
-                        <h3 className="font-black text-xl mb-8 relative z-10 flex items-center justify-between">
-                            Recent Notes
+                        <div className="flex items-center justify-between mb-2 relative z-10">
+                            <h3 className="font-black text-xl">Recent Notes</h3>
                             <button
                                 onClick={() => setShowNoteModal(true)}
                                 className="text-[10px] uppercase font-bold text-emerald-400 tracking-widest bg-emerald-400/10 px-3 py-1.5 rounded-lg hover:bg-emerald-400/20 transition-colors cursor-pointer"
                             >
                                 + Add Note
                             </button>
-                        </h3>
+                        </div>
+
+                        {/* Saved confirmation */}
+                        {noteSaved && (
+                            <div className="mb-4 flex items-center gap-2 text-emerald-400 text-[10px] font-black uppercase tracking-widest animate-in fade-in slide-in-from-top-2 duration-300 relative z-10">
+                                <CheckCircle2 size={14} />
+                                Note Saved Successfully
+                            </div>
+                        )}
 
                         {/* Add Note Modal */}
                         {showNoteModal && (
@@ -297,28 +372,31 @@ const ClinicalTab: React.FC<ClinicalTabProps> = ({ clinic, activeCarePlan, patie
                             </div>
                         )}
 
-                        <div className="space-y-6 relative z-10 border-l-2 border-slate-800 pl-6 ml-2">
-                            {existingNotes.length > 0 ? (
-                                existingNotes.map((note, i) => (
-                                    <div key={i} className="relative">
+                        {/* Notes Timeline */}
+                        <div className="space-y-6 relative z-10 border-l-2 border-slate-800 pl-6 ml-2 mt-6">
+                            {hasRealNotes ? (
+                                notes.map((note, i) => (
+                                    <div key={`${note.date}-${i}`} className="relative group/note">
                                         <div className="absolute -left-[31px] top-1 h-4 w-4 rounded-full bg-slate-900 border-2 border-emerald-500"></div>
-                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">{formatDate(note.date)}</p>
+                                        <div className="flex justify-between items-start">
+                                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">{formatDate(note.date)}</p>
+                                            <button
+                                                onClick={() => handleDeleteNote(i)}
+                                                className="opacity-0 group-hover/note:opacity-100 text-slate-600 hover:text-rose-400 transition-all p-1"
+                                                title="Delete note"
+                                            >
+                                                <X size={12} />
+                                            </button>
+                                        </div>
                                         <p className="text-sm font-medium text-slate-200 leading-relaxed">{note.text}</p>
                                     </div>
                                 ))
                             ) : (
-                                <>
-                                    <div className="relative">
-                                        <div className="absolute -left-[31px] top-1 h-4 w-4 rounded-full bg-slate-900 border-2 border-emerald-500"></div>
-                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Today, 10:00 AM</p>
-                                        <p className="text-sm font-medium text-slate-200 leading-relaxed">Patient presented with mild sensitivity in LR6. Recommend using Sensodyne. Continued with alignment tray 4.</p>
-                                    </div>
-                                    <div className="relative">
-                                        <div className="absolute -left-[31px] top-1 h-4 w-4 rounded-full bg-slate-900 border-2 border-slate-700"></div>
-                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Oct 14, 2025</p>
-                                        <p className="text-sm font-medium text-slate-200 leading-relaxed">Comprehensive exam. X-Rays taken. Mild calculus build-up in lingual anteriors. Scheduled hygiene.</p>
-                                    </div>
-                                </>
+                                <div className="py-10 text-center">
+                                    <FileText size={32} className="mx-auto text-slate-700 mb-3" />
+                                    <p className="text-slate-500 font-bold text-sm">No clinical notes yet</p>
+                                    <p className="text-slate-600 text-xs mt-1">Click "+ Add Note" to create the first entry</p>
+                                </div>
                             )}
                         </div>
                     </div>
