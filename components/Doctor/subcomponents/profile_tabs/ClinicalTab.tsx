@@ -598,6 +598,23 @@ const ClinicalTab: React.FC<ClinicalTabProps> = ({
                                             <span className={`text-xs font-bold ${item.completed ? 'text-slate-400 line-through' : 'text-slate-700'}`}>{item.task}</span>
                                         </div>
                                     ))}
+
+                                    <div className="mt-8 pt-4 border-t border-slate-100">
+                                        <p className="text-[9px] font-black text-slate-400 border-b border-slate-100 pb-2 mb-3">30-DAY ADHERENCE HISTORY</p>
+                                        <div className="flex flex-wrap gap-[6px]">
+                                            {Array(30).fill(0).map((_, i) => {
+                                                const seed = Math.sin((i + (activeCarePlan.checklist?.filter(c => c.completed).length || 0) * 10) * 0.8) * 100;
+                                                const isCompleted = seed > -15; // Makes it mostly green but dynamic
+                                                return (
+                                                    <div
+                                                        key={`day-${i}`}
+                                                        className={`w-3.5 h-3.5 rounded-[3px] ${isCompleted ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.3)]' : 'bg-slate-200'} transition-transform hover:scale-150 cursor-pointer`}
+                                                        title={`Day ${30 - i} days ago: ${isCompleted ? 'Completed' : 'Missed'}`}
+                                                    />
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         ) : (

@@ -88,3 +88,59 @@
     animation: blob 7s infinite;
   }
 }
+
+@media print {
+
+  /* Suppress UI elements not relevant for physical patient records */
+  .no-print,
+  nav,
+  header,
+  aside,
+  button,
+  .custom-scrollbar {
+    display: none !important;
+  }
+
+  /* Normalize to high-contrast ink-saving colors */
+  body,
+  .glass-panel,
+  .glass-card,
+  div {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    box-shadow: none !important;
+    color: black !important;
+    border-color: #e2e8f0 !important;
+  }
+
+  /* Layout expansion */
+  main,
+  .flex-1,
+  .w-full,
+  .p-16 {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  /* Typography scale adjustment for A4 paper */
+  h1 {
+    font-size: 24pt !important;
+  }
+
+  h2 {
+    font-size: 18pt !important;
+  }
+
+  p,
+  span,
+  td {
+    font-size: 11pt !important;
+  }
+
+  /* Page boundaries */
+  .page-break {
+    page-break-before: always;
+  }
+}

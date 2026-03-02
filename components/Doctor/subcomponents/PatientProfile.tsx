@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Shield, Sparkles, FolderLock, CreditCard, Activity, Calendar, AlertTriangle, ChevronDown, ChevronUp, User as UserIcon } from 'lucide-react';
+import { Shield, Sparkles, FolderLock, CreditCard, Activity, Calendar, AlertTriangle, ChevronDown, ChevronUp, User as UserIcon, Printer } from 'lucide-react';
 import { User, Wallet, Transaction, CarePlan, Clinic, FamilyGroup, TransactionCategory, TransactionType } from '../../../types';
 import { IBackendService } from '../../../services/IBackendService';
 import DoctorTreatmentDetail from './DoctorTreatmentDetail';
@@ -123,6 +123,9 @@ const PatientProfile: React.FC<Props> = ({
                             </h2>
                         </div>
                         <div className="flex gap-2">
+                            <button onClick={() => window.print()} className="p-3 bg-indigo-50 border border-indigo-200 text-indigo-600 rounded-2xl hover:bg-indigo-100 transition-all shadow-sm title='Export PDF'">
+                                <Printer size={18} />
+                            </button>
                             <button className="flex-1 py-3 bg-white border border-slate-200 text-slate-600 rounded-2xl font-black text-xs uppercase tracking-widest hover:border-slate-300 hover:bg-slate-50 transition-all shadow-sm">
                                 Book Review
                             </button>

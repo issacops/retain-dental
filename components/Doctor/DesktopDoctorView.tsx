@@ -307,13 +307,14 @@ interface Props {
    onToggleChecklistItem: (carePlanId: string, itemId: string) => Promise<any>;
    onDeletePatient: (patientId: string) => Promise<any>;
    onUpdateClinic: (clinicId: string, updates: Partial<Clinic>) => Promise<any>;
+   onRefreshData?: () => void;
 }
 
 const DesktopDoctorView: React.FC<Props> = ({
    currentUser, allUsers, wallets, transactions, familyGroups, carePlans, clinic,
    onProcessTransaction, onUpdateCarePlan, onLinkFamily, onAddPatient, backendService,
    appointments, onSchedule, onUpdateAppointmentStatus, onAssignPlan, onToggleChecklistItem, onDeletePatient,
-   onUpdateClinic
+   onUpdateClinic, onRefreshData
 }) => {
    const [activeSection, setActiveSection] = useState('Operational Hub');
    const [selectedPatient, setSelectedPatient] = useState<User | null>(null);
@@ -611,7 +612,7 @@ const DesktopDoctorView: React.FC<Props> = ({
                                     onToggleChecklistItem={onToggleChecklistItem}
                                     onUpdateCarePlan={onUpdateCarePlan}
                                     onDeletePatient={onDeletePatient}
-                                    onRefreshData={undefined}
+                                    onRefreshData={onRefreshData}
                                  />
                               ) : (
                                  <div className="h-full flex flex-col items-center justify-center animate-in zoom-in-95 duration-1000">

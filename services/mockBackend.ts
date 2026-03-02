@@ -321,6 +321,12 @@ export class MockBackendService implements IBackendService {
     return { success: true, message: 'Node decommissioned', updatedData: await this.getData() };
   }
 
+  public async hardDeleteUser(userId: string): Promise<ServiceResponse<DatabaseState>> {
+    this.users = this.users.filter(u => u.id !== userId);
+    this.persist();
+    return { success: true, message: 'Identity Obliterated', updatedData: await this.getData() };
+  }
+
   public async getPlatformStats() {
     const activePatients = this.users.filter(u => u.role === Role.PATIENT);
     const totalGTV = this.transactions.filter(t => t.type === TransactionType.EARN).reduce((a, b) => a + b.amountPaid, 0);
@@ -508,7 +514,7 @@ export class MockBackendService implements IBackendService {
     if (!user) return { success: false, message: 'Patient not found', error: 'NOT_FOUND' };
     user.metadata = { ...(user.metadata || {}), ...metadata };
     this.persist();
-    return { success: true, message: 'Metadata updated' };
+    return { success: true, message: 'Metadata updated', updatedData: await this.getData() };
   }
 
   public async joinWaitlist(data: { name: string, clinic: string, mobile: string, email: string }): Promise<ServiceResponse> {

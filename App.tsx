@@ -520,6 +520,7 @@ const App = () => {
 
   // Bundle handlers for easier passing
   const handlers = {
+    onRefreshData: fetchData,
     setActiveClinicId: (id: string) => setData(prev => ({ ...prev, activeClinicId: id })),
     onUpdateGlobalConfig: handleUpdateGlobalConfig,
     onToggleChecklistItem: handleToggleChecklistItem,
