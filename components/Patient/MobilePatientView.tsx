@@ -100,21 +100,25 @@ const SpecialtyCareModule: React.FC<{ plan: CarePlan; primaryColor: string; onTo
 
       {/* Instructions / Guidelines Card */}
       {plan.instructions && plan.instructions.length > 0 && (
-        <div className="bg-slate-900 p-8 rounded-[40px] shadow-2xl relative overflow-hidden text-white border border-slate-800">
+        <div className="bg-slate-900 p-8 rounded-[40px] shadow-2xl relative overflow-hidden text-white border border-slate-800 mt-8">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
           <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-indigo-500/20 rounded-full blur-[80px]"></div>
 
           <div className="relative z-10">
-            <div className="flex items-center gap-3 mb-6">
+            <div className="flex items-center gap-3 mb-2">
               <div className="p-2 bg-white/10 rounded-xl backdrop-blur-sm shadow-inner"><ShieldCheck size={20} className="text-emerald-400" /></div>
-              <h4 className="text-lg font-black tracking-tight">Care Guidelines</h4>
+              <h4 className="text-xl font-black tracking-tight">Care Protocol</h4>
             </div>
 
-            <ul className="space-y-5">
+            <p className="text-[10px] font-black uppercase tracking-widest text-emerald-400 mb-8 border border-emerald-500/30 bg-emerald-500/10 inline-block px-3 py-1.5 rounded-lg shadow-sm">
+              Customized for you
+            </p>
+
+            <ul className="space-y-6">
               {plan.instructions.map((inst, i) => (
                 <li key={i} className="flex gap-4 items-start group">
-                  <span className="flex-shrink-0 h-6 w-6 rounded-full bg-white/10 flex items-center justify-center text-[10px] font-black text-slate-400 border border-white/5 group-hover:bg-indigo-500 group-hover:text-white group-hover:border-indigo-400 transition-colors shadow-sm">{i + 1}</span>
-                  <p className="text-sm font-medium text-slate-300 leading-relaxed group-hover:text-white transition-colors">{inst}</p>
+                  <span className="flex-shrink-0 h-8 w-8 rounded-xl bg-white/5 flex items-center justify-center text-xs font-black text-slate-400 border border-white/10 group-hover:bg-indigo-500 group-hover:text-white group-hover:border-indigo-400 transition-colors shadow-sm">{i + 1}</span>
+                  <p className="text-sm font-medium text-slate-300 leading-relaxed group-hover:text-white transition-colors pt-1">{inst}</p>
                 </li>
               ))}
             </ul>
