@@ -84,7 +84,7 @@ const SpecialtyCareModule: React.FC<{ plan: CarePlan; primaryColor: string; onTo
         )}
 
         <div className="space-y-3 relative z-10">
-          <p className="text-[10px] font-black uppercase tracking-widest text-slate-300 pl-1">Daily Rituals</p>
+          <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 pl-1">Daily Rituals</p>
           {(plan.checklist || []).length > 0 ? (plan.checklist?.map(item => (
             <div key={item.id} onClick={() => handleToggle(item.id, item.completed)} className={`flex items-center gap-5 p-5 rounded-[24px] border active:scale-[0.98] transition-all cursor-pointer group hover:shadow-lg ${item.completed ? 'bg-emerald-50/50 border-emerald-100' : 'bg-white border-slate-100 hover:border-indigo-100'}`}>
               <div className={`h-8 w-8 rounded-full flex items-center justify-center transition-all duration-300 shadow-sm ${item.completed ? 'bg-emerald-500 text-white scale-110' : 'bg-slate-50 text-slate-300 group-hover:bg-indigo-50 group-hover:text-indigo-400'}`}>
@@ -117,8 +117,8 @@ const SpecialtyCareModule: React.FC<{ plan: CarePlan; primaryColor: string; onTo
             <ul className="space-y-6">
               {plan.instructions.map((inst, i) => (
                 <li key={i} className="flex gap-4 items-start group">
-                  <span className="flex-shrink-0 h-8 w-8 rounded-xl bg-white/5 flex items-center justify-center text-xs font-black text-slate-400 border border-white/10 group-hover:bg-indigo-500 group-hover:text-white group-hover:border-indigo-400 transition-colors shadow-sm">{i + 1}</span>
-                  <p className="text-sm font-medium text-slate-300 leading-relaxed group-hover:text-white transition-colors pt-1">{inst}</p>
+                  <span className="flex-shrink-0 h-8 w-8 rounded-xl bg-white/10 flex items-center justify-center text-xs font-black text-slate-300 border border-white/20 group-hover:bg-indigo-500 group-hover:text-white group-hover:border-indigo-400 transition-colors shadow-sm">{i + 1}</span>
+                  <p className="text-sm font-medium text-slate-200 leading-relaxed group-hover:text-white transition-colors pt-1">{inst}</p>
                 </li>
               ))}
             </ul>

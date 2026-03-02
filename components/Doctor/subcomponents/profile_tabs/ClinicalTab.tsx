@@ -221,6 +221,7 @@ const ClinicalTab: React.FC<ClinicalTabProps> = ({
     const [aftercareInstructions, setAftercareInstructions] = useState<string[]>([]);
     const [txAmount, setTxAmount] = useState('');
     const [txCategory, setTxCategory] = useState<TransactionCategory>(TransactionCategory.GENERAL);
+    const [isDispatching, setIsDispatching] = useState(false);
 
     // Auto-populate aftercare when template chosen
     useEffect(() => {
@@ -632,6 +633,7 @@ const ClinicalTab: React.FC<ClinicalTabProps> = ({
                                     className="mt-2 w-full py-2.5 bg-emerald-500 text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-emerald-600 disabled:opacity-40 flex items-center justify-center gap-2">
                                     <Save size={12} /> {savingNote ? 'Saving...' : 'Save Note'}
                                 </button>
+
                             </div>
                         )}
 
@@ -652,6 +654,135 @@ const ClinicalTab: React.FC<ClinicalTabProps> = ({
                                 <div className="py-8 text-center"><FileText size={28} className="mx-auto text-slate-700 mb-2" /><p className="text-slate-500 font-bold text-sm">No clinical notes</p></div>
                             )}
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* ========================================================= */}
+            {/* 5. CHECKOUT & DISPATCH (The New Unified Bottom Fold) */}
+            {/* ========================================================= */}
+            <div className="mt-8 mb-20 bg-slate-900 rounded-[40px] shadow-2xl overflow-hidden relative border border-slate-800 p-8 sm:p-12">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 blur-[80px] rounded-full pointer-events-none"></div>
+                <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/10 blur-[80px] rounded-full pointer-events-none"></div>
+
+                <div className="flex flex-col xl:flex-row justify-between items-start gap-12 relative z-10">
+                    <div className="flex-1 w-full space-y-8">
+                        <div>
+                            <div className="flex items-center gap-3 mb-4">
+                                <div className="p-3 bg-emerald-500/20 text-emerald-400 rounded-2xl"><Sparkles size={24} /></div>
+                                <div>
+                                    <h3 className="text-3xl font-black text-white tracking-tighter">Unified Checkout</h3>
+                                    <p className="text-slate-400 font-bold mt-1">Select Procedure & Assign Care Plan</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Smart Procedure Selector */}
+                        <div>
+                            <label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em] mb-4 block">1. Select Treatment Pathway</label>
+                            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 max-h-[220px] overflow-y-auto pr-2 custom-scrollbar">
+                                {TREATMENT_TEMPLATES.map(t => (
+                                    <button key={t.name} onClick={() => setSelectedTemplateName(t.name)}
+                                        className={`p-4 rounded-[20px] border-2 text-left transition-all ${selectedTemplateName === t.name ? 'border-emerald-500 bg-emerald-500/10 shadow-[0_0_20px_rgba(16,185,129,0.2)]' : 'border-slate-800 bg-slate-800/50 hover:border-slate-700'}`}>
+                                        <p className={`font-black tracking-tight leading-tight ${selectedTemplateName === t.name ? 'text-white' : 'text-slate-300'}`}>{t.name}</p>
+                                        <span className="text-[9px] uppercase font-bold text-slate-500 tracking-wider mt-2 block">{t.category}</span>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex-1 w-full xl:max-w-md space-y-8 bg-black/20 p-8 rounded-[32px] border border-white/5">
+                        <label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em] block">2. Personalize & Dispatch</label>
+
+                        {!selectedTemplateName ? (
+                            <div className="py-16 text-center border-2 border-dashed border-slate-800 rounded-[24px]">
+                                <Sparkles size={32} className="mx-auto text-slate-700 mb-3" />
+                                <p className="font-bold text-slate-400">Select a procedure to configure dispatch.</p>
+                            </div>
+                        ) : (
+                            <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-500">
+                                {/* Aftercare Instructions Tweak UI */}
+                                <div>
+                                    <div className="flex justify-between items-end mb-3">
+                                        <label className="text-[10px] font-black uppercase text-indigo-400 tracking-[0.2em]">Doctor's Custom Instructions</label>
+                                        <span className="text-[9px] text-slate-500 font-bold bg-white/5 px-2 py-0.5 rounded">Sent to Mobile App</span>
+                                    </div>
+                                    <div className="space-y-2 max-h-[200px] overflow-y-auto custom-scrollbar pr-2">
+                                        {aftercareInstructions.map((inst, i) => (
+                                            <div key={i} className="flex gap-2 group">
+                                                <div className="w-6 h-6 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-[9px] font-black shrink-0">{i + 1}</div>
+                                                <textarea value={inst} onChange={e => { const newInst = [...aftercareInstructions]; newInst[i] = e.target.value; setAftercareInstructions(newInst); }}
+                                                    className="flex-1 bg-transparent border-none text-sm font-medium text-slate-300 resize-none outline-none focus:text-white transition-colors" rows={2} />
+                                            </div>
+                                        ))}
+                                        <button onClick={() => setAftercareInstructions([...aftercareInstructions, ''])} className="text-[10px] font-black uppercase text-emerald-400 tracking-widest hover:text-emerald-300 transition-colors">+ Add Custom Rule</button>
+                                    </div>
+                                </div>
+
+                                {/* Payment Input */}
+                                <div className="pt-4 border-t border-white/10">
+                                    <div className="flex gap-4 items-end">
+                                        <div className="flex-1">
+                                            <label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em] mb-2 block">Total Cost</label>
+                                            <div className="relative">
+                                                <span className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 text-3xl font-black">₹</span>
+                                                <input type="number" min="0" placeholder="0.00" value={txAmount} onChange={(e) => setTxAmount(e.target.value)}
+                                                    className="w-full text-4xl font-black outline-none bg-white/5 border border-white/10 rounded-[20px] py-4 pl-14 pr-4 focus:border-emerald-500 transition-all text-white" />
+                                            </div>
+                                        </div>
+                                        <div className="w-1/3">
+                                            <label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em] mb-2 block">Category</label>
+                                            <select className="w-full p-5 bg-white/5 border border-white/10 rounded-[20px] outline-none font-bold text-[10px] text-white appearance-none"
+                                                onChange={(e) => setTxCategory(e.target.value as TransactionCategory)} value={txCategory}>
+                                                {Object.values(TransactionCategory).map(c => <option key={c} value={c} className="text-slate-900">{c}</option>)}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <button
+                                        disabled={!txAmount || parseFloat(txAmount) <= 0 || isDispatching}
+                                        onClick={async () => {
+                                            if (!txAmount || !onProcessTransaction || !onAssignPlan) return;
+
+                                            const template = TREATMENT_TEMPLATES.find(t => t.name === selectedTemplateName);
+                                            if (template) {
+                                                setIsDispatching(true);
+                                                try {
+                                                    // 1. Dispatch Payment & Points
+                                                    await onProcessTransaction(patient.id, parseFloat(txAmount), txCategory, TransactionType.EARN);
+                                                    // 2. Dispatch customized Aftercare regimen to PWA
+                                                    await onAssignPlan(clinic.id, patient.id, { ...template, customValues, instructions: aftercareInstructions });
+
+                                                    // Clear on success
+                                                    setTxAmount('');
+                                                    setSelectedTemplateName('');
+                                                    if (onRefreshData) onRefreshData();
+                                                } catch (err: any) {
+                                                    console.error("Dispatch Error:", err);
+                                                    alert("Failed to complete dispatch: " + err.message);
+                                                } finally {
+                                                    setIsDispatching(false);
+                                                }
+                                            }
+                                        }}
+                                        className="mt-6 w-full py-6 bg-emerald-500 hover:bg-emerald-400 text-slate-900 rounded-[20px] font-black text-xs uppercase tracking-[0.2em] shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2 relative overflow-hidden group border-none outline-none">
+
+                                        {isDispatching ? (
+                                            <>
+                                                <div className="h-4 w-4 rounded-full border-2 border-slate-900 border-t-transparent animate-spin"></div>
+                                                Dispatching to PWA...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></div>
+                                                <Sparkles size={16} className="relative z-10" /> <span className="relative z-10">Complete Visit & Dispatch</span>
+                                            </>
+                                        )}
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
