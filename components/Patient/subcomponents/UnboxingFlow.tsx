@@ -71,11 +71,19 @@ export default function UnboxingFlow({ clinic, user, onComplete }: UnboxingFlowP
                                 <h1 className="text-5xl font-black text-white tracking-tighter leading-none mb-4">Welcome<br />to <span style={{ color: clinic.primaryColor }}>{clinic.name}</span>.</h1>
                                 <p className="text-lg text-slate-400 font-medium">Your premium digital wallet for dental health and rewards.</p>
                             </div>
-                            <div className="pt-8">
+                            <div className="pt-4">
                                 <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Your Starting Tier</p>
                                 <div className="inline-block px-6 py-3 bg-white/10 rounded-full border border-white/20 text-white font-black tracking-widest uppercase">
                                     {user.currentTier} MEMBER
                                 </div>
+                            </div>
+                            <div className="space-y-4 pt-8">
+                                <button onClick={nextStep} className="w-full py-5 bg-white text-slate-900 rounded-[32px] font-black text-lg shadow-xl shadow-white/10 flex items-center justify-center gap-3 active:scale-95 transition-all hover:bg-slate-100">
+                                    Get Started <ChevronRight size={20} />
+                                </button>
+                                <button onClick={() => { localStorage.setItem(`retend_onboarded_${user.id}`, 'true'); onComplete(); }} className="w-full py-4 text-slate-500 text-sm font-bold uppercase tracking-widest active:scale-95 transition-all">
+                                    Skip Tour
+                                </button>
                             </div>
                         </motion.div>
                     )}

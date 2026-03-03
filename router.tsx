@@ -138,13 +138,14 @@ export const AppRouter: React.FC<RouterProps> = ({ appState, handlers, backendSe
                         transactions={appState.transactions}
                         carePlans={appState.carePlans}
                         appointments={appState.appointments}
+                        familyGroups={appState.familyGroups || []}
                         clinic={activeClinic}
                         onToggleChecklistItem={handlers.onToggleChecklistItem}
                         onUpdateCarePlan={handlers.onUpdateCarePlan}
                         onSchedule={handlers.onSchedule}
                         onAddFamilyMember={handlers.onAddFamilyMember}
                         onSwitchProfile={handlers.onSwitchProfile}
-                        onRedeem={handlers.onRedeem}
+                        onRedeem={handlers.onProcessTransaction}
                         onLinkFamily={handlers.onLinkFamily}
                     />
                 } />
