@@ -105,7 +105,9 @@ const App = () => {
       let derivedClinicId = 'platform';
 
       // SUBDOMAIN DETECTION (DNS LEVEL)
-      // This is the "Proper Solution": clinic.platform.com
+      // Pattern: clinic.app.retaindental.com
+      // Works with wildcard DNS: *.app.retaindental.com → Cloudflare Pages
+      // On localhost: clinic.localhost for testing
       const hostname = window.location.hostname;
       const parts = hostname.split('.');
       let subdomain = null;
@@ -114,8 +116,8 @@ const App = () => {
       if (hostname.includes('localhost') && parts.length > 1) {
         subdomain = parts[0];
       }
-      // 2. Handle Custom Domains (e.g. city.dentalos.com)
-      // We must exclude 'vercel.app' because 'retain-dental.vercel.app' -> 'retain-dental' is NOT a clinic.
+      // 2. Handle Custom Domains (e.g. citydental.app.retaindental.com)
+      // Exclude 'vercel.app' because 'retain-dental.vercel.app' is NOT a clinic.
       else if (parts.length > 2 && !hostname.endsWith('vercel.app')) {
         subdomain = parts[0];
       }
