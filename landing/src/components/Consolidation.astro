@@ -1,15 +1,15 @@
-<section class="py-24 px-6 bg-slate-900 relative overflow-hidden">
+<section class="py-24 px-6 bg-cream-100 relative overflow-hidden">
   <div class="max-w-7xl mx-auto">
     <div class="text-center max-w-2xl mx-auto mb-16 space-y-4">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-widest mx-auto">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-50 border border-teal-200 text-teal-600 text-xs font-bold uppercase tracking-widest mx-auto">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
         Stack Consolidation
       </div>
-      <h2 class="text-4xl md:text-5xl font-black text-white tracking-tighter">
+      <h2 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter">
         Replace 6 tools with<br />
-        <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">one platform</span>
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-teal-700">one platform</span>
       </h2>
-      <p class="text-lg text-slate-400">Stop the tool sprawl. RetainOS replaces the average dental practice stack at a fraction of the cost.</p>
+      <p class="text-lg text-slate-500">Stop the tool sprawl. RetainOS replaces the average dental practice stack at a fraction of the cost.</p>
     </div>
 
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 max-w-5xl mx-auto">
@@ -21,25 +21,25 @@
         { name: 'Patient Reviews', cost: '$99 /mo', tool: 'BirdEye' },
         { name: 'Marketing SMS', cost: '$0.02 /msg', tool: 'Twilio' }
       ].map(item => (
-        <div class="p-4 sm:p-5 rounded-2xl bg-white/5 border border-white/5 hover:border-rose-500/20 transition-colors group">
+        <div class="p-4 sm:p-5 rounded-2xl bg-cream-100/70 border border-gray-200/80 hover:border-rose-200 transition-colors group">
           <div class="flex items-center justify-between mb-3">
-            <p class="font-bold text-white text-sm">{item.name}</p>
-            <div class="flex items-center gap-1 text-rose-400 text-xs opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+            <p class="font-bold text-slate-900 text-sm">{item.name}</p>
+            <div class="flex items-center gap-1 text-rose-600 text-xs opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
               Replace
             </div>
           </div>
-          <p class="text-lg font-black text-emerald-400 mb-1 break-all sm:break-normal">{item.cost}</p>
+          <p class="text-lg font-black text-teal-600 mb-1 break-all sm:break-normal">{item.cost}</p>
           <p class="text-xs text-slate-600">vs. {item.tool}</p>
         </div>
       ))}
     </div>
 
-    <div class="mt-10 sm:mt-12 p-6 sm:p-8 rounded-[2rem] bg-gradient-to-r from-emerald-900/20 via-slate-800 to-teal-900/20 border border-emerald-700/20 max-w-3xl mx-auto text-center">
-      <p class="text-xl sm:text-2xl font-black text-white mb-2">
-        RetainOS bundles <span class="text-emerald-400">all of the above</span>
+    <div class="mt-10 sm:mt-12 p-6 sm:p-8 rounded-[2rem] bg-gradient-to-r from-teal-900/20 via-slate-800 to-cyan-900/20 border border-teal-200/60 max-w-3xl mx-auto text-center">
+      <p class="text-xl sm:text-2xl font-black text-slate-900 mb-2">
+        RetainOS bundles <span class="text-teal-600">all of the above</span>
       </p>
-      <p class="text-base sm:text-lg text-slate-400">One login. One dashboard. One invoice.</p>
+      <p class="text-base sm:text-lg text-slate-500">One login. One dashboard. One invoice.</p>
     </div>
   </div>
 </section>

@@ -9,13 +9,13 @@ export default function BrandShowcase() {
   const [active, setActive] = useState(0)
 
   return (
-    <section class="py-24 px-6 bg-slate-900 relative overflow-hidden">
+    <section class="py-24 px-6 bg-cream-100 relative overflow-hidden">
       <div class="max-w-7xl mx-auto">
         <div class="text-center max-w-2xl mx-auto mb-16 space-y-4">
-          <h2 class="text-4xl md:text-5xl font-black text-white tracking-tighter">
-            See RetainOS in <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Action</span>
+          <h2 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter">
+            See RetainOS in <span class="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-amber-600">Action</span>
           </h2>
-          <p class="text-lg text-slate-400">
+          <p class="text-lg text-slate-500">
             A fully branded experience for every user — clinic owners, staff, and patients.
           </p>
         </div>
@@ -27,7 +27,7 @@ export default function BrandShowcase() {
               className={`px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 ${
                 active === i
                   ? 'bg-white text-slate-900 shadow-xl'
-                  : 'bg-white/5 text-slate-400 border border-white/10 hover:border-white/30'
+                  : 'bg-cream-100/70 text-slate-500 border border-gray-200 hover:border-white/30'
               }`}
             >
               {s.label}
@@ -37,7 +37,7 @@ export default function BrandShowcase() {
 
         <div class="relative max-w-4xl mx-auto">
           <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent z-10 pointer-events-none"></div>
-          <div class="rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-indigo-900/20 bg-slate-950">
+          <div class="rounded-2xl overflow-hidden border border-gray-200 shadow-xl shadow-gray-200/80 bg-cream-50">
             <img
               src={screenshots[active].src}
               alt={screenshots[active].alt}

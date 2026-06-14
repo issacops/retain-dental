@@ -35,14 +35,14 @@ const posts = [
   description="Expert advice on dental patient retention, Invisalign compliance tracking, launching loyalty apps, and growing your dental practice with technology."
   canonical="https://retaindental.com/blog"
 >
-  <section class="pt-32 pb-24 px-6 bg-slate-950 min-h-screen">
+  <section class="pt-32 pb-24 px-6 bg-cream-50 min-h-screen">
     <div class="max-w-5xl mx-auto">
       <div class="text-center mb-16 space-y-4">
-        <span class="text-indigo-400 font-bold tracking-widest uppercase text-sm">Blog</span>
-        <h1 class="text-5xl md:text-6xl font-black text-white tracking-tighter">
+        <span class="text-teal-600 font-bold tracking-widest uppercase text-sm">Blog</span>
+        <h1 class="text-5xl md:text-6xl font-black text-slate-900 tracking-tighter">
           Dental Practice Growth Insights
         </h1>
-        <p class="text-slate-400 text-lg max-w-2xl mx-auto">
+        <p class="text-slate-500 text-lg max-w-2xl mx-auto">
           Expert guides and strategies for patient retention, Invisalign compliance, and launching your branded loyalty app.
         </p>
       </div>
@@ -50,16 +50,16 @@ const posts = [
       <div class="space-y-8">
         {posts.map((post) => (
           <a href={`/blog/${post.slug}`} class="block group">
-            <article class="p-8 rounded-2xl bg-slate-900/50 border border-slate-800 hover:border-indigo-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/5">
+            <article class="p-8 rounded-2xl bg-cream-100/80 border border-gray-200 hover:border-cyan-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-cyan-500/5">
               <div class="flex flex-wrap gap-2 mb-4">
                 {post.tags.map(tag => (
-                  <span class="text-[10px] font-bold text-indigo-400 bg-indigo-500/10 px-2 py-1 rounded uppercase tracking-widest">{tag}</span>
+                  <span class="text-[10px] font-bold text-teal-600 bg-teal-50 px-2 py-1 rounded uppercase tracking-widest">{tag}</span>
                 ))}
               </div>
-              <h2 class="text-2xl font-bold text-white group-hover:text-indigo-400 transition-colors mb-3">
+              <h2 class="text-2xl font-bold text-slate-900 group-hover:text-teal-600 transition-colors mb-3">
                 {post.title}
               </h2>
-              <p class="text-slate-400 leading-relaxed mb-4">{post.excerpt}</p>
+              <p class="text-slate-500 leading-relaxed mb-4">{post.excerpt}</p>
               <div class="flex items-center justify-between text-sm">
                 <span class="text-slate-500">{post.author}</span>
                 <span class="text-slate-500">{new Date(post.date).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}</span>

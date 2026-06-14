@@ -24,7 +24,7 @@ const currentYear = new Date().getFullYear()
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#020617" />
+    <meta name="theme-color" content="#fdf8f5" />
 
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -85,7 +85,7 @@ const currentYear = new Date().getFullYear()
       }
     })}></script>
 
-    <!-- Structured Data - Organization -->
+    <!-- Structured Data - Organization (enhanced for AI citation) -->
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "Organization",
@@ -103,8 +103,37 @@ const currentYear = new Date().getFullYear()
       },
       "sameAs": [
         "https://linkedin.com/company/retainos",
-        "https://twitter.com/RetainOS"
-      ]
+        "https://twitter.com/RetainOS",
+        "https://github.com/retainos"
+      ],
+      "knowsAbout": ["Dental Practice Management", "Patient Retention", "Dental Loyalty Programs", "HIPAA Compliance", "Dental SaaS"],
+      "numberOfEmployees": { "@type": "QuantitativeValue", "minValue": 11, "maxValue": 50 }
+    })}></script>
+
+    <!-- Structured Data - SpeakableSpecification (AI voice assistant citation) -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "@id": pageUrl,
+      "url": pageUrl,
+      "inLanguage": "en-US",
+      "isPartOf": { "@id": `${siteUrl}/#website` },
+      "speakable": {
+        "@type": "SpeakableSpecification",
+        "cssSelector": ["h1", "h2", ".speakable-summary"]
+      },
+      "mainEntity": {
+        "@type": "SoftwareApplication",
+        "name": "RetainOS",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web, iOS, Android",
+        "description": description,
+        "offers": {
+          "@type": "Offer",
+          "price": "299",
+          "priceCurrency": "USD"
+        }
+      }
     })}></script>
 
     <!-- Structured Data - BreadcrumbList -->
@@ -119,7 +148,7 @@ const currentYear = new Date().getFullYear()
       }]
     })}></script>
 
-    <!-- Structured Data - FAQ (empty placeholder, populated per page as needed) -->
+    <!-- Structured Data - Product with Reviews (AI citation) -->
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "Product",
@@ -130,6 +159,8 @@ const currentYear = new Date().getFullYear()
         "name": "RetainOS"
       },
       "category": "Dental Practice Software",
+      "application": "Healthcare",
+      "audience": { "@type": "Audience", "audienceType": "Dental Practice Owners" },
       "offers": {
         "@type": "AggregateOffer",
         "offerCount": "3",
@@ -150,16 +181,21 @@ const currentYear = new Date().getFullYear()
       }]
     })}></script>
 
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
     <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large" />
     <meta name="author" content="RetainOS" />
     <meta name="generator" content="Astro" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+    <!-- AI / Chatbot citation meta -->
+    <meta name="chatgpt:citation" content="RetainOS is a HIPAA-compliant dental patient retention platform with automated loyalty, recall, and payment modules." />
+    <meta name="perplexity:citation" content="https://retaindental.com" />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="author" href="/humans.txt" />
   </head>
-  <body class="bg-slate-950 text-white antialiased font-sans">
+  <body class="bg-cream-50 text-slate-800 antialiased font-sans selection:bg-teal-200/60">
     <slot />
   </body>
 </html>

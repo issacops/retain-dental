@@ -1,9 +1,9 @@
 ---
 const stats = [
-  { stat: '3.7x', label: 'Higher LTV for referred patients', color: 'text-emerald-400' },
-  { stat: '92%', label: 'Referral link open rate', color: 'text-indigo-400' },
-  { stat: '$0', label: 'Acquisition cost per referred patient', color: 'text-amber-400' },
-  { stat: '14 days', label: 'Average time from referral to booked visit', color: 'text-purple-400' },
+  { stat: '3.7x', label: 'Higher LTV for referred patients', color: 'text-teal-600' },
+  { stat: '92%', label: 'Referral link open rate', color: 'text-teal-600' },
+  { stat: '$0', label: 'Acquisition cost per referred patient', color: 'text-amber-600' },
+  { stat: '14 days', label: 'Average time from referral to booked visit', color: 'text-amber-600' },
 ]
 
 const flowSteps = [
@@ -14,40 +14,40 @@ const flowSteps = [
 ]
 ---
 
-<section class="py-24 px-6 bg-slate-950 relative overflow-hidden">
-  <div class="absolute bottom-[-15%] right-[-5%] w-[500px] h-[500px] bg-rose-500/5 blur-[120px] rounded-full pointer-events-none"></div>
+<section class="py-24 px-6 bg-cream-50 relative overflow-hidden">
+  <div class="absolute bottom-[-15%] right-[-5%] w-[500px] h-[500px] bg-rose-50/50 blur-[120px] rounded-full pointer-events-none"></div>
 
   <div class="max-w-7xl mx-auto relative z-10">
     <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-bold uppercase tracking-widest">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-50 border border-rose-200 text-rose-600 text-xs font-bold uppercase tracking-widest">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
         Patient Referral Engine
       </div>
-      <h2 class="text-4xl md:text-5xl font-black text-white tracking-tighter">
+      <h2 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter">
         Your happiest patients become<br />
-        <span class="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-pink-500">your best marketers</span>
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-rose-700">your best marketers</span>
       </h2>
-      <p class="text-lg text-slate-400">Every smile you create is a walking billboard. RetainOS turns patient satisfaction into a self-funding acquisition channel — with zero ad spend.</p>
+      <p class="text-lg text-slate-500">Every smile you create is a walking billboard. RetainOS turns patient satisfaction into a self-funding acquisition channel — with zero ad spend.</p>
     </div>
 
     <div class="grid lg:grid-cols-2 gap-16 items-center max-w-6xl mx-auto mb-16">
       <div class="space-y-0 relative">
-        <div class="absolute left-[23px] top-12 bottom-12 w-0.5 bg-gradient-to-b from-rose-500/50 via-pink-500/30 to-transparent hidden lg:block"></div>
+        <div class="absolute left-[23px] top-12 bottom-12 w-0.5 bg-gradient-to-b from-rose-500/50 via-rose-500/30 to-transparent hidden lg:block"></div>
         {flowSteps.map(item => (
           <div class="flex gap-6 pb-8 last:pb-0 relative">
             <div class="relative z-10">
-              <div class="w-[46px] h-[46px] rounded-full bg-slate-800 border-2 border-rose-500/30 flex items-center justify-center">
-                <span class="text-sm font-black text-rose-400">{item.step}</span>
+              <div class="w-[46px] h-[46px] rounded-full bg-white border-2 border-rose-500/30 flex items-center justify-center">
+                <span class="text-sm font-black text-rose-600">{item.step}</span>
               </div>
             </div>
             <div class="flex-1 pt-2 min-w-0">
               <div class="flex items-center gap-2 mb-1">
-                <div class="w-6 h-6 rounded-md bg-rose-500/15 flex items-center justify-center shrink-0">
+                <div class="w-6 h-6 rounded-md bg-rose-50/80 flex items-center justify-center shrink-0">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#f43f5e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d={item.icon}/></svg>
                 </div>
-                <h3 class="text-lg font-bold text-white">{item.title}</h3>
+                <h3 class="text-lg font-bold text-slate-900">{item.title}</h3>
               </div>
-              <p class="text-sm text-slate-400 leading-relaxed">{item.desc}</p>
+              <p class="text-sm text-slate-500 leading-relaxed">{item.desc}</p>
             </div>
           </div>
         ))}
@@ -56,35 +56,35 @@ const flowSteps = [
       <div class="space-y-6">
         <div class="grid grid-cols-2 gap-4">
           {stats.map(s => (
-            <div class="p-5 rounded-2xl bg-white/[0.03] border border-white/5">
+            <div class="p-5 rounded-2xl bg-cream-100/50 border border-gray-200/80">
               <p class={`text-2xl font-black ${s.color} mb-0.5`}>{s.stat}</p>
               <p class="text-xs text-slate-500 font-semibold">{s.label}</p>
             </div>
           ))}
         </div>
 
-        <div class="p-6 rounded-2xl bg-gradient-to-br from-rose-900/20 to-pink-900/20 border border-rose-700/20">
+        <div class="p-6 rounded-2xl bg-gradient-to-br from-rose-50 to-rose-900/20 border border-rose-700/20">
           <div class="space-y-4">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-full bg-rose-500/20 flex items-center justify-center shrink-0">
+              <div class="w-10 h-10 rounded-full bg-rose-100/80 flex items-center justify-center shrink-0">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f43f5e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
               </div>
               <div>
-                <p class="text-white font-bold">The Math Works for Everyone</p>
-                <p class="text-xs text-slate-400">Patient earns 500 pts · Friend gets 250 pts · You get a new patient at $0 CAC</p>
+                <p class="text-slate-900 font-bold">The Math Works for Everyone</p>
+                <p class="text-xs text-slate-500">Patient earns 500 pts · Friend gets 250 pts · You get a new patient at $0 CAC</p>
               </div>
             </div>
-            <div class="h-px bg-white/5"></div>
+            <div class="h-px bg-cream-100/70"></div>
             <div class="flex items-center justify-between text-sm">
-              <span class="text-slate-400">Traditional Google Ads CAC</span>
-              <span class="text-rose-400 font-bold">$500+</span>
+              <span class="text-slate-500">Traditional Google Ads CAC</span>
+              <span class="text-rose-600 font-bold">$500+</span>
             </div>
             <div class="flex items-center justify-between text-sm">
-              <span class="text-slate-400">RetainOS referral CAC</span>
-              <span class="text-emerald-400 font-bold">$0</span>
+              <span class="text-slate-500">RetainOS referral CAC</span>
+              <span class="text-teal-600 font-bold">$0</span>
             </div>
             <div class="w-full h-2 bg-slate-700 rounded-full overflow-hidden">
-              <div class="h-full w-0 bg-emerald-500 rounded-full"></div>
+              <div class="h-full w-0 bg-teal-500 rounded-full"></div>
             </div>
             <div class="w-full h-2 bg-slate-700 rounded-full overflow-hidden">
               <div class="h-full w-full bg-rose-500/30 rounded-full"></div>

@@ -1,24 +1,24 @@
-<footer class="py-16 px-6 bg-slate-950 border-t border-white/5">
+<footer class="py-16 px-6 bg-cream-50 border-t border-gray-200/80">
   <div class="max-w-7xl mx-auto">
     <div class="grid md:grid-cols-4 gap-10">
       <div class="space-y-4">
-        <p class="text-xl font-black text-white">Retain<span class="text-indigo-400">OS</span></p>
+        <p class="text-xl font-black text-slate-900">Retain<span class="text-teal-600">OS</span></p>
         <p class="text-sm text-slate-600 leading-relaxed max-w-xs">
           The operating system for modern dental practices. Launch your branded patient app in 20 minutes.
         </p>
       </div>
 
       <div>
-        <p class="text-sm font-bold text-white mb-4 uppercase tracking-widest">Product</p>
+        <p class="text-sm font-bold text-slate-900 mb-4 uppercase tracking-widest">Product</p>
         <ul class="space-y-3">
           {[{ href: '#platform', label: 'Platform' }, { href: '#how-it-works', label: 'How It Works' }, { href: '#faq', label: 'FAQ' }, { href: '#waitlist', label: 'Get Started' }, { href: '/blog', label: 'Blog' }, { href: '/blog/dental-loyalty-app-guide', label: 'Loyalty App Guide' }].map(item => (
-            <li><a href={item.href} class="text-sm text-slate-500 hover:text-white transition-colors">{item.label}</a></li>
+            <li><a href={item.href} class="text-sm text-slate-500 hover:text-slate-900 transition-colors">{item.label}</a></li>
           ))}
         </ul>
       </div>
 
       <div>
-        <p class="text-sm font-bold text-white mb-4 uppercase tracking-widest">Company</p>
+        <p class="text-sm font-bold text-slate-900 mb-4 uppercase tracking-widest">Company</p>
         <ul class="space-y-3">
           {[{ label: 'About' }, { label: 'Blog' }, { label: 'Careers' }, { label: 'Contact' }].map(item => (
             <li><span class="text-sm text-slate-500">{item.label}</span></li>
@@ -27,7 +27,7 @@
       </div>
 
       <div>
-        <p class="text-sm font-bold text-white mb-4 uppercase tracking-widest">Legal</p>
+        <p class="text-sm font-bold text-slate-900 mb-4 uppercase tracking-widest">Legal</p>
         <ul class="space-y-3">
           {[{ label: 'Privacy Policy' }, { label: 'Terms of Service' }, { label: 'HIPAA Compliance' }, { label: 'Security' }].map(item => (
             <li><span class="text-sm text-slate-500">{item.label}</span></li>
@@ -36,7 +36,7 @@
       </div>
     </div>
 
-    <div class="mt-12 pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
+    <div class="mt-12 pt-8 border-t border-gray-200/80 flex flex-col md:flex-row items-center justify-between gap-4">
       <p class="text-xs text-slate-700">&copy; {new Date().getFullYear()} RetainOS. All rights reserved.</p>
       <div class="flex items-center gap-4">
         <span class="text-xs text-slate-700">HIPAA Compliant</span>

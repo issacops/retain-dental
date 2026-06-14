@@ -40,13 +40,13 @@ export default function WaitlistForm() {
 
   if (state === 'success') {
     return (
-      <div id="waitlist-form" class="max-w-md mx-auto p-8 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-center space-y-3">
-        <div class="w-14 h-14 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      <div id="waitlist-form" class="max-w-md mx-auto p-8 rounded-2xl bg-teal-50 border border-teal-200/80 text-center space-y-3">
+        <div class="w-14 h-14 bg-teal-100/80 rounded-full flex items-center justify-center mx-auto">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0d9488" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
         </div>
-        <h3 class="text-xl font-bold text-white">You're on the list!</h3>
-        <p class="text-slate-400 text-sm">We'll be in touch within 24 hours to get your branded app live.</p>
-        <button onClick={() => setState('idle')} class="text-xs text-slate-500 hover:text-white transition-colors underline">Submit another</button>
+        <h3 class="text-xl font-bold text-slate-900">You're on the list!</h3>
+        <p class="text-slate-500 text-sm">We'll be in touch within 24 hours to get your branded app live.</p>
+        <button onClick={() => setState('idle')} class="text-xs text-slate-500 hover:text-slate-900 transition-colors underline">Submit another</button>
       </div>
     )
   }
@@ -56,7 +56,7 @@ export default function WaitlistForm() {
       <form onSubmit={submit} class="space-y-5">
         <div class="grid sm:grid-cols-2 gap-5">
           <div>
-            <label for="name" class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Your Name</label>
+            <label for="name" class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Your Name</label>
             <input
               id="name"
               name="name"
@@ -65,11 +65,11 @@ export default function WaitlistForm() {
               value={form.name}
               onInput={update}
               placeholder="Dr. John Smith"
-              class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-slate-600 focus:outline-none focus:border-indigo-500/50 transition-colors"
+              class="w-full px-4 py-3 bg-cream-100/70 border border-gray-200 rounded-xl text-slate-900 placeholder:text-slate-600 focus:outline-none focus:border-teal-300 transition-colors"
             />
           </div>
           <div>
-            <label for="email" class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Email</label>
+            <label for="email" class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Email</label>
             <input
               id="email"
               name="email"
@@ -78,13 +78,13 @@ export default function WaitlistForm() {
               value={form.email}
               onInput={update}
               placeholder="john@yourclinic.com"
-              class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-slate-600 focus:outline-none focus:border-indigo-500/50 transition-colors"
+              class="w-full px-4 py-3 bg-cream-100/70 border border-gray-200 rounded-xl text-slate-900 placeholder:text-slate-600 focus:outline-none focus:border-teal-300 transition-colors"
             />
           </div>
         </div>
         <div class="grid sm:grid-cols-2 gap-5">
           <div>
-            <label for="clinic" class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Clinic Name</label>
+            <label for="clinic" class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Clinic Name</label>
             <input
               id="clinic"
               name="clinic"
@@ -93,11 +93,11 @@ export default function WaitlistForm() {
               value={form.clinic}
               onInput={update}
               placeholder="Smith Family Dentistry"
-              class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-slate-600 focus:outline-none focus:border-indigo-500/50 transition-colors"
+              class="w-full px-4 py-3 bg-cream-100/70 border border-gray-200 rounded-xl text-slate-900 placeholder:text-slate-600 focus:outline-none focus:border-teal-300 transition-colors"
             />
           </div>
           <div>
-            <label for="phone" class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Phone</label>
+            <label for="phone" class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Phone</label>
             <input
               id="phone"
               name="phone"
@@ -105,19 +105,19 @@ export default function WaitlistForm() {
               value={form.phone}
               onInput={update}
               placeholder="+1 (312) 555-0123"
-              class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-slate-600 focus:outline-none focus:border-indigo-500/50 transition-colors"
+              class="w-full px-4 py-3 bg-cream-100/70 border border-gray-200 rounded-xl text-slate-900 placeholder:text-slate-600 focus:outline-none focus:border-teal-300 transition-colors"
             />
           </div>
         </div>
         <button
           type="submit"
           disabled={state === 'submitting'}
-          class="w-full py-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl font-bold text-lg hover:scale-[1.02] hover:shadow-xl hover:shadow-indigo-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          class="w-full py-4 bg-gradient-to-r from-teal-500 to-teal-600 text-slate-900 rounded-xl font-bold text-lg hover:scale-[1.02] hover:shadow-xl hover:shadow-cyan-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {state === 'submitting' ? 'Sending...' : 'Launch My App'}
         </button>
         {state === 'error' && (
-          <p class="text-center text-xs text-rose-400">Something went wrong. Please try again or email us directly.</p>
+          <p class="text-center text-xs text-rose-600">Something went wrong. Please try again or email us directly.</p>
         )}
         <p class="text-center text-xs text-slate-600">No spam. No contracts. Cancel anytime.</p>
       </form>

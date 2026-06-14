@@ -1,10 +1,10 @@
-<section id="faq" class="py-24 px-6 bg-slate-950 relative overflow-hidden" itemscope itemtype="https://schema.org/FAQPage">
+<section id="faq" class="py-24 px-6 bg-cream-50 relative overflow-hidden" itemscope itemtype="https://schema.org/FAQPage">
   <div class="max-w-7xl mx-auto">
     <div class="text-center max-w-2xl mx-auto mb-16 space-y-4">
-      <h2 class="text-4xl md:text-5xl font-black text-white tracking-tighter">
-        Frequently Asked <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Questions</span>
+      <h2 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter">
+        Frequently Asked <span class="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-amber-600">Questions</span>
       </h2>
-      <p class="text-lg text-slate-400">Everything you need to know about RetainOS.</p>
+      <p class="text-lg text-slate-500">Everything you need to know about RetainOS.</p>
     </div>
 
     <div class="max-w-3xl mx-auto space-y-4">
@@ -20,12 +20,12 @@
       ].map((faq, i) => {
         const id = `faq-${i}`;
         return (
-          <details class="group p-6 rounded-2xl bg-white/[0.03] border border-white/5 open:border-indigo-500/30 open:bg-indigo-500/5 transition-all duration-300">
+          <details class="group p-6 rounded-2xl bg-cream-100/50 border border-gray-200/80 open:border-teal-200/80 open:bg-teal-50/80 transition-all duration-300">
             <summary class="flex justify-between items-center cursor-pointer list-none">
-              <span class="text-base font-bold text-white pr-4">{faq.q}</span>
+              <span class="text-base font-bold text-slate-900 pr-4">{faq.q}</span>
               <svg class="w-5 h-5 text-slate-500 shrink-0 group-open:rotate-45 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             </summary>
-            <p class="mt-4 text-slate-400 leading-relaxed">{faq.a}</p>
+            <p class="mt-4 text-slate-500 leading-relaxed">{faq.a}</p>
           </details>
         );
       })}

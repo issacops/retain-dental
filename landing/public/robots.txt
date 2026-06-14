@@ -5,6 +5,9 @@ Disallow: /_astro/
 User-agent: GPTBot
 Allow: /
 
+User-agent: ChatGPT-User
+Allow: /
+
 User-agent: CCBot
 Allow: /
 
