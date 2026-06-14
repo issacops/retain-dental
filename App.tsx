@@ -166,11 +166,12 @@ const App = () => {
             found = { ...found, name: session.user.user_metadata.full_name };
           }
           activeUser = found;
-        } else if (session.user.email?.toLowerCase() === 'issaciconnect@gmail.com') {
+        } else if (session.user.email?.toLowerCase() === 'issaciconnect@gmail.com' || session.user.email?.toLowerCase() === 'god@retain.dental') {
           // 2. Fallback: God Mode (Only if no specific profile exists)
+          const godName = session.user.email?.toLowerCase() === 'issaciconnect@gmail.com' ? 'Isaac Thomas' : 'Platform Master';
           activeUser = {
             id: session.user.id,
-            name: 'Isaac Thomas',
+            name: godName,
             mobile: 'SUPER-ADMIN',
             role: Role.SUPER_ADMIN,
             clinicId: 'platform',
@@ -370,6 +371,22 @@ const App = () => {
     if (result.success && result.updatedData) {
       setData(prev => ({ ...prev, ...result.updatedData }));
       addToast("Clinic Deployed Successfully", "success");
+      // Register subdomain via Cloudflare Pages Function
+      try {
+        const subRes = await fetch('/api/register-subdomain', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ slug, clinicName: name }),
+        });
+        const subData = await subRes.json();
+        if (subData.success) {
+          addToast(`Subdomain live: ${subData.domain}`, "success");
+        } else {
+          addToast(`DNS registration: ${subData.dns?.errors?.[0]?.message || subData.pages?.errors?.[0]?.message || 'check logs'}`, "warning");
+        }
+      } catch (e) {
+        console.error('Subdomain registration failed:', e);
+      }
     } else {
       addToast(`Deployment Failed: ${result.message}`, "error");
     }
