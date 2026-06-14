@@ -8,8 +8,29 @@
   <meta name="description" content="Retain Dental is the Dentist's Loyalty Operating System. Convert patient spend into tiered membership status and lock in future revenue." />
   <meta name="apple-mobile-web-app-title" content="Retain OS" />
   <link rel="apple-touch-icon" href="/icon-192.png" />
-  <link rel="manifest" href="/manifest.json" />
-  <meta name="theme-color" content="#6366f1" />
+  <link id="pwa-manifest" rel="manifest" href="/manifest.json" />
+  <meta id="pwa-theme-color" name="theme-color" content="#6366f1" />
+
+  <script>
+    // PWA Manifest Pre-hydration: Detect subdomain and set dynamic manifest before React loads
+    (function() {
+      var host = window.location.hostname;
+      var parts = host.split('.');
+      var subdomain = null;
+      if (host.includes('localhost') && parts.length > 1) subdomain = parts[0];
+      else if (parts.length > 2 && !host.endsWith('vercel.app')) subdomain = parts[0];
+      var params = new URLSearchParams(window.location.search);
+      var subParam = params.get('subdomain');
+      if (subParam) subdomain = subParam;
+      if (subdomain && !['www','app','platform','api','localhost'].includes(subdomain)) {
+        var manifestLink = document.getElementById('pwa-manifest');
+        if (manifestLink) manifestLink.href = '/api/manifest?slug=' + subdomain;
+        var themeMeta = document.getElementById('pwa-theme-color');
+        var storedTheme = localStorage.getItem('retain_clinic_color');
+        if (storedTheme && themeMeta) themeMeta.content = storedTheme;
+      }
+    })();
+  </script>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

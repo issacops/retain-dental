@@ -34,7 +34,40 @@ export class MockBackendService implements IBackendService {
 
   private constructor() {
     // Sync constructor is fine, but methods will be async
-    const savedState = typeof window !== 'undefined' ? localStorage.getItem('dentalOS_db_v2') : null;
+    let savedState = typeof window !== 'undefined' ? localStorage.getItem('dentalOS_db_v2') : null;
+
+    // BACKWARD COMPATIBILITY: Migrate from older versions
+    if (!savedState) {
+      const oldV1 = typeof window !== 'undefined' ? localStorage.getItem('dentalOS_db') : null;
+      if (oldV1) {
+        try {
+          const parsed = JSON.parse(oldV1);
+          // v1 had 'clinics', 'users', etc. but may lack carePlans, appointments, systemConfig
+          savedState = JSON.stringify({
+            clinics: parsed.clinics || [],
+            users: parsed.users || [],
+            wallets: parsed.wallets || [],
+            transactions: parsed.transactions || [],
+            familyGroups: parsed.familyGroups || [],
+            carePlans: parsed.carePlans || [],
+            appointments: parsed.appointments || [],
+            systemConfig: parsed.systemConfig || {
+              platformName: 'PracticePrime OS',
+              baseCurrency: 'INR',
+              globalMfaEnabled: true,
+              maintenanceMode: false,
+              referralBonusPoints: 500
+            },
+            activityLogs: parsed.activityLogs || []
+          });
+          localStorage.setItem('dentalOS_db_v2', savedState);
+          localStorage.removeItem('dentalOS_db');
+          console.log('[MockBackend] Migrated data from v1 to v2');
+        } catch (e) {
+          console.warn('[MockBackend] Failed to migrate v1 data, starting fresh');
+        }
+      }
+    }
 
     if (savedState) {
       const parsed = JSON.parse(savedState);

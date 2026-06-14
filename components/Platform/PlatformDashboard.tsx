@@ -740,12 +740,17 @@ const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, o
                               </div>
                            </div>
                            <div className="space-y-4">
-                              <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest px-1">Logo URL</label>
-                              <input
-                                 value={editDraft.logoUrl || ''}
-                                 onChange={e => setEditDraft({ ...editDraft, logoUrl: e.target.value })}
-                                 className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white font-bold text-sm outline-none focus:border-indigo-500"
-                              />
+                              <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest px-1">Theme Texture</label>
+                              <select
+                                 value={editDraft.themeTexture || 'minimal'}
+                                 onChange={e => setEditDraft({ ...editDraft, themeTexture: e.target.value })}
+                                 className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white font-bold text-sm outline-none focus:border-indigo-500 [&>option]:text-black"
+                              >
+                                 <option value="minimal">Minimal (Clean White)</option>
+                                 <option value="grain">Grain (Subtle Texture)</option>
+                                 <option value="aurora">Aurora (Soft Gradients)</option>
+                                 <option value="glass">Glass (Frosted Panels)</option>
+                              </select>
                            </div>
                         </div>
 
@@ -757,6 +762,40 @@ const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, o
                               placeholder="+91 99999 88888"
                               className="w-full bg-rose-500/10 border border-rose-500/20 rounded-2xl px-6 py-4 text-white font-bold text-sm outline-none focus:border-rose-500 placeholder:text-rose-500/30"
                            />
+                        </div>
+
+                        {/* LIVE BRAND PREVIEW */}
+                        <div className="space-y-4 pt-6 border-t border-white/10">
+                           <label className="text-[10px] font-black text-indigo-400 uppercase tracking-widest px-1">Live Patient App Preview</label>
+                           <div className="bg-white rounded-[32px] p-8 max-w-sm mx-auto shadow-xl border border-white/20 overflow-hidden" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                              <div className="flex items-center gap-3 mb-6">
+                                 {editDraft.logoUrl ? (
+                                    <img src={editDraft.logoUrl} className="h-10 w-10 rounded-xl object-cover ring-2 ring-slate-100" />
+                                 ) : (
+                                    <div className="h-10 w-10 rounded-xl flex items-center justify-center text-white font-black text-lg" style={{ backgroundColor: editDraft.primaryColor || '#6366f1' }}>
+                                       {(editDraft.name || 'C').charAt(0)}
+                                    </div>
+                                 )}
+                                 <div>
+                                    <p className="font-black text-slate-900 text-sm leading-tight">{editDraft.name || 'Clinic Name'}</p>
+                                    <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Patient Portal</p>
+                                 </div>
+                              </div>
+                              <div className="rounded-3xl p-6 mb-4 relative overflow-hidden" style={{ backgroundColor: editDraft.primaryColor || '#6366f1' }}>
+                                 <p className="text-white text-[9px] uppercase font-black tracking-widest opacity-80 mb-1">Rewards Balance</p>
+                                 <p className="text-3xl font-black text-white tracking-tighter">1,200 <span className="text-sm opacity-70">Pts</span></p>
+                              </div>
+                              <div className="flex gap-3">
+                                 <div className="flex-1 p-4 rounded-2xl bg-white border border-slate-100 shadow-sm text-center">
+                                    <div className="text-slate-400 mb-1 text-xs">📅</div>
+                                    <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest">Book</p>
+                                 </div>
+                                 <div className="flex-1 p-4 rounded-2xl text-center" style={{ backgroundColor: editDraft.primaryColor || '#6366f1' }}>
+                                    <div className="text-white mb-1 text-xs">❤️</div>
+                                    <p className="text-[8px] font-black text-white uppercase tracking-widest">Care</p>
+                                 </div>
+                              </div>
+                           </div>
                         </div>
 
                         <div className="pt-8 flex gap-4 border-t border-white/5">

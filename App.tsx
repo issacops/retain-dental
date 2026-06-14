@@ -186,6 +186,16 @@ const App = () => {
         addToast(`Login Error: No profile found for ${session.user.email}`, "error");
       }
 
+      // Persist clinic color for pre-hydration PWA manifest theme color
+      if (tenantClinic?.primaryColor) {
+        localStorage.setItem('retain_clinic_color', tenantClinic.primaryColor);
+      } else if (activeUser) {
+        const userClinic = dbData.clinics.find(c => c.id === activeUser.clinicId);
+        if (userClinic?.primaryColor) {
+          localStorage.setItem('retain_clinic_color', userClinic.primaryColor);
+        }
+      }
+
       // CONFLICT RESOLUTION: Sticky Session vs URL Context
       // If the user accessed a specific clinic link (e.g., ?subdomain=newclinic) but is logged in as a user of 'oldclinic',
       // we must force a logout to respect the link's intent.
