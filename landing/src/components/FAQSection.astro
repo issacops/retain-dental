@@ -1,0 +1,34 @@
+<section id="faq" class="py-24 px-6 bg-slate-950 relative overflow-hidden" itemscope itemtype="https://schema.org/FAQPage">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center max-w-2xl mx-auto mb-16 space-y-4">
+      <h2 class="text-4xl md:text-5xl font-black text-white tracking-tighter">
+        Frequently Asked <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Questions</span>
+      </h2>
+      <p class="text-lg text-slate-400">Everything you need to know about RetainOS.</p>
+    </div>
+
+    <div class="max-w-3xl mx-auto space-y-4">
+      {[
+        { q: 'How fast can I get my branded app live?', a: 'Most clinics go live in under 20 minutes. We handle app store submission, branding, and configuration — you just provide your logo and preferences.' },
+        { q: 'Do patients need to download a new app?', a: 'Yes — your patients download your custom-branded app from the Apple App Store and Google Play. They use it to book appointments, earn loyalty points, make payments, and receive recall notifications.' },
+        { q: 'How does the pricing work?', a: 'Plans start at $299/month per location with no long-term contract. All modules — loyalty, recall, payments, analytics — are included. Volume discounts are available for multi-location groups.' },
+        { q: 'Does RetainOS integrate with my existing PMS?', a: 'Yes, we integrate with the major Practice Management Systems including Dentrix, Eaglesoft, Open Dental, and more. Our team handles the integration during onboarding.' },
+        { q: 'What happens if a patient misses their appointment?', a: 'RetainOS automatically triggers a reactivation sequence — an SMS reminder, a push notification, and a follow-up email over 3 days. Your team doesn\'t lift a finger.' },
+        { q: 'Is my patient data secure?', a: 'Yes. RetainOS is HIPAA-compliant with SOC 2 Type II certification. All data is encrypted at rest (AES-256) and in transit (TLS 1.3). We undergo annual third-party security audits.' },
+        { q: 'Can patients earn rewards on paid treatments?', a: 'Absolutely. You define the earning rules — points per dollar, bonus points for specific treatments, and VIP tier multipliers. Patients redeem points toward future services.' },
+        { q: 'What support do you provide during onboarding?', a: 'You get a dedicated onboarding specialist who walks your team through configuration, staff training, and patient launch. Ongoing support is available via in-app chat and email.' }
+      ].map((faq, i) => {
+        const id = `faq-${i}`;
+        return (
+          <details class="group p-6 rounded-2xl bg-white/[0.03] border border-white/5 open:border-indigo-500/30 open:bg-indigo-500/5 transition-all duration-300">
+            <summary class="flex justify-between items-center cursor-pointer list-none">
+              <span class="text-base font-bold text-white pr-4">{faq.q}</span>
+              <svg class="w-5 h-5 text-slate-500 shrink-0 group-open:rotate-45 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </summary>
+            <p class="mt-4 text-slate-400 leading-relaxed">{faq.a}</p>
+          </details>
+        );
+      })}
+    </div>
+  </div>
+</section>

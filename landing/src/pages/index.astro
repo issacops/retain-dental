@@ -1,0 +1,134 @@
+---
+import Layout from '../layouts/Layout.astro'
+import Navbar from '../components/Navbar.astro'
+import Hero from '../components/Hero.astro'
+import TrustBar from '../components/TrustBar.astro'
+import LeakyBucket from '../components/LeakyBucket.astro'
+import Comparison from '../components/Comparison.astro'
+import Aftercare from '../components/Aftercare.astro'
+import SmilePoints from '../components/SmilePoints.astro'
+import FamilyPool from '../components/FamilyPool.astro'
+import ReferralEngine from '../components/ReferralEngine.astro'
+import SocialStudio from '../components/SocialStudio.astro'
+import ClinicalIntelligence from '../components/ClinicalIntelligence.astro'
+import Consolidation from '../components/Consolidation.astro'
+import ProductPillars from '../components/ProductPillars.astro'
+import BrandShowcase from '../components/BrandShowcase.tsx'
+import CaseStudy from '../components/CaseStudy.astro'
+import ImplementationTimeline from '../components/ImplementationTimeline.astro'
+import RoiCalculator from '../components/RoiCalculator.tsx'
+import FAQSection from '../components/FAQSection.astro'
+import TrustSecurity from '../components/TrustSecurity.astro'
+import CTA from '../components/CTA.astro'
+import WaitlistForm from '../components/WaitlistForm.tsx'
+import Footer from '../components/Footer.astro'
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://retaindental.com",
+      "url": "https://retaindental.com",
+      "name": "RetainOS — Dental Patient Retention Platform",
+      "description": "Launch your custom-branded dental patient app in 20 minutes. Automate recalls, loyalty, payments, and referrals with a HIPAA-compliant platform built to grow your practice.",
+      "isPartOf": { "@id": "https://retaindental.com/#website" },
+      "about": { "@id": "https://retaindental.com/#organization" },
+      "datePublished": "2024-06-01",
+      "dateModified": "2026-06-01",
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://retaindental.com/assets/screens/doctor-dashboard.png"
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://retaindental.com/#website",
+      "url": "https://retaindental.com",
+      "name": "RetainOS",
+      "description": "Dental patient loyalty and retention platform — launch your branded app in 20 minutes.",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": { "@type": "EntryPoint", "urlTemplate": "https://retaindental.com/search?q={search_term_string}" },
+        "query-input": "required name=search_term_string"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://retaindental.com/#organization",
+      "name": "RetainOS",
+      "url": "https://retaindental.com",
+      "logo": "https://retaindental.com/icon-512.png",
+      "sameAs": [
+        "https://linkedin.com/company/retainos",
+        "https://twitter.com/RetainOS"
+      ],
+      "foundingDate": "2024",
+      "foundingLocation": "Chicago, IL"
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://retaindental.com/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "How fast can I get my branded app live?", "acceptedAnswer": { "@type": "Answer", "text": "Most clinics go live in under 20 minutes. We handle app store submission, branding, and configuration — you just provide your logo and preferences." } },
+        { "@type": "Question", "name": "How does the pricing work?", "acceptedAnswer": { "@type": "Answer", "text": "Plans start at $299/month per location with no long-term contract. All modules including loyalty, recall, payments, and analytics are included." } },
+        { "@type": "Question", "name": "Does RetainOS integrate with my existing PMS?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, we integrate with major Practice Management Systems including Dentrix, Eaglesoft, Open Dental, and more." } },
+        { "@type": "Question", "name": "What is the patient retention rate with RetainOS?", "acceptedAnswer": { "@type": "Answer", "text": "Clinics using RetainOS achieve an average 96.4% patient retention rate through automated loyalty programs, aftercare sequences, and multi-channel recall automation." } },
+        { "@type": "Question", "name": "How do Smile Points work?", "acceptedAnswer": { "@type": "Answer", "text": "Patients earn points for every visit, referral, review, and online booking. Points are redeemable for treatments, whitening, and premium upgrades. Family pools let members combine points." } }
+      ]
+    }
+  ]
+}
+---
+
+<Layout title="RetainOS — Launch Your Branded Dental Patient App in 20 Minutes">
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)}></script>
+  <Navbar />
+  <Hero />
+  <TrustBar />
+  <div class="reveal"><LeakyBucket /></div>
+  <div class="reveal"><Comparison /></div>
+  <div class="reveal"><Aftercare /></div>
+  <div class="reveal"><SmilePoints /></div>
+  <div class="reveal"><FamilyPool /></div>
+  <div class="reveal"><ReferralEngine /></div>
+  <div class="reveal"><SocialStudio /></div>
+  <div class="reveal"><ClinicalIntelligence /></div>
+  <div class="reveal"><Consolidation /></div>
+  <div class="reveal"><ProductPillars /></div>
+  <div class="reveal"><BrandShowcase client:load /></div>
+  <div class="reveal"><CaseStudy /></div>
+  <div class="reveal"><ImplementationTimeline /></div>
+  <div class="reveal"><RoiCalculator client:load /></div>
+  <div class="reveal"><FAQSection /></div>
+  <div class="reveal"><TrustSecurity /></div>
+  <div class="reveal"><CTA /></div>
+  <div class="reveal"><WaitlistForm client:load /></div>
+  <Footer />
+
+  <style>
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease-out, transform 0.7s ease-out; }
+    .reveal.show { opacity: 1; transform: translateY(0); }
+  </style>
+  <noscript>
+    <style>.reveal { opacity: 1 !important; transform: translateY(0) !important; }</style>
+  </noscript>
+  <script>
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('show');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        el.classList.add('show');
+      } else {
+        observer.observe(el);
+      }
+    });
+  </script>
+</Layout>

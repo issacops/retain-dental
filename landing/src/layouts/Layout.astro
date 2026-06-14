@@ -1,0 +1,165 @@
+---
+export interface Props {
+  title?: string
+  description?: string
+  image?: string
+  pageType?: 'website' | 'article'
+}
+
+const {
+  title = 'RetainOS — The Operating System for Modern Dental Practices',
+  description = 'Launch your custom-branded dental patient app in 20 minutes. Automate recalls, loyalty, and payments with a HIPAA-compliant platform built to grow your practice.',
+  image = '/assets/screens/landing-preview.png',
+  pageType = 'website',
+} = Astro.props
+
+const url = Astro.url
+const siteUrl = `${url.protocol}//${url.host}`
+const pageUrl = `${siteUrl}${url.pathname}${url.search}`
+const currentYear = new Date().getFullYear()
+---
+
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#020617" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="keywords" content="dental patient app, dental loyalty program, dental practice management, patient retention software, dental recall automation, HIPAA compliant dental software, dental rewards program, dental patient engagement platform" />
+
+    <link rel="canonical" href={pageUrl} />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content={pageType} />
+    <meta property="og:url" content={pageUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={`${siteUrl}${image}`} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="RetainOS" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={pageUrl} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={`${siteUrl}${image}`} />
+    <meta name="twitter:site" content="@RetainOS" />
+
+    <!-- Structured Data - SoftwareApplication -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "RetainOS",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web, iOS, Android",
+      "description": description,
+      "url": siteUrl,
+      "image": `${siteUrl}/assets/screens/doctor-dashboard.png`,
+      "screenshot": `${siteUrl}/assets/screens/doctor-dashboard.png`,
+      "softwareVersion": "2.0",
+      "datePublished": "2024-06-01",
+      "dateModified": `${currentYear}-06-01`,
+      "offers": {
+        "@type": "Offer",
+        "price": "299",
+        "priceCurrency": "USD",
+        "priceValidUntil": `${currentYear}-12-31`,
+        "availability": "https://schema.org/InStock"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "bestRating": "5",
+        "ratingCount": "87",
+        "reviewCount": "87"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "RetainOS"
+      }
+    })}></script>
+
+    <!-- Structured Data - Organization -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "RetainOS",
+      "url": siteUrl,
+      "logo": `${siteUrl}/icon-512.png`,
+      "description": "Dental patient loyalty and retention platform for modern dental practices.",
+      "foundingDate": "2024",
+      "foundingLocation": "Chicago, IL",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+1-312-555-0142",
+        "contactType": "sales",
+        "availableLanguage": ["English"]
+      },
+      "sameAs": [
+        "https://linkedin.com/company/retainos",
+        "https://twitter.com/RetainOS"
+      ]
+    })}></script>
+
+    <!-- Structured Data - BreadcrumbList -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": siteUrl
+      }]
+    })}></script>
+
+    <!-- Structured Data - FAQ (empty placeholder, populated per page as needed) -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": "RetainOS",
+      "description": description,
+      "brand": {
+        "@type": "Brand",
+        "name": "RetainOS"
+      },
+      "category": "Dental Practice Software",
+      "offers": {
+        "@type": "AggregateOffer",
+        "offerCount": "3",
+        "lowPrice": "299",
+        "highPrice": "999",
+        "priceCurrency": "USD"
+      },
+      "review": [{
+        "@type": "Review",
+        "reviewRating": { "@type": "Rating", "ratingValue": "5" },
+        "author": { "@type": "Person", "name": "Dr. Sarah Mitchell" },
+        "reviewBody": "RetainOS added $5K+ to our monthly revenue in just 60 days. The branded app transformed how our patients engage with us."
+      }, {
+        "@type": "Review",
+        "reviewRating": { "@type": "Rating", "ratingValue": "5" },
+        "author": { "@type": "Person", "name": "Dr. James Park" },
+        "reviewBody": "My patients love the app. It's completely changed our recall rate and reduced admin time by 10+ hours per week."
+      }]
+    })}></script>
+
+    <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large" />
+    <meta name="author" content="RetainOS" />
+    <meta name="generator" content="Astro" />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="author" href="/humans.txt" />
+  </head>
+  <body class="bg-slate-950 text-white antialiased font-sans">
+    <slot />
+  </body>
+</html>

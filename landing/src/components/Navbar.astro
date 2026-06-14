@@ -1,0 +1,29 @@
+---
+const { activeSection = 'hero' } = Astro.props;
+---
+
+<nav class="fixed top-0 left-0 right-0 z-50 border-b border-white/5 bg-slate-950/90 backdrop-blur-2xl">
+  <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-3 group">
+      <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-600/20 group-hover:shadow-indigo-600/40 transition-shadow">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      </div>
+      <span class="text-xl font-black text-white tracking-tighter">Retain<span class="text-indigo-400">OS</span></span>
+    </a>
+
+    <div class="hidden lg:flex items-center gap-8">
+      <a href="#how-it-works" class="text-sm font-semibold text-slate-400 hover:text-white transition-colors">How It Works</a>
+      <a href="#platform" class="text-sm font-semibold text-slate-400 hover:text-white transition-colors">Platform</a>
+      <a href="#faq" class="text-sm font-semibold text-slate-400 hover:text-white transition-colors">FAQ</a>
+    </div>
+
+    <div class="flex items-center gap-6">
+      <a href="/login" class="text-sm font-semibold text-slate-400 hover:text-white transition-colors hidden md:block">
+        Sign In
+      </a>
+      <a href="#waitlist" class="px-6 py-2.5 bg-white text-slate-900 hover:bg-slate-100 rounded-full text-xs font-black uppercase tracking-widest transition-all shadow-lg shadow-white/10 hover:shadow-white/20">
+        Launch My App
+      </a>
+    </div>
+  </div>
+</nav>

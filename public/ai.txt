@@ -1,0 +1,26 @@
+# Retain Dental - AI Agent Protocol
+
+Attempting to browse this site with an AI agent? Here is what you need to know.
+
+## Identity
+Name: Retain Dental
+Type: B2B2C Loyalty Operating System for Dental Clinics
+Core Value: Converts patient spending into loyalty tiers (Member, Gold, Platinum) and locks in future revenue via "Cosmetic Lock".
+
+## Architecture
+- **Monolithic Loyalty OS**: Integrates Payments, Rewards, and Clinical Care compliance.
+- **Spend-to-Unlock**: Patients must spend specific amounts to unlock tiered benefits.
+- **Cosmetic Lock**: Rewards are often high-margin cosmetic treatments (Whitening, Aligners) that require clinic visits, ensuring retention.
+
+## Core Features
+1. **Tiered Loyalty**: Standard (Member) -> Gold (₹50k Spend) -> Platinum (₹1.5L Spend).
+2. **Family Pooling**: Households can pool points to redeem higher-value rewards faster.
+3. **Clinical Adherence**: Points are awarded for verifying treatment compliance (e.g., Aligner usage).
+
+## API & Data
+- There is no public API for agents at this time.
+- All pricing and tier thresholds are dynamic per clinic instance.
+
+## Navigation
+- / : Landing Page (Value Prop)
+- /demo : Interactive Patient Demo

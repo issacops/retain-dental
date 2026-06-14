@@ -1,0 +1,146 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply font-sans antialiased text-slate-900 bg-slate-50;
+    /* Light Medical Background */
+    overflow-x: hidden;
+  }
+
+  /* Sleek Modern Scrollbar - Teal Themed */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary-200/80 rounded-full transition-colors;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary-400;
+  }
+}
+
+@layer components {
+
+  /* Glassmorphism Utilities - Light Mode */
+  .glass-panel {
+    @apply bg-white/80 backdrop-blur-xl border border-white/60 shadow-xl shadow-slate-200/50 rounded-2xl;
+  }
+
+  .glass-card {
+    @apply bg-white/70 backdrop-blur-md border border-white/50 shadow-sm shadow-slate-200/40 rounded-xl hover:shadow-md hover:shadow-indigo-100/50 transition-all duration-300;
+  }
+
+  .glass-button {
+    @apply bg-primary-700 hover:bg-primary-800 text-white backdrop-blur-sm shadow-lg shadow-primary-700/20 active:scale-95 transition-all;
+  }
+
+  .glass-input {
+    @apply bg-white/80 border border-slate-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/10 rounded-lg px-4 py-2 outline-none transition-all placeholder:text-slate-400 text-slate-800;
+  }
+}
+
+@layer utilities {
+  .bg-noise {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+  }
+
+  .mask-linear-fade {
+    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  }
+
+  /* Subtle Pulse for Light Mode */
+  @keyframes blob {
+    0% {
+      transform: translate(0px, 0px) scale(1);
+    }
+
+    33% {
+      transform: translate(30px, -50px) scale(1.1);
+    }
+
+    66% {
+      transform: translate(-20px, 20px) scale(0.9);
+    }
+
+    100% {
+      transform: translate(0px, 0px) scale(1);
+    }
+  }
+
+  .animate-blob {
+    animation: blob 7s infinite;
+  }
+}
+
+@media print {
+
+  /* Suppress UI elements not relevant for physical patient records */
+  .no-print,
+  nav,
+  header,
+  aside,
+  button,
+  .custom-scrollbar {
+    display: none !important;
+  }
+
+  /* Normalize to high-contrast ink-saving colors */
+  body,
+  .glass-panel,
+  .glass-card,
+  div {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    box-shadow: none !important;
+    color: black !important;
+    border-color: #e2e8f0 !important;
+  }
+
+  /* Layout expansion */
+  main,
+  .flex-1,
+  .w-full,
+  .p-16 {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  /* Typography scale adjustment for A4 paper */
+  h1 {
+    font-size: 24pt !important;
+  }
+
+  h2 {
+    font-size: 18pt !important;
+  }
+
+  p,
+  span,
+  td {
+    font-size: 11pt !important;
+  }
+
+  /* Page boundaries */
+  .page-break {
+    page-break-before: always;
+  }
+}

@@ -1,0 +1,4 @@
+# RetainOS Team
+# Built for modern dental practices worldwide
+# Technology: Astro, Tailwind CSS, React, Supabase
+# Location: Chicago, IL

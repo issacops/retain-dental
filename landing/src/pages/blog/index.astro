@@ -1,0 +1,73 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+// Sample blog posts — in production, use Astro content collections
+const posts = [
+  {
+    slug: 'dental-loyalty-app-guide',
+    title: 'How to Launch a Dental Loyalty App for Your Clinic in 2025',
+    excerpt: 'A step-by-step guide to launching a custom-branded patient loyalty app for your dental practice — from PMS integration to patient onboarding.',
+    date: '2025-06-01',
+    author: 'RetainOS Team',
+    tags: ['dental app', 'loyalty program', 'patient retention'],
+  },
+  {
+    slug: 'invisalign-compliance-tracking',
+    title: 'How Invisalign Compliance Tracking Boosts Treatment Outcomes',
+    excerpt: 'Using AI-powered selfie analysis to track aligner wear time and improve patient compliance — real data from 20+ clinics.',
+    date: '2025-05-15',
+    author: 'RetainOS Team',
+    tags: ['Invisalign', 'compliance', 'orthodontics'],
+  },
+  {
+    slug: 'reduce-dental-patient-churn',
+    title: '6 Proven Strategies to Reduce Dental Patient Churn',
+    excerpt: 'Stop bleeding patients with automated recalls, family rewards pooling, and cosmetic lock strategies that actually work.',
+    date: '2025-04-20',
+    author: 'RetainOS Team',
+    tags: ['patient retention', 'churn', 'dental marketing'],
+  },
+];
+---
+
+<Layout
+  title="RetainOS Blog — Dental Practice Growth & Patient Retention Insights"
+  description="Expert advice on dental patient retention, Invisalign compliance tracking, launching loyalty apps, and growing your dental practice with technology."
+  canonical="https://retaindental.com/blog"
+>
+  <section class="pt-32 pb-24 px-6 bg-slate-950 min-h-screen">
+    <div class="max-w-5xl mx-auto">
+      <div class="text-center mb-16 space-y-4">
+        <span class="text-indigo-400 font-bold tracking-widest uppercase text-sm">Blog</span>
+        <h1 class="text-5xl md:text-6xl font-black text-white tracking-tighter">
+          Dental Practice Growth Insights
+        </h1>
+        <p class="text-slate-400 text-lg max-w-2xl mx-auto">
+          Expert guides and strategies for patient retention, Invisalign compliance, and launching your branded loyalty app.
+        </p>
+      </div>
+
+      <div class="space-y-8">
+        {posts.map((post) => (
+          <a href={`/blog/${post.slug}`} class="block group">
+            <article class="p-8 rounded-2xl bg-slate-900/50 border border-slate-800 hover:border-indigo-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/5">
+              <div class="flex flex-wrap gap-2 mb-4">
+                {post.tags.map(tag => (
+                  <span class="text-[10px] font-bold text-indigo-400 bg-indigo-500/10 px-2 py-1 rounded uppercase tracking-widest">{tag}</span>
+                ))}
+              </div>
+              <h2 class="text-2xl font-bold text-white group-hover:text-indigo-400 transition-colors mb-3">
+                {post.title}
+              </h2>
+              <p class="text-slate-400 leading-relaxed mb-4">{post.excerpt}</p>
+              <div class="flex items-center justify-between text-sm">
+                <span class="text-slate-500">{post.author}</span>
+                <span class="text-slate-500">{new Date(post.date).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+              </div>
+            </article>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</Layout>
