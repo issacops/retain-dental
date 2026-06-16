@@ -1,0 +1,60 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Terms of Service | RetainOS"
+  description="Terms and conditions for using the RetainOS platform."
+  breadcrumbs={[
+    { name: 'Home', url: 'https://retaindental.com/' },
+    { name: 'Terms of Service', url: 'https://retaindental.com/terms' },
+  ]}
+>
+  <section class="pt-36 pb-24 px-6 bg-cream-50">
+    <div class="max-w-3xl mx-auto">
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <h1 class="text-5xl md:text-6xl font-black text-slate-900 tracking-tighter mb-6">Terms of <span class="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-amber-600">Service</span>.</h1>
+        <p class="text-slate-500">Last updated: June 15, 2026</p>
+      </div>
+
+      <div class="prose prose-slate max-w-none prose-headings:text-slate-900 prose-headings:font-bold prose-headings:tracking-tight prose-p:text-slate-600 prose-p:leading-relaxed prose-a:text-teal-600 prose-a:font-medium prose-strong:text-slate-900 prose-li:text-slate-600">
+        <h2>1. Acceptance</h2>
+        <p>By signing up for or using RetainOS, you agree to these Terms of Service. If you are accepting on behalf of a clinic or DSO, you represent that you have authority to bind that entity.</p>
+
+        <h2>2. Description of Service</h2>
+        <p>RetainOS provides a white-label patient engagement platform including: branded patient mobile app, recall automation, loyalty program, review management, patient communication, analytics, and payment processing. We grant you a non-exclusive, non-transferable right to use the platform during your subscription term.</p>
+
+        <h2>3. Subscription & Billing</h2>
+        <p>Plans are billed monthly or annually as selected at signup. Pricing is available at <a href="/pricing">retaindental.com/pricing</a>. All fees are non-refundable except as required by law. We may change pricing with 30 days notice.</p>
+
+        <h2>4. Data Ownership</h2>
+        <p>You retain full ownership of all patient data and clinic content you enter into the platform. We claim no intellectual property rights over your data. We will not access your data except as necessary to provide support or maintain the platform.</p>
+
+        <h2>5. Prohibited Uses</h2>
+        <p>You may not: use the platform for any unlawful purpose, attempt to reverse-engineer the platform, use the platform to send spam, or sublicense the platform to third parties without our written consent.</p>
+
+        <h2>6. Uptime & SLA</h2>
+        <p>We target 99.9% uptime. Planned maintenance is scheduled during off-hours (2am–5am CT) with advance notice. If uptime falls below 99.5% in a calendar month, you receive a 10% service credit.</p>
+
+        <h2>7. Limitation of Liability</h2>
+        <p>To the maximum extent permitted by law, RetainOS's liability is limited to the fees paid in the 12 months preceding the claim. We are not liable for indirect, consequential, or incidental damages.</p>
+
+        <h2>8. Termination</h2>
+        <p>Either party may terminate with 30 days written notice. Upon termination, you may export your data within 30 days. After 90 days, your data is permanently deleted.</p>
+
+        <h2>9. Governing Law</h2>
+        <p>These terms are governed by the laws of the State of Texas. Disputes shall be resolved in Travis County, Texas.</p>
+
+        <h2>10. Changes</h2>
+        <p>We may modify these terms with 30 days email notice. Continued use after the notice period constitutes acceptance of the modified terms.</p>
+
+        <h2>11. Contact</h2>
+        <p>Questions? Email <a href="mailto:legal@retaindental.com">legal@retaindental.com</a>.</p>
+      </div>
+
+      <div class="mt-12 pt-8 border-t border-cream-300 text-center">
+        <a href="/" class="text-sm text-teal-600 font-semibold hover:underline">&larr; Back to home</a>
+      </div>
+    </div>
+  </section>
+</Layout>

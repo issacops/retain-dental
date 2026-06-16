@@ -1,0 +1,73 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Security | RetainOS"
+  description="RetainOS security architecture, infrastructure, and practices. Built on Cloudflare and Supabase with encryption, access controls, and regular audits."
+  breadcrumbs={[
+    { name: 'Home', url: 'https://retaindental.com/' },
+    { name: 'Security', url: 'https://retaindental.com/security' },
+  ]}
+>
+  <section class="pt-36 pb-24 px-6 bg-cream-50">
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <h1 class="text-5xl md:text-6xl font-black text-slate-900 tracking-tighter mb-6">Security is <span class="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-amber-600">table stakes</span>.</h1>
+        <p class="text-lg sm:text-xl text-slate-500 leading-relaxed">We treat security as a first-class feature — not an afterthought. Every layer of RetainOS is designed to protect patient data and clinic operations.</p>
+      </div>
+
+      <div class="space-y-12">
+        <div>
+          <h2 class="text-2xl font-bold text-slate-900 mb-6">Infrastructure</h2>
+          <div class="grid md:grid-cols-3 gap-4">
+            <div class="p-6 rounded-2xl bg-white border border-cream-200">
+              <h3 class="font-bold text-slate-900 mb-2">Cloudflare Edge</h3>
+              <p class="text-sm text-slate-500 leading-relaxed">DDoS protection, WAF, SSL/TLS termination. All traffic routes through Cloudflare's global network before reaching our origin.</p>
+            </div>
+            <div class="p-6 rounded-2xl bg-white border border-cream-200">
+              <h3 class="font-bold text-slate-900 mb-2">Supabase (RDS)</h3>
+              <p class="text-sm text-slate-500 leading-relaxed">PostgreSQL database with automated backups, point-in-time recovery, and encryption at rest. Hosted on AWS us-east-1.</p>
+            </div>
+            <div class="p-6 rounded-2xl bg-white border border-cream-200">
+              <h3 class="font-bold text-slate-900 mb-2">Zero Trust Network</h3>
+              <p class="text-sm text-slate-500 leading-relaxed">All internal services communicate over mTLS. No open ports. Database accessible only via private networking.</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h2 class="text-2xl font-bold text-slate-900 mb-6">Application Security</h2>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div class="p-6 rounded-2xl bg-white border border-cream-200">
+              <h3 class="font-bold text-slate-900 mb-2">Authentication</h3>
+              <p class="text-sm text-slate-500 leading-relaxed">Supabase Auth with Row Level Security. All database queries are scoped to the authenticated user's role and clinic. No direct database access from the client.</p>
+            </div>
+            <div class="p-6 rounded-2xl bg-white border border-cream-200">
+              <h3 class="font-bold text-slate-900 mb-2">API Security</h3>
+              <p class="text-sm text-slate-500 leading-relaxed">Cloudflare Pages Functions handle all server-side logic for sensitive operations (auth, payments). Rate limiting, CORS, and CSRF protection enabled.</p>
+            </div>
+            <div class="p-6 rounded-2xl bg-white border border-cream-200">
+              <h3 class="font-bold text-slate-900 mb-2">Dependency Scanning</h3>
+              <p class="text-sm text-slate-500 leading-relaxed">Automated npm audit and Dependabot alerts run on every commit. Critical vulnerabilities are patched within 24 hours.</p>
+            </div>
+            <div class="p-6 rounded-2xl bg-white border border-cream-200">
+              <h3 class="font-bold text-slate-900 mb-2">Penetration Testing</h3>
+              <p class="text-sm text-slate-500 leading-relaxed">We conduct quarterly third-party penetration tests. Full reports are available to enterprise customers under NDA.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-12 p-8 rounded-2xl bg-gradient-to-br from-teal-900 to-teal-800 text-white text-center">
+        <h2 class="text-xl font-bold mb-3">Report a vulnerability</h2>
+        <p class="text-teal-100 mb-6">We maintain a bug bounty program for responsible disclosure.</p>
+        <a href="mailto:security@retaindental.com" class="inline-flex items-center gap-2 px-8 py-3 bg-white text-teal-900 rounded-full font-bold hover:bg-teal-50 transition-all">security@retaindental.com <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+      </div>
+
+      <div class="mt-12 pt-8 border-t border-cream-300 text-center">
+        <a href="/" class="text-sm text-teal-600 font-semibold hover:underline">&larr; Back to home</a>
+      </div>
+    </div>
+  </section>
+</Layout>

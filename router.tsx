@@ -2,18 +2,11 @@ import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AppState, Role } from './types';
 import { IBackendService } from './services/IBackendService';
-import { LandingPage } from './pages/LandingPage'; // Eager Load Landing Page
-
-// Lazy Load Heavy Platform Pages to isolate Marketing Bundle
+// Lazy Load Platform Pages
 const PlatformPage = React.lazy(() => import('./pages/PlatformPage').then(module => ({ default: module.PlatformPage })));
 const ClinicPage = React.lazy(() => import('./pages/ClinicPage').then(module => ({ default: module.ClinicPage })));
 const PatientPage = React.lazy(() => import('./pages/PatientPage').then(module => ({ default: module.PatientPage })));
 const LoginPage = React.lazy(() => import('./pages/LoginPage').then(module => ({ default: module.LoginPage })));
-const PricingPage = React.lazy(() => import('./pages/PricingPage').then(module => ({ default: module.PricingPage })));
-const DsoPage = React.lazy(() => import('./pages/DsoPage').then(module => ({ default: module.DsoPage })));
-const SoloPracticePage = React.lazy(() => import('./pages/SoloPracticePage').then(module => ({ default: module.SoloPracticePage })));
-const VsDentrixPage = React.lazy(() => import('./pages/VsDentrixPage').then(module => ({ default: module.VsDentrixPage })));
-const VsYapiPage = React.lazy(() => import('./pages/VsYapiPage').then(module => ({ default: module.VsYapiPage })));
 interface RouterProps {
     appState: AppState;
     handlers: any;
@@ -120,16 +113,8 @@ export const AppRouter: React.FC<RouterProps> = ({ appState, handlers, backendSe
     return (
         <Suspense fallback={<RouterLoader />}>
             <Routes>
-                {/* PUBLIC: LANDING PAGE */}
-                <Route path="/" element={<LandingPage backend={backendService} />} />
-
-                {/* PUBLIC: SEO / MARKETING ROUTES */}
-                <Route path="/pricing" element={<PricingPage />} />
-                <Route path="/dso" element={<DsoPage />} />
-                <Route path="/solo-practice" element={<SoloPracticePage />} />
-                <Route path="/vs-dentrix" element={<VsDentrixPage />} />
-                <Route path="/vs-yapi" element={<VsYapiPage />} />
                 {/* PUBLIC: UNIFIED LOGIN & BRANDED LOGIN */}
+                <Route path="/" element={<Navigate to="/login" replace />} />
                 <Route path="/login" element={<LoginPage clinics={clinics} activeClinic={activeClinic} />} />
                 <Route path="/login/:slug" element={<LoginPage clinics={clinics} activeClinic={activeClinic} />} />
 

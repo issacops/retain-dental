@@ -1,0 +1,78 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Careers | Join RetainOS"
+  description="Help us redefine how dental practices retain patients. We're hiring engineers, designers, and dental sales specialists."
+  breadcrumbs={[
+    { name: 'Home', url: 'https://retaindental.com/' },
+    { name: 'Careers', url: 'https://retaindental.com/careers' },
+  ]}
+>
+  <section class="pt-36 pb-24 px-6 bg-cream-50">
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <h1 class="text-5xl md:text-6xl font-black text-slate-900 tracking-tighter mb-6">Join us in <span class="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-amber-600">rebuilding dental software</span>.</h1>
+        <p class="text-lg sm:text-xl text-slate-500 leading-relaxed">We're a small, remote team building the operating system for modern dental practices. If you care about craft and want to ship daily, you'll fit right in.</p>
+      </div>
+
+      <div class="space-y-6">
+        <div class="p-8 rounded-2xl bg-white border border-cream-200 hover:border-teal-200 transition-all">
+          <div class="flex items-start justify-between gap-4 flex-wrap">
+            <div>
+              <h2 class="text-xl font-bold text-slate-900 mb-1">Full-Stack Engineer</h2>
+              <p class="text-sm text-slate-500">Remote · Full-time · React, TypeScript, Supabase</p>
+            </div>
+            <span class="px-3 py-1 text-xs font-bold text-teal-700 bg-teal-50 rounded-full">Open</span>
+          </div>
+          <p class="mt-4 text-slate-500 leading-relaxed">You'll own features end-to-end — from database schema to UI polishing. We ship to production multiple times a week and expect every engineer to think like a product owner.</p>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <span class="px-3 py-1 text-xs font-medium text-slate-600 bg-cream-100 rounded-full">React</span>
+            <span class="px-3 py-1 text-xs font-medium text-slate-600 bg-cream-100 rounded-full">TypeScript</span>
+            <span class="px-3 py-1 text-xs font-medium text-slate-600 bg-cream-100 rounded-full">Supabase</span>
+            <span class="px-3 py-1 text-xs font-medium text-slate-600 bg-cream-100 rounded-full">Cloudflare</span>
+          </div>
+        </div>
+
+        <div class="p-8 rounded-2xl bg-white border border-cream-200 hover:border-teal-200 transition-all">
+          <div class="flex items-start justify-between gap-4 flex-wrap">
+            <div>
+              <h2 class="text-xl font-bold text-slate-900 mb-1">Product Designer</h2>
+              <p class="text-sm text-slate-500">Remote · Full-time · UI/UX, Design Systems</p>
+            </div>
+            <span class="px-3 py-1 text-xs font-bold text-teal-700 bg-teal-50 rounded-full">Open</span>
+          </div>
+          <p class="mt-4 text-slate-500 leading-relaxed">You'll define the look and feel of dental software that patients and clinicians actually enjoy using. Our design system is built on Tailwind and a warm cream/teal palette. You'll work directly with the founding team.</p>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <span class="px-3 py-1 text-xs font-medium text-slate-600 bg-cream-100 rounded-full">Figma</span>
+            <span class="px-3 py-1 text-xs font-medium text-slate-600 bg-cream-100 rounded-full">Tailwind</span>
+            <span class="px-3 py-1 text-xs font-medium text-slate-600 bg-cream-100 rounded-full">Framer Motion</span>
+          </div>
+        </div>
+
+        <div class="p-8 rounded-2xl bg-white border border-cream-200 hover:border-teal-200 transition-all">
+          <div class="flex items-start justify-between gap-4 flex-wrap">
+            <div>
+              <h2 class="text-xl font-bold text-slate-900 mb-1">Dental Partnerships Lead</h2>
+              <p class="text-sm text-slate-500">Remote · Full-time · Sales, Onboarding</p>
+            </div>
+            <span class="px-3 py-1 text-xs font-bold text-amber-700 bg-amber-50 rounded-full">Coming Soon</span>
+          </div>
+          <p class="mt-4 text-slate-500 leading-relaxed">You'll own the pilot onboarding pipeline — from first demo call to go-live. Dental industry experience required. You'll help us scale from 12 to 500+ clinics.</p>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <span class="px-3 py-1 text-xs font-medium text-slate-600 bg-cream-100 rounded-full">Dental Sales</span>
+            <span class="px-3 py-1 text-xs font-medium text-slate-600 bg-cream-100 rounded-full">DSO Experience</span>
+            <span class="px-3 py-1 text-xs font-medium text-slate-600 bg-cream-100 rounded-full">CRM</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-12 text-center p-10 rounded-2xl bg-gradient-to-br from-teal-900 to-teal-800 text-white">
+        <h2 class="text-2xl font-bold mb-3">Don't see a fit?</h2>
+        <p class="text-teal-100 mb-6">We're always looking for talented people. Send us a note and tell us what you'd build.</p>
+        <a href="mailto:careers@retaindental.com" class="inline-flex items-center gap-2 px-8 py-3 bg-white text-teal-900 rounded-full font-bold hover:bg-teal-50 transition-all">careers@retaindental.com <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+      </div>
+    </div>
+  </section>
+</Layout>

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { BrowserRouter, useLocation, Link, useNavigate, Navigate, Routes, Route } from 'react-router-dom';
-import { LandingPage } from './pages/LandingPage';
+import { BrowserRouter, useLocation, useNavigate, Routes, Route } from 'react-router-dom';
 import {
   User, Wallet, Transaction, FamilyGroup, Role, AppState, ViewMode, Clinic, TransactionCategory, TransactionType, CarePlan, ThemeTexture,
   AppointmentType, AppointmentStatus
@@ -614,15 +613,8 @@ const App = () => {
       <ErrorBoundary>
         <BrowserRouter>
           <Routes>
-            {/* Public Landing Page at Root (No Auth Required) */}
-            <Route path="/" element={
-              data && data.activeClinicId !== 'platform' && !window.location.hostname.startsWith('retaindental.com') && !window.location.hostname.includes('localhost') ?
-                // Logic Check: If we have a TENANT context, we show the app.
-                // But simpler: The Router handles this?
-                // Actually, AppRouter expects to handle everything. We need to Wrap Landing Page.
-                <PublicLandingWrapper appState={data} handlers={handlers} backend={backendService} />
-                : <PublicLandingWrapper appState={data} handlers={handlers} backend={backendService} />
-            } />
+            {/* Root handled by AppRouter (no landing page) */}
+            <Route path="/" element={<AppRouter appState={data} handlers={handlers} backendService={backendService} />} />
 
 
 
@@ -640,43 +632,6 @@ const App = () => {
   );
 };
 
-// Helper to determine if we show Landing Page or App
-const PublicLandingWrapper = ({ appState, handlers, backend }: any) => {
-  // 1. Check Subdomain
-  const hostname = window.location.hostname;
-  // If we are at a subdomain (city.retaindental.com), SHOW THE APP (Login/PatientView)
-  const isSubdomain = ((hostname.split('.').length > 2 && !hostname.endsWith('vercel.app')) ||
-    (hostname.includes('localhost') && hostname.split('.').length > 1))
-    && !hostname.startsWith('www.');
 
-  // 2. Check Query Param override
-  const params = new URLSearchParams(window.location.search);
-  const hasSubParam = !!params.get('subdomain');
-
-  if (isSubdomain || hasSubParam) {
-    // Marketing routes (pricing/blog/vs-*/dso/solo-practice) stay public even on subdomains
-    const publicMarketingPaths = ['/pricing', '/dso', '/solo-practice', '/vs-dentrix', '/vs-yapi'];
-    const isPublicMarketingRoute = publicMarketingPaths.some(p => window.location.pathname.startsWith(p));
-    if (isPublicMarketingRoute) {
-      return <AppRouter appState={appState} handlers={handlers} backendService={backend} />;
-    }
-
-    // Explicitly Redirect if at root (fixes PWA context loss)
-    if (window.location.pathname === '/') {
-      return <Navigate to={`/login${window.location.search}`} replace />;
-    }
-
-    // Render the Main App Router
-    return (
-      <>
-        <AuthHandler currentUser={appState?.currentUser || null} onRoleChange={() => { }} />
-        <AppRouter appState={appState} handlers={handlers} backendService={backend} />
-      </>
-    );
-  }
-
-  // Default: Show Landing Page
-  return <LandingPage backend={backend} />;
-};
 
 export default App;

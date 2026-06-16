@@ -1,0 +1,57 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Privacy Policy | RetainOS"
+  description="How RetainOS collects, uses, and protects your data. We take privacy and HIPAA compliance seriously."
+  breadcrumbs={[
+    { name: 'Home', url: 'https://retaindental.com/' },
+    { name: 'Privacy Policy', url: 'https://retaindental.com/privacy' },
+  ]}
+>
+  <section class="pt-36 pb-24 px-6 bg-cream-50">
+    <div class="max-w-3xl mx-auto">
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <h1 class="text-5xl md:text-6xl font-black text-slate-900 tracking-tighter mb-6">Privacy <span class="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-amber-600">Policy</span>.</h1>
+        <p class="text-slate-500">Last updated: June 15, 2026</p>
+      </div>
+
+      <div class="prose prose-slate max-w-none prose-headings:text-slate-900 prose-headings:font-bold prose-headings:tracking-tight prose-p:text-slate-600 prose-p:leading-relaxed prose-a:text-teal-600 prose-a:font-medium prose-strong:text-slate-900 prose-li:text-slate-600">
+        <h2>1. Information We Collect</h2>
+        <p>We collect information you provide directly: name, email, phone number, clinic name, and billing details when you sign up for RetainOS. We also collect usage data — pages visited, features used, session duration — to improve the platform.</p>
+
+        <h2>2. Patient Data (PHI)</h2>
+        <p>RetainOS is designed as a HIPAA-ready platform. Patient data (Protected Health Information) is encrypted at rest and in transit. We store PHI only as necessary to provide recall, loyalty, and communication features. We never sell, rent, or share PHI with third parties. Patients own their data; clinics control access.</p>
+
+        <h2>3. How We Use Data</h2>
+        <p>We use your data to: operate and maintain the platform, send transactional communications (appointment reminders, recall notifications), improve and develop new features, comply with legal obligations.</p>
+
+        <h2>4. Data Sharing</h2>
+        <p>We share data only with trusted subprocessors who help us run the platform: Supabase (database), Cloudflare (CDN and edge functions), Formspree (contact form). Each processor is bound by a Data Processing Agreement that meets HIPAA standards.</p>
+
+        <h2>5. Data Retention</h2>
+        <p>We retain clinic account data for the duration of your subscription plus 90 days. Patient data is retained per the clinic's data retention policy (configurable in settings). You may request deletion at any time by contacting <a href="mailto:privacy@retaindental.com">privacy@retaindental.com</a>.</p>
+
+        <h2>6. Your Rights</h2>
+        <p>You have the right to: access your data, correct inaccuracies, request deletion, and data portability. To exercise these rights, contact your clinic administrator or email us directly.</p>
+
+        <h2>7. Cookies</h2>
+        <p>We use essential cookies for authentication and session management. No tracking cookies, no third-party analytics cookies, no fingerprinting. We respect Do Not Track signals.</p>
+
+        <h2>8. Security</h2>
+        <p>We encrypt all data at rest (AES-256) and in transit (TLS 1.3). We conduct regular security audits and penetration testing. Our infrastructure runs on Cloudflare's edge network and Supabase's SOC 2-compliant infrastructure.</p>
+
+        <h2>9. Changes</h2>
+        <p>We'll notify you of material changes to this policy via email and an in-app notification. Continued use after changes constitutes acceptance.</p>
+
+        <h2>10. Contact</h2>
+        <p>Privacy questions? Email <a href="mailto:privacy@retaindental.com">privacy@retaindental.com</a> or write to: RetainOS, Austin, Texas.</p>
+      </div>
+
+      <div class="mt-12 pt-8 border-t border-cream-300 text-center">
+        <a href="/" class="text-sm text-teal-600 font-semibold hover:underline">&larr; Back to home</a>
+      </div>
+    </div>
+  </section>
+</Layout>
