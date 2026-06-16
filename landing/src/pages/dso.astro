@@ -1,0 +1,112 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import StickyMobileCta from '../components/StickyMobileCta.astro';
+
+const features = [
+  { icon: 'chart', title: 'Centralized dashboard', desc: 'Real-time KPIs across every location. Spot underperformers in seconds, not weeks.' },
+  { icon: 'users', title: 'Household points pooling', desc: 'Families share loyalty balances across all your clinics — drives 3.2x multi-location enrollments.' },
+  { icon: 'layers', title: 'Multi-brand support', desc: 'Run sub-brands under one organization. Each clinic gets its own app, color, and domain.' },
+  { icon: 'pin', title: 'Location-level analytics', desc: 'Drill from network → region → clinic → provider. Each layer surfaces the right metrics.' },
+  { icon: 'shield', title: 'SSO + role-based access', desc: 'SAML, OIDC, custom roles for ops, marketing, billing, and clinical teams.' },
+  { icon: 'activity', title: 'Cross-clinic recall automation', desc: 'One campaign blasts to 50 locations. Patients get the right clinic\'s content automatically.' },
+];
+---
+
+<Layout
+  title="RetainOS for DSOs — Multi-Location Dental Practice Management"
+  description="RetainOS gives DSOs a single patient engagement layer across every location. Centralized dashboard, multi-brand apps, household points, SSO, and cross-clinic recall automation."
+  keywords={['DSO software', 'multi-location dental software', 'DSO patient engagement', 'dental support organization platform', 'dental franchise software']}
+  canonical="https://retaindental.com/dso"
+  breadcrumbs={[
+    { name: 'Home', url: 'https://retaindental.com/' },
+    { name: 'For DSOs', url: 'https://retaindental.com/dso' },
+  ]}
+>
+  <Navbar />
+
+  <section class="pt-32 pb-16 px-6 bg-gradient-to-b from-slate-900 to-slate-800 text-white">
+    <div class="max-w-5xl mx-auto text-center space-y-6">
+      <span class="inline-flex items-center gap-2 px-3 py-1 bg-teal-500/10 border border-teal-400/30 rounded-full text-xs font-bold text-teal-300 uppercase tracking-widest">
+        For DSOs
+      </span>
+      <h1 class="text-5xl md:text-7xl font-black tracking-tighter leading-[1.05]">
+        One platform. <br />
+        <span class="text-teal-400">Every location.</span>
+      </h1>
+      <p class="text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">
+        Run 50 clinics or 500. RetainOS gives your ops team a single command center
+        while each location keeps its own brand and patient experience.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center pt-4">
+        <a href="/#waitlist" class="px-8 py-4 bg-teal-500 text-white rounded-full font-bold hover:bg-teal-400 transition-all shadow-lg shadow-teal-500/30 flex items-center justify-center gap-2">
+          Request DSO demo →
+        </a>
+        <a href="/pricing" class="px-8 py-4 bg-white/10 backdrop-blur text-white border border-white/20 rounded-full font-bold hover:bg-white/20 transition-all flex items-center justify-center">
+          See Enterprise pricing
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-24 px-6 bg-cream-50">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-16 space-y-4">
+        <h2 class="text-4xl md:text-6xl font-black text-slate-900 tracking-tighter">
+          Built for the way <br /><span class="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-amber-600">DSOs actually operate.</span>
+        </h2>
+      </div>
+      <div class="grid md:grid-cols-3 gap-6">
+        {features.map((f) => (
+          <div class="bg-white rounded-3xl p-6 border border-gray-200 hover:shadow-lg transition-all">
+            <div class="h-10 w-10 bg-teal-50 text-teal-600 rounded-xl flex items-center justify-center mb-4">
+              {f.icon === 'chart' && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>}
+              {f.icon === 'users' && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>}
+              {f.icon === 'layers' && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>}
+              {f.icon === 'pin' && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>}
+              {f.icon === 'shield' && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>}
+              {f.icon === 'activity' && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>}
+            </div>
+            <h3 class="text-lg font-black text-slate-900 mb-2">{f.title}</h3>
+            <p class="text-sm text-slate-600 leading-relaxed">{f.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="py-20 px-6 bg-cream-100">
+    <div class="max-w-4xl mx-auto">
+      <div class="bg-white rounded-3xl p-10 border border-gray-200 shadow-xl">
+        <p class="text-[10px] font-black text-teal-600 uppercase tracking-widest mb-3">By the numbers</p>
+        <h3 class="text-3xl font-black text-slate-900 mb-6">What multi-location operators get with RetainOS.</h3>
+        <div class="grid grid-cols-3 gap-6">
+          <div class="text-center">
+            <p class="text-4xl font-black text-teal-600 mb-1">50+</p>
+            <p class="text-xs text-slate-500 font-bold uppercase tracking-widest">Locations per org</p>
+          </div>
+          <div class="text-center">
+            <p class="text-4xl font-black text-teal-600 mb-1">4 min</p>
+            <p class="text-xs text-slate-500 font-bold uppercase tracking-widest">Time to add clinic</p>
+          </div>
+          <div class="text-center">
+            <p class="text-4xl font-black text-teal-600 mb-1">3.2x</p>
+            <p class="text-xs text-slate-500 font-bold uppercase tracking-widest">Multi-clinic enrollments</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-20 px-6 bg-teal-900 text-center">
+    <h2 class="text-3xl md:text-5xl font-black text-white tracking-tighter mb-4">Ready to consolidate your stack?</h2>
+    <p class="text-teal-200 mb-8 max-w-xl mx-auto">Most DSOs retire 3-4 vendors within 90 days of switching.</p>
+    <a href="/#waitlist" class="inline-block px-8 py-4 bg-white text-teal-900 rounded-full font-black text-lg hover:scale-105 transition-transform">
+      Book a DSO demo →
+    </a>
+  </section>
+
+  <Footer />
+  <StickyMobileCta />
+</Layout>

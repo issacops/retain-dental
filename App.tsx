@@ -27,7 +27,7 @@ const AuthHandler = ({
 
   useEffect(() => {
     // If no user and trying to access protected route, send to Login
-    const publicPaths = ['/login', '/public', '/god'];
+    const publicPaths = ['/login', '/public', '/god', '/patient'];
     const isPublic = publicPaths.some(p => location.pathname.startsWith(p));
 
     if (!currentUser && !isPublic) {
@@ -568,7 +568,7 @@ const App = () => {
     onDeleteClinic: handleDeleteClinic,
     onUpdateAdminAuth: handleUpdateAdminAuth,
     onLogin: handleLogin,
-    onRedeem: (amount: number, description: string) => handleTransaction(data.currentUser?.id!, amount, TransactionCategory.REWARD, TransactionType.REDEEM, { name: description } as any),
+    onRedeem: handleTransaction,
     onHardDeleteUser: async (userId: string) => {
       const result = await backendService.hardDeleteUser(userId);
       if (result.success && result.updatedData) {
@@ -654,6 +654,13 @@ const PublicLandingWrapper = ({ appState, handlers, backend }: any) => {
   const hasSubParam = !!params.get('subdomain');
 
   if (isSubdomain || hasSubParam) {
+    // Marketing routes (pricing/blog/vs-*/dso/solo-practice) stay public even on subdomains
+    const publicMarketingPaths = ['/pricing', '/dso', '/solo-practice', '/vs-dentrix', '/vs-yapi'];
+    const isPublicMarketingRoute = publicMarketingPaths.some(p => window.location.pathname.startsWith(p));
+    if (isPublicMarketingRoute) {
+      return <AppRouter appState={appState} handlers={handlers} backendService={backend} />;
+    }
+
     // Explicitly Redirect if at root (fixes PWA context loss)
     if (window.location.pathname === '/') {
       return <Navigate to={`/login${window.location.search}`} replace />;
@@ -669,7 +676,7 @@ const PublicLandingWrapper = ({ appState, handlers, backend }: any) => {
   }
 
   // Default: Show Landing Page
-  return <LandingPage />;
+  return <LandingPage backend={backend} />;
 };
 
 export default App;

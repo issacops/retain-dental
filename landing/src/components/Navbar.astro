@@ -14,14 +14,19 @@ const { activeSection = 'hero' } = Astro.props;
     <div class="hidden lg:flex items-center gap-8">
       <a href="#how-it-works" class="text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors">How It Works</a>
       <a href="#platform" class="text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors">Platform</a>
+      <a href="/pricing" class="text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors">Pricing</a>
+      <a href="/blog" class="text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors">Resources</a>
       <a href="#faq" class="text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors">FAQ</a>
     </div>
 
-    <div class="flex items-center gap-6">
-      <a href="/login" class="text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors hidden md:block">
+    <div class="flex items-center gap-4">
+      <a href="https://app.retaindental.com" class="text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors hidden md:block">
         Sign In
       </a>
-      <a href="#waitlist" class="px-6 py-2.5 bg-teal-600 text-white hover:bg-teal-700 rounded-full text-xs font-black uppercase tracking-widest transition-all shadow-lg shadow-teal-600/20 hover:shadow-teal-600/30">
+      <a href="https://app.retaindental.com" class="hidden md:inline-block px-5 py-2.5 bg-white border border-gray-200 text-slate-700 hover:bg-cream-100 rounded-full text-xs font-black uppercase tracking-widest transition-all">
+        Free Trial
+      </a>
+      <a href="#waitlist" class="px-5 py-2.5 bg-teal-600 text-white hover:bg-teal-700 rounded-full text-xs font-black uppercase tracking-widest transition-all shadow-lg shadow-teal-600/20 hover:shadow-teal-600/30">
         Launch My App
       </a>
     </div>

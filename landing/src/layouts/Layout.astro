@@ -4,21 +4,182 @@ export interface Props {
   description?: string
   image?: string
   pageType?: 'website' | 'article'
+  keywords?: string[]
+  canonical?: string
+  faqs?: { question: string; answer: string }[]
+  breadcrumbs?: { name: string; url: string }[]
+  articlePublishedTime?: string
 }
 
 const {
   title = 'RetainOS — The Operating System for Modern Dental Practices',
-  description = 'Launch your custom-branded dental patient app in 20 minutes. Automate recalls, loyalty, and payments with a HIPAA-compliant platform built to grow your practice.',
+  description = 'Launch your custom-branded dental patient app in 20 minutes. Automate recalls, loyalty, and payments with a HIPAA-ready platform built to grow your practice.',
   image = '/assets/screens/landing-preview.png',
   pageType = 'website',
+  keywords,
+  canonical,
+  faqs,
+  breadcrumbs,
+  articlePublishedTime,
 } = Astro.props
+
+const DEFAULT_KEYWORDS = [
+  // Tier 1 — high intent
+  'dental practice management software',
+  'dental patient engagement software',
+  'dental recall software',
+  'dental patient communication software',
+  'dental appointment reminder software',
+  'dental CRM',
+  'dental practice software',
+  'dental clinic software',
+  // Tier 2 — mid-funnel
+  'best dental software 2026',
+  'dental practice marketing software',
+  'dental loyalty program software',
+  'dental patient retention software',
+  'dental reactivation software',
+  'dental patient experience platform',
+  'dental membership software',
+  'dental aftercare software',
+  'dental patient app',
+  'dental care plan software',
+  // Tier 3 — long-tail differentiators
+  'dental app for patients white label',
+  'branded dental app',
+  'dental aligner tracking app',
+  'dso patient engagement software',
+  'dental recall system automation',
+  'dental practice app custom branded',
+  'multi-location dental practice software',
+  'patient loyalty program dental',
+  'dental membership tier software',
+  'household dental rewards program',
+  'ai social media for dentists',
+  'dental post-op care app',
+  'dental treatment plan app',
+  'dental care plan tracking',
+  'dental check-in app',
+  'dental re-care reminder',
+  'dentist patient retention',
+  'patient recall software',
+  'dental membership rewards',
+  'dental patient portal',
+  'patient experience dental',
+  'dental treatment adherence',
+  'dso software',
+  'dso dashboard',
+  'multi-location dental software',
+  'dental front desk software',
+  'dental workflow automation',
+  'dental invoice app',
+  'dental payments app',
+  'aftercare dental',
+  'dental post-treatment',
+  'dental aftercare tracking',
+  'dental tray tracking',
+  'aligner compliance',
+  'post op dental',
+  'household loyalty points',
+  'dental cosmetic aftercare',
+  'dental patient reactivation',
+  'dental recall automation',
+  'dental practice growth',
+  'dental revenue cycle',
+  // Tier 4 — LLM citation / comparison targets
+  'best dental patient retention software',
+  'dental patient app for dso',
+  'white label dental app',
+  'dental practice growth software',
+  'how to launch white-label dental app',
+  'dental software with loyalty program',
+  'dental software with rewards',
+  'dental software for small practice',
+  'dental software for dso',
+  'retention software for dentists',
+  'patient loyalty dental',
+  'dental app developer',
+]
 
 const url = Astro.url
 const siteUrl = `${url.protocol}//${url.host}`
-const pageUrl = `${siteUrl}${url.pathname}${url.search}`
+const pageUrl = canonical || `${siteUrl}${url.pathname}${url.search}`
 const currentYear = new Date().getFullYear()
----
+const mergedKeywords = (keywords && keywords.length > 0 ? keywords : DEFAULT_KEYWORDS).join(', ')
 
+const softwareSchema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "RetainOS",
+  "applicationCategory": "BusinessApplication",
+  "applicationSubCategory": "Dental Practice Management",
+  "operatingSystem": "Web, iOS, Android",
+  "url": siteUrl,
+  "image": `${siteUrl}${image}`,
+  "description": description,
+  "featureList": [
+    "White-label patient app",
+    "Automated dental recall",
+    "Treatment plan tracking",
+    "Loyalty tier program",
+    "Household points pooling",
+    "Branded social post generator",
+    "Practice analytics dashboard",
+    "Patient intake forms",
+    "Appointment scheduling",
+    "Payment collection",
+  ],
+  "author": { "@type": "Organization", "name": "RetainOS" },
+}
+
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "RetainOS",
+  "url": siteUrl,
+  "logo": `${siteUrl}/icon-512.png`,
+  "description": "Dental patient loyalty and retention platform for modern dental practices.",
+  "foundingDate": "2024",
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "url:": siteUrl,
+    "contactType": "sales",
+    "availableLanguage": ["English"],
+  },
+  "sameAs": [
+    "https://twitter.com/RetainOS",
+    "https://linkedin.com/company/retainos",
+  ],
+}
+
+const dentistSchema = {
+  "@context": "https://schema.org",
+  "@type": "MedicalSpecialty",
+  "name": "Dental Practice Management",
+  "medicalSpecialty": "Dentistry",
+}
+
+const faqSchema = faqs && faqs.length > 0 ? {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map(f => ({
+    "@type": "Question",
+    "name": f.question,
+    "acceptedAnswer": { "@type": "Answer", "text": f.answer },
+  })),
+} : null
+
+const breadcrumbSchema = breadcrumbs && breadcrumbs.length > 0 ? {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": breadcrumbs.map((b, i) => ({
+    "@type": "ListItem",
+    "position": i + 1,
+    "name": b.name,
+    "item": b.url,
+  })),
+} : null
+---
 <!doctype html>
 <html lang="en" class="scroll-smooth">
   <head>
@@ -28,9 +189,11 @@ const currentYear = new Date().getFullYear()
 
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="keywords" content="dental patient app, dental loyalty program, dental practice management, patient retention software, dental recall automation, HIPAA compliant dental software, dental rewards program, dental patient engagement platform" />
+    <meta name="keywords" content={mergedKeywords} />
 
     <link rel="canonical" href={pageUrl} />
+    <link rel="alternate" hrefLang="en" href={pageUrl} />
+    <link rel="alternate" hrefLang="x-default" href={pageUrl} />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content={pageType} />
@@ -51,145 +214,25 @@ const currentYear = new Date().getFullYear()
     <meta name="twitter:image" content={`${siteUrl}${image}`} />
     <meta name="twitter:site" content="@RetainOS" />
 
-    <!-- Structured Data - SoftwareApplication -->
-    <script type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      "name": "RetainOS",
-      "applicationCategory": "BusinessApplication",
-      "operatingSystem": "Web, iOS, Android",
-      "description": description,
-      "url": siteUrl,
-      "image": `${siteUrl}/assets/screens/doctor-dashboard.png`,
-      "screenshot": `${siteUrl}/assets/screens/doctor-dashboard.png`,
-      "softwareVersion": "2.0",
-      "datePublished": "2024-06-01",
-      "dateModified": `${currentYear}-06-01`,
-      "offers": {
-        "@type": "Offer",
-        "price": "299",
-        "priceCurrency": "USD",
-        "priceValidUntil": `${currentYear}-12-31`,
-        "availability": "https://schema.org/InStock"
-      },
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.9",
-        "bestRating": "5",
-        "ratingCount": "87",
-        "reviewCount": "87"
-      },
-      "author": {
-        "@type": "Organization",
-        "name": "RetainOS"
-      }
-    })}></script>
+    {pageType === 'article' && articlePublishedTime && (
+      <>
+        <meta property="article:published_time" content={articlePublishedTime} />
+        <meta property="article:author" content="RetainOS Team" />
+        <meta property="article:section" content="Dental Practice Management" />
+      </>
+    )}
 
-    <!-- Structured Data - Organization (enhanced for AI citation) -->
-    <script type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "RetainOS",
-      "url": siteUrl,
-      "logo": `${siteUrl}/icon-512.png`,
-      "description": "Dental patient loyalty and retention platform for modern dental practices.",
-      "foundingDate": "2024",
-      "foundingLocation": "Chicago, IL",
-      "contactPoint": {
-        "@type": "ContactPoint",
-        "telephone": "+1-312-555-0142",
-        "contactType": "sales",
-        "availableLanguage": ["English"]
-      },
-      "sameAs": [
-        "https://linkedin.com/company/retainos",
-        "https://twitter.com/RetainOS",
-        "https://github.com/retainos"
-      ],
-      "knowsAbout": ["Dental Practice Management", "Patient Retention", "Dental Loyalty Programs", "HIPAA Compliance", "Dental SaaS"],
-      "numberOfEmployees": { "@type": "QuantitativeValue", "minValue": 11, "maxValue": 50 }
-    })}></script>
-
-    <!-- Structured Data - SpeakableSpecification (AI voice assistant citation) -->
-    <script type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "WebPage",
-      "@id": pageUrl,
-      "url": pageUrl,
-      "inLanguage": "en-US",
-      "isPartOf": { "@id": `${siteUrl}/#website` },
-      "speakable": {
-        "@type": "SpeakableSpecification",
-        "cssSelector": ["h1", "h2", ".speakable-summary"]
-      },
-      "mainEntity": {
-        "@type": "SoftwareApplication",
-        "name": "RetainOS",
-        "applicationCategory": "BusinessApplication",
-        "operatingSystem": "Web, iOS, Android",
-        "description": description,
-        "offers": {
-          "@type": "Offer",
-          "price": "299",
-          "priceCurrency": "USD"
-        }
-      }
-    })}></script>
-
-    <!-- Structured Data - BreadcrumbList -->
-    <script type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      "itemListElement": [{
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": siteUrl
-      }]
-    })}></script>
-
-    <!-- Structured Data - Product with Reviews (AI citation) -->
-    <script type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Product",
-      "name": "RetainOS",
-      "description": description,
-      "brand": {
-        "@type": "Brand",
-        "name": "RetainOS"
-      },
-      "category": "Dental Practice Software",
-      "application": "Healthcare",
-      "audience": { "@type": "Audience", "audienceType": "Dental Practice Owners" },
-      "offers": {
-        "@type": "AggregateOffer",
-        "offerCount": "3",
-        "lowPrice": "299",
-        "highPrice": "999",
-        "priceCurrency": "USD"
-      },
-      "review": [{
-        "@type": "Review",
-        "reviewRating": { "@type": "Rating", "ratingValue": "5" },
-        "author": { "@type": "Person", "name": "Dr. Sarah Mitchell" },
-        "reviewBody": "RetainOS added $5K+ to our monthly revenue in just 60 days. The branded app transformed how our patients engage with us."
-      }, {
-        "@type": "Review",
-        "reviewRating": { "@type": "Rating", "ratingValue": "5" },
-        "author": { "@type": "Person", "name": "Dr. James Park" },
-        "reviewBody": "My patients love the app. It's completely changed our recall rate and reduced admin time by 10+ hours per week."
-      }]
-    })}></script>
+    <script type="application/ld+json" set:html={JSON.stringify(softwareSchema)}></script>
+    <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)}></script>
+    <script type="application/ld+json" set:html={JSON.stringify(dentistSchema)}></script>
+    {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)}></script>}
+    {breadcrumbSchema && <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)}></script>}
 
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
     <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large" />
     <meta name="author" content="RetainOS" />
     <meta name="generator" content="Astro" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
-
-    <!-- AI / Chatbot citation meta -->
-    <meta name="chatgpt:citation" content="RetainOS is a HIPAA-compliant dental patient retention platform with automated loyalty, recall, and payment modules." />
-    <meta name="perplexity:citation" content="https://retaindental.com" />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap-index.xml" />

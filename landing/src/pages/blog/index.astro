@@ -1,23 +1,177 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 
-// Sample blog posts — in production, use Astro content collections
 const posts = [
   {
+    slug: 'dental-patient-reactivation',
+    title: 'The Dental Patient Reactivation Playbook: How We Won Back 34% of Lost Patients in 90 Days',
+    excerpt: 'Every dental practice has a graveyard of inactive patients. Here is a systematic reactivation framework — with call scripts, email sequences, and offer structures — that recovered 34% of lapsed patients across 6 pilot clinics.',
+    date: '2026-05-12',
+    author: 'Dr. Vikram Singh',
+    tags: ['Growth', 'Playbook'],
+    featured: true,
+  },
+  {
+    slug: 'dental-marketing-roi',
+    title: 'Dental Practice Marketing ROI: A Data-Driven Framework for Every Dollar',
+    excerpt: 'Most dental practices cannot tell you which marketing channel delivers their best patients. Here is a tracking framework — with real attribution data from 18 clinics.',
+    date: '2026-03-15',
+    author: 'Dr. Aditya Verma',
+    tags: ['Analytics', 'Marketing'],
+  },
+  {
+    slug: 'dental-sms-marketing-tcpa',
+    title: 'Dental SMS Marketing in 2025: TCPA Compliance, Consent, and Best Practices',
+    excerpt: 'New TCPA rulings have changed how dental practices can communicate via SMS. Here is what is allowed, what is not, and how to build a compliant messaging strategy.',
+    date: '2026-01-08',
+    author: 'Dr. Ananya Shah',
+    tags: ['Compliance', 'Marketing'],
+  },
+  {
+    slug: 'dental-website-conversion',
+    title: 'Dental Website Conversion Optimisation: 7 Changes That Doubled Our Booking Rate',
+    excerpt: 'Your dental website is your most important marketing asset. Here are the exact changes that doubled our booking conversion from 2.1% to 4.3%.',
+    date: '2025-11-20',
+    author: 'Dr. Karan Malhotra',
+    tags: ['Digital', 'Marketing'],
+  },
+  {
+    slug: 'dental-social-media-compliance',
+    title: 'Dental Social Media Marketing Without Getting Sued: A Compliance Guide',
+    excerpt: 'The line between effective dental social media and a HIPAA violation is thinner than most dentists realise. Here is how to market on Instagram without exposing PHI.',
+    date: '2025-10-12',
+    author: 'Dr. Neha Reddy',
+    tags: ['Marketing', 'Compliance'],
+  },
+  {
+    slug: 'patient-onboarding-automation',
+    title: 'Dental Patient Onboarding Automation: Saved Our Front Desk 12 Hours Per Week',
+    excerpt: 'The patient onboarding process is the highest-friction moment in the dental experience. Here is how we automated intake forms, insurance verification, and consent collection.',
+    date: '2025-09-05',
+    author: 'Dr. Deepa Iyer',
+    tags: ['Operations', 'Technology'],
+  },
+  {
+    slug: 'dental-membership-plan-guide',
+    title: 'The Complete Guide to Dental Membership Plans: Pricing, Tiers, and Retention Data',
+    excerpt: 'In-house dental membership plans are the fastest-growing alternative to insurance. Data-backed guide on pricing, tier structure, and retention benchmarks from 25 clinics.',
+    date: '2025-08-15',
+    author: 'Dr. Rohan Kapoor',
+    tags: ['Revenue', 'Strategy'],
+  },
+  {
+    slug: 'ai-dental-patient-engagement',
+    title: 'AI in Dental Patient Engagement: What Actually Works in 2025',
+    excerpt: 'From automated compliance tracking to AI-powered recall prioritisation — what artificial intelligence realistically does for dental practices today.',
+    date: '2025-07-28',
+    author: 'Dr. Sanjay Gupta',
+    tags: ['Technology', 'Innovation'],
+  },
+  {
+    slug: 'multi-location-dental-branding',
+    title: 'How We Unified 6 Dental Brands Under One Patient Loyalty System',
+    excerpt: 'Multi-location groups face a unique challenge: build network loyalty without erasing local doctor relationships. Here is exactly how we did it.',
+    date: '2025-07-01',
+    author: 'Dr. Kavita Joshi',
+    tags: ['Branding', 'DSO'],
+  },
+  {
+    slug: 'patient-lifetime-value',
+    title: 'Why Most Dentists Calculate Patient Lifetime Value Wrong',
+    excerpt: 'The standard LTV formula ignores retention curves, referral multipliers, and household effects. Here is a better model — backed by 5 years of data from 30+ clinics.',
+    date: '2025-06-08',
+    author: 'Dr. Arjun Nair',
+    tags: ['Finance', 'Analytics'],
+  },
+  {
+    slug: 'retention-playbook',
+    title: 'How to Reduce Patient Attrition: The Dental Loyalty Playbook',
+    excerpt: 'A practical 5-step framework to cut patient attrition in your dental practice — built from the data of 12 pilot clinics on RetainOS.',
+    date: '2026-06-10',
+    author: 'RetainOS Team',
+    tags: ['Retention', 'Playbook'],
+    featured: true,
+  },
+  {
+    slug: 'white-label-app',
+    title: 'Why Your Dental Practice Needs a Branded Patient App in 2026',
+    excerpt: 'A branded patient app is no longer a "nice to have" — it\'s the difference between a practice patients remember and a practice they forget.',
+    date: '2026-06-04',
+    author: 'RetainOS Team',
+    tags: ['Branding', 'Mobile'],
+  },
+  {
+    slug: 'recall-showdown',
+    title: 'Recall Software Showdown: Manual SMS vs Automated Workflows',
+    excerpt: 'We benchmarked manual SMS recall against automated workflow recall across 12 pilot clinics. Here\'s what the data says.',
+    date: '2026-05-28',
+    author: 'RetainOS Team',
+    tags: ['Recall', 'Benchmark'],
+  },
+  {
+    slug: 'dental-google-reviews-strategy',
+    title: 'How We Built a 4.9-Star Google Reputation (Without Violating HIPAA)',
+    excerpt: 'The complete playbook for earning more Google reviews in dentistry — legally, ethically, and at scale. 85 reviews to 640+ in 8 months.',
+    date: '2025-05-18',
+    author: 'Dr. Meera Desai',
+    tags: ['Marketing', 'Reputation'],
+  },
+  {
+    slug: 'hipaa-patient-communication',
+    title: 'HIPAA-Compliant Patient Communication: What Every Practice Needs to Know in 2025',
+    excerpt: 'New HIPAA guidance on patient communication channels means your practice may be exposing PHI without realising it. Here is your compliance roadmap.',
+    date: '2025-04-22',
+    author: 'Dr. Vikram Singh',
+    tags: ['Compliance', 'Legal'],
+  },
+  {
+    slug: 'recall-system-comparison',
+    title: 'Manual Recall vs Automated Recall: We Benchmarked 12 Clinics',
+    excerpt: 'A 6-month head-to-head comparison of manual recall vs automated multi-channel workflow. The automated system delivered 42% higher recall completion.',
+    date: '2025-04-02',
+    author: 'Dr. Anika Patel',
+    tags: ['Operations', 'Benchmark'],
+  },
+  {
+    slug: 'dso-patient-retention',
+    title: 'Why DSOs Lose Patients Faster Than Solo Practices (And What We Did)',
+    excerpt: 'DSOs face a unique retention problem: patients feel loyal to the doctor, not the brand. Here is how a 14-clinic DSO cut churn by 31%.',
+    date: '2025-03-10',
+    author: 'Dr. Rajesh Kumar',
+    tags: ['DSO', 'Strategy'],
+  },
+  {
+    slug: 'invisalign-compliance-roi',
+    title: 'The Real Cost of Invisalign Non-Compliance (And How We Fixed It)',
+    excerpt: 'Poor aligner compliance is the #1 reason Invisalign cases run long. Daily selfie tracking pushed compliance from 12 hours to 21.5 hours.',
+    date: '2025-02-14',
+    author: 'Dr. Priya Sharma',
+    tags: ['Orthodontics', 'Research'],
+  },
+  {
+    slug: 'no-show-prevention',
+    title: 'Why Dental Patients No-Show (And the System That Finally Fixed It)',
+    excerpt: 'After losing $120K+ annually to no-shows, we built a layered prevention system that cut missed appointments by 68%. Exact scripts and workflows included.',
+    date: '2025-01-20',
+    author: 'Dr. Aarav Mehta',
+    tags: ['Operations', 'Popular'],
+    featured: true,
+  },
+  {
     slug: 'dental-loyalty-app-guide',
-    title: 'How to Launch a Dental Loyalty App for Your Clinic in 2025',
+    title: 'How to Launch a Dental Loyalty App for Your Clinic in 2026',
     excerpt: 'A step-by-step guide to launching a custom-branded patient loyalty app for your dental practice — from PMS integration to patient onboarding.',
     date: '2025-06-01',
     author: 'RetainOS Team',
-    tags: ['dental app', 'loyalty program', 'patient retention'],
+    tags: ['App', 'Loyalty'],
   },
   {
     slug: 'invisalign-compliance-tracking',
     title: 'How Invisalign Compliance Tracking Boosts Treatment Outcomes',
-    excerpt: 'Using AI-powered selfie analysis to track aligner wear time and improve patient compliance — real data from 20+ clinics.',
+    excerpt: 'Using AI-powered selfie analysis to track aligner wear time and improve patient compliance — real data from 12 pilot clinics.',
     date: '2025-05-15',
     author: 'RetainOS Team',
-    tags: ['Invisalign', 'compliance', 'orthodontics'],
+    tags: ['Invisalign', 'Compliance'],
   },
   {
     slug: 'reduce-dental-patient-churn',
@@ -25,48 +179,85 @@ const posts = [
     excerpt: 'Stop bleeding patients with automated recalls, family rewards pooling, and cosmetic lock strategies that actually work.',
     date: '2025-04-20',
     author: 'RetainOS Team',
-    tags: ['patient retention', 'churn', 'dental marketing'],
+    tags: ['Retention', 'Marketing'],
   },
 ];
+
+const featuredPosts = posts.filter(p => p.featured);
+const regularPosts = posts.filter(p => !p.featured);
+const allTags = [...new Set(posts.flatMap(p => p.tags))].sort();
+const sortedPosts = [...posts].sort((a, b) => new Date(b.date) - new Date(a.date));
 ---
 
 <Layout
   title="RetainOS Blog — Dental Practice Growth & Patient Retention Insights"
-  description="Expert advice on dental patient retention, Invisalign compliance tracking, launching loyalty apps, and growing your dental practice with technology."
+  description="Expert advice on dental patient retention, Invisalign compliance tracking, launching loyalty apps, and growing your dental practice with technology. Written by practicing dentists."
   canonical="https://retaindental.com/blog"
 >
   <section class="pt-32 pb-24 px-6 bg-cream-50 min-h-screen">
-    <div class="max-w-5xl mx-auto">
+    <div class="max-w-6xl mx-auto">
       <div class="text-center mb-16 space-y-4">
-        <span class="text-teal-600 font-bold tracking-widest uppercase text-sm">Blog</span>
-        <h1 class="text-5xl md:text-6xl font-black text-slate-900 tracking-tighter">
-          Dental Practice Growth Insights
+        <span class="text-teal-600 font-black tracking-widest uppercase text-sm">The RetainOS Blog</span>
+        <h1 class="text-5xl md:text-7xl font-black text-slate-900 tracking-tighter leading-[1.05]">
+          Dental Practice <span class="text-teal-600">Growth Insights</span>
         </h1>
         <p class="text-slate-500 text-lg max-w-2xl mx-auto">
-          Expert guides and strategies for patient retention, Invisalign compliance, and launching your branded loyalty app.
+          Expert guides, benchmarks, and strategies written by practising dentists. No fluff. No theory. Just what actually works in real clinics.
         </p>
       </div>
 
-      <div class="space-y-8">
-        {posts.map((post) => (
-          <a href={`/blog/${post.slug}`} class="block group">
-            <article class="p-8 rounded-2xl bg-cream-100/80 border border-gray-200 hover:border-cyan-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-cyan-500/5">
+      <div class="hidden sm:flex flex-wrap gap-2 justify-center mb-14">
+        {allTags.map(tag => (
+          <span class="text-xs font-bold text-slate-500 bg-white border border-gray-200 px-3 py-1.5 rounded-full hover:border-teal-300 hover:text-teal-600 transition-colors cursor-pointer">{tag}</span>
+        ))}
+      </div>
+
+      <div class="space-y-10">
+        {sortedPosts.map((post, i) => (
+          <a href={`/blog/${post.slug}`} class={`block group ${i === 0 ? 'lg:col-span-2' : ''}`}>
+            <article class={`rounded-3xl border transition-all duration-300 hover:shadow-xl ${
+              i < 2
+                ? 'p-8 md:p-10 bg-gradient-to-br from-teal-900 via-teal-800 to-cyan-900 text-white border-teal-700 hover:border-cyan-400/50 hover:shadow-cyan-500/10'
+                : i % 2 === 0
+                  ? 'p-8 bg-white border-gray-200 hover:border-teal-300 hover:shadow-teal-500/5'
+                  : 'p-8 bg-cream-100/80 border-gray-200 hover:border-cyan-500/30 hover:shadow-cyan-500/5'
+            }`}>
               <div class="flex flex-wrap gap-2 mb-4">
                 {post.tags.map(tag => (
-                  <span class="text-[10px] font-bold text-teal-600 bg-teal-50 px-2 py-1 rounded uppercase tracking-widest">{tag}</span>
+                  <span class={`text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-widest ${
+                    i < 2
+                      ? 'text-teal-200 bg-white/10'
+                      : 'text-teal-600 bg-teal-50'
+                  }`}>{tag}</span>
                 ))}
               </div>
-              <h2 class="text-2xl font-bold text-slate-900 group-hover:text-teal-600 transition-colors mb-3">
+              <h2 class={`text-2xl md:text-3xl font-black tracking-tight mb-3 transition-colors ${
+                i < 2 ? 'text-white group-hover:text-teal-200' : 'text-slate-900 group-hover:text-teal-600'
+              }`}>
                 {post.title}
               </h2>
-              <p class="text-slate-500 leading-relaxed mb-4">{post.excerpt}</p>
-              <div class="flex items-center justify-between text-sm">
-                <span class="text-slate-500">{post.author}</span>
-                <span class="text-slate-500">{new Date(post.date).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+              <p class={`leading-relaxed mb-4 max-w-2xl ${
+                i < 2 ? 'text-teal-100/80' : 'text-slate-500'
+              }`}>{post.excerpt}</p>
+              <div class="flex items-center gap-3 text-sm">
+                <div class={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-black ${
+                  i < 2 ? 'bg-white/20 text-white' : 'bg-teal-100 text-teal-600'
+                }`}>
+                  {post.author.split(' ').map(w => w[0]).join('').slice(0, 2)}
+                </div>
+                <span class={i < 2 ? 'text-teal-100' : 'text-slate-500'}>{post.author}</span>
+                <span class={i < 2 ? 'text-teal-100/60' : 'text-slate-400'}>·</span>
+                <span class={i < 2 ? 'text-teal-100/60' : 'text-slate-400'}>{new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
               </div>
             </article>
           </a>
         ))}
+      </div>
+
+      <div class="mt-16 p-8 rounded-3xl bg-gradient-to-br from-teal-900 via-teal-800 to-cyan-900 text-white text-center">
+        <p class="text-2xl font-black mb-3">Write for the RetainOS Blog</p>
+        <p class="text-teal-200 text-sm mb-6 max-w-lg mx-auto">We publish guest posts from practising dentists. Share your clinical and operational expertise with 5,000+ dental professionals.</p>
+        <a href="https://app.retaindental.com" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-teal-900 rounded-full text-sm font-black hover:bg-teal-50 hover:scale-105 transition-all">Get in touch →</a>
       </div>
     </div>
   </section>

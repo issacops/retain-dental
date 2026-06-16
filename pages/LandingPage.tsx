@@ -2,22 +2,15 @@ import { SEOHead } from '../components/SEO/SEOHead';
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-    Check,
-    X,
-    LayoutGrid,
-    Trophy,
-    ArrowRight,
-    ScanFace,
-    Calendar,
-    Wallet,
-    Bell,
-    Shield,
-    Globe,
-    Activity,
-    Users
+    Check, X, LayoutGrid, Trophy, ArrowRight, ScanFace, Calendar,
+    Wallet, Bell, Shield, Globe, Activity, Users
 } from 'lucide-react';
 import { IBackendService } from '../services/IBackendService';
 import HeroSection from '../components/landing/HeroSection';
+import LiveStatsTicker from '../components/landing/LiveStatsTicker';
+import LiveProductShowcase from '../components/landing/LiveProductShowcase';
+import PilotProgram from '../components/landing/PilotProgram';
+import StickyMobileCta from '../components/landing/StickyMobileCta';
 import PhoneMockup from '../components/landing/PhoneMockup';
 import RoiCalculator from '../components/landing/RoiCalculator';
 import ScrollyTell from '../components/landing/ScrollyTell';
@@ -32,13 +25,13 @@ import CaseStudySection from '../components/landing/CaseStudySection'; // ADDED
 
 import SocialStudioSection from '../components/landing/SocialStudioSection'; // ADDED
 import ClinicalSpeedSection from '../components/landing/ClinicalSpeedSection'; // ADDED
+import TabbedDemos from '../components/landing/TabbedDemos';
 
 interface LandingPageProps {
     backend: IBackendService;
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
-    // ... [State Logic Remains Same] ...
     const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
     const [status, setStatus] = useState<'IDLE' | 'LOADING' | 'SUCCESS' | 'ERROR'>('IDLE');
     const [formData, setFormData] = useState({ name: '', clinic: '', mobile: '', email: '' });
@@ -47,6 +40,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
         e.preventDefault();
         setStatus('LOADING');
         try {
+            if (!backend) throw new Error('Backend not available');
             const result = await backend.joinWaitlist(formData);
             if (result.success) {
                 setStatus('SUCCESS');
@@ -121,25 +115,36 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
 
 
             {/* Navbar - Glass Light */}
-            <nav className="fixed top-0 w-full z-50 border-b border-white/60 bg-white/80 backdrop-blur-xl shadow-sm">
-                <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center shadow-lg shadow-primary-600/20 text-white">
-                            <LayoutGrid size={20} />
+            <nav className="fixed top-0 w-full z-50 border-b border-slate-100 bg-white/80 backdrop-blur-xl">
+                <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+                    <div className="flex items-center gap-2.5">
+                        <div className="w-8 h-8 bg-teal-600 rounded-lg flex items-center justify-center text-white shadow-sm">
+                            <LayoutGrid size={16} />
                         </div>
-                        <span className="text-xl font-black text-slate-900 tracking-tighter">Retain<span className="text-primary-600">OS</span></span>
+                        <span className="text-lg font-black text-slate-900 tracking-tighter">Retain<span className="text-teal-600">OS</span></span>
                     </div>
 
-                    <div className="flex items-center gap-4">
-                        <a href="/login" className="text-sm font-bold text-slate-600 hover:text-primary-600 transition-colors hidden md:block">
+                    <div className="flex items-center gap-3">
+                        <a href="/pricing" className="text-sm font-semibold text-slate-500 hover:text-teal-600 transition-colors hidden md:block">
+                            Pricing
+                        </a>
+                        <a href="https://retaindental.com/blog" className="text-sm font-semibold text-slate-500 hover:text-teal-600 transition-colors hidden md:block">
+                            Resources
+                        </a>
+                        <a href="/login" className="text-sm font-semibold text-slate-500 hover:text-teal-600 transition-colors hidden md:block">
                             Member Login
                         </a>
-                        <button onClick={() => setIsWaitlistOpen(true)} className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-full text-xs font-bold uppercase tracking-widest transition-all shadow-md">
+                        <button onClick={() => setIsWaitlistOpen(true)} className="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-full text-xs font-bold uppercase tracking-widest transition-all shadow-sm">
                             Get Early Access
                         </button>
                     </div>
                 </div>
             </nav>
+
+            {/* 0. LIVE STATS TICKER */}
+            <div className="pt-16">
+                <LiveStatsTicker backend={backend} />
+            </div>
 
             {/* 1. HERO (UPDATED COPY) */}
             <HeroSection onJoinWaitlist={() => setIsWaitlistOpen(true)} />
@@ -147,17 +152,24 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
             {/* 1.5 TRUST SIGNALS - Light Theme */}
             <section className="py-10 border-y border-slate-200 bg-white overflow-hidden">
                 <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-8">
-                    <p className="text-sm font-bold text-slate-400 uppercase tracking-widest whitespace-nowrap">Trusted by modern DSOs</p>
-                    <div className="flex items-center gap-12 opacity-30 grayscale mix-blend-multiply overflow-x-auto w-full md:w-auto no-scrollbar mask-linear-fade">
-                        {['Aspen Dental', 'Pacific Dental', 'Heartland', 'Smile Brands', 'Deca Dental'].map((name, i) => (
-                            <span key={i} className="text-xl font-black text-slate-900 whitespace-nowrap">{name}</span>
-                        ))}
+                    <p className="text-sm font-bold text-slate-400 uppercase tracking-widest whitespace-nowrap">Powered by</p>
+                    <div className="flex items-center gap-12 opacity-50 grayscale mix-blend-multiply overflow-x-auto w-full md:w-auto no-scrollbar mask-linear-fade">
+                        <span className="text-xl font-black text-slate-900 whitespace-nowrap">Cloudflare</span>
+                        <span className="text-xl font-black text-slate-900 whitespace-nowrap">Supabase</span>
+                        <span className="text-xl font-black text-slate-900 whitespace-nowrap">Stripe</span>
+                        <span className="text-xl font-black text-slate-900 whitespace-nowrap">Vercel Edge</span>
                     </div>
                 </div>
             </section>
 
             {/* 2. ROI CALCULATOR (The Hook) */}
             <RoiCalculator />
+
+            {/* 2.5 LIVE PRODUCT SHOWCASE */}
+            <LiveProductShowcase />
+
+            {/* 2.6 PILOT PROGRAM */}
+            <PilotProgram />
 
             {/* 1.75 THE AGITATE (THE LEAKY BUCKET) - LIGHT THEME */}
             <section className="py-24 px-6 bg-slate-50 relative overflow-hidden">
@@ -232,6 +244,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
             {/* NEW: SOCIAL STUDIO SECTION */}
             <SocialStudioSection />
 
+            {/* NEW: TABBED UI DEMOS */}
+            <TabbedDemos />
+
             {/* NEW: CLINICAL SPEED SECTION */}
             <ClinicalSpeedSection />
 
@@ -254,7 +269,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
             <section className="py-32 border-t border-slate-200 bg-white">
                 <div className="max-w-7xl mx-auto px-6">
                     <div className="text-center mb-20 space-y-4">
-                        <span className="text-emerald-600 font-bold tracking-widest uppercase text-sm">Speed to Value</span>
+                        <span className="text-teal-600 font-bold tracking-widest uppercase text-sm">Speed to Value</span>
                         <h2 className="text-4xl md:text-6xl font-black text-slate-900 tracking-tighter">
                             Live in 20 Minutes.
                         </h2>
@@ -265,7 +280,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
 
                     <div className="grid md:grid-cols-4 gap-8 relative">
                         {/* Connecting Line */}
-                        <div className="hidden md:block absolute top-12 left-0 w-full h-1 bg-gradient-to-r from-emerald-500/0 via-emerald-100 to-emerald-500/0 -z-10"></div>
+                        <div className="hidden md:block absolute top-12 left-0 w-full h-1 bg-gradient-to-r from-teal-500/0 via-teal-100 to-teal-500/0 -z-10"></div>
 
                         {[
                             { step: "01", title: "Sync", desc: "We connect to your PMS (Dentrix/EagleSoft) via API." },
@@ -274,9 +289,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
                             { step: "04", title: "Revenue", desc: "Patients download the app, book recare, and pay invoices." }
                         ].map((item, i) => (
                             <div key={i} className="relative pt-8 group">
-                                <div className="w-8 h-8 rounded-full bg-white border-4 border-slate-100 group-hover:border-emerald-500 transition-colors absolute top-8 left-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:block z-10"></div>
+                                <div className="w-8 h-8 rounded-full bg-white border-4 border-slate-100 group-hover:border-teal-500 transition-colors absolute top-8 left-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:block z-10"></div>
                                 <div className="text-center space-y-4 p-6 rounded-3xl bg-slate-50 border border-slate-100 hover:bg-white hover:shadow-lg transition-all">
-                                    <div className="text-4xl font-black text-slate-200 group-hover:text-emerald-500 transition-colors">{item.step}</div>
+                                    <div className="text-4xl font-black text-slate-200 group-hover:text-teal-500 transition-colors">{item.step}</div>
                                     <h3 className="text-xl font-bold text-slate-900">{item.title}</h3>
                                     <p className="text-slate-500 text-sm leading-relaxed">{item.desc}</p>
                                 </div>
@@ -287,29 +302,31 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
             </section>
 
             {/* 5. TRUST & SECURITY */}
-            <section className="py-24 border-t border-slate-200 bg-slate-50">
+            <section className="py-20 border-t border-slate-200 bg-white">
                 <div className="max-w-7xl mx-auto px-6 text-center">
-                    <p className="text-slate-400 uppercase tracking-widest text-sm font-bold mb-12">Trusted Enterprise Infrastructure</p>
-                    <div className="flex flex-wrap justify-center gap-12 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
-                        <div className="flex items-center gap-2 text-slate-700 font-bold text-xl"><ShieldCheckIcon /> HIPAA Compliant</div>
-                        <div className="flex items-center gap-2 text-slate-700 font-bold text-xl"><ShieldCheckIcon /> SOC2 Ready</div>
-                        <div className="flex items-center gap-2 text-slate-700 font-bold text-xl"><ShieldCheckIcon /> 99.9% Uptime</div>
-                        <div className="flex items-center gap-2 text-slate-700 font-bold text-xl"><ShieldCheckIcon /> AES-256 Encrypted</div>
+                    <div className="flex flex-wrap justify-center gap-8 mb-16">
+                        <div className="flex items-center gap-2 text-slate-500 font-semibold"><ShieldCheckIcon /> HIPAA-ready architecture</div>
+                        <div className="flex items-center gap-2 text-slate-500 font-semibold"><ShieldCheckIcon /> SOC 2 in progress</div>
+                        <div className="flex items-center gap-2 text-slate-500 font-semibold"><ShieldCheckIcon /> 99.9% Uptime SLA</div>
+                        <div className="flex items-center gap-2 text-slate-500 font-semibold"><ShieldCheckIcon /> AES-256 Encrypted</div>
+                    </div>
+                    <div className="flex items-center justify-center gap-2 text-sm text-slate-400">
+                        <span className="px-3 py-1 bg-teal-50 text-teal-700 rounded-full font-bold">Beta · 12 pilot clinics onboarding now</span>
                     </div>
                 </div>
             </section>
 
             {/* 6. CTA */}
-            <section className="py-32 px-6 relative overflow-hidden bg-primary-900">
-                <div className="absolute inset-0 bg-primary-950 opacity-50"></div>
+            <section className="py-32 px-6 relative overflow-hidden bg-teal-900">
+                <div className="absolute inset-0 bg-teal-950 opacity-50"></div>
                 <div className="max-w-4xl mx-auto text-center relative z-10 space-y-8">
                     <h2 className="text-5xl md:text-7xl font-black text-white tracking-tighter">
                         Scale your retention.
                     </h2>
-                    <p className="text-xl text-primary-200 max-w-xl mx-auto">
+                    <p className="text-xl text-teal-200 max-w-xl mx-auto">
                         Join the highest-performing dental groups in the world.
                     </p>
-                    <button onClick={() => setIsWaitlistOpen(true)} className="px-10 py-5 bg-white text-primary-900 rounded-full font-black text-xl hover:scale-105 transition-transform flex items-center gap-2 mx-auto shadow-2xl">
+                    <button onClick={() => setIsWaitlistOpen(true)} className="px-10 py-5 bg-white text-teal-900 rounded-full font-black text-xl hover:scale-105 transition-transform flex items-center gap-2 mx-auto shadow-2xl">
                         Request Enterprise Demo <ArrowRight />
                     </button>
                 </div>
@@ -336,7 +353,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
 
                             {status === 'SUCCESS' ? (
                                 <div className="py-20 text-center space-y-6">
-                                    <div className="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <div className="w-20 h-20 bg-teal-100 text-teal-600 rounded-full flex items-center justify-center mx-auto mb-4">
                                         <Check size={40} />
                                     </div>
                                     <h3 className="text-3xl font-black text-slate-900">Request Received.</h3>
@@ -354,7 +371,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
                                             <input
                                                 required
                                                 placeholder="Doctor Name"
-                                                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-slate-900 placeholder:text-slate-400 focus:border-primary-500 outline-none transition-colors"
+                                                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-slate-900 placeholder:text-slate-400 focus:border-teal-500 outline-none transition-colors"
                                                 value={formData.name}
                                                 onChange={e => setFormData({ ...formData, name: e.target.value })}
                                             />
@@ -363,7 +380,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
                                             <input
                                                 required
                                                 placeholder="Clinic/DSO Name"
-                                                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-slate-900 placeholder:text-slate-400 focus:border-primary-500 outline-none transition-colors"
+                                                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-slate-900 placeholder:text-slate-400 focus:border-teal-500 outline-none transition-colors"
                                                 value={formData.clinic}
                                                 onChange={e => setFormData({ ...formData, clinic: e.target.value })}
                                             />
@@ -372,7 +389,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
                                             <input
                                                 required
                                                 placeholder="Mobile"
-                                                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-slate-900 placeholder:text-slate-400 focus:border-primary-500 outline-none transition-colors"
+                                                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-slate-900 placeholder:text-slate-400 focus:border-teal-500 outline-none transition-colors"
                                                 value={formData.mobile}
                                                 onChange={e => setFormData({ ...formData, mobile: e.target.value })}
                                             />
@@ -380,7 +397,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
                                                 required
                                                 placeholder="Work Email"
                                                 type="email"
-                                                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-slate-900 placeholder:text-slate-400 focus:border-primary-500 outline-none transition-colors"
+                                                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-slate-900 placeholder:text-slate-400 focus:border-teal-500 outline-none transition-colors"
                                                 value={formData.email}
                                                 onChange={e => setFormData({ ...formData, email: e.target.value })}
                                             />
@@ -389,7 +406,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
                                         <button
                                             disabled={status === 'LOADING'}
                                             type="submit"
-                                            className="w-full py-5 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-black text-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50 shadow-lg"
+                                            className="w-full py-5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-black text-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50 shadow-lg"
                                         >
                                             {status === 'LOADING' ? 'Processing...' : 'Request Demo'}
                                         </button>
@@ -404,8 +421,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({ backend }) => {
             {/* 7. FOOTER */}
             <Footer />
 
+            {/* STICKY MOBILE CTA */}
+            <StickyMobileCta onJoinWaitlist={() => setIsWaitlistOpen(true)} />
+
         </div>
     );
 };
 
-const ShieldCheckIcon = () => <Shield className="text-emerald-400" size={20} />;
+const ShieldCheckIcon = () => <Shield className="text-teal-400" size={18} />;

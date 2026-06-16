@@ -1,0 +1,139 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const title = 'Dental SMS Marketing in 2025: TCPA Compliance, Consent Requirements, and the 5 Best Practices Every Practice Must Follow'
+const description = 'New TCPA rulings have changed how dental practices can communicate with patients via SMS. Here is what is allowed, what is not, and how to build a compliant messaging strategy.'
+const pageUrl = 'https://retaindental.com/blog/dental-sms-marketing-tcpa'
+const publishedDate = '2026-01-08'
+const author = 'Dr. Ananya Shah'
+const authorBio = 'Dr. Shah is a general dentist and a certified healthcare privacy professional. She advises dental practices on patient communication compliance and has spoken at dental conferences on digital regulation.'
+---
+
+<Layout
+  title={title}
+  description={description}
+  pageType="article"
+  articlePublishedTime={publishedDate}
+  canonical={pageUrl}
+  breadcrumbs={[
+    { name: 'Home', url: 'https://retaindental.com/' },
+    { name: 'Blog', url: 'https://retaindental.com/blog' },
+    { name: 'SMS Marketing Compliance', url: pageUrl },
+  ]}
+>
+  <article class="pt-32 pb-24 px-6 bg-cream-50 min-h-screen">
+    <div class="max-w-3xl mx-auto">
+      <a href="/blog" class="inline-flex items-center gap-2 text-xs font-bold text-teal-600 uppercase tracking-widest mb-6 hover:text-teal-500 transition-colors">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+        Back to all posts
+      </a>
+
+      <div class="flex flex-wrap items-center gap-3 mb-6">
+        <span class="text-[10px] font-black text-teal-600 bg-teal-50 border border-teal-200 px-2.5 py-1 rounded-full uppercase tracking-widest">Compliance</span>
+        <span class="text-sm text-slate-400 font-medium">9 min read</span>
+        <span class="text-sm text-slate-400 font-medium">·</span>
+        <span class="text-sm text-slate-400 font-medium">{new Date(publishedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+      </div>
+
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 tracking-tighter leading-[1.05] mb-6">
+        Dental SMS Marketing in 2025: <span class="text-teal-600">TCPA Compliance, Consent Requirements, and 5 Best Practices</span>
+      </h1>
+
+      <div class="flex items-center gap-4 mb-12 p-4 bg-cream-100 rounded-2xl border border-gray-200">
+        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center text-white font-black text-lg">AS</div>
+        <div>
+          <p class="font-bold text-slate-900 text-sm">{author}</p>
+          <p class="text-xs text-slate-500">GP · Certified privacy professional</p>
+        </div>
+      </div>
+
+      <div class="prose prose-lg max-w-none text-slate-700 leading-relaxed space-y-6">
+        <p class="text-xl text-slate-600 leading-relaxed font-medium">
+          SMS is the highest-engagement channel dental practices have. Text messages have a 98% open rate within 3 minutes. Email struggles to hit 25%. Phone calls get answered less than 50% of the time. But SMS is also the most heavily regulated communication channel — and the regulations have gotten significantly stricter in the last 18 months.
+        </p>
+
+        <p>
+          The Telephone Consumer Protection Act (TCPA) and its 2024-2025 updates have created a compliance landscape that is catching many dental practices off guard. The FCC's 2024 ruling on "prior express consent" clarified that consent for appointment reminders does not automatically extend to recall messages or promotional texts. Several class-action lawsuits against healthcare providers — including a February 2025 case against a DSO network in Texas — have made it clear that the TCPA applies to dental practices just as it applies to telemarketers.
+        </p>
+
+        <h2>What the TCPA requires for dental SMS</h2>
+        <p>
+          The TCPA and its implementing regulations establish three categories of SMS messages with different consent requirements:
+        </p>
+
+        <h3>Category 1: Appointment reminders (operational)</h3>
+        <p>
+          These are messages that convey information about an existing appointment — date, time, location, provider name. The FCC has confirmed that these fall under the "healthcare" exemption and do not require prior written consent, provided that:
+        </p>
+        <ul>
+          <li>The message is strictly informational and does not contain marketing content</li>
+          <li>The patient provided their phone number during the appointment booking process</li>
+          <li>The message includes an opt-out mechanism (e.g., "Reply STOP to opt out")</li>
+        </ul>
+
+        <h3>Category 2: Recall and re-care messages (grey area)</h3>
+        <p>
+          This is where most dental practices are exposed. A message saying "It has been 6 months since your last visit — book your next cleaning" does not relate to an existing appointment. The FCC has not issued definitive guidance on whether these are "healthcare" or "promotional." The conservative approach: treat them as promotional and obtain prior written consent.
+        </p>
+
+        <h3>Category 3: Promotional and marketing messages (strict)</h3>
+        <p>
+          "Flash sale on Zoom whitening — 30% off this month!" These require prior express written consent. The consent must be: specific to the phone number provided, include clear disclosure of what the patient is agreeing to, and be obtained without any conditions (you cannot require consent to marketing messages as a condition of treatment).
+        </p>
+
+        <blockquote>
+          "The safest framework I recommend to every practice: obtain a single, comprehensive written consent at patient intake that covers appointment reminders, recall communications, and promotional messages — with clear separation so the patient can opt into some categories and not others. This gives you maximum flexibility while staying compliant."
+        </blockquote>
+
+        <h2>Five best practices for dental SMS in 2025</h2>
+
+        <h3>1. Separate consent at intake</h3>
+        <p>
+          Your new-patient consent form should include a dedicated section for SMS communication with three checkboxes: (a) appointment reminders, (b) recall and re-care messages, (c) promotional offers and practice news. Default all three to unchecked — the patient must actively opt in. This eliminates any argument about "prior express consent" later.
+        </p>
+
+        <h3>2. Include opt-out in every message</h3>
+        <p>
+          Every SMS you send — even appointment reminders — must include a clear, working opt-out mechanism. "Reply STOP to unsubscribe from all messages" is the gold standard. The opt-out must be processed immediately (within 24 hours, but ideally in real time). If a patient replies STOP and receives another message from you, you have violated the TCPA.
+        </p>
+
+        <h3>3. Maintain a Do-Not-Text list</h3>
+        <p>
+          This is separate from your DNC (Do Not Call) list. Some patients are fine with phone calls but do not want texts. Your SMS platform must maintain a suppression list that prevents messages from being sent to opted-out numbers across all message categories.
+        </p>
+
+        <h3>4. Audit your third-party platforms</h3>
+        <p>
+          If you use a patient engagement platform that sends SMS on your behalf, you are vicariously liable for their compliance. Your BAA with the platform must include specific TCPA compliance representations. You should also request an annual SOC 2 report or equivalent audit documentation covering their SMS delivery practices.
+        </p>
+
+        <h3>5. Document everything</h3>
+        <p>
+          In the event of a complaint or lawsuit, your best defence is a contemporaneous record of: when consent was obtained, what the patient agreed to, and every message sent. Your SMS platform should maintain an immutable audit log of all outbound messages and opt-in/opt-out events. We retain these records for four years (matching the TCPA statute of limitations).
+        </p>
+
+        <h2>The cost of non-compliance</h2>
+        <p>
+          TCPA violations carry statutory damages of $500 per unsolicited text message, which can be trebled for wilful violations. A single campaign sending 500 messages to patients without proper consent represents a potential liability of $300,000. The DSO network case I mentioned earlier is reportedly seeking $12 million in damages for 18 months of allegedly non-compliant recall messaging.
+        </p>
+        <p>
+          The good news: compliance is straightforward. It requires updating your consent forms, choosing a compliant messaging platform, and training your team on the categories. Most dental practices that get into TCPA trouble are not knowingly violating the law — they simply never updated their processes after the 2024-2025 regulatory changes.
+        </p>
+        <p>
+          — <em>Dr. Ananya Shah</em>
+        </p>
+
+        <div class="not-prose mt-12 p-8 rounded-3xl bg-gradient-to-br from-teal-900 via-teal-800 to-cyan-900 text-white relative overflow-hidden">
+          <div class="relative z-10">
+            <p class="text-2xl font-black mb-3">Compliant SMS, built for dentistry</p>
+            <p class="text-teal-200 text-sm mb-6 max-w-lg">RetainOS handles TCPA compliance automatically — consent management, opt-out processing, audit logging, and category-based messaging. You focus on care, not legal exposure.</p>
+            <div class="flex flex-wrap gap-3">
+              <a href="https://app.retaindental.com" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-teal-900 rounded-full text-sm font-black hover:bg-teal-50 hover:scale-105 transition-all">Start free trial →</a>
+              <a href="/blog" class="inline-flex items-center gap-2 px-6 py-3 bg-white/10 text-white rounded-full text-sm font-semibold hover:bg-white/20 transition-all border border-white/20">Read more posts</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</Layout>

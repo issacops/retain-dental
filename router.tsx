@@ -9,7 +9,11 @@ const PlatformPage = React.lazy(() => import('./pages/PlatformPage').then(module
 const ClinicPage = React.lazy(() => import('./pages/ClinicPage').then(module => ({ default: module.ClinicPage })));
 const PatientPage = React.lazy(() => import('./pages/PatientPage').then(module => ({ default: module.PatientPage })));
 const LoginPage = React.lazy(() => import('./pages/LoginPage').then(module => ({ default: module.LoginPage })));
-
+const PricingPage = React.lazy(() => import('./pages/PricingPage').then(module => ({ default: module.PricingPage })));
+const DsoPage = React.lazy(() => import('./pages/DsoPage').then(module => ({ default: module.DsoPage })));
+const SoloPracticePage = React.lazy(() => import('./pages/SoloPracticePage').then(module => ({ default: module.SoloPracticePage })));
+const VsDentrixPage = React.lazy(() => import('./pages/VsDentrixPage').then(module => ({ default: module.VsDentrixPage })));
+const VsYapiPage = React.lazy(() => import('./pages/VsYapiPage').then(module => ({ default: module.VsYapiPage })));
 interface RouterProps {
     appState: AppState;
     handlers: any;
@@ -43,13 +47,28 @@ const GodGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
     if (isAuthenticated) return <>{children}</>;
 
-    const handleLogin = (e: React.FormEvent) => {
+    const [checking, setChecking] = React.useState(false);
+
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (email === 'issaciconnect@gmail.com' && password === 'Jisha@99898542') {
-            setIsAuthenticated(true);
-            setError('');
-        } else {
-            setError('ACCESS DENIED');
+        setChecking(true);
+        setError('');
+        try {
+            const res = await fetch('/api/auth/god', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password }),
+            });
+            const data = await res.json();
+            if (data.authenticated) {
+                setIsAuthenticated(true);
+            } else {
+                setError('ACCESS DENIED');
+            }
+        } catch {
+            setError('Connection failed');
+        } finally {
+            setChecking(false);
         }
     };
 
@@ -74,11 +93,22 @@ const GodGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
                 {error && <div className="p-3 bg-rose-500/10 border border-rose-500/20 rounded-xl text-rose-500 text-xs font-bold text-center animate-pulse">{error}</div>}
 
-                <button type="submit" className="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-black uppercase tracking-widest rounded-xl transition-all shadow-lg hover:shadow-indigo-500/20 active:scale-95">Authenticate</button>
+                <button type="submit" disabled={checking} className="w-full py-4 bg-indigo-600 hover:bg-indigo-500 disabled:bg-indigo-800 disabled:cursor-not-allowed text-white font-black uppercase tracking-widest rounded-xl transition-all shadow-lg hover:shadow-indigo-500/20 active:scale-95 flex items-center justify-center gap-2">{checking ? <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> : 'Authenticate'}</button>
             </form>
         </div>
     );
 };
+
+// 404 Not Found
+const NotFound = () => (
+    <div className="h-[100dvh] w-full flex items-center justify-center bg-slate-950 p-6">
+        <div className="text-center max-w-md">
+            <h1 className="text-8xl font-black text-slate-800 tracking-tighter mb-2">404</h1>
+            <p className="text-slate-500 font-mono text-sm uppercase tracking-widest mb-8">Page Not Found</p>
+            <a href="/" className="inline-block px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-indigo-500/20 active:scale-95">Return Home</a>
+        </div>
+    </div>
+);
 
 // Safe Router Wrapper
 export const AppRouter: React.FC<RouterProps> = ({ appState, handlers, backendService }) => {
@@ -93,6 +123,12 @@ export const AppRouter: React.FC<RouterProps> = ({ appState, handlers, backendSe
                 {/* PUBLIC: LANDING PAGE */}
                 <Route path="/" element={<LandingPage backend={backendService} />} />
 
+                {/* PUBLIC: SEO / MARKETING ROUTES */}
+                <Route path="/pricing" element={<PricingPage />} />
+                <Route path="/dso" element={<DsoPage />} />
+                <Route path="/solo-practice" element={<SoloPracticePage />} />
+                <Route path="/vs-dentrix" element={<VsDentrixPage />} />
+                <Route path="/vs-yapi" element={<VsYapiPage />} />
                 {/* PUBLIC: UNIFIED LOGIN & BRANDED LOGIN */}
                 <Route path="/login" element={<LoginPage clinics={clinics} activeClinic={activeClinic} />} />
                 <Route path="/login/:slug" element={<LoginPage clinics={clinics} activeClinic={activeClinic} />} />
@@ -103,6 +139,7 @@ export const AppRouter: React.FC<RouterProps> = ({ appState, handlers, backendSe
                         <PlatformPage
                             data={appState}
                             onNavigate={() => { }}
+                            backendService={backendService}
                             {...handlers}
                         />
                     </GodGuard>
@@ -112,6 +149,7 @@ export const AppRouter: React.FC<RouterProps> = ({ appState, handlers, backendSe
                         <PlatformPage
                             data={appState}
                             onNavigate={() => { }}
+                            backendService={backendService}
                             {...handlers}
                         />
                     </GodGuard>
@@ -149,6 +187,9 @@ export const AppRouter: React.FC<RouterProps> = ({ appState, handlers, backendSe
                         onLinkFamily={handlers.onLinkFamily}
                     />
                 } />
+
+                {/* 404: Catch-all */}
+                <Route path="*" element={<NotFound />} />
 
                 {/* ROOT REDIRECT - Default to Login (Preserve Query Params for PWA) */}
                 <Route path="/auth/callback" element={<Navigate to="/" replace />} />

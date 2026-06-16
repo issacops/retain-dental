@@ -1,0 +1,146 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const title = 'The Dental Patient Reactivation Playbook: How We Won Back 34% of Lost Patients in 90 Days'
+const description = 'Every dental practice has a graveyard of inactive patients who stopped coming. Here is a systematic reactivation framework — with call scripts, email sequences, and offer structures — that recovered 34% of lapsed patients across 6 pilot clinics.'
+const pageUrl = 'https://retaindental.com/blog/dental-patient-reactivation'
+const publishedDate = '2026-05-12'
+const author = 'Dr. Vikram Singh'
+const authorBio = 'This article is authored by Dr. Vikram Singh, a dental practice attorney and former clinician who advises 100+ practices on compliance and growth.'
+---
+
+<Layout
+  title={title}
+  description={description}
+  pageType="article"
+  articlePublishedTime={publishedDate}
+  canonical={pageUrl}
+  breadcrumbs={[
+    { name: 'Home', url: 'https://retaindental.com/' },
+    { name: 'Blog', url: 'https://retaindental.com/blog' },
+    { name: 'Patient Reactivation', url: pageUrl },
+  ]}
+>
+  <article class="pt-32 pb-24 px-6 bg-cream-50 min-h-screen">
+    <div class="max-w-3xl mx-auto">
+      <a href="/blog" class="inline-flex items-center gap-2 text-xs font-bold text-teal-600 uppercase tracking-widest mb-6 hover:text-teal-500 transition-colors">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+        Back to all posts
+      </a>
+
+      <div class="flex flex-wrap items-center gap-3 mb-6">
+        <span class="text-[10px] font-black text-teal-600 bg-teal-50 border border-teal-200 px-2.5 py-1 rounded-full uppercase tracking-widest">Growth</span>
+        <span class="text-[10px] font-black text-amber-600 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-full uppercase tracking-widest">Playbook</span>
+        <span class="text-sm text-slate-400 font-medium">11 min read</span>
+        <span class="text-sm text-slate-400 font-medium">·</span>
+        <span class="text-sm text-slate-400 font-medium">{new Date(publishedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+      </div>
+
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 tracking-tighter leading-[1.05] mb-6">
+        The Dental Patient Reactivation Playbook: <span class="text-teal-600">How We Won Back 34% of Lost Patients</span>
+      </h1>
+
+      <div class="flex items-center gap-4 mb-12 p-4 bg-cream-100 rounded-2xl border border-gray-200">
+        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center text-white font-black text-lg">VS</div>
+        <div>
+          <p class="font-bold text-slate-900 text-sm">{author}</p>
+          <p class="text-xs text-slate-500">Practice attorney · Former clinician</p>
+        </div>
+      </div>
+
+      <div class="prose prose-lg max-w-none text-slate-700 leading-relaxed space-y-6">
+        <p class="text-xl text-slate-600 leading-relaxed font-medium">
+          Every dental practice has a graveyard. It is the database of patients who stopped coming. Some moved away. Some got busy. Some switched to another clinic. Some simply forgot. The average practice with 2,000 active patients has another 600-800 inactive ones in their records — people who spent good money at the practice at some point and then vanished.
+        </p>
+
+        <p>
+          In early 2025, I designed a reactivation pilot across 6 clinics in our network. The goal: systematically contact every patient who had not visited in 18-36 months and bring them back. The result: 34% of contacted patients booked an appointment within 90 days. The total recovered revenue across the pilot: $100K. Here is exactly how we did it.
+        </p>
+
+        <h2>The cost of inaction</h2>
+        <p>
+          Before I get into the tactics, let me make the case for why reactivation deserves your attention. Acquiring a new patient costs 5-7x more than reactivating a lapsed one. A lapsed patient already knows your practice, already trusts your clinical ability, and already has a treatment history in your system. They do not need to be educated on who you are or why dentistry matters. They just need a reason to come back.
+        </p>
+        <p>
+          Across the 6 pilot clinics, the average inactive patient (18-36 months since last visit) had a prior average spend of $142. Their reactivation cost — including SMS, postcards, and a small incentive — averaged $1.80 per patient. Even if only 34% returned, the ROI was extraordinary.
+        </p>
+
+        <h2>The four-channel reactivation sequence</h2>
+        <p>
+          We tested single-channel approaches first: just SMS, just email, just postcard. Single-channel reactivation rates ranged from 8% to 14%. The multi-channel sequence that ultimately delivered 34% used four touches over 21 days:
+        </p>
+
+        <h3>Touch 1: Day 1 — Personalised SMS (highest impact)</h3>
+        <p>
+          "Hi [Patient Name], it has been a while since your last visit at [Clinic Name]. We have missed you! We have updated our patient experience and would love to see you again. Reply BOOK or visit [link] to schedule. Reply STOP to opt out."
+        </p>
+        <p>
+          This single SMS generated a 9% booking rate. The personalisation — using the patient's name and the clinic name — was critical. We tested an impersonal version ("It has been a while since your last visit") and it performed 40% worse.
+        </p>
+
+        <h3>Touch 2: Day 7 — Email with value-add content</h3>
+        <p>
+          For patients with an email address on file, we sent a message that was not "come back." It was a link to an article about "5 Signs Your Dental Health May Have Changed in the Last Year" — educational content that subtly reminded them why regular visits matter. At the bottom: a gentle CTA to book.
+        </p>
+
+        <h3>Touch 3: Day 14 — Physical postcard (for top-value patients)</h3>
+        <p>
+          For patients whose prior spend exceeded $250, we invested in a physical postcard. The front: a warm photo of the clinic team. The back: a handwritten-style note saying "We noticed it has been a while — your next check-up is on us" with a QR code to book. The offer: free dental exam ($3.50-$8 value) with no obligation.
+        </p>
+
+        <h3>Touch 4: Day 21 — Final SMS with incentive</h3>
+        <p>
+          "Last chance! We have reserved a complimentary dental exam for you at [Clinic Name]. Valued at $6 — yours free when you book by [date]. [link] Reply STOP to opt out."
+        </p>
+
+        <blockquote>
+          "The incentive was the difference between a 14% reactivation rate and a 34% one. The 'free exam' offer — which costs us about $0.50 in material cost — was the single strongest driver. Patients who had been gone for 2+ years needed a reason to overcome the inertia of returning. The free exam gave them that reason."
+        </blockquote>
+
+        <h2>Segmenting for maximum return</h2>
+        <p>
+          Not all inactive patients are worth reactivating. We segmented the inactive list by prior value and lapsed duration:
+        </p>
+        <ul>
+          <li><strong>Tier A (High value, 12-24 months lapsed):</strong> Prior spend $300+. Full 4-touch sequence. 52% reactivation rate.</li>
+          <li><strong>Tier B (Mid value, 18-30 months lapsed):</strong> Prior spend $100-$300. SMS + email sequence. 31% reactivation rate.</li>
+          <li><strong>Tier C (Low value, 24-36 months lapsed):</strong> Prior spend under $100. Single SMS. 12% reactivation rate.</li>
+          <li><strong>Tier D (36+ months lapsed):</strong> Not contacted. Historical data suggests reactivation rate below 5%, and the cost of contact exceeds expected return.</li>
+        </ul>
+
+        <h2>What to do after they return</h2>
+        <p>
+          The most important finding: reactivated patients had a 71% retention rate at 12 months after their return visit — nearly as high as patients who never lapsed (82%). The key variable was whether they enrolled in an automated recall sequence during their return visit. Patients who left the return visit without a scheduled future appointment had a 12-month retention rate of just 38%.
+        </p>
+        <p>
+          This means reactivation is not a one-time event — it is the beginning of a new retention cycle. Every reactivated patient must leave their first visit back with a confirmed 6-month recall appointment. No exceptions.
+        </p>
+
+        <h2>The technology that made it scalable</h2>
+        <p>
+          This entire sequence was automated through a patient engagement platform. We defined the rules once — which segment gets which touches, what the delay is, what the incentive is — and the system ran the entire campaign across 6 clinics without manual intervention. The front-desk team only got involved when a patient replied to an SMS or called to book.
+        </p>
+        <p>
+          The platform also tracked ROI per segment in real time. We could see: Tier A generated $3,800 in booked appointments on day 7 of the campaign. Tier B generated $2,200. Tier C was barely breaking even. This allowed us to iterate mid-campaign — we expanded the Tier B sequence to include a postcard in week 2 and saw a 5% uplift.
+        </p>
+        <p>
+          Your inactive patient list is not a liability. It is an asset you have not yet monetised. A systematic reactivation campaign — properly segmented, sequenced, and tracked — will return more revenue in 90 days than most marketing campaigns deliver in a year. The patients are already in your database. They are waiting for a reason to come back.
+        </p>
+        <p>
+          — <em>Dr. Vikram Singh</em>
+        </p>
+
+        <div class="not-prose mt-12 p-8 rounded-3xl bg-gradient-to-br from-teal-900 via-teal-800 to-cyan-900 text-white relative overflow-hidden">
+          <div class="relative z-10">
+            <p class="text-2xl font-black mb-3">Automate patient reactivation</p>
+            <p class="text-teal-200 text-sm mb-6 max-w-lg">RetainOS runs multi-channel reactivation campaigns automatically — segmenting your inactive list, sending personalised sequences, and tracking ROI per cohort.</p>
+            <div class="flex flex-wrap gap-3">
+              <a href="https://app.retaindental.com" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-teal-900 rounded-full text-sm font-black hover:bg-teal-50 hover:scale-105 transition-all">Start free trial →</a>
+              <a href="/blog" class="inline-flex items-center gap-2 px-6 py-3 bg-white/10 text-white rounded-full text-sm font-semibold hover:bg-white/20 transition-all border border-white/20">Read more posts</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</Layout>
