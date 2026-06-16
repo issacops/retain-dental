@@ -12,14 +12,14 @@ export const LandingPatientView: React.FC<Props> = ({ initialTab = 'HOME' }) => 
     return (
         <div className="w-full h-full bg-slate-50 text-slate-900 font-sans relative overflow-hidden flex flex-col">
             {/* Background Gradients */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-[60px] pointer-events-none"></div>
+            <div className="absolute top-0 right-0 w-64 h-64 bg-teal-500/10 rounded-full blur-[60px] pointer-events-none"></div>
             <div className="absolute bottom-0 left-0 w-48 h-48 bg-emerald-500/10 rounded-full blur-[50px] pointer-events-none"></div>
 
             <main className="flex-1 p-6 overflow-hidden flex flex-col">
                 {/* Header (Always Visible) */}
                 <div className="flex items-center gap-3 mb-6">
                     <div className="h-10 w-10 bg-white rounded-xl shadow-sm border border-slate-100 flex items-center justify-center">
-                        <Activity size={20} className="text-indigo-600" />
+                        <Activity size={20} className="text-teal-600" />
                     </div>
                     <div>
                         <h1 className="text-xl font-black text-slate-900 tracking-tight">Roots & Co.</h1>
@@ -32,7 +32,7 @@ export const LandingPatientView: React.FC<Props> = ({ initialTab = 'HOME' }) => 
                     <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
                         {/* Loyalty Card */}
                         <div className="bg-white rounded-[2rem] p-6 shadow-xl border border-slate-100 relative overflow-hidden group">
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-50 rounded-full blur-2xl -mr-10 -mt-10 opacity-50"></div>
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-teal-50 rounded-full blur-2xl -mr-10 -mt-10 opacity-50"></div>
 
                             <div className="flex justify-between items-start relative z-10 mb-6">
                                 <div>
@@ -54,7 +54,7 @@ export const LandingPatientView: React.FC<Props> = ({ initialTab = 'HOME' }) => 
 
                             <div className="mt-4 pt-4 border-t border-slate-100 relative z-10">
                                 <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                                    <div className="h-full bg-indigo-500 w-[70%]"></div>
+                                    <div className="h-full bg-teal-500 w-[70%]"></div>
                                 </div>
                                 <p className="text-[9px] font-bold text-slate-400 mt-2 text-right">70% to Platinum</p>
                             </div>

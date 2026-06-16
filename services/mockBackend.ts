@@ -550,12 +550,21 @@ export class MockBackendService implements IBackendService {
     return { success: true, message: 'Metadata updated', updatedData: await this.getData() };
   }
 
+  private waitlistEntries: any[] = [];
+
   public async joinWaitlist(data: { name: string, clinic: string, mobile: string, email: string }): Promise<ServiceResponse> {
-    return { success: true, message: 'Waitlist joined (Mock)' };
+    const entry = { ...data, created_at: new Date().toISOString(), id: `wl-${Date.now()}` };
+    this.waitlistEntries.unshift(entry);
+    const stored = JSON.parse(localStorage.getItem('retain_waitlist') || '[]');
+    stored.unshift(entry);
+    localStorage.setItem('retain_waitlist', JSON.stringify(stored));
+    return { success: true, message: 'Request Received. We will contact you shortly.' };
   }
 
   public async getWaitlist(): Promise<ServiceResponse<any[]>> {
-    return { success: true, message: 'Waitlist fetched (Mock)', updatedData: [] };
+    const stored = JSON.parse(localStorage.getItem('retain_waitlist') || '[]');
+    this.waitlistEntries = stored;
+    return { success: true, message: 'Waitlist fetched', updatedData: stored };
   }
 
   public async linkFamilyMember(headUserId: string, memberMobile: string): Promise<ServiceResponse> {

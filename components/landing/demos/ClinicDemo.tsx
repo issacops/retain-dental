@@ -4,7 +4,7 @@ const ClinicDemo: React.FC = () => {
     return (
         <div className="w-full h-full bg-slate-900 rounded-2xl overflow-hidden relative border border-slate-800 shadow-2xl group cursor-default">
             {/* Background Ambience */}
-            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-500/20 rounded-full blur-[120px] pointer-events-none"></div>
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-teal-500/20 rounded-full blur-[120px] pointer-events-none"></div>
 
             {/* The Real Screenshot */}
             <div className="absolute inset-2 md:inset-4 rounded-xl overflow-hidden border border-white/10 shadow-2xl bg-slate-950">

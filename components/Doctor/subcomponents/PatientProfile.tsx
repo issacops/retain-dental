@@ -77,7 +77,7 @@ const PatientProfile: React.FC<Props> = ({
                             <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border shadow-sm ${selectedPatient.currentTier === 'GOLD' ? 'bg-amber-50 text-amber-600 border-amber-200' : selectedPatient.currentTier === 'PLATINUM' ? 'bg-slate-800 text-slate-100 border-slate-700' : 'bg-slate-50 text-slate-500 border-slate-200'}`}>
                                 {selectedPatient.currentTier} Tier
                             </span>
-                            {patientAge && <span className="px-3 py-1.5 bg-indigo-50 text-indigo-600 rounded-full text-[11px] font-bold border border-indigo-100">{patientAge} yrs</span>}
+                            {patientAge && <span className="px-3 py-1.5 bg-teal-50 text-teal-600 rounded-full text-[11px] font-bold border border-teal-100">{patientAge} yrs</span>}
                             {bloodGroup && <span className="px-3 py-1.5 bg-rose-50 text-rose-600 rounded-full text-[11px] font-bold border border-rose-100 flex items-center gap-1"><Activity size={12} /> {bloodGroup}</span>}
                         </div>
 
@@ -96,7 +96,7 @@ const PatientProfile: React.FC<Props> = ({
                                 <p className="text-lg font-bold text-slate-500 font-mono bg-slate-50 px-3 py-1 rounded-lg inline-block border border-slate-100">{selectedPatient.mobile}</p>
                                 <button
                                     onClick={() => setShowDemographics(!showDemographics)}
-                                    className="text-xs font-bold text-indigo-500 hover:text-indigo-600 flex items-center gap-1 transition-colors"
+                                    className="text-xs font-bold text-teal-500 hover:text-teal-600 flex items-center gap-1 transition-colors"
                                 >
                                     {showDemographics ? 'Hide' : 'View'} Full Demographics {showDemographics ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
                                 </button>
@@ -123,7 +123,7 @@ const PatientProfile: React.FC<Props> = ({
                             </h2>
                         </div>
                         <div className="flex gap-2">
-                            <button onClick={() => window.print()} className="p-3 bg-indigo-50 border border-indigo-200 text-indigo-600 rounded-2xl hover:bg-indigo-100 transition-all shadow-sm title='Export PDF'">
+                            <button onClick={() => window.print()} className="p-3 bg-teal-50 border border-teal-200 text-teal-600 rounded-2xl hover:bg-teal-100 transition-all shadow-sm title='Export PDF'">
                                 <Printer size={18} />
                             </button>
                             <button className="flex-1 py-3 bg-white border border-slate-200 text-slate-600 rounded-2xl font-black text-xs uppercase tracking-widest hover:border-slate-300 hover:bg-slate-50 transition-all shadow-sm">

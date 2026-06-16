@@ -62,7 +62,7 @@ const AppointmentScheduler: React.FC<Props> = ({ clinic, appointments, patients,
             case AppointmentStatus.COMPLETED: return 'bg-slate-200 text-slate-500';
             case AppointmentStatus.CANCELLED: return 'bg-rose-500/10 text-rose-500';
             case AppointmentStatus.NO_SHOW: return 'bg-red-500 text-white';
-            default: return 'bg-indigo-500 text-white';
+            default: return 'bg-teal-500 text-white';
         }
     };
 
@@ -104,7 +104,7 @@ const AppointmentScheduler: React.FC<Props> = ({ clinic, appointments, patients,
                                 <div className={`flex-1 min-h-[100px] rounded-3xl border transition-all relative overflow-hidden ${appt ? 'bg-white border-slate-200 shadow-sm hover:shadow-md' : 'border-dashed border-slate-200 hover:bg-slate-100/50'}`}>
                                     {appt ? (
                                         <div className="p-6 flex justify-between items-start h-full">
-                                            <div className="absolute left-0 top-0 bottom-0 w-1.5" style={{ backgroundColor: appt.type === AppointmentType.CHECKUP ? '#6366f1' : '#10b981' }}></div>
+                                            <div className="absolute left-0 top-0 bottom-0 w-1.5" style={{ backgroundColor: appt.type === AppointmentType.CHECKUP ? '#0d9488' : '#10b981' }}></div>
                                             <div>
                                                 <div className="flex items-center gap-3 mb-2">
                                                     <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-lg ${getStatusColor(appt.status)}`}>{appt.status}</span>
@@ -149,7 +149,7 @@ const AppointmentScheduler: React.FC<Props> = ({ clinic, appointments, patients,
                             <div>
                                 <label className="text-xs font-black text-slate-400 uppercase tracking-widest block mb-3">Time Slot</label>
                                 <div className="flex items-center gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                                    <Clock size={20} className="text-indigo-500" />
+                                    <Clock size={20} className="text-teal-500" />
                                     <span className="font-black text-xl text-slate-800">{selectedTime}</span>
                                     <span className="text-slate-400 font-bold">{selectedDate.toLocaleDateString()}</span>
                                 </div>
@@ -158,7 +158,7 @@ const AppointmentScheduler: React.FC<Props> = ({ clinic, appointments, patients,
                             <div>
                                 <label className="text-xs font-black text-slate-400 uppercase tracking-widest block mb-3">Select Patient</label>
                                 <select value={selectedPatientId} onChange={(e) => setSelectedPatientId(e.target.value)}
-                                    className="w-full p-4 bg-white border-2 border-slate-100 rounded-2xl font-bold text-slate-700 outline-none focus:border-indigo-500 transition-all">
+                                    className="w-full p-4 bg-white border-2 border-slate-100 rounded-2xl font-bold text-slate-700 outline-none focus:border-teal-500 transition-all">
                                     <option value="">Select Identity...</option>
                                     {patients.map(p => <option key={p.id} value={p.id}>{p.name} ({p.mobile})</option>)}
                                 </select>
@@ -169,7 +169,7 @@ const AppointmentScheduler: React.FC<Props> = ({ clinic, appointments, patients,
                                 <div className="grid grid-cols-2 gap-3">
                                     {Object.values(AppointmentType).map(t => (
                                         <button key={t} onClick={() => setSelectedType(t)}
-                                            className={`p-4 rounded-xl font-bold text-sm transition-all border-2 ${selectedType === t ? 'border-indigo-500 bg-indigo-50 text-indigo-700' : 'border-transparent bg-slate-50 text-slate-500'}`}>
+                                            className={`p-4 rounded-xl font-bold text-sm transition-all border-2 ${selectedType === t ? 'border-teal-500 bg-teal-50 text-teal-700' : 'border-transparent bg-slate-50 text-slate-500'}`}>
                                             {t}
                                         </button>
                                     ))}
@@ -178,7 +178,7 @@ const AppointmentScheduler: React.FC<Props> = ({ clinic, appointments, patients,
 
                             <div>
                                 <label className="text-xs font-black text-slate-400 uppercase tracking-widest block mb-3">Clinical Notes</label>
-                                <textarea value={notes} onChange={(e) => setNotes(e.target.value)} className="w-full p-4 bg-slate-50 border-none rounded-2xl font-medium resize-none h-24 outline-none focus:ring-2 focus:ring-indigo-500/20" placeholder="Reason for visit..."></textarea>
+                                <textarea value={notes} onChange={(e) => setNotes(e.target.value)} className="w-full p-4 bg-slate-50 border-none rounded-2xl font-medium resize-none h-24 outline-none focus:ring-2 focus:ring-teal-500/20" placeholder="Reason for visit..."></textarea>
                             </div>
 
                             <button onClick={handleBook} disabled={!selectedPatientId}

@@ -28,19 +28,18 @@ export const useToast = () => {
 export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [toasts, setToasts] = useState<Toast[]>([]);
 
-    const addToast = useCallback((message: string, type: ToastType) => {
-        const id = Math.random().toString(36).substr(2, 9);
-        setToasts((prev) => [...prev, { id, message, type }]);
-
-        // Auto-dismiss
-        setTimeout(() => {
-            removeToast(id);
-        }, 5000);
-    }, []);
-
     const removeToast = useCallback((id: string) => {
         setToasts((prev) => prev.filter((toast) => toast.id !== id));
     }, []);
+
+    const addToast = useCallback((message: string, type: ToastType) => {
+        const id = Math.random().toString(36).substring(2, 11);
+        setToasts((prev) => [...prev, { id, message, type }]);
+
+        setTimeout(() => {
+            removeToast(id);
+        }, 5000);
+    }, [removeToast]);
 
     return (
         <ToastContext.Provider value={{ addToast, removeToast }}>
@@ -52,7 +51,7 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) =
                         className={`pointer-events-auto min-w-[300px] max-w-sm p-4 rounded-2xl shadow-2xl flex items-start gap-3 transform transition-all animate-in slide-in-from-right-10 duration-300 ${toast.type === 'success' ? 'bg-emerald-500 text-white' :
                                 toast.type === 'error' ? 'bg-rose-600 text-white' :
                                     toast.type === 'warning' ? 'bg-amber-500 text-white' :
-                                        'bg-indigo-600 text-white'
+                                        'bg-teal-600 text-white'
                             }`}
                     >
                         <div className="mt-0.5">

@@ -54,20 +54,22 @@ const FinancialLedger: React.FC<Props> = ({ clinic, transactions, wallets, allUs
                 new Date(t.date).toLocaleDateString(),
                 t.type,
                 t.category,
-                `"${t.description}"`, // Quote description to handle commas
+                `"${t.description}"`,
                 t.amountPaid,
                 `"${patient?.name || 'Unknown'}"`
             ].join(',');
         });
 
-        const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows].join('\n');
-        const encodedUri = encodeURI(csvContent);
+        const csvContent = [headers.join(','), ...rows].join('\n');
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
+        link.setAttribute("href", url);
         link.setAttribute("download", `financial_ledger_${clinic.slug}_${new Date().toISOString().split('T')[0]}.csv`);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+        URL.revokeObjectURL(url);
     };
 
     const handlePrintReceipt = (transaction: Transaction) => {
@@ -156,7 +158,7 @@ const FinancialLedger: React.FC<Props> = ({ clinic, transactions, wallets, allUs
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {[
                     { label: 'Total Revenue', value: stats.totalRevenue, icon: <DollarSign size={24} />, color: 'bg-emerald-50 text-emerald-600' },
-                    { label: 'This Month', value: stats.monthlyRevenue, icon: <Calendar size={24} />, color: 'bg-indigo-50 text-indigo-600' },
+                    { label: 'This Month', value: stats.monthlyRevenue, icon: <Calendar size={24} />, color: 'bg-teal-50 text-teal-600' },
                     { label: 'Today', value: stats.todayRevenue, icon: <TrendingUp size={24} />, color: 'bg-amber-50 text-amber-600' }
                 ].map((stat, i) => (
                     <div key={i} className="glass-panel p-6 flex items-center justify-between border border-white/60 shadow-lg group">
@@ -187,17 +189,17 @@ const FinancialLedger: React.FC<Props> = ({ clinic, transactions, wallets, allUs
 
                     <div className="flex gap-4">
                         <div className="relative group">
-                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors" size={18} />
+                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-teal-500 transition-colors" size={18} />
                             <input
                                 type="text"
                                 placeholder="Search transactions..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="pl-12 pr-6 py-3 bg-white border border-slate-200 rounded-xl outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/10 transition-all w-64 text-sm font-bold text-slate-700"
+                                className="pl-12 pr-6 py-3 bg-white border border-slate-200 rounded-xl outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10 transition-all w-64 text-sm font-bold text-slate-700"
                             />
                         </div>
                         <select
-                            className="px-6 py-3 bg-white border border-slate-200 rounded-xl outline-none font-bold text-sm text-slate-600 cursor-pointer hover:border-indigo-500 transition-colors uppercase tracking-wide appearance-none"
+                            className="px-6 py-3 bg-white border border-slate-200 rounded-xl outline-none font-bold text-sm text-slate-600 cursor-pointer hover:border-teal-500 transition-colors uppercase tracking-wide appearance-none"
                             value={filterCategory}
                             onChange={(e) => setFilterCategory(e.target.value)}
                         >
@@ -225,7 +227,7 @@ const FinancialLedger: React.FC<Props> = ({ clinic, transactions, wallets, allUs
                         </thead>
                         <tbody className="divide-y divide-slate-100">
                             {filteredTransactions.map(tx => (
-                                <tr key={tx.id} className="group hover:bg-indigo-50/30 transition-colors">
+                                <tr key={tx.id} className="group hover:bg-teal-50/30 transition-colors">
                                     <td className="p-6 text-xs font-mono font-bold text-slate-400 select-all">#{tx.id.slice(0, 8)}</td>
                                     <td className="p-6">
                                         <div className="flex items-center gap-3">

@@ -114,7 +114,7 @@ const LOWER_TEETH = [48, 47, 46, 45, 44, 43, 42, 41, 31, 32, 33, 34, 35, 36, 37,
 const TOOTH_CONDITIONS: Record<string, { label: string; color: string }> = {
     healthy: { label: 'Healthy', color: '#10b981' },
     cavity: { label: 'Cavity', color: '#ef4444' },
-    filling: { label: 'Filling', color: '#6366f1' },
+    filling: { label: 'Filling', color: '#14b8a6' },
     crown: { label: 'Crown', color: '#f59e0b' },
     missing: { label: 'Missing', color: '#94a3b8' },
     rct: { label: 'RCT', color: '#8b5cf6' },
@@ -143,7 +143,7 @@ const DEFAULT_EMR: EMRData = {
 // ============================================================
 
 /** Collapsible section wrapper */
-const Section: React.FC<{ title: string; icon: React.ReactNode; children: React.ReactNode; defaultOpen?: boolean; accentColor?: string; badge?: string }> = ({ title, icon, children, defaultOpen = false, accentColor = '#6366f1', badge }) => {
+const Section: React.FC<{ title: string; icon: React.ReactNode; children: React.ReactNode; defaultOpen?: boolean; accentColor?: string; badge?: string }> = ({ title, icon, children, defaultOpen = false, accentColor = '#14b8a6', badge }) => {
     const [open, setOpen] = useState(defaultOpen);
     return (
         <div className="rounded-[32px] border border-slate-100 bg-white shadow-lg shadow-slate-100/50 overflow-hidden transition-all duration-300">
@@ -165,12 +165,12 @@ const Field: React.FC<{ label: string; value?: string; onChange: (v: string) => 
     <div className={half ? 'flex-1 min-w-[140px]' : 'w-full'}>
         <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-1.5 ml-1">{label}</label>
         <input type={type} value={value || ''} onChange={e => onChange(e.target.value)} placeholder={placeholder || label}
-            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 outline-none focus:border-indigo-400 focus:bg-white focus:ring-1 focus:ring-indigo-100 transition-all" />
+            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 outline-none focus:border-teal-400 focus:bg-white focus:ring-1 focus:ring-teal-100 transition-all" />
     </div>
 );
 
 /** Tag/chip list with add/remove */
-const TagList: React.FC<{ items: string[]; onUpdate: (items: string[]) => void; suggestions?: string[]; color?: string; label: string }> = ({ items, onUpdate, suggestions, color = '#6366f1', label }) => {
+const TagList: React.FC<{ items: string[]; onUpdate: (items: string[]) => void; suggestions?: string[]; color?: string; label: string }> = ({ items, onUpdate, suggestions, color = '#14b8a6', label }) => {
     const [input, setInput] = useState('');
     const [showSuggestions, setShowSuggestions] = useState(false);
     const add = (val: string) => { if (val.trim() && !items.includes(val.trim())) onUpdate([...items, val.trim()]); setInput(''); setShowSuggestions(false); };
@@ -192,11 +192,11 @@ const TagList: React.FC<{ items: string[]; onUpdate: (items: string[]) => void; 
                 <input value={input} onChange={e => { setInput(e.target.value); setShowSuggestions(true); }} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); add(input); } }}
                     onFocus={() => setShowSuggestions(true)} onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
                     placeholder={`Add ${label.toLowerCase()}...`}
-                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-indigo-400 transition-all" />
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-teal-400 transition-all" />
                 {showSuggestions && filtered && filtered.length > 0 && (
                     <div className="absolute z-30 mt-1 w-full bg-white border border-slate-200 rounded-xl shadow-xl max-h-40 overflow-auto">
                         {filtered.map(s => (
-                            <button key={s} onMouseDown={e => { e.preventDefault(); add(s); }} className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-indigo-50 transition-colors">{s}</button>
+                            <button key={s} onMouseDown={e => { e.preventDefault(); add(s); }} className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-teal-50 transition-colors">{s}</button>
                         ))}
                     </div>
                 )}
@@ -255,6 +255,7 @@ const ClinicalTab: React.FC<ClinicalTabProps> = ({
     const [noteType, setNoteType] = useState('General');
     const [savingNote, setSavingNote] = useState(false);
     const [noteSaved, setNoteSaved] = useState(false);
+    const [noteError, setNoteError] = useState('');
     const [selectedCondition, setSelectedCondition] = useState('cavity');
     const [savingChart, setSavingChart] = useState(false);
     const [chartSaved, setChartSaved] = useState(false);
@@ -262,16 +263,25 @@ const ClinicalTab: React.FC<ClinicalTabProps> = ({
     const [savingEMR, setSavingEMR] = useState(false);
     const [emrSaved, setEmrSaved] = useState(false);
     const [emrDirty, setEmrDirty] = useState(false);
+    const [emrError, setEmrError] = useState('');
 
     // Prescription modal
     const [showRxModal, setShowRxModal] = useState(false);
     const [rxMeds, setRxMeds] = useState<{ name: string; dosage: string; frequency: string; duration: string }[]>([{ name: '', dosage: '', frequency: '', duration: '' }]);
     const [rxNotes, setRxNotes] = useState('');
+    const [savingRx, setSavingRx] = useState(false);
 
     // Imaging modal
     const [showImagingModal, setShowImagingModal] = useState(false);
     const [imgType, setImgType] = useState('OPG/Panoramic');
     const [imgNotes, setImgNotes] = useState('');
+    const [savingImg, setSavingImg] = useState(false);
+
+    // Consent modal
+    const [showConsentModal, setShowConsentModal] = useState(false);
+    const [consentProcedure, setConsentProcedure] = useState('');
+    const [consentType, setConsentType] = useState('Informed Consent');
+    const [savingConsent, setSavingConsent] = useState(false);
 
     // Sync on patient change
     useEffect(() => {
@@ -279,41 +289,78 @@ const ClinicalTab: React.FC<ClinicalTabProps> = ({
         setNotes(patient.metadata?.clinicalNotes || []);
         setDentalChart(patient.metadata?.dentalChart || {});
         setEmrDirty(false);
+        setEmrError('');
+        setNoteError('');
     }, [patient.id]);
+
+    // Auto calculate age from DOB
+    const calculateAge = (dob: string) => {
+        if (!dob) return '';
+        const birth = new Date(dob);
+        const today = new Date();
+        let age = today.getFullYear() - birth.getFullYear();
+        const m = today.getMonth() - birth.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
+        return String(age);
+    };
 
     // EMR field updater
     const updateEMR = useCallback(<K extends keyof EMRData>(section: K, data: Partial<EMRData[K]>) => {
-        setEmr(prev => ({ ...prev, [section]: { ...(prev[section] as any), ...data } }));
+        setEmr(prev => {
+            const updated = { ...prev, [section]: { ...(prev[section] as any), ...data } } as EMRData;
+            if (section === 'demographics' && 'dateOfBirth' in data) {
+                const age = calculateAge((data as any).dateOfBirth);
+                (updated.demographics as any).age = age;
+            }
+            return updated;
+        });
         setEmrDirty(true);
     }, []);
 
     // Save EMR
     const handleSaveEMR = async () => {
         setSavingEMR(true);
-        const result = await backendService.updatePatientMetadata(patient.id, { emr, medicalAlerts: emr.medicalHistory.allergies });
-        if (result.success) { setEmrDirty(false); setEmrSaved(true); setTimeout(() => setEmrSaved(false), 3000); onRefreshData?.(); }
-        setSavingEMR(false);
+        setEmrError('');
+        try {
+            const result = await backendService.updatePatientMetadata(patient.id, { emr, medicalAlerts: emr.medicalHistory.allergies });
+            if (result.success) { setEmrDirty(false); setEmrSaved(true); setTimeout(() => setEmrSaved(false), 3000); onRefreshData?.(); }
+            else { setEmrError(result.message || 'Failed to save EMR'); }
+        } catch (e: any) {
+            setEmrError(e.message || 'Failed to save EMR');
+        } finally {
+            setSavingEMR(false);
+        }
     };
 
     // Save Note
     const handleAddNote = async () => {
         if (!noteText.trim()) return;
         setSavingNote(true);
+        setNoteError('');
+        const prevNotes = [...notes];
         const newNote: ClinicalNote = { text: noteText.trim(), date: new Date().toISOString(), type: noteType };
         const updated = [newNote, ...notes];
         setNotes(updated);
         setNoteText(''); setShowNoteModal(false);
-        const result = await backendService.updatePatientMetadata(patient.id, { clinicalNotes: updated });
-        if (result.success) { setNoteSaved(true); setTimeout(() => setNoteSaved(false), 3000); onRefreshData?.(); }
-        else { setNotes(notes); }
-        setSavingNote(false);
+        try {
+            const result = await backendService.updatePatientMetadata(patient.id, { clinicalNotes: updated });
+            if (result.success) { setNoteSaved(true); setTimeout(() => setNoteSaved(false), 3000); onRefreshData?.(); }
+            else { setNotes(prevNotes); setNoteError(result.message || 'Failed to save note'); }
+        } catch (e: any) {
+            setNotes(prevNotes);
+            setNoteError(e.message || 'Failed to save note');
+        } finally {
+            setSavingNote(false);
+        }
     };
 
     // Save dental chart
     const handleSaveChart = async () => {
         setSavingChart(true);
-        const result = await backendService.updatePatientMetadata(patient.id, { dentalChart });
-        if (result.success) { setChartDirty(false); setChartSaved(true); setTimeout(() => setChartSaved(false), 3000); onRefreshData?.(); }
+        try {
+            const result = await backendService.updatePatientMetadata(patient.id, { dentalChart });
+            if (result.success) { setChartDirty(false); setChartSaved(true); setTimeout(() => setChartSaved(false), 3000); onRefreshData?.(); }
+        } catch { }
         setSavingChart(false);
     };
 
@@ -329,39 +376,67 @@ const ClinicalTab: React.FC<ClinicalTabProps> = ({
     const handleAddPrescription = async () => {
         const validMeds = rxMeds.filter(m => m.name.trim());
         if (validMeds.length === 0) return;
-        const rx: EMRPrescription = { id: crypto.randomUUID(), date: new Date().toISOString(), medications: validMeds, notes: rxNotes };
-        const updated = { ...emr, prescriptions: [rx, ...emr.prescriptions] };
-        setEmr(updated);
-        setShowRxModal(false); setRxMeds([{ name: '', dosage: '', frequency: '', duration: '' }]); setRxNotes('');
-        await backendService.updatePatientMetadata(patient.id, { emr: updated });
-        onRefreshData?.();
+        setSavingRx(true);
+        try {
+            const rx: EMRPrescription = { id: crypto.randomUUID(), date: new Date().toISOString(), medications: validMeds, notes: rxNotes };
+            const updated = { ...emr, prescriptions: [rx, ...emr.prescriptions] };
+            setEmr(updated);
+            setShowRxModal(false); setRxMeds([{ name: '', dosage: '', frequency: '', duration: '' }]); setRxNotes('');
+            await backendService.updatePatientMetadata(patient.id, { emr: updated });
+            onRefreshData?.();
+        } catch (e: any) {
+            console.error("Failed to save prescription:", e);
+        } finally {
+            setSavingRx(false);
+        }
     };
 
     // Add imaging record
     const handleAddImaging = async () => {
-        const img: EMRImaging = { id: crypto.randomUUID(), type: imgType, date: new Date().toISOString(), notes: imgNotes };
-        const updated = { ...emr, imaging: [img, ...emr.imaging] };
-        setEmr(updated);
-        setShowImagingModal(false); setImgNotes('');
-        await backendService.updatePatientMetadata(patient.id, { emr: updated });
-        onRefreshData?.();
+        setSavingImg(true);
+        try {
+            const img: EMRImaging = { id: crypto.randomUUID(), type: imgType, date: new Date().toISOString(), notes: imgNotes };
+            const updated = { ...emr, imaging: [img, ...emr.imaging] };
+            setEmr(updated);
+            setShowImagingModal(false); setImgNotes('');
+            await backendService.updatePatientMetadata(patient.id, { emr: updated });
+            onRefreshData?.();
+        } catch (e: any) {
+            console.error("Failed to save imaging:", e);
+        } finally {
+            setSavingImg(false);
+        }
     };
 
     // Add consent
-    const handleAddConsent = async (procedure: string, type: string) => {
-        const consent: EMRConsent = { id: crypto.randomUUID(), type, signedAt: new Date().toISOString(), procedure };
-        const updated = { ...emr, consents: [consent, ...emr.consents] };
-        setEmr(updated);
-        await backendService.updatePatientMetadata(patient.id, { emr: updated });
-        onRefreshData?.();
+    const handleAddConsent = async () => {
+        if (!consentProcedure.trim()) return;
+        setSavingConsent(true);
+        try {
+            const consent: EMRConsent = { id: crypto.randomUUID(), type: consentType, signedAt: new Date().toISOString(), procedure: consentProcedure.trim() };
+            const updated = { ...emr, consents: [consent, ...emr.consents] };
+            setEmr(updated);
+            setShowConsentModal(false); setConsentProcedure(''); setConsentType('Informed Consent');
+            await backendService.updatePatientMetadata(patient.id, { emr: updated });
+            onRefreshData?.();
+        } catch (e: any) {
+            console.error("Failed to save consent:", e);
+        } finally {
+            setSavingConsent(false);
+        }
     };
 
     // Delete note
     const handleDeleteNote = async (i: number) => {
         const updated = notes.filter((_, idx) => idx !== i);
         setNotes(updated);
-        await backendService.updatePatientMetadata(patient.id, { clinicalNotes: updated });
-        onRefreshData?.();
+        try {
+            await backendService.updatePatientMetadata(patient.id, { clinicalNotes: updated });
+            onRefreshData?.();
+        } catch {
+            // Revert on failure
+            setNotes(notes);
+        }
     };
 
     const formatDate = (iso: string) => { try { return new Date(iso).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }); } catch { return iso; } };
@@ -382,17 +457,22 @@ const ClinicalTab: React.FC<ClinicalTabProps> = ({
 
             {/* GLOBAL SAVE BAR */}
             {(emrDirty || chartDirty) && (
-                <div className="sticky top-0 z-50 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-2xl p-4 flex justify-between items-center shadow-2xl shadow-indigo-500/30 animate-in slide-in-from-top-4 duration-300">
+                <div className="sticky top-0 z-50 bg-gradient-to-r from-teal-600 to-violet-600 text-white rounded-2xl p-4 flex justify-between items-center shadow-2xl shadow-teal-500/30 animate-in slide-in-from-top-4 duration-300">
                     <p className="text-sm font-bold">Unsaved changes in patient record</p>
                     <div className="flex gap-3">
                         {chartDirty && <button onClick={handleSaveChart} disabled={savingChart} className="px-4 py-2 bg-white/20 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-white/30 transition-all">{savingChart ? 'Saving...' : 'Save Chart'}</button>}
-                        {emrDirty && <button onClick={handleSaveEMR} disabled={savingEMR} className="px-4 py-2 bg-white text-indigo-700 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-indigo-50 transition-all">{savingEMR ? 'Saving...' : 'Save EMR'}</button>}
+                        {emrDirty && <button onClick={handleSaveEMR} disabled={savingEMR} className="px-4 py-2 bg-white text-teal-700 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-teal-50 transition-all">{savingEMR ? 'Saving...' : 'Save EMR'}</button>}
                     </div>
                 </div>
             )}
             {(emrSaved || chartSaved || noteSaved) && (
                 <div className="flex items-center gap-2 text-emerald-600 text-xs font-black uppercase tracking-widest animate-in fade-in duration-300">
                     <CheckCircle2 size={16} /> {emrSaved ? 'EMR Saved' : chartSaved ? 'Chart Saved' : 'Note Saved'}
+                </div>
+            )}
+            {(emrError || noteError) && (
+                <div className="flex items-center gap-2 text-rose-600 bg-rose-50 border border-rose-100 p-3 rounded-xl text-xs font-bold animate-in fade-in duration-300">
+                    <AlertTriangle size={16} /> {emrError || noteError}
                 </div>
             )}
 
@@ -413,21 +493,21 @@ const ClinicalTab: React.FC<ClinicalTabProps> = ({
                 <div className="col-span-12 xl:col-span-8 space-y-6">
 
                     {/* 1. DEMOGRAPHICS */}
-                    <Section title="Patient Demographics" icon={<UserIcon size={20} />} defaultOpen={true} accentColor="#6366f1" badge={emr.demographics.dateOfBirth ? 'Complete' : undefined}>
+                    <Section title="Patient Demographics" icon={<UserIcon size={20} />} defaultOpen={true} accentColor="#14b8a6" badge={emr.demographics.dateOfBirth ? 'Complete' : undefined}>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                             <Field label="Date of Birth" value={emr.demographics.dateOfBirth} onChange={v => updateEMR('demographics', { dateOfBirth: v })} type="date" />
                             <Field label="Age" value={emr.demographics.age} onChange={v => updateEMR('demographics', { age: v })} placeholder="e.g. 32" half />
                             <div className="flex-1 min-w-[140px]">
                                 <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-1.5 ml-1">Gender</label>
                                 <select value={emr.demographics.gender || ''} onChange={e => updateEMR('demographics', { gender: e.target.value })}
-                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium outline-none focus:border-indigo-400 transition-all">
+                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium outline-none focus:border-teal-400 transition-all">
                                     <option value="">Select</option><option value="Male">Male</option><option value="Female">Female</option><option value="Other">Other</option>
                                 </select>
                             </div>
                             <div className="flex-1 min-w-[140px]">
                                 <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-1.5 ml-1">Blood Group</label>
                                 <select value={emr.demographics.bloodGroup || ''} onChange={e => updateEMR('demographics', { bloodGroup: e.target.value })}
-                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium outline-none focus:border-indigo-400 transition-all">
+                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium outline-none focus:border-teal-400 transition-all">
                                     <option value="">Select</option>{BLOOD_GROUPS.map(bg => <option key={bg} value={bg}>{bg}</option>)}
                                 </select>
                             </div>
@@ -445,7 +525,7 @@ const ClinicalTab: React.FC<ClinicalTabProps> = ({
                         <div className="space-y-5">
                             <TagList label="Medical Conditions" items={emr.medicalHistory.conditions} onUpdate={items => updateEMR('medicalHistory', { conditions: items })} suggestions={COMMON_CONDITIONS} color="#ef4444" />
                             <TagList label="Drug Allergies" items={emr.medicalHistory.allergies} onUpdate={items => updateEMR('medicalHistory', { allergies: items })} suggestions={COMMON_ALLERGIES} color="#f59e0b" />
-                            <TagList label="Current Medications" items={emr.medicalHistory.medications} onUpdate={items => updateEMR('medicalHistory', { medications: items })} color="#6366f1" />
+                            <TagList label="Current Medications" items={emr.medicalHistory.medications} onUpdate={items => updateEMR('medicalHistory', { medications: items })} color="#14b8a6" />
                             <TagList label="Past Surgeries" items={emr.medicalHistory.surgeries} onUpdate={items => updateEMR('medicalHistory', { surgeries: items })} color="#8b5cf6" />
                             <TagList label="Family History" items={emr.medicalHistory.familyHistory} onUpdate={items => updateEMR('medicalHistory', { familyHistory: items })} color="#06b6d4" />
                             <TagList label="Habits (Smoking, Tobacco, Alcohol)" items={emr.medicalHistory.habits} onUpdate={items => updateEMR('medicalHistory', { habits: items })} suggestions={['Smoking', 'Tobacco Chewing', 'Alcohol', 'Betel Nut', 'Bruxism']} color="#f97316" />
@@ -463,13 +543,23 @@ const ClinicalTab: React.FC<ClinicalTabProps> = ({
                     {/* 3. VITALS */}
                     <Section title="Vitals" icon={<Thermometer size={20} />} accentColor="#10b981">
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                            <Field label="Blood Pressure (mmHg)" value={emr.vitals.bloodPressure} onChange={v => updateEMR('vitals', { bloodPressure: v })} placeholder="120/80" />
-                            <Field label="Pulse Rate (bpm)" value={emr.vitals.pulseRate} onChange={v => updateEMR('vitals', { pulseRate: v })} />
-                            <Field label="Temperature (°F)" value={emr.vitals.temperature} onChange={v => updateEMR('vitals', { temperature: v })} />
-                            <Field label="SpO2 (%)" value={emr.vitals.spO2} onChange={v => updateEMR('vitals', { spO2: v })} />
-                            <Field label="Weight (kg)" value={emr.vitals.weight} onChange={v => updateEMR('vitals', { weight: v })} />
-                            <Field label="Height (cm)" value={emr.vitals.height} onChange={v => updateEMR('vitals', { height: v })} />
+                            {(() => {
+                                const updateVitals = (v: Partial<EMRVitals>) => updateEMR('vitals', { ...v, recordedAt: new Date().toISOString() });
+                                return <>
+                                    <Field label="Blood Pressure (mmHg)" value={emr.vitals.bloodPressure} onChange={v => updateVitals({ bloodPressure: v })} placeholder="120/80" />
+                                    <Field label="Pulse Rate (bpm)" value={emr.vitals.pulseRate} onChange={v => updateVitals({ pulseRate: v })} />
+                                    <Field label="Temperature (°F)" value={emr.vitals.temperature} onChange={v => updateVitals({ temperature: v })} />
+                                    <Field label="SpO2 (%)" value={emr.vitals.spO2} onChange={v => updateVitals({ spO2: v })} />
+                                    <Field label="Weight (kg)" value={emr.vitals.weight} onChange={v => updateVitals({ weight: v })} />
+                                    <Field label="Height (cm)" value={emr.vitals.height} onChange={v => updateVitals({ height: v })} />
+                                </>;
+                            })()}
                         </div>
+                        {emr.vitals.recordedAt && (
+                            <p className="text-[8px] font-bold text-slate-400 mt-2 text-right">
+                                Last recorded: {formatDate(emr.vitals.recordedAt)}
+                            </p>
+                        )}
                     </Section>
 
                     {/* 4. CLINICAL EXAMINATION */}
@@ -478,23 +568,23 @@ const ClinicalTab: React.FC<ClinicalTabProps> = ({
                             <div>
                                 <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-1.5 ml-1">Chief Complaint</label>
                                 <textarea value={emr.examination.chiefComplaint || ''} onChange={e => updateEMR('examination', { chiefComplaint: e.target.value })} rows={2} placeholder="Patient's primary concern..."
-                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-indigo-400 transition-all resize-none" />
+                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-teal-400 transition-all resize-none" />
                             </div>
                             <div>
                                 <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-1.5 ml-1">History of Present Illness</label>
                                 <textarea value={emr.examination.historyOfPresentIllness || ''} onChange={e => updateEMR('examination', { historyOfPresentIllness: e.target.value })} rows={3} placeholder="Detailed history..."
-                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-indigo-400 transition-all resize-none" />
+                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-teal-400 transition-all resize-none" />
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-1.5 ml-1">Extra-Oral Findings</label>
                                     <textarea value={emr.examination.extraOralFindings || ''} onChange={e => updateEMR('examination', { extraOralFindings: e.target.value })} rows={2} placeholder="Facial symmetry, lymph nodes..."
-                                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-indigo-400 transition-all resize-none" />
+                                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-teal-400 transition-all resize-none" />
                                 </div>
                                 <div>
                                     <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-1.5 ml-1">Intra-Oral Findings</label>
                                     <textarea value={emr.examination.intraOralFindings || ''} onChange={e => updateEMR('examination', { intraOralFindings: e.target.value })} rows={2} placeholder="Tissue condition, lesions..."
-                                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-indigo-400 transition-all resize-none" />
+                                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-teal-400 transition-all resize-none" />
                                 </div>
                             </div>
                             <div className="grid grid-cols-2 gap-4">
@@ -565,7 +655,7 @@ const ClinicalTab: React.FC<ClinicalTabProps> = ({
                     {/* 8. CONSENT */}
                     <Section title="Consent Records" icon={<FileSignature size={20} />} accentColor="#14b8a6" badge={emr.consents.length > 0 ? `${emr.consents.length} signed` : undefined}>
                         <div className="flex gap-2 mb-4">
-                            <button onClick={() => { const proc = prompt('Procedure name for consent:'); if (proc) handleAddConsent(proc, 'Informed Consent'); }}
+                            <button onClick={() => setShowConsentModal(true)}
                                 className="flex items-center gap-2 px-4 py-2.5 bg-teal-50 border border-teal-200 text-teal-700 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-teal-100 transition-all">
                                 <Plus size={14} /> Record Consent
                             </button>
@@ -660,7 +750,7 @@ const ClinicalTab: React.FC<ClinicalTabProps> = ({
                                     <div className="absolute -left-[27px] top-1 h-3.5 w-3.5 rounded-full bg-slate-900 border-2 border-emerald-500"></div>
                                     <div className="flex justify-between items-start">
                                         <div>
-                                            {note.type && note.type !== 'General' && <span className="text-[8px] font-black text-indigo-400 uppercase tracking-widest bg-indigo-400/10 px-2 py-0.5 rounded mb-1 inline-block">{note.type}</span>}
+                                            {note.type && note.type !== 'General' && <span className="text-[8px] font-black text-teal-400 uppercase tracking-widest bg-teal-400/10 px-2 py-0.5 rounded mb-1 inline-block">{note.type}</span>}
                                             <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">{formatDate(note.date)}</p>
                                         </div>
                                         <button onClick={() => handleDeleteNote(i)} className="opacity-0 group-hover/note:opacity-100 text-slate-600 hover:text-rose-400 p-1"><X size={10} /></button>
@@ -680,7 +770,7 @@ const ClinicalTab: React.FC<ClinicalTabProps> = ({
             {/* ========================================================= */}
             <div className="mt-8 mb-20 bg-slate-900 rounded-[40px] shadow-2xl overflow-hidden relative border border-slate-800 p-8 sm:p-12">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 blur-[80px] rounded-full pointer-events-none"></div>
-                <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/10 blur-[80px] rounded-full pointer-events-none"></div>
+                <div className="absolute bottom-0 left-0 w-64 h-64 bg-teal-500/10 blur-[80px] rounded-full pointer-events-none"></div>
 
                 <div className="flex flex-col xl:flex-row justify-between items-start gap-12 relative z-10">
                     <div className="flex-1 w-full space-y-8">
@@ -722,13 +812,13 @@ const ClinicalTab: React.FC<ClinicalTabProps> = ({
                                 {/* Aftercare Instructions Tweak UI */}
                                 <div>
                                     <div className="flex justify-between items-end mb-3">
-                                        <label className="text-[10px] font-black uppercase text-indigo-400 tracking-[0.2em]">Doctor's Custom Instructions</label>
+                                        <label className="text-[10px] font-black uppercase text-teal-400 tracking-[0.2em]">Doctor's Custom Instructions</label>
                                         <span className="text-[9px] text-slate-500 font-bold bg-white/5 px-2 py-0.5 rounded">Sent to Mobile App</span>
                                     </div>
                                     <div className="space-y-2 max-h-[200px] overflow-y-auto custom-scrollbar pr-2">
                                         {aftercareInstructions.map((inst, i) => (
                                             <div key={i} className="flex gap-2 group">
-                                                <div className="w-6 h-6 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-[9px] font-black shrink-0">{i + 1}</div>
+                                                <div className="w-6 h-6 rounded-lg bg-teal-500/20 text-teal-400 flex items-center justify-center text-[9px] font-black shrink-0">{i + 1}</div>
                                                 <textarea value={inst} onChange={e => { const newInst = [...aftercareInstructions]; newInst[i] = e.target.value; setAftercareInstructions(newInst); }}
                                                     className="flex-1 bg-transparent border-none text-sm font-medium text-slate-300 resize-none outline-none focus:text-white transition-colors" rows={2} />
                                             </div>
@@ -813,17 +903,19 @@ const ClinicalTab: React.FC<ClinicalTabProps> = ({
                         <div className="flex justify-between items-center mb-6"><h3 className="text-2xl font-black tracking-tight">New Prescription</h3><button onClick={() => setShowRxModal(false)}><X size={24} /></button></div>
                         {rxMeds.map((med, i) => (
                             <div key={i} className="grid grid-cols-4 gap-2 mb-3">
-                                <input value={med.name} onChange={e => { const m = [...rxMeds]; m[i].name = e.target.value; setRxMeds(m); }} placeholder="Drug name" className="col-span-2 px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-indigo-400" />
-                                <input value={med.dosage} onChange={e => { const m = [...rxMeds]; m[i].dosage = e.target.value; setRxMeds(m); }} placeholder="Dosage" className="px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-indigo-400" />
+                                <input value={med.name} onChange={e => { const m = [...rxMeds]; m[i].name = e.target.value; setRxMeds(m); }} placeholder="Drug name" className="col-span-2 px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-teal-400" />
+                                <input value={med.dosage} onChange={e => { const m = [...rxMeds]; m[i].dosage = e.target.value; setRxMeds(m); }} placeholder="Dosage" className="px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-teal-400" />
                                 <div className="flex gap-1">
-                                    <input value={med.frequency} onChange={e => { const m = [...rxMeds]; m[i].frequency = e.target.value; setRxMeds(m); }} placeholder="Freq" className="flex-1 px-2 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-indigo-400" />
-                                    <input value={med.duration} onChange={e => { const m = [...rxMeds]; m[i].duration = e.target.value; setRxMeds(m); }} placeholder="Days" className="w-14 px-2 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-indigo-400" />
+                                    <input value={med.frequency} onChange={e => { const m = [...rxMeds]; m[i].frequency = e.target.value; setRxMeds(m); }} placeholder="Freq" className="flex-1 px-2 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-teal-400" />
+                                    <input value={med.duration} onChange={e => { const m = [...rxMeds]; m[i].duration = e.target.value; setRxMeds(m); }} placeholder="Days" className="w-14 px-2 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-teal-400" />
                                 </div>
                             </div>
                         ))}
-                        <button onClick={() => setRxMeds([...rxMeds, { name: '', dosage: '', frequency: '', duration: '' }])} className="text-xs font-bold text-indigo-600 mb-4">+ Add medication</button>
+                        <button onClick={() => setRxMeds([...rxMeds, { name: '', dosage: '', frequency: '', duration: '' }])} className="text-xs font-bold text-teal-600 mb-4">+ Add medication</button>
                         <textarea value={rxNotes} onChange={e => setRxNotes(e.target.value)} placeholder="Additional notes..." rows={2} className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none resize-none mb-4" />
-                        <button onClick={handleAddPrescription} className="w-full py-3 bg-amber-500 text-white rounded-xl font-black text-xs uppercase tracking-widest hover:bg-amber-600">Save Prescription</button>
+                        <button onClick={handleAddPrescription} disabled={savingRx} className="w-full py-3 bg-amber-500 text-white rounded-xl font-black text-xs uppercase tracking-widest hover:bg-amber-600 disabled:opacity-50">
+                            {savingRx ? 'Saving...' : 'Save Prescription'}
+                        </button>
                     </div>
                 </div>
             )}
@@ -837,10 +929,49 @@ const ClinicalTab: React.FC<ClinicalTabProps> = ({
                             {IMAGING_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
                         </select>
                         <textarea value={imgNotes} onChange={e => setImgNotes(e.target.value)} placeholder="Findings / notes..." rows={3} className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none resize-none mb-4" />
-                        <button onClick={handleAddImaging} className="w-full py-3 bg-pink-500 text-white rounded-xl font-black text-xs uppercase tracking-widest hover:bg-pink-600">Save Record</button>
+                        <button onClick={handleAddImaging} disabled={savingImg} className="w-full py-3 bg-pink-500 text-white rounded-xl font-black text-xs uppercase tracking-widest hover:bg-pink-600 disabled:opacity-50">
+                            {savingImg ? 'Saving...' : 'Save Record'}
+                        </button>
                     </div>
                 </div>
             )}
+
+            {/* CONSENT MODAL */}
+            {showConsentModal && (
+                <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/60 backdrop-blur-xl p-4">
+                    <div className="bg-white rounded-[32px] p-8 w-full max-w-md shadow-2xl">
+                        <div className="flex justify-between items-center mb-6">
+                            <h3 className="text-2xl font-black tracking-tight">Record Consent</h3>
+                            <button onClick={() => setShowConsentModal(false)}><X size={24} /></button>
+                        </div>
+                        <div className="space-y-4">
+                            <div>
+                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1.5 ml-1">Procedure</label>
+                                <input value={consentProcedure} onChange={e => setConsentProcedure(e.target.value)}
+                                    placeholder="e.g. Invisalign, RCT, Implant..."
+                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium outline-none focus:border-teal-400 transition-all" />
+                            </div>
+                            <div>
+                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1.5 ml-1">Consent Type</label>
+                                <select value={consentType} onChange={e => setConsentType(e.target.value)}
+                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium outline-none focus:border-teal-400 transition-all">
+                                    <option value="Informed Consent">Informed Consent</option>
+                                    <option value="Treatment Consent">Treatment Consent</option>
+                                    <option value="Sedation Consent">Sedation Consent</option>
+                                    <option value="Photography Consent">Photography Consent</option>
+                                    <option value="Financial Agreement">Financial Agreement</option>
+                                </select>
+                            </div>
+                            <button onClick={handleAddConsent} disabled={savingConsent || !consentProcedure.trim()}
+                                className="w-full py-3 bg-teal-600 text-white rounded-xl font-black text-xs uppercase tracking-widest hover:bg-teal-700 disabled:opacity-50 transition-all">
+                                {savingConsent ? 'Saving...' : 'Record Consent'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* CLEANUP: remove unused imports that may have been orphaned */}
         </div>
     );
 };

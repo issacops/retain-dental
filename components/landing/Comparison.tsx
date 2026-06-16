@@ -3,85 +3,84 @@ import { X, Check, DollarSign, Clock, XCircle, Tag } from 'lucide-react';
 
 const Comparison: React.FC = () => {
     return (
-        <section className="py-24 px-6 bg-slate-950 relative overflow-hidden">
-            <div className="max-w-7xl mx-auto">
+        <section className="py-24 px-6 bg-[#fdf8f0] relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-teal-500/5 rounded-full blur-[100px]"></div>
+            <div className="max-w-7xl mx-auto relative z-10">
                 <div className="text-center mb-16 space-y-4">
-                    <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter">
-                        The Shift.
+                    <span className="inline-flex items-center gap-2 px-3 py-1 bg-teal-50 border border-teal-100 rounded-full text-xs font-bold text-teal-700 uppercase tracking-widest">
+                        The Shift
+                    </span>
+                    <h2 className="text-4xl md:text-6xl font-black text-slate-900 tracking-tighter">
+                        Stop renting your audience. <br />
+                        <span className="text-teal-600">Start owning it.</span>
                     </h2>
-                    <p className="text-slate-400 text-lg">Stop renting your audience. Start owning it.</p>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-8 relative z-10">
+                <div className="grid md:grid-cols-2 gap-6">
                     {/* OLD WAY */}
-                    <div className="p-8 md:p-12 rounded-[2.5rem] bg-slate-900/50 border border-slate-800 backdrop-blur-sm relative group overflow-hidden">
-                        <div className="absolute inset-0 bg-gradient-to-br from-red-500/0 to-red-900/0 group-hover:to-red-900/10 transition-all duration-700"></div>
-                        <h3 className="text-xl font-bold text-rose-400 mb-8 uppercase tracking-widest flex items-center gap-3 relative z-10">
-                            <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-rose-500 border border-slate-700">
+                    <div className="p-8 md:p-10 rounded-[2.5rem] bg-white border border-rose-200/60 shadow-lg shadow-rose-100/40 relative group overflow-hidden">
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-rose-100/30 rounded-full blur-[80px]"></div>
+                        <h3 className="text-lg font-black text-rose-600 mb-8 uppercase tracking-widest flex items-center gap-3 relative z-10">
+                            <div className="w-10 h-10 rounded-full bg-rose-50 flex items-center justify-center text-rose-600 border border-rose-100">
                                 <X size={20} />
                             </div>
                             The "Ad Spend" Trap
                         </h3>
-                        <div className="space-y-6 relative z-10">
-                            <ul className="space-y-6 text-slate-300 font-medium">
-                                <li className="flex gap-4 items-start group/item">
-                                    <div className="p-1 bg-red-900/30 rounded text-red-500 mt-1">
-                                        <DollarSign size={16} />
-                                    </div>
-                                    <span className="text-slate-300 group-hover/item:text-red-300 transition-colors">Burning $5k/mo on Meta Ads to fill the bucket you are leaking.</span>
-                                </li>
-                                <li className="flex gap-4 items-start group/item">
-                                    <div className="p-1 bg-red-900/30 rounded text-red-500 mt-1">
-                                        <XCircle size={16} />
-                                    </div>
-                                    <span className="text-slate-300 group-hover/item:text-red-300 transition-colors">Transactional patients who forget you 48 hours after treatment.</span>
-                                </li>
-                                <li className="flex gap-4 items-start group/item">
-                                    <div className="p-1 bg-red-900/30 rounded text-red-500 mt-1">
-                                        <Clock size={16} />
-                                    </div>
-                                    <span className="text-slate-300 group-hover/item:text-red-300 transition-colors">Staff wasting 20hrs/week chasing recalls that never answer.</span>
-                                </li>
-                                <li className="flex gap-4 items-start group/item">
-                                    <div className="p-1 bg-red-900/30 rounded text-red-500 mt-1">
-                                        <Tag size={16} />
-                                    </div>
-                                    <span className="text-slate-300 group-hover/item:text-red-300 transition-colors">Competing on price (Groupon/Offers) instead of Brand Loyalty.</span>
-                                </li>
-                            </ul>
-                        </div>
+                        <ul className="space-y-5 relative z-10">
+                            <li className="flex gap-4 items-start">
+                                <div className="p-1.5 bg-rose-50 rounded-lg text-rose-500 mt-0.5 shrink-0">
+                                    <DollarSign size={14} />
+                                </div>
+                                <span className="text-slate-700 leading-relaxed">Burning ₹50k/mo on Meta Ads to fill the bucket you are leaking.</span>
+                            </li>
+                            <li className="flex gap-4 items-start">
+                                <div className="p-1.5 bg-rose-50 rounded-lg text-rose-500 mt-0.5 shrink-0">
+                                    <XCircle size={14} />
+                                </div>
+                                <span className="text-slate-700 leading-relaxed">Transactional patients who forget you 48 hours after treatment.</span>
+                            </li>
+                            <li className="flex gap-4 items-start">
+                                <div className="p-1.5 bg-rose-50 rounded-lg text-rose-500 mt-0.5 shrink-0">
+                                    <Clock size={14} />
+                                </div>
+                                <span className="text-slate-700 leading-relaxed">Staff wasting 20hrs/week chasing recalls that never answer.</span>
+                            </li>
+                            <li className="flex gap-4 items-start">
+                                <div className="p-1.5 bg-rose-50 rounded-lg text-rose-500 mt-0.5 shrink-0">
+                                    <Tag size={14} />
+                                </div>
+                                <span className="text-slate-700 leading-relaxed">Competing on price (Groupon/Offers) instead of brand loyalty.</span>
+                            </li>
+                        </ul>
                     </div>
 
                     {/* NEW WAY */}
-                    <div className="p-8 md:p-12 rounded-[2.5rem] bg-gradient-to-b from-indigo-900/80 to-slate-900/90 border border-indigo-500/30 backdrop-blur-md relative overflow-hidden shadow-2xl shadow-indigo-900/20 group">
-                        <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/20 blur-[120px] rounded-full group-hover:bg-indigo-500/30 transition-all duration-700"></div>
-
-                        <h3 className="text-xl font-bold text-white mb-8 uppercase tracking-widest flex items-center gap-3 relative z-10">
-                            <div className="w-10 h-10 rounded-full bg-indigo-500 flex items-center justify-center text-white border border-indigo-400 shadow-lg shadow-indigo-500/50">
+                    <div className="p-8 md:p-10 rounded-[2.5rem] bg-gradient-to-br from-teal-600 to-teal-800 text-white shadow-2xl shadow-teal-900/30 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-72 h-72 bg-teal-400/30 blur-[100px] rounded-full"></div>
+                        <h3 className="text-lg font-black text-white mb-8 uppercase tracking-widest flex items-center gap-3 relative z-10">
+                            <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-teal-600 shadow-lg">
                                 <Check size={20} />
                             </div>
                             The RetainOS Way
                         </h3>
-                        <div className="space-y-6 relative z-10">
-                            <ul className="space-y-6 text-white font-medium">
-                                <li className="flex gap-4 items-start">
-                                    <span className="text-indigo-300 font-mono mt-1">01.</span>
-                                    <span>Direct access via <b>Your Custom App</b>.</span>
-                                </li>
-                                <li className="flex gap-4 items-start">
-                                    <span className="text-indigo-300 font-mono mt-1">02.</span>
-                                    <span>Automated weekly engagement loops (Score, Rewards, Tips).</span>
-                                </li>
-                                <li className="flex gap-4 items-start">
-                                    <span className="text-indigo-300 font-mono mt-1">03.</span>
-                                    <span>Gamified loyalty that locks families into your clinic.</span>
-                                </li>
-                                <li className="flex gap-4 items-start">
-                                    <span className="text-indigo-300 font-mono mt-1">04.</span>
-                                    <span>Zero-touch recalls filled automatically.</span>
-                                </li>
-                            </ul>
-                        </div>
+                        <ul className="space-y-5 relative z-10">
+                            <li className="flex gap-4 items-start">
+                                <span className="text-teal-200 font-mono font-black mt-0.5 text-sm">01.</span>
+                                <span className="text-white leading-relaxed">Direct access via <strong>your custom branded app</strong>.</span>
+                            </li>
+                            <li className="flex gap-4 items-start">
+                                <span className="text-teal-200 font-mono font-black mt-0.5 text-sm">02.</span>
+                                <span className="text-white leading-relaxed">Automated weekly engagement loops (score, rewards, tips).</span>
+                            </li>
+                            <li className="flex gap-4 items-start">
+                                <span className="text-teal-200 font-mono font-black mt-0.5 text-sm">03.</span>
+                                <span className="text-white leading-relaxed">Gamified loyalty that locks families into your clinic.</span>
+                            </li>
+                            <li className="flex gap-4 items-start">
+                                <span className="text-teal-200 font-mono font-black mt-0.5 text-sm">04.</span>
+                                <span className="text-white leading-relaxed">Zero-touch recalls filled automatically.</span>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>

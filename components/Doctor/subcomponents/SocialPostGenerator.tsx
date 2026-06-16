@@ -117,7 +117,7 @@ const SocialPostGenerator: React.FC<SocialPostGeneratorProps> = ({ clinic, onClo
         const draw = async () => {
             const canvas = canvasRef.current;
             if (!canvas) return;
-            const ctx = canvas.getContext('2d');
+            const ctx = canvas.getContext('2d', { willReadFrequently: true });
             if (!ctx) return;
 
             setIsGenerating(true);
@@ -290,7 +290,7 @@ const SocialPostGenerator: React.FC<SocialPostGeneratorProps> = ({ clinic, onClo
     // 2. REVIEW: "The Editorial Quote"
     const drawReview = async (ctx: CanvasRenderingContext2D, data: any, clinic: Clinic, loadImg: any) => {
         // Deep Brand Background
-        const bgParams = clinic.primaryColor || '#4f46e5';
+        const bgParams = clinic.primaryColor || '#0d9488';
         ctx.fillStyle = bgParams; // Solid Brand Color
         ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
@@ -554,7 +554,7 @@ const SocialPostGenerator: React.FC<SocialPostGeneratorProps> = ({ clinic, onClo
                 <div className="w-[320px] bg-slate-50 border-r border-slate-200 flex flex-col">
                     <div className="p-6 border-b border-slate-200">
                         <h2 className="text-xl font-bold flex items-center gap-2">
-                            <LayoutTemplate size={20} className="text-indigo-600" />
+                            <LayoutTemplate size={20} className="text-teal-600" />
                             Templates
                         </h2>
                     </div>
@@ -563,10 +563,10 @@ const SocialPostGenerator: React.FC<SocialPostGeneratorProps> = ({ clinic, onClo
                             <button
                                 key={t.id}
                                 onClick={() => { setSelectedTemplate(t); setFormData({}); }}
-                                className={`w-full p-4 rounded-xl text-left border transition-all ${selectedTemplate.id === t.id ? 'bg-indigo-50 border-indigo-500 ring-1 ring-indigo-500' : 'bg-white border-slate-200 hover:border-indigo-300'}`}
+                                className={`w-full p-4 rounded-xl text-left border transition-all ${selectedTemplate.id === t.id ? 'bg-teal-50 border-teal-500 ring-1 ring-teal-500' : 'bg-white border-slate-200 hover:border-teal-300'}`}
                             >
                                 <div className="flex items-center gap-3 mb-2">
-                                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${selectedTemplate.id === t.id ? 'bg-indigo-100 text-indigo-600' : 'bg-slate-100 text-slate-500'}`}>
+                                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${selectedTemplate.id === t.id ? 'bg-teal-100 text-teal-600' : 'bg-slate-100 text-slate-500'}`}>
                                         {t.icon}
                                     </div>
                                     <div>
@@ -592,7 +592,7 @@ const SocialPostGenerator: React.FC<SocialPostGeneratorProps> = ({ clinic, onClo
                                 {input.type === 'text' && (
                                     <input
                                         type="text"
-                                        className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
+                                        className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none"
                                         placeholder={input.placeholder}
                                         value={formData[input.key] || ''}
                                         onChange={(e) => handleInputChange(input.key, e.target.value)}
@@ -611,7 +611,7 @@ const SocialPostGenerator: React.FC<SocialPostGeneratorProps> = ({ clinic, onClo
 
                                 {input.type === 'textarea' && (
                                     <textarea
-                                        className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none h-32 resize-none"
+                                        className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none h-32 resize-none"
                                         placeholder={input.placeholder}
                                         value={formData[input.key] || ''}
                                         onChange={(e) => handleInputChange(input.key, e.target.value)}
@@ -635,7 +635,7 @@ const SocialPostGenerator: React.FC<SocialPostGeneratorProps> = ({ clinic, onClo
                         ))}
                     </div>
                     <div className="p-6 border-t border-slate-200 bg-slate-50">
-                        <button onClick={downloadImage} className="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-xl shadow-indigo-200 transition-all active:scale-[0.98]">
+                        <button onClick={downloadImage} className="w-full py-4 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-xl shadow-teal-200 transition-all active:scale-[0.98]">
                             <Download size={20} />
                             Download Post
                         </button>

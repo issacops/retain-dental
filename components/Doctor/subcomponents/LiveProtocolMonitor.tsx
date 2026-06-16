@@ -67,7 +67,7 @@ const LiveProtocolMonitor: React.FC<Props> = ({ carePlans, users, clinic, onUpda
                                                 <input
                                                     value={editValues.treatmentName || ''}
                                                     onChange={e => setEditValues(v => ({ ...v, treatmentName: e.target.value }))}
-                                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-bold text-slate-800 focus:border-indigo-500 outline-none"
+                                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-bold text-slate-800 focus:border-teal-500 outline-none"
                                                 />
                                             </div>
                                             <div className="space-y-2">
@@ -76,7 +76,7 @@ const LiveProtocolMonitor: React.FC<Props> = ({ carePlans, users, clinic, onUpda
                                                     type="number"
                                                     value={editValues.cost || 0}
                                                     onChange={e => setEditValues(v => ({ ...v, cost: Number(e.target.value) }))}
-                                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-bold text-slate-800 focus:border-indigo-500 outline-none"
+                                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-bold text-slate-800 focus:border-teal-500 outline-none"
                                                 />
                                             </div>
                                         </div>
@@ -94,11 +94,11 @@ const LiveProtocolMonitor: React.FC<Props> = ({ carePlans, users, clinic, onUpda
                                         <div className="flex-1 space-y-4">
                                             <div>
                                                 <div className="flex items-center gap-2 mb-1">
-                                                    <span className="text-[10px] font-black uppercase text-indigo-500 tracking-[0.2em]">{user?.name || 'Unknown Patient'}</span>
+                                                    <span className="text-[10px] font-black uppercase text-teal-500 tracking-[0.2em]">{user?.name || 'Unknown Patient'}</span>
                                                     <div className="h-1 w-1 rounded-full bg-slate-300"></div>
                                                     <span className="text-[9px] font-bold text-slate-400 italic">Live Sync</span>
                                                 </div>
-                                                <h4 className="text-xl font-black text-slate-900 tracking-tighter leading-tight group-hover:text-indigo-600 transition-colors">{plan.treatmentName}</h4>
+                                                <h4 className="text-xl font-black text-slate-900 tracking-tighter leading-tight group-hover:text-teal-600 transition-colors">{plan.treatmentName}</h4>
                                             </div>
 
                                             <div className="flex items-end justify-between">
@@ -114,7 +114,7 @@ const LiveProtocolMonitor: React.FC<Props> = ({ carePlans, users, clinic, onUpda
                                                 </div>
                                             </div>
                                         </div>
-                                        <button onClick={() => handleEdit(plan)} className="p-3 bg-slate-50 text-slate-400 rounded-xl hover:bg-indigo-50 hover:text-indigo-600 transition-all group/edit">
+                                        <button onClick={() => handleEdit(plan)} className="p-3 bg-slate-50 text-slate-400 rounded-xl hover:bg-teal-50 hover:text-teal-600 transition-all group/edit">
                                             <Edit3 size={18} className="translate-y-0.5 group-hover/edit:scale-110 transition-transform" />
                                         </button>
                                     </div>
@@ -125,7 +125,7 @@ const LiveProtocolMonitor: React.FC<Props> = ({ carePlans, users, clinic, onUpda
                 )}
             </div>
 
-            <button className="w-full mt-6 py-4 border-2 border-dashed border-slate-200 rounded-2xl text-[10px] font-black text-slate-400 uppercase tracking-widest hover:border-indigo-200 hover:text-indigo-500 hover:bg-indigo-50/50 transition-all">
+            <button className="w-full mt-6 py-4 border-2 border-dashed border-slate-200 rounded-2xl text-[10px] font-black text-slate-400 uppercase tracking-widest hover:border-teal-200 hover:text-teal-500 hover:bg-teal-50/50 transition-all">
                 Access Clinical Archive
             </button>
         </div>

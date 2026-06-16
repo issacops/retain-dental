@@ -135,16 +135,16 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ patients, onSelectPatie
                                                 key={p.id}
                                                 onMouseEnter={() => setSelectedIndex(globalIdx)}
                                                 onClick={() => executeItem({ ...p, _type: 'PATIENT' })}
-                                                className={`flex items-center gap-4 px-4 py-3 rounded-xl cursor-pointer transition-colors ${isSelected ? 'bg-indigo-50 text-indigo-900' : 'hover:bg-slate-50 text-slate-700'}`}
+                                                className={`flex items-center gap-4 px-4 py-3 rounded-xl cursor-pointer transition-colors ${isSelected ? 'bg-teal-50 text-teal-900' : 'hover:bg-slate-50 text-slate-700'}`}
                                             >
-                                                <div className={`h-8 w-8 rounded-full flex items-center justify-center font-black text-xs ${isSelected ? 'bg-indigo-200' : 'bg-slate-100'}`}>
+                                                <div className={`h-8 w-8 rounded-full flex items-center justify-center font-black text-xs ${isSelected ? 'bg-teal-200' : 'bg-slate-100'}`}>
                                                     <User size={14} />
                                                 </div>
                                                 <div>
                                                     <p className="font-bold text-sm tracking-tight">{p.name}</p>
                                                     <p className="text-[10px] font-bold opacity-60 font-mono">{p.mobile}</p>
                                                 </div>
-                                                {isSelected && <span className="ml-auto text-[10px] tracking-widest uppercase font-black text-indigo-400">Jump</span>}
+                                                {isSelected && <span className="ml-auto text-[10px] tracking-widest uppercase font-black text-teal-400">Jump</span>}
                                             </div>
                                         )
                                     })}

@@ -28,7 +28,6 @@ const DoctorTreatmentDetail: React.FC<Props> = ({ plan, patient, clinic, onClose
 
         const lastReset = plan.lastChecklistReset;
         if (plan.checklist && lastReset && lastReset !== localDate) {
-            console.log(`Daily Reset Triggered (Doctor View) for ${plan.treatmentName}`);
 
             // Calculate History
             const totalItems = plan.checklist.length;
@@ -129,10 +128,10 @@ const DoctorTreatmentDetail: React.FC<Props> = ({ plan, patient, clinic, onClose
                             </button>
                         ))}
 
-                        <div className="mt-auto bg-indigo-50 p-6 rounded-3xl border border-indigo-100 shrink-0">
-                            <h4 className="font-black text-indigo-900 text-lg mb-2">Doctor Notes</h4>
+                        <div className="mt-auto bg-teal-50 p-6 rounded-3xl border border-teal-100 shrink-0">
+                            <h4 className="font-black text-teal-900 text-lg mb-2">Doctor Notes</h4>
                             <textarea
-                                className="w-full bg-white border border-indigo-100 rounded-xl p-3 text-xs font-medium text-slate-600 outline-none focus:ring-2 ring-indigo-200"
+                                className="w-full bg-white border border-teal-100 rounded-xl p-3 text-xs font-medium text-slate-600 outline-none focus:ring-2 ring-teal-200"
                                 rows={4}
                                 placeholder="Add clinical observations..."
                             ></textarea>
@@ -189,7 +188,7 @@ const DoctorTreatmentDetail: React.FC<Props> = ({ plan, patient, clinic, onClose
                                 {/* Specific Modules based on Category */}
                                 {(plan.treatmentName || '').includes('Invisalign') && (
                                     <div className="bg-slate-900 text-white p-8 rounded-[40px] relative overflow-hidden">
-                                        <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/20 rounded-full blur-[80px]"></div>
+                                        <div className="absolute top-0 right-0 w-64 h-64 bg-teal-500/20 rounded-full blur-[80px]"></div>
                                         <h3 className="text-2xl font-black mb-6 relative z-10">Aligner Tracking</h3>
                                         <div className="flex items-center gap-8 relative z-10">
                                             <div className="text-center">
@@ -243,7 +242,7 @@ const DoctorTreatmentDetail: React.FC<Props> = ({ plan, patient, clinic, onClose
                                                     onChange={(e) => setNewItemText(e.target.value)}
                                                     onKeyDown={(e) => e.key === 'Enter' && handleAddItem()}
                                                     placeholder="Add new daily task..."
-                                                    className="flex-1 px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl text-xs font-bold focus:bg-white focus:border-indigo-200 outline-none transition-all"
+                                                    className="flex-1 px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl text-xs font-bold focus:bg-white focus:border-teal-200 outline-none transition-all"
                                                 />
                                                 <button onClick={handleAddItem} className="px-4 py-2 bg-slate-900 text-white rounded-xl font-bold text-xs hover:bg-black transition-colors">Add</button>
                                             </div>
@@ -296,16 +295,16 @@ const DoctorTreatmentDetail: React.FC<Props> = ({ plan, patient, clinic, onClose
 
                                         {/* Current Node */}
                                         <div className="flex gap-8">
-                                            <div className="h-14 w-14 rounded-full bg-indigo-500 border-4 border-white shadow-xl flex items-center justify-center text-white shrink-0 animate-pulse">
+                                            <div className="h-14 w-14 rounded-full bg-teal-500 border-4 border-white shadow-xl flex items-center justify-center text-white shrink-0 animate-pulse">
                                                 <Clock size={24} />
                                             </div>
                                             <div className="pt-2">
-                                                <span className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-lg text-[10px] font-black uppercase tracking-widest mb-2 inline-block">Day {daysElapsed}</span>
+                                                <span className="px-3 py-1 bg-teal-100 text-teal-700 rounded-lg text-[10px] font-black uppercase tracking-widest mb-2 inline-block">Day {daysElapsed}</span>
                                                 <h4 className="text-xl font-black text-slate-800">Current Progress</h4>
                                                 <p className="text-slate-500 text-sm mt-1">Patient is {Math.round(progressPercent)}% through the initial phase.</p>
 
                                                 <div className="mt-4 h-4 bg-slate-100 rounded-full overflow-hidden w-64">
-                                                    <div className="h-full bg-indigo-500 rounded-full" style={{ width: `${progressPercent}%` }}></div>
+                                                    <div className="h-full bg-teal-500 rounded-full" style={{ width: `${progressPercent}%` }}></div>
                                                 </div>
                                             </div>
                                         </div>

@@ -19,7 +19,7 @@ const FeatureSection: React.FC<FeatureSectionProps> = ({ title, subtitle, descri
                     {/* Text Content */}
                     <div className="flex-1 space-y-8">
                         {badge && (
-                            <span className="px-4 py-2 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 rounded-full text-xs font-black uppercase tracking-widest">
+                            <span className="px-4 py-2 bg-teal-500/10 border border-teal-500/20 text-teal-400 rounded-full text-xs font-black uppercase tracking-widest">
                                 {badge}
                             </span>
                         )}

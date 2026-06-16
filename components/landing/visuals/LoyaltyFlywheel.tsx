@@ -22,7 +22,7 @@ const LoyaltyFlywheel = () => {
             >
                 {/* Planet 1: Treatment */}
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-6 flex flex-col items-center">
-                    <div className="w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center text-white shadow-lg shadow-indigo-600/50">
+                    <div className="w-12 h-12 bg-teal-600 rounded-full flex items-center justify-center text-white shadow-lg shadow-teal-600/50">
                         <Star size={20} fill="currentColor" />
                     </div>
                     <span className="mt-2 text-xs font-bold text-white bg-slate-900 px-2 rounded opacity-0">Start</span>
@@ -53,7 +53,7 @@ const LoyaltyFlywheel = () => {
             {/* Labels (Static Overlays) */}
             <div className="absolute inset-0 pointer-events-none">
                 <div className="absolute top-8 left-1/2 -translate-x-1/2 text-center">
-                    <p className="text-indigo-400 text-xs font-bold uppercase tracking-widest">Compliance</p>
+                    <p className="text-teal-400 text-xs font-bold uppercase tracking-widest">Compliance</p>
                 </div>
                 <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-center">
                     <p className="text-emerald-400 text-xs font-bold uppercase tracking-widest">Referrals</p>
@@ -67,7 +67,7 @@ const LoyaltyFlywheel = () => {
             </div>
 
             {/* Background glow */}
-            <div className="absolute inset-0 bg-indigo-500/10 blur-[80px] rounded-full"></div>
+            <div className="absolute inset-0 bg-teal-500/10 blur-[80px] rounded-full"></div>
         </div>
     );
 };

@@ -8,10 +8,9 @@ const CaseStudySection: React.FC = () => {
 
                 {/* Visual Side */}
                 <div className="relative">
-                    <div className="absolute inset-0 bg-indigo-600/10 blur-[100px] rounded-full"></div>
-                    <div className="relative z-10 rounded-[2.5rem] overflow-hidden shadow-2xl bg-indigo-900 aspect-square md:aspect-[4/5] relative group">
-                        {/* Placeholder for Doctor Image - using a gradient/abstract for now if no image available */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 to-indigo-900 mix-blend-overlay opacity-60"></div>
+                    <div className="absolute inset-0 bg-teal-600/10 blur-[100px] rounded-full"></div>
+                    <div className="relative z-10 rounded-[2.5rem] overflow-hidden shadow-2xl bg-teal-900 aspect-square md:aspect-[4/5] relative group">
+                        <div className="absolute inset-0 bg-gradient-to-br from-teal-500 to-teal-900 mix-blend-overlay opacity-60"></div>
                         <img
                             src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=2070&auto=format&fit=crop"
                             alt="Dr. Sarah Chen"
@@ -20,7 +19,7 @@ const CaseStudySection: React.FC = () => {
 
                         <div className="absolute bottom-0 left-0 w-full p-8 bg-gradient-to-t from-black/80 to-transparent">
                             <p className="text-white font-bold text-xl">Dr. Sarah Chen, DDS</p>
-                            <p className="text-indigo-200 text-sm">Founder, Mint Dental Group (5 Locations)</p>
+                            <p className="text-teal-200 text-sm">Founder, Mint Dental Group (5 Locations)</p>
                         </div>
                     </div>
                 </div>
@@ -29,15 +28,15 @@ const CaseStudySection: React.FC = () => {
                 <div className="space-y-10">
                     <div className="flex items-center gap-4">
                         <span className="w-12 h-[1px] bg-slate-200"></span>
-                        <span className="text-indigo-600 font-bold tracking-widest uppercase text-sm">Case Study</span>
+                        <span className="text-teal-600 font-bold tracking-widest uppercase text-sm">Case Study</span>
                     </div>
 
                     <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight">
-                        "We stopped bleeding patients and added <span className="text-indigo-600">$1.2M in annual recurring revenue.</span>"
+                        "We stopped bleeding patients and added <span className="text-teal-600">$1.2M in annual recurring revenue.</span>"
                     </h2>
 
                     <div className="relative">
-                        <Quote className="absolute -top-4 -left-6 text-indigo-100 transform -scale-x-100" size={64} />
+                        <Quote className="absolute -top-4 -left-6 text-teal-100 transform -scale-x-100" size={64} />
                         <p className="text-xl text-slate-600 leading-relaxed relative z-10 italic font-medium">
                             Before RetainOS, our recall system was broken. We were burning cash on Google Ads just to replace the patients walking out the back door.
                             Switching to this platform gave us our retention back on autopilot.

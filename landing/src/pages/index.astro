@@ -3,24 +3,14 @@ import Layout from '../layouts/Layout.astro'
 import Navbar from '../components/Navbar.astro'
 import Hero from '../components/Hero.astro'
 import TrustBar from '../components/TrustBar.astro'
-import LiveProductShowcase from '../components/LiveProductShowcase.astro'
-import PilotProgram from '../components/PilotProgram.astro'
 import LeakyBucket from '../components/LeakyBucket.astro'
+import LiveProductShowcase from '../components/LiveProductShowcase.astro'
 import Comparison from '../components/Comparison.astro'
-import Aftercare from '../components/Aftercare.astro'
-import SmilePoints from '../components/SmilePoints.astro'
-import FamilyPool from '../components/FamilyPool.astro'
-import ReferralEngine from '../components/ReferralEngine.astro'
-import SocialStudio from '../components/SocialStudio.astro'
-import ClinicalIntelligence from '../components/ClinicalIntelligence.astro'
+import PilotProgram from '../components/PilotProgram.astro'
 import Consolidation from '../components/Consolidation.astro'
 import ProductPillars from '../components/ProductPillars.astro'
-import BrandShowcase from '../components/BrandShowcase.tsx'
-import CaseStudy from '../components/CaseStudy.astro'
-import ImplementationTimeline from '../components/ImplementationTimeline.astro'
 import RoiCalculator from '../components/RoiCalculator.tsx'
 import FAQSection from '../components/FAQSection.astro'
-import TrustSecurity from '../components/TrustSecurity.astro'
 import CTA from '../components/CTA.astro'
 import WaitlistForm from '../components/WaitlistForm.tsx'
 import StickyMobileCta from '../components/StickyMobileCta.astro'
@@ -30,25 +20,15 @@ import Footer from '../components/Footer.astro'
 <Layout title="RetainOS — Launch Your Branded Dental Patient App in 20 Minutes">
   <Navbar />
   <Hero />
-  <TrustBar />
-  <div class="reveal"><LiveProductShowcase /></div>
-  <div class="reveal"><PilotProgram /></div>
+  <div class="reveal"><TrustBar /></div>
   <div class="reveal"><LeakyBucket /></div>
+  <div class="reveal"><LiveProductShowcase /></div>
   <div class="reveal"><Comparison /></div>
-  <div class="reveal"><Aftercare /></div>
-  <div class="reveal"><SmilePoints /></div>
-  <div class="reveal"><FamilyPool /></div>
-  <div class="reveal"><ReferralEngine /></div>
-  <div class="reveal"><SocialStudio /></div>
-  <div class="reveal"><ClinicalIntelligence /></div>
+  <div class="reveal"><PilotProgram /></div>
   <div class="reveal"><Consolidation /></div>
   <div class="reveal"><ProductPillars /></div>
-  <div class="reveal"><BrandShowcase client:load /></div>
-  <div class="reveal"><CaseStudy /></div>
-  <div class="reveal"><ImplementationTimeline /></div>
   <div class="reveal"><RoiCalculator client:load /></div>
   <div class="reveal"><FAQSection /></div>
-  <div class="reveal"><TrustSecurity /></div>
   <div class="reveal"><CTA /></div>
   <div class="reveal"><WaitlistForm client:load /></div>
   <Footer />

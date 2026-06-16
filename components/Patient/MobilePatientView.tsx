@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { User, Wallet, Transaction, Tier, TransactionType, Clinic, CarePlan, TransactionCategory, FamilyGroup, AppointmentType, Appointment, TIER_THRESHOLDS, TIER_BENEFITS } from '../../types';
-import { Home, User as UserIcon, ShieldCheck, History, Calendar, Sparkles, Clock, HeartPulse, ChevronRight, PhoneCall, AlertTriangle, Timer, Smile, Zap, CircleCheck, ClipboardList, ArrowUpRight, ArrowDownLeft, Trophy, Activity as ActivityIcon, Globe, Users, Lock, X, CheckCircle, Gift } from 'lucide-react';
+import { Home, User as UserIcon, ShieldCheck, History, Calendar, Sparkles, HeartPulse, ChevronRight, PhoneCall, AlertTriangle, Zap, CircleCheck, ClipboardList, Trophy, Activity as ActivityIcon, Globe, Users, Lock, X, CheckCircle, Gift } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -60,7 +60,7 @@ const SpecialtyCareModule: React.FC<{ plan: CarePlan; primaryColor: string; onTo
 
       {/* Header Card */}
       <div className="bg-white p-8 rounded-[40px] border border-slate-100 shadow-xl shadow-slate-200/50 relative overflow-hidden group">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-50 rounded-bl-[100px] -mr-8 -mt-8 opacity-50"></div>
+        <div className="absolute top-0 right-0 w-32 h-32 bg-teal-50 rounded-bl-[100px] -mr-8 -mt-8 opacity-50"></div>
 
         <div className="flex justify-between items-start mb-6 relative z-10">
           <div>
@@ -86,9 +86,9 @@ const SpecialtyCareModule: React.FC<{ plan: CarePlan; primaryColor: string; onTo
         <div className="space-y-3 relative z-10">
           <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 pl-1">Daily Rituals</p>
           {(plan.checklist || []).length > 0 ? (plan.checklist?.map(item => (
-            <div key={item.id} onClick={() => handleToggle(item.id, item.completed)} className={`flex items-center gap-5 p-5 rounded-[24px] border active:scale-[0.98] transition-all cursor-pointer group hover:shadow-lg ${item.completed ? 'bg-emerald-50/50 border-emerald-100' : 'bg-white border-slate-100 hover:border-indigo-100'}`}>
-              <div className={`h-8 w-8 rounded-full flex items-center justify-center transition-all duration-300 shadow-sm ${item.completed ? 'bg-emerald-500 text-white scale-110' : 'bg-slate-50 text-slate-300 group-hover:bg-indigo-50 group-hover:text-indigo-400'}`}>
-                {item.completed ? <CheckCircle size={18} strokeWidth={3} /> : <div className="h-3 w-3 rounded-full bg-slate-200 group-hover:bg-indigo-200 transition-colors" />}
+            <div key={item.id} onClick={() => handleToggle(item.id, item.completed)} className={`flex items-center gap-5 p-5 rounded-[24px] border active:scale-[0.98] transition-all cursor-pointer group hover:shadow-lg ${item.completed ? 'bg-emerald-50/50 border-emerald-100' : 'bg-white border-slate-100 hover:border-teal-100'}`}>
+              <div className={`h-8 w-8 rounded-full flex items-center justify-center transition-all duration-300 shadow-sm ${item.completed ? 'bg-emerald-500 text-white scale-110' : 'bg-slate-50 text-slate-300 group-hover:bg-teal-50 group-hover:text-teal-400'}`}>
+                {item.completed ? <CheckCircle size={18} strokeWidth={3} /> : <div className="h-3 w-3 rounded-full bg-slate-200 group-hover:bg-teal-200 transition-colors" />}
               </div>
               <span className={`text-sm font-bold tracking-tight transition-colors ${item.completed ? 'text-slate-400 line-through decoration-emerald-500/30' : 'text-slate-700 group-hover:text-slate-900'}`}>{item.task}</span>
             </div>
@@ -102,7 +102,7 @@ const SpecialtyCareModule: React.FC<{ plan: CarePlan; primaryColor: string; onTo
       {plan.instructions && plan.instructions.length > 0 && (
         <div className="bg-slate-900 p-8 rounded-[40px] shadow-2xl relative overflow-hidden text-white border border-slate-800 mt-8">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-          <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-indigo-500/20 rounded-full blur-[80px]"></div>
+          <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-teal-500/20 rounded-full blur-[80px]"></div>
 
           <div className="relative z-10">
             <div className="flex items-center gap-3 mb-2">
@@ -117,7 +117,7 @@ const SpecialtyCareModule: React.FC<{ plan: CarePlan; primaryColor: string; onTo
             <ul className="space-y-6">
               {plan.instructions.map((inst, i) => (
                 <li key={i} className="flex gap-4 items-start group">
-                  <span className="flex-shrink-0 h-8 w-8 rounded-xl bg-white/10 flex items-center justify-center text-xs font-black text-slate-300 border border-white/20 group-hover:bg-indigo-500 group-hover:text-white group-hover:border-indigo-400 transition-colors shadow-sm">{i + 1}</span>
+                  <span className="flex-shrink-0 h-8 w-8 rounded-xl bg-white/10 flex items-center justify-center text-xs font-black text-slate-300 border border-white/20 group-hover:bg-teal-500 group-hover:text-white group-hover:border-teal-400 transition-colors shadow-sm">{i + 1}</span>
                   <p className="text-sm font-medium text-slate-200 leading-relaxed group-hover:text-white transition-colors pt-1">{inst}</p>
                 </li>
               ))}
@@ -146,7 +146,7 @@ export default function MobilePatientView({
   onRedeem,
   onLinkFamily,
   onUpdateCarePlan,
-  defaultTab = 'HOME'
+  defaultTab = 'HOME' as const
 }: MobilePatientViewProps) {
   const [activeTab, setActiveTab] = useState<'HOME' | 'WALLET' | 'CARE' | 'PROFILE'>(defaultTab);
   const [showBookingModal, setShowBookingModal] = useState(false);
@@ -157,6 +157,9 @@ export default function MobilePatientView({
   const [bookType, setBookType] = useState<AppointmentType>(AppointmentType.CHECKUP);
   const [bookSuccess, setBookSuccess] = useState(false);
   const [bookingError, setBookingError] = useState('');
+  const [bookLoading, setBookLoading] = useState(false);
+  const [redeemLoading, setRedeemLoading] = useState(false);
+  const [familyLoading, setFamilyLoading] = useState(false);
 
   // FAMILY STATE
   const [showAddFamilyModal, setShowAddFamilyModal] = useState(false);
@@ -258,9 +261,9 @@ export default function MobilePatientView({
 
   return (
     <>
-      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-black pointer-events-none -z-20"></div>
-      <div className="fixed top-[-10%] left-[-10%] w-[500px] h-[500px] bg-indigo-500/20 rounded-full blur-[100px] pointer-events-none -z-10 animate-pulse" style={{ backgroundColor: `${clinic.primaryColor}20` }}></div>
-      <div className="fixed bottom-[-10%] right-[-10%] w-[300px] h-[300px] bg-emerald-500/10 rounded-full blur-[80px] pointer-events-none -z-10"></div>
+      <div className="fixed inset-0 bg-gradient-to-b from-[#fdf8f0] via-[#f8f0e6] to-[#f0e8db] pointer-events-none -z-20"></div>
+      <div className="fixed top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full blur-[100px] pointer-events-none -z-10 animate-pulse" style={{ backgroundColor: `${clinic.primaryColor}10` }}></div>
+      <div className="fixed bottom-[-10%] right-[-10%] w-[300px] h-[300px] bg-amber-500/5 rounded-full blur-[80px] pointer-events-none -z-10"></div>
 
       <main className="pb-32 px-6 pt-12 max-w-md mx-auto min-h-screen transition-all duration-700 overflow-x-hidden">
         <AnimatePresence mode="wait">
@@ -274,7 +277,7 @@ export default function MobilePatientView({
                     <img src={clinic.logoUrl} className="h-12 w-12 object-contain bg-white/10 rounded-xl p-2 border border-white/20 backdrop-blur-sm" />
                   )}
                   <div>
-                    <h1 className="text-2xl font-black text-white tracking-tighter shadow-black drop-shadow-lg">{clinic.name}</h1>
+                    <h1 className="text-2xl font-black text-gray-900 tracking-tighter">{clinic.name}</h1>
                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Patient Portal</p>
                   </div>
                 </div>
@@ -363,7 +366,7 @@ export default function MobilePatientView({
                 {/* UPCOMING APPOINTMENTS */}
                 {upcomingAppointments.length > 0 && (
                   <div className="space-y-3">
-                    <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400 pl-4">Upcoming Visits</h4>
+                    <h4 className="text-[10px] font-black uppercase tracking-widest text-gray-400 pl-4">Upcoming Visits</h4>
                     {upcomingAppointments.map(appt => (
                       <div key={appt.id} className="p-6 bg-white rounded-[32px] border border-slate-100 shadow-sm flex items-center gap-5 relative overflow-hidden">
                         {appt.status !== 'CONFIRMED' && (
@@ -377,7 +380,7 @@ export default function MobilePatientView({
                           </div>
                         )}
 
-                        <div className={`h-16 w-16 rounded-2xl flex flex-col items-center justify-center border ${appt.status === 'CONFIRMED' ? 'bg-indigo-50 border-indigo-100 text-indigo-600' : 'bg-slate-50 border-slate-100 text-slate-400'}`}>
+                        <div className={`h-16 w-16 rounded-2xl flex flex-col items-center justify-center border ${appt.status === 'CONFIRMED' ? 'bg-teal-50 border-teal-100 text-teal-600' : 'bg-slate-50 border-slate-100 text-slate-400'}`}>
                           <span className="text-xl font-black">{new Date(appt.startTime).getDate()}</span>
                           <span className="text-[9px] font-bold uppercase">{new Date(appt.startTime).toLocaleDateString('en-US', { month: 'short' })}</span>
                         </div>
@@ -394,24 +397,24 @@ export default function MobilePatientView({
 
                 {/* Active Treatment Quick Look */}
                 {activeCarePlan && (
-                  <button onClick={() => setActiveTab('CARE')} className="w-full text-left p-8 rounded-[48px] bg-slate-900 text-white shadow-2xl relative overflow-hidden group active:scale-[0.98] transition-all border" style={{ borderColor: clinic.primaryColor, borderWidth: '1px' }}>
-                    <div className="absolute top-[-20%] right-[-10%] w-64 h-64 bg-indigo-500/10 blur-[80px] rounded-full"></div>
-                    <div className="absolute right-0 top-0 p-8 opacity-10 scale-150 group-hover:scale-125 transition-transform duration-700"><ActivityIcon size={80} /></div>
+                  <button onClick={() => setActiveTab('CARE')} className="w-full text-left p-8 rounded-[48px] bg-white border border-gray-100 shadow-lg hover:shadow-xl relative overflow-hidden group active:scale-[0.98] transition-all" style={{ borderColor: clinic.primaryColor, borderWidth: '1px' }}>
+                    <div className="absolute top-[-20%] right-[-10%] w-64 h-64 opacity-[0.04] blur-[80px] rounded-full" style={{ backgroundColor: clinic.primaryColor }}></div>
+                    <div className="absolute right-0 top-0 p-8 opacity-5 scale-150 group-hover:scale-125 transition-transform duration-700"><ActivityIcon size={80} style={{ color: clinic.primaryColor }} /></div>
 
                     <div className="relative z-10">
                       <div className="flex items-center gap-2 mb-4">
-                        <div className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></div>
-                        <p className="text-[10px] font-black uppercase tracking-[0.25em] text-white/50">Live Protocol</p>
+                        <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+                        <p className="text-[10px] font-black uppercase tracking-[0.25em] text-gray-400">Live Protocol</p>
                       </div>
-                      <h4 className="text-3xl font-black tracking-tighter mb-8 leading-tight">{activeCarePlan.treatmentName}</h4>
+                      <h4 className="text-3xl font-black tracking-tighter mb-8 leading-tight text-gray-900">{activeCarePlan.treatmentName}</h4>
 
                       <div className="space-y-3">
                         <div className="flex justify-between items-end">
-                          <p className="text-[9px] font-black uppercase tracking-widest text-white/30">Journey Progress</p>
-                          <span className="text-xs font-black tracking-widest text-emerald-400">{Math.round((activeCarePlan.checklist?.filter(i => i.completed).length || 0) / (activeCarePlan.checklist?.length || 1) * 100)}%</span>
+                          <p className="text-[9px] font-black uppercase tracking-widest text-gray-300">Journey Progress</p>
+                          <span className="text-xs font-black tracking-widest text-emerald-600">{Math.round((activeCarePlan.checklist?.filter(i => i.completed).length || 0) / (activeCarePlan.checklist?.length || 1) * 100)}%</span>
                         </div>
-                        <div className="h-2.5 bg-white/10 rounded-full overflow-hidden backdrop-blur-sm">
-                          <div className="h-full bg-emerald-400 shadow-[0_0_15px_rgba(52,211,153,0.5)] transition-all duration-1000" style={{ width: `${(activeCarePlan.checklist?.filter(i => i.completed).length || 0) / (activeCarePlan.checklist?.length || 1) * 100}%` }}></div>
+                        <div className="h-2.5 bg-gray-100 rounded-full overflow-hidden">
+                          <div className="h-full bg-emerald-500 transition-all duration-1000" style={{ width: `${(activeCarePlan.checklist?.filter(i => i.completed).length || 0) / (activeCarePlan.checklist?.length || 1) * 100}%` }}></div>
                         </div>
                       </div>
                     </div>
@@ -420,13 +423,13 @@ export default function MobilePatientView({
 
                 {/* Quick Actions */}
                 <div className="grid grid-cols-2 gap-4">
-                  <button onClick={() => setShowBookingModal(true)} className="p-6 bg-slate-900 text-white rounded-[32px] flex flex-col items-center gap-3 active:scale-95 transition-all shadow-xl" style={{ backgroundColor: clinic.primaryColor }}>
+                  <button onClick={() => setShowBookingModal(true)} className="p-6 text-white rounded-[32px] flex flex-col items-center gap-3 active:scale-95 transition-all shadow-lg hover:shadow-xl" style={{ backgroundColor: clinic.primaryColor }}>
                     <Calendar size={24} />
                     <span className="text-[10px] uppercase font-black tracking-widest">Book Visit</span>
                   </button>
-                  <button onClick={() => setActiveTab('CARE')} className="p-6 bg-white text-slate-900 border border-slate-100 rounded-[32px] flex flex-col items-center gap-3 active:scale-95 transition-all shadow-sm">
-                    <HeartPulse size={24} className="text-slate-400" />
-                    <span className="text-[10px] uppercase font-black tracking-widest text-slate-600">My Care</span>
+                  <button onClick={() => setActiveTab('CARE')} className="p-6 bg-white text-gray-900 border border-gray-100 rounded-[32px] flex flex-col items-center gap-3 active:scale-95 transition-all shadow-sm hover:shadow-md">
+                    <HeartPulse size={24} className="text-gray-300" />
+                    <span className="text-[10px] uppercase font-black tracking-widest text-gray-500">My Care</span>
                   </button>
                 </div>
               </motion.div>
@@ -439,7 +442,7 @@ export default function MobilePatientView({
               <motion.div key="wallet" variants={pageVariants} initial="initial" animate="animate" exit="exit" className="space-y-10">
                 <div className="flex justify-between items-end">
                   <div className="hidden"></div> {/* Spacer for formatting if needed, layout handled by header */}
-                  <button onClick={() => setShowRedeemModal(true)} className="w-full px-5 py-6 bg-slate-900 text-white rounded-[32px] font-black uppercase tracking-widest text-xs shadow-xl active:scale-95 transition-all flex items-center justify-center gap-3">
+                  <button onClick={() => setShowRedeemModal(true)} className="w-full px-5 py-6 text-white rounded-[32px] font-black uppercase tracking-widest text-xs shadow-lg active:scale-95 transition-all flex items-center justify-center gap-3" style={{ backgroundColor: clinic.primaryColor }}>
                     <Gift size={18} /> Redeem Rewards
                   </button>
                 </div>
@@ -480,11 +483,11 @@ export default function MobilePatientView({
                   <div className="space-y-8">
                     <SpecialtyCareModule plan={activeCarePlan} primaryColor={clinic.primaryColor} onToggle={onToggleChecklistItem} />
                     <div className="grid grid-cols-2 gap-4">
-                      <button onClick={() => clinic.emergencyPhone ? window.location.href = `tel:${clinic.emergencyPhone}` : alert("Emergency contact not configured by clinic.")} className="p-8 bg-slate-900 rounded-[40px] text-white flex flex-col items-center gap-3 active:scale-95 shadow-2xl transition-all shadow-black/20">
+                      <button onClick={() => clinic.emergencyPhone ? window.location.href = `tel:${clinic.emergencyPhone}` : alert("Emergency contact not configured by clinic.")} className="p-8 bg-gray-900 rounded-[40px] text-white flex flex-col items-center gap-3 active:scale-95 shadow-lg transition-all">
                         <PhoneCall size={28} style={{ color: clinic.primaryColor }} />
                         <span className="text-[10px] font-black uppercase tracking-[0.2em]">Priority SOS</span>
                       </button>
-                      <button className="p-8 bg-white border border-slate-100 rounded-[40px] text-slate-800 flex flex-col items-center gap-3 active:scale-95 transition-all">
+                      <button className="p-8 bg-white border border-gray-100 rounded-[40px] text-gray-800 flex flex-col items-center gap-3 active:scale-95 transition-all shadow-sm">
                         <AlertTriangle size={28} className="text-rose-500" />
                         <span className="text-[10px] font-black uppercase tracking-[0.2em]">Report Issue</span>
                       </button>
@@ -492,9 +495,9 @@ export default function MobilePatientView({
                   </div>
                 ) : (
                   <div className="p-16 bg-white rounded-[40px] border border-slate-100 shadow-xl shadow-slate-200/50 text-center relative overflow-hidden group">
-                    <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 to-transparent opacity-50"></div>
+                    <div className="absolute inset-0 bg-gradient-to-br from-teal-50 to-transparent opacity-50"></div>
                     <div className="relative z-10">
-                      <HeartPulse size={56} className="text-indigo-400 mb-6 mx-auto opacity-70 group-hover:scale-110 transition-transform duration-500" />
+                      <HeartPulse size={56} className="text-teal-400 mb-6 mx-auto opacity-70 group-hover:scale-110 transition-transform duration-500" />
                       <h4 className="text-2xl font-black text-slate-900 tracking-tighter">No Active Plan</h4>
                       <p className="text-sm text-slate-500 mt-3 font-medium px-4 leading-relaxed">You are currently fully healthy with no active protocols assigned by your doctor.</p>
                     </div>
@@ -534,16 +537,16 @@ export default function MobilePatientView({
                 <div className="space-y-6 pt-6 border-t border-slate-100">
                   <div className="flex justify-between items-center">
                     <h4 className="text-xl font-black text-slate-900 tracking-tight">Family Hub</h4>
-                    <button onClick={() => setShowAddFamilyModal(true)} className="px-4 py-2 bg-slate-900 text-white rounded-full text-[10px] font-black uppercase tracking-widest">+ Add</button>
+                    <button onClick={() => setShowAddFamilyModal(true)} className="px-4 py-2 text-white rounded-full text-[10px] font-black uppercase tracking-widest" style={{ backgroundColor: clinic.primaryColor }}>+ Add</button>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     {/* Current User Card */}
-                    <div className="p-4 rounded-[32px] bg-slate-900 text-white shadow-lg relative overflow-hidden group">
+                    <div className="p-4 rounded-[32px] bg-white border border-gray-100 shadow-sm relative overflow-hidden group">
                       <div className="relative z-10">
-                        <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center text-sm font-black mb-3 border border-white/10">{currentUser.name.charAt(0)}</div>
-                        <p className="font-bold text-sm truncate">{currentUser.name}</p>
-                        <p className="text-[9px] uppercase tracking-widest text-white/50 mt-1">Primary</p>
+                        <div className="h-10 w-10 rounded-full bg-gray-50 flex items-center justify-center text-sm font-black mb-3 text-gray-400 border border-gray-100" style={{ backgroundColor: `${clinic.primaryColor}10`, color: clinic.primaryColor }}>{currentUser.name.charAt(0)}</div>
+                        <p className="font-bold text-sm text-gray-900 truncate">{currentUser.name}</p>
+                        <p className="text-[9px] uppercase tracking-widest text-gray-400 mt-1">Primary</p>
                       </div>
                     </div>
 
@@ -581,10 +584,10 @@ export default function MobilePatientView({
 
       {/* Navigation */}
       < div className="fixed bottom-8 left-0 w-full px-6 z-50" >
-        <nav className="bg-slate-900/90 backdrop-blur-3xl border border-white/10 shadow-[0_30px_60px_-10px_rgba(0,0,0,0.4)] rounded-[40px] px-3 py-3 flex justify-between items-center max-w-md mx-auto overflow-hidden relative">
-          <div className="absolute bottom-0 left-0 w-full h-1 bg-white/5 opacity-50"></div>
+        <nav className="bg-white/95 backdrop-blur-3xl border border-gray-100 shadow-[0_8px_32px_rgba(0,0,0,0.06)] rounded-[40px] px-3 py-3 flex justify-between items-center max-w-md mx-auto overflow-hidden relative">
+          <div className="absolute bottom-0 left-0 w-full h-1 bg-gray-50"></div>
           {['HOME', 'WALLET', 'CARE', 'PROFILE'].map((tab) => (
-            <button key={tab} onClick={() => setActiveTab(tab as any)} className={`flex-1 flex flex-col items-center justify-center h-16 rounded-[28px] transition-all duration-500 relative group overflow-hidden ${activeTab === tab ? 'text-white' : 'text-slate-500 hover:text-slate-300'}`} style={activeTab === tab ? { backgroundColor: clinic.primaryColor } : {}}>
+            <button key={tab} onClick={() => setActiveTab(tab as any)} className={`flex-1 flex flex-col items-center justify-center h-16 rounded-[28px] transition-all duration-500 relative group overflow-hidden ${activeTab === tab ? 'text-white' : 'text-gray-400 hover:text-gray-600'}`} style={activeTab === tab ? { backgroundColor: clinic.primaryColor } : {}}>
               {tab === 'HOME' && <Home size={24} className={activeTab === tab ? 'scale-110' : ''} />}
               {tab === 'WALLET' && <History size={24} className={activeTab === tab ? 'scale-110' : ''} />}
               {tab === 'CARE' && <HeartPulse size={24} className={activeTab === tab ? 'scale-110' : ''} />}
@@ -598,7 +601,7 @@ export default function MobilePatientView({
       {/* Redeem Modal */}
       {
         showRedeemModal && (
-          <div className="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-md flex items-end">
+          <div className="fixed inset-0 z-[100] bg-black/40 backdrop-blur-sm flex items-end">
             <div className="bg-white w-full rounded-t-[48px] p-8 pb-12 animate-in slide-in-from-bottom-full duration-500 shadow-2xl h-[85vh] flex flex-col">
               <div className="flex justify-between items-center mb-6">
                 <h3 className="text-3xl font-black text-slate-900 tracking-tight">Rewards</h3>
@@ -625,19 +628,24 @@ export default function MobilePatientView({
                         </div>
                       </div>
                       <button
-                        disabled={!canAfford}
+                        disabled={!canAfford || redeemLoading}
                         onClick={async () => {
-                          await onRedeem(currentUser.id, reward.cost, TransactionCategory.REWARD, TransactionType.REDEEM, { name: reward.name });
-                          setRedeemSuccess(true);
-                          setTimeout(() => {
-                            setRedeemSuccess(false);
-                            setShowRedeemModal(false);
-                          }, 2000);
+                          setRedeemLoading(true);
+                          try {
+                            await onRedeem(currentUser.id, reward.cost, TransactionCategory.REWARD, TransactionType.REDEEM, { name: reward.name });
+                            setRedeemSuccess(true);
+                            setTimeout(() => {
+                              setRedeemSuccess(false);
+                              setShowRedeemModal(false);
+                            }, 2000);
+                          } finally {
+                            setRedeemLoading(false);
+                          }
                         }}
-                        className={`px-5 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all ${canAfford ? 'bg-indigo-600 text-white shadow-lg active:scale-95' : 'bg-slate-200 text-slate-400 cursor-not-allowed'}`}
-                        style={canAfford ? { backgroundColor: clinic.primaryColor } : {}}
+                        className={`px-5 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all ${canAfford && !redeemLoading ? 'bg-teal-600 text-white shadow-lg active:scale-95' : 'bg-slate-200 text-slate-400 cursor-not-allowed'}`}
+                        style={canAfford && !redeemLoading ? { backgroundColor: clinic.primaryColor } : {}}
                       >
-                        {redeemSuccess ? <CheckCircle size={16} /> : 'Claim'}
+                        {redeemLoading ? <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : redeemSuccess ? <CheckCircle size={16} /> : 'Claim'}
                       </button>
                     </div>
                   );
@@ -651,7 +659,7 @@ export default function MobilePatientView({
       {/* Booking Modal */}
       {
         showBookingModal && (
-          <div className="fixed inset-0 z-[100] bg-slate-900/40 backdrop-blur-md flex items-end">
+          <div className="fixed inset-0 z-[100] bg-black/30 backdrop-blur-sm flex items-end">
             <div className="bg-white w-full rounded-t-[48px] p-8 pb-12 animate-in slide-in-from-bottom-full duration-500 shadow-2xl">
               {bookSuccess ? (
                 <div className="text-center py-10 space-y-6">
@@ -672,8 +680,8 @@ export default function MobilePatientView({
                   <div className="space-y-4">
                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-2">Date & Time</label>
                     <div className="flex gap-4">
-                      <input type="date" value={bookDate} min={localDate} onChange={e => { setBookDate(e.target.value); setBookingError(''); }} className="flex-1 bg-slate-50 border border-slate-100 p-4 rounded-2xl font-bold outline-none focus:border-indigo-500 transition-all" />
-                      <select value={bookTime} onChange={e => { setBookTime(e.target.value); setBookingError(''); }} className="bg-slate-50 border border-slate-100 p-4 rounded-2xl font-bold outline-none focus:border-indigo-500 transition-all">
+                      <input type="date" value={bookDate} min={localDate} onChange={e => { setBookDate(e.target.value); setBookingError(''); }} className="flex-1 bg-slate-50 border border-slate-100 p-4 rounded-2xl font-bold outline-none focus:border-teal-500 transition-all" />
+                      <select value={bookTime} onChange={e => { setBookTime(e.target.value); setBookingError(''); }} className="bg-slate-50 border border-slate-100 p-4 rounded-2xl font-bold outline-none focus:border-teal-500 transition-all">
                         {['09:00', '10:00', '11:00', '14:00', '15:00', '16:00', '17:00'].map(t => <option key={t} value={t}>{t}</option>)}
                       </select>
                     </div>
@@ -719,12 +727,17 @@ export default function MobilePatientView({
                     // For now, we'll skip rigorous conflict check or use 'carePlans' for strict protocol tracking.)
 
                     // Proceed
-                    const end = new Date(start);
-                    end.setMinutes(end.getMinutes() + 30);
-                    await onSchedule(currentUser.id, start, bookType, 'Mobile Booking');
-                    setBookSuccess(true);
-                  }} className="w-full py-5 bg-indigo-600 text-white rounded-[32px] font-black text-lg shadow-xl shadow-indigo-200 mt-4 active:scale-95 transition-transform" style={{ backgroundColor: clinic.primaryColor }}>
-                    Confirm Request
+                    setBookLoading(true);
+                    try {
+                      const end = new Date(start);
+                      end.setMinutes(end.getMinutes() + 30);
+                      await onSchedule(currentUser.id, start, bookType, 'Mobile Booking');
+                      setBookSuccess(true);
+                    } finally {
+                      setBookLoading(false);
+                    }
+                  }} disabled={bookLoading} className={`w-full py-5 rounded-[32px] font-black text-lg shadow-xl mt-4 active:scale-95 transition-transform ${bookLoading ? 'bg-slate-300 text-slate-500' : 'bg-teal-600 text-white shadow-teal-200'}`} style={!bookLoading ? { backgroundColor: clinic.primaryColor } : {}}>
+                    {bookLoading ? <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto" /> : 'Confirm Request'}
                   </button>
                 </div>
               )}
@@ -736,7 +749,7 @@ export default function MobilePatientView({
       {/* Add Family Modal */}
       {
         showAddFamilyModal && (
-          <div className="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-6">
+          <div className="fixed inset-0 z-[100] bg-black/40 backdrop-blur-sm flex items-center justify-center p-6">
             <div className="bg-white rounded-[48px] p-8 w-full max-w-sm animate-in zoom-in-95 duration-300 relative">
               <button onClick={() => setShowAddFamilyModal(false)} className="absolute top-6 right-6 p-2 bg-slate-50 rounded-full"><X size={18} /></button>
               <h3 className="text-2xl font-black text-slate-900 tracking-tight mb-6">Add Dependent</h3>
@@ -768,12 +781,17 @@ export default function MobilePatientView({
                   </div>
 
                   <button onClick={async () => {
-                    await onAddFamilyMember(currentUser.id, newMemberName, newMemberRelation, "0000000000");
-                    setShowAddFamilyModal(false);
-                    setNewMemberName('');
-                    setNewMemberAge('');
-                  }} className="w-full py-5 bg-slate-900 text-white rounded-[32px] font-black mt-4 shadow-xl active:scale-95 transition-all">
-                    Add Dependent
+                    setFamilyLoading(true);
+                    try {
+                      await onAddFamilyMember(currentUser.id, newMemberName, newMemberRelation, "0000000000");
+                      setShowAddFamilyModal(false);
+                      setNewMemberName('');
+                      setNewMemberAge('');
+                    } finally {
+                      setFamilyLoading(false);
+                    }
+                  }} disabled={familyLoading} className={`w-full py-5 rounded-[32px] font-black mt-4 shadow-xl active:scale-95 transition-all ${familyLoading ? 'bg-slate-400 text-slate-200' : 'bg-slate-900 text-white'}`}>
+                    {familyLoading ? <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto" /> : 'Add Dependent'}
                   </button>
                 </div>
               ) : (
@@ -786,11 +804,16 @@ export default function MobilePatientView({
                     Linking will merge your Loyalty Wallets into a shared Household Pool.
                   </p>
                   <button onClick={async () => {
-                    await onLinkFamily(currentUser.id, linkMobile);
-                    setShowAddFamilyModal(false);
-                    setLinkMobile('');
-                  }} className="w-full py-5 bg-indigo-600 text-white rounded-[32px] font-black mt-4 shadow-xl active:scale-95 transition-all" style={{ backgroundColor: clinic.primaryColor }}>
-                    Link Account
+                    setFamilyLoading(true);
+                    try {
+                      await onLinkFamily(currentUser.id, linkMobile);
+                      setShowAddFamilyModal(false);
+                      setLinkMobile('');
+                    } finally {
+                      setFamilyLoading(false);
+                    }
+                  }} disabled={familyLoading} className={`w-full py-5 rounded-[32px] font-black mt-4 shadow-xl active:scale-95 transition-all ${familyLoading ? 'bg-slate-400 text-slate-200' : 'bg-teal-600 text-white'}`} style={!familyLoading ? { backgroundColor: clinic.primaryColor } : {}}>
+                    {familyLoading ? <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto" /> : 'Link Account'}
                   </button>
                 </div>
               )}

@@ -4,6 +4,7 @@ import { Clinic, ThemeTexture } from '../../types';
 import { LayoutGrid, Plus, BarChart3, Lock, Cpu, Settings, Globe, Radio, Search, Palette, X, Copy, Terminal, Monitor, Server, LayoutGrid as LayoutGridIcon, Upload } from 'lucide-react';
 import GlobalStats from './subcomponents/GlobalStats';
 import ClinicCard from './subcomponents/ClinicCard';
+import { IBackendService } from '../../services/IBackendService';
 import { supabase } from '../../lib/supabase';
 
 interface PerformanceMetric {
@@ -47,6 +48,7 @@ interface Props {
    onUpdateClinic: (clinicId: string, updates: Partial<Clinic>) => Promise<any>;
    onUpdateAdminAuth: (clinicId: string, email: string, password?: string) => Promise<any>;
    onHardDeleteUser: (userId: string) => Promise<any>; // NEW
+   backend?: IBackendService;
 }
 
 const LiveHeartbeat = () => (
@@ -58,7 +60,7 @@ const LiveHeartbeat = () => (
    </div>
 );
 
-const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, onEnterClinic, onUpdateConfig, onDeleteClinic, onUpdateClinic, onUpdateAdminAuth }) => {
+const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, onEnterClinic, onUpdateConfig, onDeleteClinic, onUpdateClinic, onUpdateAdminAuth, backend }) => {
    const [activeView, setActiveView] = useState<'HUB' | 'REVENUE' | 'SECURITY' | 'DEPLOYMENTS' | 'CONFIG' | 'WAITLIST'>('HUB');
    const [showOnboardModal, setShowOnboardModal] = useState(false);
    const [selectedClinicForManifest, setSelectedClinicForManifest] = useState<PerformanceMetric | null>(null);
@@ -76,11 +78,15 @@ const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, o
    }, [activeView]);
 
    const fetchWaitlist = async () => {
-      const { data, error } = await supabase.from('waitlist').select('*').order('created_at', { ascending: false });
-      if (!error) { // supabase returns error if not successful, data will be null if error
-         setWaitlistData(data || []);
+      if (backend?.getWaitlist) {
+         const result = await backend.getWaitlist();
+         if (result.success && result.updatedData) {
+            setWaitlistData(result.updatedData);
+         } else {
+            console.error("Error fetching waitlist:", result.error);
+            setWaitlistData([]);
+         }
       } else {
-         console.error("Error fetching waitlist:", error);
          setWaitlistData([]);
       }
    };
@@ -111,19 +117,25 @@ const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, o
       }
    }, [selectedClinicForManifest, clinics]);
 
+   const [savingEdit, setSavingEdit] = useState(false);
+   const [editError, setEditError] = useState('');
+
    const handleSaveEdit = async () => {
       if (!selectedClinicForManifest) return;
-
-      // 1. Update Core Clinic Data
-      await onUpdateClinic(selectedClinicForManifest.id, editDraft);
-
-      // 2. Update Auth Credentials
-      if (editDraft.adminEmail || editDraft.password) {
-         await onUpdateAdminAuth(selectedClinicForManifest.id, editDraft.adminEmail, editDraft.password);
+      setSavingEdit(true);
+      setEditError('');
+      try {
+         await onUpdateClinic(selectedClinicForManifest.id, editDraft);
+         if (editDraft.adminEmail || editDraft.password) {
+            await onUpdateAdminAuth(selectedClinicForManifest.id, editDraft.adminEmail, editDraft.password);
+         }
+         setIsEditing(false);
+         setSelectedClinicForManifest(null);
+      } catch (e: any) {
+         setEditError(e.message || 'Failed to save');
+      } finally {
+         setSavingEdit(false);
       }
-
-      setIsEditing(false);
-      setSelectedClinicForManifest(null); // Close to refresh
    };
 
 
@@ -798,12 +810,15 @@ const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, o
                            </div>
                         </div>
 
+                        {editError && (
+                           <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-400 text-xs font-bold">{editError}</div>
+                        )}
                         <div className="pt-8 flex gap-4 border-t border-white/5">
-                           <button onClick={() => setIsEditing(false)} className="px-8 py-4 bg-white/5 hover:bg-white/10 text-slate-300 rounded-[24px] font-bold text-sm transition-all">Cancel</button>
-                           <button onClick={handleSaveEdit} className="flex-1 py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-[24px] font-bold text-sm shadow-xl hover:scale-[1.02] transition-all">
-                              Commit Changes to Core
-                           </button>
-                        </div>
+                            <button onClick={() => setIsEditing(false)} className="px-8 py-4 bg-white/5 hover:bg-white/10 text-slate-300 rounded-[24px] font-bold text-sm transition-all">Cancel</button>
+                            <button onClick={handleSaveEdit} disabled={savingEdit} className="flex-1 py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-[24px] font-bold text-sm shadow-xl hover:scale-[1.02] transition-all disabled:opacity-50">
+                               {savingEdit ? 'Saving...' : 'Commit Changes to Core'}
+                            </button>
+                         </div>
                      </div>
                   ) : (
                      // COMPACT VIEW MODE

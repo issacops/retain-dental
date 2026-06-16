@@ -2,16 +2,18 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import PlatformDashboard from '../components/Platform/PlatformDashboard';
 import { AppState } from '../types';
+import { IBackendService } from '../services/IBackendService';
 
 interface Props {
     data: AppState;
     onNavigate: (view: any) => void;
+    backendService?: IBackendService;
     // fast-track props passing
     [key: string]: any;
 }
 
 export const PlatformPage: React.FC<Props> = (props) => {
-    const { data, ...handlers } = props;
+    const { data, backendService, ...handlers } = props;
     const navigate = useNavigate();
 
     // Wrapper to handle navigation explicitly since Auth Gates are removed
@@ -59,6 +61,7 @@ export const PlatformPage: React.FC<Props> = (props) => {
             <PlatformDashboard
                 clinics={data.clinics}
                 stats={stats}
+                backend={backendService}
                 {...handlers}
                 onEnterClinic={handleEnterClinic}
             />

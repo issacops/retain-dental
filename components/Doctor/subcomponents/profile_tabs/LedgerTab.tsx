@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CreditCard, IndianRupee, Layers, Microscope, Sparkles, Filter, History } from 'lucide-react';
+import { CreditCard, IndianRupee, Layers, Filter, History } from 'lucide-react';
 import { User, Clinic, TransactionCategory, TransactionType, Transaction, CarePlan } from '../../../../types';
 import { TREATMENT_TEMPLATES } from '../../../../constants';
 
@@ -18,13 +18,13 @@ const LedgerTab: React.FC<LedgerTabProps> = ({ clinic, selectedPatient, patientT
         <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
             {/* NEXUS TERMINAL */}
             <div className="relative p-12 rounded-[48px] overflow-hidden group shadow-2xl shadow-slate-200/40 border border-white/60 transition-all duration-500 bg-white/60 backdrop-blur-2xl">
-                <div className="absolute inset-0 bg-gradient-to-br from-white/80 via-white/40 to-indigo-50/20 opacity-80"></div>
+                <div className="absolute inset-0 bg-gradient-to-br from-white/80 via-white/40 to-teal-50/20 opacity-80"></div>
                 <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-slate-200 to-transparent"></div>
                 <div className="absolute top-0 right-0 p-20 opacity-[0.03] rotate-12 pointer-events-none blur-sm"><IndianRupee size={200} /></div>
 
                 <div className="flex justify-between items-center relative z-10 mb-12">
                     <h3 className="font-black text-3xl tracking-tighter flex items-center gap-5 text-slate-900">
-                        <div className="p-3 bg-white rounded-2xl shadow-lg shadow-indigo-100 text-indigo-600"><CreditCard size={28} /></div>
+                        <div className="p-3 bg-white rounded-2xl shadow-lg shadow-teal-100 text-teal-600"><CreditCard size={28} /></div>
                         Financial Ledger & Terminal
                     </h3>
                     <div className="flex gap-2 bg-white/50 p-2 rounded-full backdrop-blur-sm border border-white/40">
@@ -43,7 +43,7 @@ const LedgerTab: React.FC<LedgerTabProps> = ({ clinic, selectedPatient, patientT
                         <div className="space-y-4 flex-1 w-full relative z-20">
                             <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] px-2 flex items-center gap-2"><Layers size={12} /> Classification</label>
                             <div className="relative group/select">
-                                <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 rounded-[28px] opacity-0 group-hover/select:opacity-100 transition-opacity"></div>
+                                <div className="absolute inset-0 bg-gradient-to-br from-teal-500/5 to-purple-500/5 rounded-[28px] opacity-0 group-hover/select:opacity-100 transition-opacity"></div>
                                 <select className="w-full p-8 bg-white/50 border border-slate-200/60 rounded-[28px] outline-none font-black text-lg appearance-none cursor-pointer hover:bg-white transition-all text-slate-700 uppercase tracking-widest backdrop-blur-sm"
                                     onChange={(e) => setTxCategory(e.target.value as TransactionCategory)}
                                     value={txCategory}>
@@ -71,7 +71,7 @@ const LedgerTab: React.FC<LedgerTabProps> = ({ clinic, selectedPatient, patientT
             {/* CLINICAL JOURNAL (TRANSACTION HISTORY) */}
             <div className="glass-panel p-12 rounded-[48px] shadow-sm border border-white/50 space-y-8">
                 <div className="flex justify-between items-center">
-                    <h3 className="font-black text-xl tracking-tighter flex items-center gap-3 text-slate-800"><History size={24} className="text-indigo-500" /> Financial Journal</h3>
+                    <h3 className="font-black text-xl tracking-tighter flex items-center gap-3 text-slate-800"><History size={24} className="text-teal-500" /> Financial Journal</h3>
                     <button className="p-3 bg-slate-50 rounded-xl text-slate-400 hover:text-slate-600 transition-colors"><Filter size={16} /></button>
                 </div>
 

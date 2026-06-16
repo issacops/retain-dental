@@ -61,7 +61,7 @@ const ClinicWorkflowDemo = () => {
                             exit={{ opacity: 0 }}
                             className="absolute inset-0 flex items-center justify-center pointer-events-none"
                         >
-                            <div className="bg-indigo-600 text-white px-6 py-3 rounded-full shadow-xl shadow-indigo-600/20 font-bold flex items-center gap-2">
+                            <div className="bg-teal-600 text-white px-6 py-3 rounded-full shadow-xl shadow-teal-600/20 font-bold flex items-center gap-2">
                                 <Zap size={18} fill="currentColor" /> Start New Patient
                             </div>
                             <div className="absolute mt-24 text-slate-500 text-xs">Simulating 3-Click Workflow...</div>
@@ -96,7 +96,7 @@ const ClinicWorkflowDemo = () => {
                             >
                                 <label className="text-[10px] text-slate-400 uppercase tracking-wider font-bold">Treatment Plan</label>
                                 <div className="grid grid-cols-1 gap-2">
-                                    <div className={`h-10 rounded-lg border flex items-center px-3 justify-between transition-colors ${step === 2 ? 'bg-indigo-600 border-indigo-500 text-white' : 'bg-slate-900 border-white/10 text-slate-500'}`}>
+                                    <div className={`h-10 rounded-lg border flex items-center px-3 justify-between transition-colors ${step === 2 ? 'bg-teal-600 border-teal-500 text-white' : 'bg-slate-900 border-white/10 text-slate-500'}`}>
                                         <div className="flex items-center gap-2">
                                             <Star size={14} className={step === 2 ? 'text-amber-300' : ''} fill={step === 2 ? 'currentColor' : 'none'} />
                                             <span className="text-sm font-medium">Invisalign Platinum</span>

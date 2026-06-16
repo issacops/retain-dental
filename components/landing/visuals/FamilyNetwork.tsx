@@ -11,9 +11,9 @@ const FamilyNetwork = () => {
             {/* Central Node (Head of Household) */}
             <div className="relative z-10 flex flex-col items-center">
                 <motion.div
-                    animate={{ scale: [1, 1.05, 1], boxShadow: ["0 0 20px rgba(99,102,241,0.2)", "0 0 40px rgba(99,102,241,0.5)", "0 0 20px rgba(99,102,241,0.2)"] }}
+                    animate={{ scale: [1, 1.05, 1], boxShadow: ["0 0 20px rgba(13,148,136,0.2)", "0 0 40px rgba(13,148,136,0.5)", "0 0 20px rgba(13,148,136,0.2)"] }}
                     transition={{ duration: 3, repeat: Infinity }}
-                    className="w-24 h-24 bg-indigo-600 rounded-full flex items-center justify-center text-white border-4 border-slate-900 z-20 relative"
+                    className="w-24 h-24 bg-teal-600 rounded-full flex items-center justify-center text-white border-4 border-slate-900 z-20 relative"
                 >
                     <div className="text-center">
                         <User size={32} className="mx-auto mb-1" />

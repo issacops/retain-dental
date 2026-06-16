@@ -10,4 +10,10 @@ Allow: /
 User-agent: Google-Extended
 Allow: /
 
-Sitemap: https://retain.dental/sitemap.xml
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+Sitemap: https://app.retaindental.com/sitemap.xml

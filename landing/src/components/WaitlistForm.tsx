@@ -112,7 +112,7 @@ export default function WaitlistForm() {
         <button
           type="submit"
           disabled={state === 'submitting'}
-          class="w-full py-4 bg-gradient-to-r from-teal-500 to-teal-600 text-slate-900 rounded-xl font-bold text-lg hover:scale-[1.02] hover:shadow-xl hover:shadow-cyan-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          class="w-full py-4 bg-gradient-to-r from-teal-500 to-teal-600 text-slate-900 rounded-xl font-bold text-lg hover:scale-[1.02] hover:shadow-xl hover:shadow-teal-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {state === 'submitting' ? 'Sending...' : 'Launch My App'}
         </button>

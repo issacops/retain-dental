@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Microscope, Sparkles, User as UserIcon, X, Plus } from 'lucide-react';
+import { Microscope, Sparkles, User as UserIcon, X } from 'lucide-react';
 import { Clinic, User } from '../../../../types';
 import { TREATMENT_TEMPLATES } from '../../../../constants';
 
@@ -44,8 +44,8 @@ const TreatmentTab: React.FC<TreatmentTabProps> = ({ clinic, patient, onAssignPl
                     <p className="text-slate-500 font-medium">Select the primary treatment to generate the AI-assisted timeline and patient aftercare instructions.</p>
 
                     <div className="relative group/select mt-8 w-full xl:w-2/3">
-                        <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 rounded-[28px] opacity-0 group-hover/select:opacity-100 transition-opacity"></div>
-                        <select className="w-full p-8 bg-slate-50 border border-slate-200/60 rounded-[28px] outline-none font-black text-xl appearance-none cursor-pointer hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-slate-800 focus:border-indigo-500 shadow-sm"
+                        <div className="absolute inset-0 bg-gradient-to-br from-teal-500/5 to-purple-500/5 rounded-[28px] opacity-0 group-hover/select:opacity-100 transition-opacity"></div>
+                        <select className="w-full p-8 bg-slate-50 border border-slate-200/60 rounded-[28px] outline-none font-black text-xl appearance-none cursor-pointer hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-slate-800 focus:border-teal-500 shadow-sm"
                             onChange={(e) => setSelectedTemplateName(e.target.value)}
                             value={selectedTemplateName}>
                             <option value="">-- Choose Procedure --</option>
@@ -90,7 +90,7 @@ const TreatmentTab: React.FC<TreatmentTabProps> = ({ clinic, patient, onAssignPl
                                 setInstructions([]);
                             }
                         }} className="px-8 py-5 bg-white text-slate-900 rounded-2xl shadow-xl shadow-white/10 font-black text-xs uppercase tracking-widest hover:bg-slate-100 transition-all hover:scale-105 active:scale-95 flex items-center gap-3">
-                            <Sparkles size={16} className="text-indigo-600" /> Dispatch to Patient PWA
+                            <Sparkles size={16} className="text-teal-600" /> Dispatch to Patient PWA
                         </button>
                     </div>
 
@@ -106,15 +106,15 @@ const TreatmentTab: React.FC<TreatmentTabProps> = ({ clinic, patient, onAssignPl
                                             type={field.type}
                                             value={customValues[field.key] || ''}
                                             onChange={(e) => setCustomValues(prev => ({ ...prev, [field.key]: e.target.value }))}
-                                            className="w-full px-5 py-4 bg-white/5 rounded-2xl border border-white/10 text-white font-bold text-sm outline-none focus:border-indigo-400 focus:bg-white/10 focus:shadow-lg transition-all"
+                                            className="w-full px-5 py-4 bg-white/5 rounded-2xl border border-white/10 text-white font-bold text-sm outline-none focus:border-teal-400 focus:bg-white/10 focus:shadow-lg transition-all"
                                         />
                                     </div>
                                 ))}
                             </div>
 
-                            <div className="mt-8 bg-indigo-500/10 border border-indigo-500/30 rounded-3xl p-6">
-                                <h4 className="flex items-center gap-2 text-indigo-300 font-bold text-xs uppercase tracking-widest mb-2"><UserIcon size={14} /> Patient Notification</h4>
-                                <p className="text-sm font-medium text-indigo-100 leading-relaxed">
+                            <div className="mt-8 bg-teal-500/10 border border-teal-500/30 rounded-3xl p-6">
+                                <h4 className="flex items-center gap-2 text-teal-300 font-bold text-xs uppercase tracking-widest mb-2"><UserIcon size={14} /> Patient Notification</h4>
+                                <p className="text-sm font-medium text-teal-100 leading-relaxed">
                                     Dispatching this plan will instantly push the daily habit tracker to <strong>{patient.name}'s</strong> digital wallet, earning them points for compliance.
                                 </p>
                             </div>

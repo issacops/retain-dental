@@ -1,8 +1,8 @@
 import React, { useState, useMemo } from 'react';
-import { LayoutGrid, TrendingUp, Bell, Settings, Smile, LayoutGrid as LayoutGridIcon, Plus, X, Calendar as CalendarIcon, Activity, Grid, Zap, Search, UserPlus, CreditCard, MessageSquare, QrCode } from 'lucide-react';
+import { LayoutGrid, TrendingUp, Bell, Settings, LayoutGrid as LayoutGridIcon, Plus, X, Calendar as CalendarIcon, Activity, Grid, Zap, Search, UserPlus, CreditCard, QrCode } from 'lucide-react';
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { IBackendService } from '../../services/IBackendService';
-import { User, Wallet, Transaction, FamilyGroup, Clinic, CarePlan, TransactionCategory, TransactionType, Appointment, AppointmentStatus, AppointmentType, Tier, TIER_BENEFITS } from '../../types';
+import { User, Wallet, Transaction, FamilyGroup, Clinic, CarePlan, TransactionCategory, TransactionType, Appointment, AppointmentStatus, AppointmentType, Tier } from '../../types';
 import MorningBriefTicker from './subcomponents/MorningBrief';
 // import IntelligenceSidebar from './subcomponents/IntelligenceSidebar';
 import PatientList from './subcomponents/PatientList';
@@ -12,7 +12,7 @@ import AppointmentScheduler from './subcomponents/AppointmentScheduler';
 import LiveProtocolMonitor from './subcomponents/LiveProtocolMonitor';
 import FinancialLedger from './subcomponents/FinancialLedger';
 import SocialPostGenerator from './subcomponents/SocialPostGenerator';
-import CommandPalette from './subcomponents/CommandPalette';
+
 
 
 const RetentionDashboard: React.FC<{ clinic: Clinic, backendService: IBackendService, allUsers?: User[], wallets?: Wallet[], transactions?: Transaction[] }> = ({ clinic, backendService, allUsers = [], wallets = [], transactions = [] }) => {
@@ -63,7 +63,7 @@ const RetentionDashboard: React.FC<{ clinic: Clinic, backendService: IBackendSer
       return tierData;
    }, [allUsers, clinic.id]);
 
-   const CHART_COLORS = ['#10b981', '#6366f1', '#f59e0b'];
+   const CHART_COLORS = ['#10b981', '#14b8a6', '#f59e0b'];
 
    const CustomTooltip = ({ active, payload, label }: any) => {
       if (active && payload && payload.length) {
@@ -85,7 +85,7 @@ const RetentionDashboard: React.FC<{ clinic: Clinic, backendService: IBackendSer
    if (loading) return (
       <div className="h-[600px] flex flex-col items-center justify-center space-y-6 animate-pulse">
          <div className="h-24 w-24 rounded-full bg-slate-100 relative">
-            <div className="absolute inset-0 border-t-4 border-indigo-500 rounded-full animate-spin"></div>
+            <div className="absolute inset-0 border-t-4 border-teal-500 rounded-full animate-spin"></div>
          </div>
          <div className="text-slate-300 font-bold uppercase tracking-widest text-sm">Computing Intelligence Vectors...</div>
       </div>
@@ -108,12 +108,12 @@ const RetentionDashboard: React.FC<{ clinic: Clinic, backendService: IBackendSer
                </div>
             </div>
 
-            <div className="group relative bg-gradient-to-br from-indigo-500 to-violet-600 rounded-[40px] p-8 text-white shadow-2xl shadow-indigo-500/20 overflow-hidden hover:scale-[1.02] transition-all duration-500">
+            <div className="group relative bg-gradient-to-br from-teal-500 to-violet-600 rounded-[40px] p-8 text-white shadow-2xl shadow-teal-500/20 overflow-hidden hover:scale-[1.02] transition-all duration-500">
                <div className="absolute top-0 right-0 p-8 opacity-20"><Zap size={80} /></div>
                <div className="relative z-10">
                   <p className="text-[11px] font-black uppercase tracking-widest opacity-80 mb-4">Points Engagement</p>
                   <h3 className="text-6xl font-black tracking-tighter mb-2">{metrics.pointsParticipation}<span className="text-3xl opacity-60">%</span></h3>
-                  <p className="text-indigo-100 text-xs font-bold">Active Participation</p>
+                  <p className="text-teal-100 text-xs font-bold">Active Participation</p>
                </div>
             </div>
 
@@ -163,13 +163,13 @@ const RetentionDashboard: React.FC<{ clinic: Clinic, backendService: IBackendSer
                         <defs>
                            <linearGradient id="lineColor" x1="0" y1="0" x2="1" y2="0">
                               <stop offset="0%" stopColor="#10b981" />
-                              <stop offset="100%" stopColor="#6366f1" />
+                               <stop offset="100%" stopColor="#14b8a6" />
                            </linearGradient>
                            <filter id="shadow" height="200%">
-                              <feDropShadow dx="0" dy="4" stdDeviation="4" floodColor="#6366f1" floodOpacity="0.3" />
+                               <feDropShadow dx="0" dy="4" stdDeviation="4" floodColor="#14b8a6" floodOpacity="0.3" />
                            </filter>
                         </defs>
-                        <Line type="monotone" dataKey="rate" stroke="url(#lineColor)" strokeWidth={5} dot={{ fill: '#fff', stroke: '#6366f1', strokeWidth: 3, r: 6 }} activeDot={{ r: 10, fill: '#6366f1' }} filter="url(#shadow)" />
+                         <Line type="monotone" dataKey="rate" stroke="url(#lineColor)" strokeWidth={5} dot={{ fill: '#fff', stroke: '#14b8a6', strokeWidth: 3, r: 6 }} activeDot={{ r: 10, fill: '#14b8a6' }} filter="url(#shadow)" />
                      </LineChart>
                   </ResponsiveContainer>
                </div>
@@ -250,7 +250,7 @@ const RetentionDashboard: React.FC<{ clinic: Clinic, backendService: IBackendSer
                               {i + 1}
                            </div>
                            <div>
-                              <p className="font-bold text-slate-800 text-sm group-hover:text-indigo-600 transition-colors">{f.name}</p>
+                              <p className="font-bold text-slate-800 text-sm group-hover:text-teal-600 transition-colors">{f.name}</p>
                               <p className="text-[10px] font-bold text-slate-400">{Math.floor(Math.random() * 4) + 2} Members</p>
                            </div>
                         </div>
@@ -261,7 +261,7 @@ const RetentionDashboard: React.FC<{ clinic: Clinic, backendService: IBackendSer
             </div>
 
             {/* Churn Risk Alert */}
-            <div className="rounded-[40px] p-10 relative overflow-hidden text-white flex flex-col justify-between group shadow-2xl shadow-indigo-500/30"
+            <div className="rounded-[40px] p-10 relative overflow-hidden text-white flex flex-col justify-between group shadow-2xl shadow-teal-500/30"
                style={{ background: `linear-gradient(135deg, ${clinic.primaryColor}, #000)` }}>
 
                <div className="absolute top-0 right-0 p-8 opacity-20 group-hover:scale-110 transition-transform duration-700">
@@ -372,7 +372,7 @@ const DesktopDoctorView: React.FC<Props> = ({
    // Helper to convert hex to rgb string for Tailwind alpha support
    const hexToRgb = (hex: string) => {
       const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-      return result ? `${parseInt(result[1], 16)} ${parseInt(result[2], 16)} ${parseInt(result[3], 16)} ` : '99 102 241';
+      return result ? `${parseInt(result[1], 16)} ${parseInt(result[2], 16)} ${parseInt(result[3], 16)} ` : '20 184 166';
    };
 
    // Helper to calculate luminance for contrast
@@ -388,7 +388,6 @@ const DesktopDoctorView: React.FC<Props> = ({
       return /^#[0-9A-F]{6}$/i.test(clinic.primaryColor) ? getLuminance(clinic.primaryColor) > 180 : false;
    }, [clinic.primaryColor]);
 
-   console.log("[DesktopDoctorView] Rendering for clinic:", clinic.name, "Texture:", textureClass);
 
    return (
       <div className={`flex flex-col h-[100dvh] text-slate-900 font-sans overflow-hidden transition-all duration-1000 ${textureClass || 'bg-white'} `} style={{ '--primary': clinic.primaryColor, '--primary-rgb': hexToRgb(clinic.primaryColor), '--primary-glow': clinic.primaryColor + '15' } as React.CSSProperties}>
@@ -451,12 +450,12 @@ const DesktopDoctorView: React.FC<Props> = ({
                <header className="sticky top-0 z-10 px-8 py-6 flex justify-between items-center bg-white/40 backdrop-blur-md border-b border-white/20">
                   <div>
                      <h2 className="text-2xl font-black text-slate-800 tracking-tight">{greet()}, Dr. {getUserName(currentUser.name)}</h2>
-                     <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mt-1 flex items-center gap-2 text-indigo-500">
+                     <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mt-1 flex items-center gap-2 text-teal-500">
                         <Zap size={12} /> Press Cmd+K or Ctrl+K for Command Palette
                      </p>
                   </div>
                   <div className="flex items-center gap-4">
-                     <button onClick={() => setIsQRModalOpen(true)} className="h-10 px-4 bg-indigo-600 text-white rounded-xl shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition-all flex items-center gap-2 font-black text-xs uppercase tracking-widest active:scale-95">
+                     <button onClick={() => setIsQRModalOpen(true)} className="h-10 px-4 bg-teal-600 text-white rounded-xl shadow-lg shadow-teal-200 hover:bg-teal-700 transition-all flex items-center gap-2 font-black text-xs uppercase tracking-widest active:scale-95">
                         <QrCode size={16} /> Patient App
                      </button>
                      <div className="h-10 px-4 bg-white rounded-xl border border-slate-200 flex items-center gap-2 text-slate-400 focus-within:border-primary focus-within:text-primary transition-colors shadow-sm">
@@ -522,15 +521,15 @@ const DesktopDoctorView: React.FC<Props> = ({
                                           const patient = allUsers.find(u => u.id === appt.patientId);
                                           const isNow = new Date() >= new Date(appt.startTime) && new Date() <= new Date(appt.endTime);
                                           return (
-                                             <div key={appt.id} className={`p-4 bg-white rounded-2xl border flex items-center gap-4 shadow-sm transition-all ${isNow ? 'border-indigo-500 ring-1 ring-indigo-500/20' : 'border-slate-100'}`}>
-                                                <div className={`h-10 w-10 rounded-full flex items-center justify-center font-bold text-xs ${isNow ? 'bg-indigo-100 text-indigo-600 animate-pulse' : 'bg-slate-100 text-slate-500'}`}>
+                                             <div key={appt.id} className={`p-4 bg-white rounded-2xl border flex items-center gap-4 shadow-sm transition-all ${isNow ? 'border-teal-500 ring-1 ring-teal-500/20' : 'border-slate-100'}`}>
+                                                <div className={`h-10 w-10 rounded-full flex items-center justify-center font-bold text-xs ${isNow ? 'bg-teal-100 text-teal-600 animate-pulse' : 'bg-slate-100 text-slate-500'}`}>
                                                    {new Date(appt.startTime).getHours() < 12 ? 'AM' : 'PM'}
                                                 </div>
                                                 <div className="flex-1 min-w-0">
                                                    <h5 className="font-bold text-sm text-slate-800 truncate">{patient?.name || 'Unknown'}</h5>
                                                    <p className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-2">
                                                       {new Date(appt.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                                      {isNow && <span className="text-indigo-500">• In Chair</span>}
+                                                      {isNow && <span className="text-teal-500">• In Chair</span>}
                                                    </p>
                                                 </div>
                                                 <button onClick={() => {
@@ -703,14 +702,14 @@ const DesktopDoctorView: React.FC<Props> = ({
                                  <input type="number"
                                     defaultValue={clinic.loyaltyConfig?.defaultRate || 10}
                                     onBlur={(e) => onUpdateClinic(clinic.id, { loyaltyConfig: { ...clinic.loyaltyConfig, defaultRate: Number(e.target.value) } as any })}
-                                    className="w-full bg-slate-50 border border-slate-100 p-6 rounded-2xl font-black text-3xl outline-none focus:border-indigo-500 transition-all" />
+                                    className="w-full bg-slate-50 border border-slate-100 p-6 rounded-2xl font-black text-3xl outline-none focus:border-teal-500 transition-all" />
                               </div>
                               <div>
                                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-2 mb-2 block">Redemption Value (INR per Pt)</label>
                                  <input type="number"
                                     defaultValue={clinic.loyaltyConfig?.redemptionRate || 1}
                                     onBlur={(e) => onUpdateClinic(clinic.id, { loyaltyConfig: { ...clinic.loyaltyConfig, redemptionRate: Number(e.target.value) } as any })}
-                                    className="w-full bg-slate-50 border border-slate-100 p-6 rounded-2xl font-black text-3xl outline-none focus:border-indigo-500 transition-all" />
+                                    className="w-full bg-slate-50 border border-slate-100 p-6 rounded-2xl font-black text-3xl outline-none focus:border-teal-500 transition-all" />
                               </div>
                            </div>
 
@@ -774,12 +773,12 @@ const DesktopDoctorView: React.FC<Props> = ({
 
                      </div>
                      <div className="col-span-4">
-                        <div className="bg-indigo-600 rounded-[40px] p-10 text-white shadow-2xl shadow-indigo-500/30">
+                        <div className="bg-teal-600 rounded-[40px] p-10 text-white shadow-2xl shadow-teal-500/30">
                            <h3 className="text-3xl font-black tracking-tight mb-4">Pro &<br />Power.</h3>
-                           <p className="text-indigo-200 font-medium leading-relaxed mb-8">
+                           <p className="text-teal-200 font-medium leading-relaxed mb-8">
                               Advanced configurations for multi-location syncing and API access are available in the Enterprise tier.
                            </p>
-                           <button className="py-4 px-8 bg-white text-indigo-600 font-black rounded-xl uppercase tracking-widest text-xs shadow-lg hover:bg-indigo-50 transition-colors">
+                           <button className="py-4 px-8 bg-white text-teal-600 font-black rounded-xl uppercase tracking-widest text-xs shadow-lg hover:bg-teal-50 transition-colors">
                               Contact Support
                            </button>
                         </div>
@@ -803,7 +802,7 @@ const DesktopDoctorView: React.FC<Props> = ({
                         </div>
 
                         <div className="bg-slate-900 p-8 rounded-[32px] inline-block shadow-2xl mb-8 group relative overflow-hidden">
-                           <div className="absolute inset-0 bg-gradient-to-tr from-indigo-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                           <div className="absolute inset-0 bg-gradient-to-tr from-teal-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                            <img
                               src={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&bgcolor=ffffff&color=000000&margin=0&data=${encodeURIComponent(`${window.location.origin}/?subdomain=${clinic.slug}`)}`}
                               alt="Patient Portal QR"

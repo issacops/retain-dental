@@ -3,15 +3,15 @@ import { Activity, Zap, TrendingUp, Grid, Bell, Search, Calendar, UserPlus, Cred
 
 export const LandingDoctorView: React.FC = () => {
     return (
-        <div className="flex flex-col h-full text-slate-900 font-sans overflow-hidden bg-slate-50 relative selection:bg-indigo-100">
+        <div className="flex flex-col h-full text-slate-900 font-sans overflow-hidden bg-slate-50 relative selection:bg-teal-100">
             {/* Simple Glow Effect - replacing complex blurred divs */}
-            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-500/5 rounded-full blur-[100px] pointer-events-none"></div>
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-teal-500/5 rounded-full blur-[100px] pointer-events-none"></div>
 
             {/* Sidebar Mock */}
             <div className="flex h-full overflow-hidden">
                 <aside className="w-64 bg-white/50 backdrop-blur-xl border-r border-white/40 flex flex-col p-6 z-20 relative">
                     <div className="flex items-center gap-3 mb-10">
-                        <div className="h-8 w-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white shadow-lg shadow-indigo-500/30">
+                        <div className="h-8 w-8 bg-teal-600 rounded-lg flex items-center justify-center text-white shadow-lg shadow-teal-500/30">
                             <Activity size={16} />
                         </div>
                         <div>
@@ -21,7 +21,7 @@ export const LandingDoctorView: React.FC = () => {
                     </div>
 
                     <nav className="space-y-1">
-                        <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-indigo-600 text-white shadow-lg shadow-indigo-500/20">
+                        <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-teal-600 text-white shadow-lg shadow-teal-500/20">
                             <Grid size={16} />
                             <span className="font-bold text-xs tracking-wide">Operational Hub</span>
                         </div>
@@ -70,7 +70,7 @@ export const LandingDoctorView: React.FC = () => {
                                 <h3 className="text-4xl font-black tracking-tighter">84<span className="text-xl opacity-60">%</span></h3>
                                 <p className="text-[10px] font-bold mt-1 opacity-80">+2.4% vs last month</p>
                             </div>
-                            <div className="col-span-1 bg-gradient-to-br from-indigo-500 to-violet-600 rounded-[2rem] p-6 text-white shadow-xl shadow-indigo-500/10 relative overflow-hidden">
+                            <div className="col-span-1 bg-gradient-to-br from-teal-500 to-violet-600 rounded-[2rem] p-6 text-white shadow-xl shadow-teal-500/10 relative overflow-hidden">
                                 <Zap className="absolute top-4 right-4 opacity-20" size={40} />
                                 <p className="text-[9px] font-black uppercase tracking-widest opacity-80 mb-2">Active Patients</p>
                                 <h3 className="text-4xl font-black tracking-tighter">1,240</h3>
@@ -88,7 +88,7 @@ export const LandingDoctorView: React.FC = () => {
                                     {/* Fake Mini Chart */}
                                     <div className="absolute bottom-0 left-0 w-full flex items-end gap-1 px-2 pb-2 h-full">
                                         {[40, 60, 45, 70, 50, 80, 65].map((h, i) => (
-                                            <div key={i} className="flex-1 bg-indigo-500/20 rounded-t-sm" style={{ height: `${h}%` }}></div>
+                                            <div key={i} className="flex-1 bg-teal-500/20 rounded-t-sm" style={{ height: `${h}%` }}></div>
                                         ))}
                                     </div>
                                 </div>
@@ -102,7 +102,7 @@ export const LandingDoctorView: React.FC = () => {
                                 <div className="flex justify-between items-center mb-10">
                                     <h4 className="text-lg font-black text-slate-900">Retention Velocity</h4>
                                     <div className="flex gap-2">
-                                        <div className="h-2 w-2 rounded-full bg-indigo-500"></div>
+                                        <div className="h-2 w-2 rounded-full bg-teal-500"></div>
                                         <div className="h-2 w-2 rounded-full bg-slate-200"></div>
                                     </div>
                                 </div>
@@ -114,13 +114,13 @@ export const LandingDoctorView: React.FC = () => {
                                     </div>
                                     {/* The Line (SVG path) */}
                                     <svg className="absolute inset-0 w-full h-full overflow-visible" preserveAspectRatio="none">
-                                        <path d="M0 150 C 100 140, 200 100, 300 110 S 500 40, 600 50 S 800 20, 900 10" fill="none" stroke="#6366f1" strokeWidth="4" strokeLinecap="round" />
+                                        <path d="M0 150 C 100 140, 200 100, 300 110 S 500 40, 600 50 S 800 20, 900 10" fill="none" stroke="#14b8a6" strokeWidth="4" strokeLinecap="round" />
                                         <path d="M0 150 L 900 150" fill="none" stroke="transparent" />
                                         {/* Area fill would be complex, keeping simple line */}
                                     </svg>
                                     {/* Dots */}
-                                    <div className="absolute top-[110px] left-[33%] h-4 w-4 bg-white border-4 border-indigo-500 rounded-full shadow-lg z-10"></div>
-                                    <div className="absolute top-[50px] left-[66%] h-4 w-4 bg-white border-4 border-indigo-500 rounded-full shadow-lg z-10"></div>
+                                    <div className="absolute top-[110px] left-[33%] h-4 w-4 bg-white border-4 border-teal-500 rounded-full shadow-lg z-10"></div>
+                                    <div className="absolute top-[50px] left-[66%] h-4 w-4 bg-white border-4 border-teal-500 rounded-full shadow-lg z-10"></div>
                                 </div>
                             </div>
 
@@ -152,7 +152,7 @@ export const LandingDoctorView: React.FC = () => {
                                     </div>
                                     <div className="space-y-3">
                                         <div className="p-3 bg-white/10 rounded-xl flex items-center gap-3 border border-white/10">
-                                            <div className="h-8 w-8 rounded-full bg-indigo-500 flex items-center justify-center text-[10px] font-black">JS</div>
+                                            <div className="h-8 w-8 rounded-full bg-teal-500 flex items-center justify-center text-[10px] font-black">JS</div>
                                             <div>
                                                 <p className="text-xs font-bold">James Smith</p>
                                                 <p className="text-[9px] opacity-60">In Chair • Hygiene</p>

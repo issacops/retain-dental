@@ -128,7 +128,7 @@ const FAQSection: React.FC = () => {
     };
 
     return (
-        <section className="py-32 px-6 bg-slate-950 border-t border-white/5 relative overflow-hidden" id="faq">
+        <section className="py-24 px-6 bg-[#fdf8f0] border-t border-slate-100 relative overflow-hidden" id="faq">
             <Helmet>
                 <script type="application/ld+json">
                     {JSON.stringify(faqSchema)}
@@ -136,12 +136,12 @@ const FAQSection: React.FC = () => {
             </Helmet>
 
             {/* Background glow */}
-            <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900/10 via-slate-950 to-slate-950 pointer-events-none"></div>
+            <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-teal-500/5 via-transparent to-transparent pointer-events-none"></div>
 
             <div className="max-w-5xl mx-auto relative z-10">
-                <div className="text-center mb-20 space-y-6">
-                    <span className="text-indigo-500 font-bold tracking-widest uppercase text-sm">Knowledge Base</span>
-                    <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter">
+                <div className="text-center mb-16 space-y-6">
+                    <span className="text-teal-600 font-bold tracking-widest uppercase text-sm">Knowledge Base</span>
+                    <h2 className="text-4xl md:text-6xl font-black text-slate-900 tracking-tighter">
                         Everything you need to know.
                     </h2>
                     <p className="text-xl text-slate-400 max-w-2xl mx-auto">
@@ -168,19 +168,19 @@ const FAQSection: React.FC = () => {
                                         initial={{ height: 0, opacity: 0 }}
                                         animate={{ height: "auto", opacity: 1 }}
                                         exit={{ height: 0, opacity: 0 }}
-                                        className="border-t border-white/5"
+                                        className="border-t border-slate-100"
                                     >
                                         <div className="p-4 md:p-8 space-y-2">
                                             {category.questions.map((item, index) => (
-                                                <div key={index} className="rounded-xl overflow-hidden bg-slate-900/50 border border-white/5 hover:border-indigo-500/30 transition-colors">
+                                                <div key={index} className="rounded-xl overflow-hidden bg-white border border-slate-200 hover:border-teal-300 transition-colors shadow-sm">
                                                     <button
                                                         onClick={(e) => { e.stopPropagation(); toggleQuestion(item.q); }}
                                                         className="w-full flex items-start text-left p-6 gap-4"
                                                     >
-                                                        <div className={`mt-1 transition-colors ${openQuestion === item.q ? 'text-indigo-400' : 'text-slate-500'}`}>
+                                                        <div className={`mt-1 transition-colors ${openQuestion === item.q ? 'text-teal-600' : 'text-slate-400'}`}>
                                                             {openQuestion === item.q ? <Minus size={18} /> : <Plus size={18} />}
                                                         </div>
-                                                        <span className={`text-lg font-bold transition-colors ${openQuestion === item.q ? 'text-indigo-400' : 'text-slate-200'}`}>
+                                                        <span className={`text-lg font-bold transition-colors ${openQuestion === item.q ? 'text-teal-600' : 'text-slate-800'}`}>
                                                             {item.q}
                                                         </span>
                                                     </button>

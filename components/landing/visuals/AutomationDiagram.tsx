@@ -25,16 +25,16 @@ const AutomationDiagram = () => {
                 {/* Line 1: Phone to Server */}
                 <motion.path
                     d="M 120 200 L 240 200"
-                    className="stroke-indigo-500/30 stroke-2 fill-none"
+                    className="stroke-teal-500/30 stroke-2 fill-none"
                 />
-                <motion.circle cx="120" cy="200" r="4" className="fill-indigo-500" animate={{ x: [0, 120] }} transition={{ duration: 1, repeat: Infinity, ease: 'linear', repeatDelay: 1.5 }} />
+                <motion.circle cx="120" cy="200" r="4" className="fill-teal-500" animate={{ x: [0, 120] }} transition={{ duration: 1, repeat: Infinity, ease: 'linear', repeatDelay: 1.5 }} />
 
                 {/* Line 2: Server to Dashboard */}
                 <motion.path
                     d="M 320 200 L 440 100"
-                    className="stroke-indigo-500/30 stroke-2 fill-none"
+                    className="stroke-teal-500/30 stroke-2 fill-none"
                 />
-                <motion.circle cx="320" cy="200" r="4" className="fill-indigo-500" animate={{ cx: [320, 440], cy: [200, 100], opacity: step >= 1 ? 1 : 0 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear', repeatDelay: 1.5 }} />
+                <motion.circle cx="320" cy="200" r="4" className="fill-teal-500" animate={{ cx: [320, 440], cy: [200, 100], opacity: step >= 1 ? 1 : 0 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear', repeatDelay: 1.5 }} />
 
 
                 {/* Line 3: Server to Phone (Feedback) */}
@@ -61,7 +61,7 @@ const AutomationDiagram = () => {
                                 initial={{ scale: 0.8, opacity: 0 }}
                                 animate={{ scale: 1.2, opacity: 0 }}
                                 transition={{ duration: 1, repeat: Infinity }}
-                                className="absolute inset-0 border-2 border-indigo-500 rounded-2xl"
+                                className="absolute inset-0 border-2 border-teal-500 rounded-2xl"
                             />
                         )}
                     </motion.div>
@@ -72,12 +72,12 @@ const AutomationDiagram = () => {
                 <div className="flex flex-col items-center gap-4">
                     <motion.div
                         animate={{ scale: step === 1 ? 1.1 : 1, borderColor: step === 1 ? 'rgba(99,102,241,0.8)' : 'rgba(255,255,255,0.1)' }}
-                        className="w-24 h-24 bg-indigo-900/20 border border-indigo-500/30 backdrop-blur-md rounded-full flex items-center justify-center shadow-[0_0_50px_rgba(99,102,241,0.2)] relative"
+                        className="w-24 h-24 bg-teal-900/20 border border-teal-500/30 backdrop-blur-md rounded-full flex items-center justify-center shadow-[0_0_50px_rgba(13,148,136,0.2)] relative"
                     >
-                        <Database className="text-indigo-400" size={36} />
-                        {step === 1 && <span className="absolute top-0 right-0 w-3 h-3 bg-indigo-500 rounded-full animate-ping"></span>}
+                        <Database className="text-teal-400" size={36} />
+                        {step === 1 && <span className="absolute top-0 right-0 w-3 h-3 bg-teal-500 rounded-full animate-ping"></span>}
                     </motion.div>
-                    <p className="text-xs font-bold text-indigo-400 uppercase tracking-widest text-center">AI Analysis<br />Engine</p>
+                    <p className="text-xs font-bold text-teal-400 uppercase tracking-widest text-center">AI Analysis<br />Engine</p>
                 </div>
 
                 {/* Node 3: Outputs (Split) */}

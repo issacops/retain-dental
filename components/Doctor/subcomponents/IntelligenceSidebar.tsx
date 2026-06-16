@@ -45,17 +45,17 @@ const IntelligenceSidebar: React.FC<Props> = ({ patient, wallet, carePlan }) => 
         )}
 
         <div className="space-y-4">
-            <div className="glass-card p-6 rounded-[32px] bg-indigo-50/50 border border-indigo-100/50 space-y-4 group">
+            <div className="glass-card p-6 rounded-[32px] bg-teal-50/50 border border-teal-100/50 space-y-4 group">
                 <div className="flex items-center gap-3">
-                    <Zap size={18} className="text-indigo-600" />
-                    <p className="text-[10px] font-black uppercase text-indigo-900">Next Best Action</p>
+                    <Zap size={18} className="text-teal-600" />
+                    <p className="text-[10px] font-black uppercase text-teal-900">Next Best Action</p>
                 </div>
-                <p className="text-xs font-bold text-indigo-900 leading-relaxed">
+                <p className="text-xs font-bold text-teal-900 leading-relaxed">
                     {patient.currentTier === 'MEMBER'
                         ? "Subject is ₹10,000 away from GOLD level. Propose Hygiene bundle to unlock 5% yield."
                         : "High Loyalty Surplus. Trigger a 30% credit-burn offer for Cosmetic Enhancements."}
                 </p>
-                <button className="w-full py-3 bg-white rounded-2xl text-[10px] font-black text-indigo-600 uppercase tracking-widest shadow-sm group-hover:shadow-md transition-all">Project Quote</button>
+                <button className="w-full py-3 bg-white rounded-2xl text-[10px] font-black text-teal-600 uppercase tracking-widest shadow-sm group-hover:shadow-md transition-all">Project Quote</button>
             </div>
 
             <div className="glass-card p-6 rounded-[32px] bg-emerald-50/50 border border-emerald-100/50 space-y-4">
@@ -73,7 +73,7 @@ const IntelligenceSidebar: React.FC<Props> = ({ patient, wallet, carePlan }) => 
         <div className="space-y-4 pt-4 border-t border-slate-200/50">
             <h5 className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Inventory Ledger</h5>
             <div className="glass-card p-5 rounded-[24px] border border-white/50 flex items-center gap-4 group hover:bg-white transition-all cursor-help">
-                <Box size={20} className="text-slate-400 group-hover:text-indigo-500 transition-colors" />
+                <Box size={20} className="text-slate-400 group-hover:text-teal-500 transition-colors" />
                 <div>
                     <p className="text-xs font-bold text-slate-800">Aligner Shipped</p>
                     <p className="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">In Transit // Node Mumbai</p>
