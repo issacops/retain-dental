@@ -1,7 +1,5 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import Navbar from '../../components/Navbar.astro';
-import Footer from '../../components/Footer.astro';
 import StickyMobileCta from '../../components/StickyMobileCta.astro';
 
 const posts = [
@@ -196,7 +194,6 @@ const allTags = [...new Set(posts.flatMap(p => p.tags))].sort();
   description="Expert advice on dental patient retention, Invisalign compliance tracking, launching loyalty apps, and growing your dental practice with technology. Written by practicing dentists."
   canonical="https://retaindental.com/blog"
 >
-  <Navbar />
   <section class="pt-32 pb-24 px-6 bg-cream-50 min-h-screen">
     <div class="max-w-6xl mx-auto">
 
@@ -302,7 +299,6 @@ const allTags = [...new Set(posts.flatMap(p => p.tags))].sort();
       </div>
     </div>
   </section>
-  <Footer />
   <StickyMobileCta />
 
   <script>

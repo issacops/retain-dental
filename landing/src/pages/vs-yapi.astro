@@ -1,7 +1,5 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Navbar from '../components/Navbar.astro';
-import Footer from '../components/Footer.astro';
 import StickyMobileCta from '../components/StickyMobileCta.astro';
 
 const rows = [
@@ -32,8 +30,6 @@ const rows = [
     { name: 'Vs Yapi', url: 'https://retaindental.com/vs-yapi' },
   ]}
 >
-  <Navbar />
-
   <section class="pt-32 pb-12 px-6 bg-cream-50">
     <div class="max-w-4xl mx-auto text-center space-y-5">
       <span class="inline-flex items-center gap-2 px-3 py-1 bg-teal-50 border border-teal-200 rounded-full text-xs font-bold text-teal-700 uppercase tracking-widest">
@@ -116,6 +112,5 @@ const rows = [
     </a>
   </section>
 
-  <Footer />
   <StickyMobileCta />
 </Layout>

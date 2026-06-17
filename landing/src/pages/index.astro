@@ -1,6 +1,5 @@
 ---
 import Layout from '../layouts/Layout.astro'
-import Navbar from '../components/Navbar.astro'
 import Hero from '../components/Hero.astro'
 import TrustBar from '../components/TrustBar.astro'
 import ProblemSection from '../components/ProblemSection.astro'
@@ -13,11 +12,9 @@ import FAQSection from '../components/FAQSection.astro'
 import CTA from '../components/CTA.astro'
 import DemoForm from '../components/DemoForm'
 import StickyMobileCta from '../components/StickyMobileCta.astro'
-import Footer from '../components/Footer.astro'
 ---
 
 <Layout title="RetainOS — Launch Your Branded Dental Patient App in 20 Minutes">
-  <Navbar />
   <Hero />
   <div class="reveal"><TrustBar /></div>
   <div class="reveal"><ProblemSection /></div>
@@ -29,7 +26,6 @@ import Footer from '../components/Footer.astro'
   <div class="reveal"><FAQSection /></div>
   <div class="reveal"><CTA /></div>
   <DemoForm client:load />
-  <Footer />
   <StickyMobileCta />
 
   <style>
