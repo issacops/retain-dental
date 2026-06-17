@@ -186,10 +186,9 @@ const posts = [
   },
 ];
 
-const featuredPosts = posts.filter(p => p.featured);
-const regularPosts = posts.filter(p => !p.featured);
+const featuredPost = posts.find(p => p.slug === 'retention-playbook');
+const regularPosts = posts.filter(p => p.slug !== 'retention-playbook').sort((a, b) => new Date(b.date) - new Date(a.date));
 const allTags = [...new Set(posts.flatMap(p => p.tags))].sort();
-const sortedPosts = [...posts].sort((a, b) => new Date(b.date) - new Date(a.date));
 ---
 
 <Layout
@@ -200,6 +199,8 @@ const sortedPosts = [...posts].sort((a, b) => new Date(b.date) - new Date(a.date
   <Navbar />
   <section class="pt-32 pb-24 px-6 bg-cream-50 min-h-screen">
     <div class="max-w-6xl mx-auto">
+
+      {/* Header */}
       <div class="text-center mb-16 space-y-4">
         <span class="text-teal-600 font-black tracking-widest uppercase text-sm">The RetainOS Blog</span>
         <h1 class="text-5xl md:text-7xl font-black text-slate-900 tracking-tighter leading-[1.05]">
@@ -210,54 +211,90 @@ const sortedPosts = [...posts].sort((a, b) => new Date(b.date) - new Date(a.date
         </p>
       </div>
 
-      <div class="hidden sm:flex flex-wrap gap-2 justify-center mb-14">
-        {allTags.map(tag => (
-          <span class="text-xs font-bold text-slate-500 bg-white border border-gray-200 px-3 py-1.5 rounded-full hover:border-teal-300 hover:text-teal-600 transition-colors cursor-pointer">{tag}</span>
-        ))}
+      {/* Search + Tags */}
+      <div class="max-w-2xl mx-auto mb-14">
+        <div class="relative mb-6">
+          <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input
+            type="text"
+            id="blog-search"
+            placeholder="Search articles..."
+            class="w-full pl-12 pr-6 py-4 bg-white border border-gray-200 rounded-2xl text-sm font-medium text-slate-900 placeholder:text-slate-400 outline-none focus:border-teal-300 focus:ring-2 focus:ring-teal-100 transition-all"
+          />
+        </div>
+        <div class="flex flex-wrap gap-2 justify-center" id="tag-filters">
+          <button class="tag-btn active text-xs font-bold px-3 py-1.5 rounded-full transition-colors border" data-tag="all">All</button>
+          {allTags.map(tag => (
+            <button class="tag-btn text-xs font-bold px-3 py-1.5 rounded-full transition-colors border" data-tag={tag}>{tag}</button>
+          ))}
+        </div>
       </div>
 
-      <div class="space-y-10">
-        {sortedPosts.map((post, i) => (
-          <a href={`/blog/${post.slug}`} class="block group">
-            <article class={`rounded-3xl border transition-all duration-300 hover:shadow-xl ${
-              i < 2
-                ? 'p-8 md:p-10 bg-gradient-to-br from-teal-900 via-teal-800 to-teal-950 text-white border-teal-700 hover:border-teal-400/50 hover:shadow-teal-500/10'
-                : i % 2 === 0
-                  ? 'p-8 bg-white border-gray-200 hover:border-teal-300 hover:shadow-teal-500/5'
-                  : 'p-8 bg-cream-100/80 border-gray-200 hover:border-teal-300 hover:shadow-teal-500/5'
-            }`}>
-              <div class="flex flex-wrap gap-2 mb-4">
+      {/* Featured Post */}
+      {featuredPost && (
+        <a href={`/blog/${featuredPost.slug}`} class="block group mb-16">
+          <article class="rounded-3xl bg-gradient-to-br from-teal-900 via-teal-800 to-teal-950 text-white border border-teal-700 p-10 md:p-14 hover:border-teal-400/50 hover:shadow-2xl hover:shadow-teal-500/10 transition-all duration-300 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-teal-400/10 rounded-full blur-[80px]"></div>
+            <div class="relative z-10">
+              <div class="flex items-center gap-3 mb-6">
+                <span class="px-3 py-1 bg-white/10 text-teal-200 text-[10px] font-black uppercase tracking-widest rounded-full">Featured</span>
+                <div class="flex gap-2">
+                  {featuredPost.tags.map(tag => (
+                    <span class="text-[10px] font-black text-teal-200 bg-white/10 px-2.5 py-1 rounded-full uppercase tracking-widest">{tag}</span>
+                  ))}
+                </div>
+              </div>
+              <h2 class="text-3xl md:text-5xl font-black tracking-tight mb-4 group-hover:text-teal-200 transition-colors leading-tight">
+                {featuredPost.title}
+              </h2>
+              <p class="text-teal-100/80 leading-relaxed mb-6 max-w-3xl text-lg">{featuredPost.excerpt}</p>
+              <div class="flex items-center gap-3 text-sm">
+                <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-xs font-black">
+                  {featuredPost.author.split(' ').map(w => w[0]).join('').slice(0, 2)}
+                </div>
+                <span class="text-teal-100">{featuredPost.author}</span>
+                <span class="text-teal-100/60">·</span>
+                <span class="text-teal-100/60">{new Date(featuredPost.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+              </div>
+            </div>
+          </article>
+        </a>
+      )}
+
+      {/* Post Grid */}
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="post-grid">
+        {regularPosts.map(post => (
+          <a href={`/blog/${post.slug}`} class="block group post-card" data-tags={post.tags.join(',')} data-title={post.title.toLowerCase()} data-excerpt={post.excerpt.toLowerCase()}>
+            <article class="h-full rounded-3xl bg-white border border-gray-200 p-7 hover:border-teal-300 hover:shadow-xl hover:shadow-teal-500/5 transition-all duration-300 flex flex-col">
+              <div class="flex flex-wrap gap-1.5 mb-4">
                 {post.tags.map(tag => (
-                  <span class={`text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-widest ${
-                    i < 2
-                      ? 'text-teal-200 bg-white/10'
-                      : 'text-teal-600 bg-teal-50'
-                  }`}>{tag}</span>
+                  <span class="text-[10px] font-black text-teal-600 bg-teal-50 px-2 py-0.5 rounded-full uppercase tracking-widest">{tag}</span>
                 ))}
               </div>
-              <h2 class={`text-2xl md:text-3xl font-black tracking-tight mb-3 transition-colors ${
-                i < 2 ? 'text-white group-hover:text-teal-200' : 'text-slate-900 group-hover:text-teal-600'
-              }`}>
+              <h2 class="text-lg font-black text-slate-900 tracking-tight mb-3 group-hover:text-teal-600 transition-colors leading-snug flex-grow">
                 {post.title}
               </h2>
-              <p class={`leading-relaxed mb-4 max-w-2xl ${
-                i < 2 ? 'text-teal-100/80' : 'text-slate-500'
-              }`}>{post.excerpt}</p>
-              <div class="flex items-center gap-3 text-sm">
-                <div class={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-black ${
-                  i < 2 ? 'bg-white/20 text-white' : 'bg-teal-100 text-teal-600'
-                }`}>
+              <p class="text-sm text-slate-500 leading-relaxed mb-5 line-clamp-3">{post.excerpt}</p>
+              <div class="flex items-center gap-2.5 text-xs mt-auto pt-4 border-t border-gray-100">
+                <div class="w-7 h-7 rounded-full bg-teal-100 flex items-center justify-center text-[9px] font-black text-teal-600">
                   {post.author.split(' ').map(w => w[0]).join('').slice(0, 2)}
                 </div>
-                <span class={i < 2 ? 'text-teal-100' : 'text-slate-500'}>{post.author}</span>
-                <span class={i < 2 ? 'text-teal-100/60' : 'text-slate-400'}>·</span>
-                <span class={i < 2 ? 'text-teal-100/60' : 'text-slate-400'}>{new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                <span class="text-slate-500 font-semibold">{post.author}</span>
+                <span class="text-slate-300">·</span>
+                <span class="text-slate-400">{new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
               </div>
             </article>
           </a>
         ))}
       </div>
 
+      {/* Empty state */}
+      <div id="no-results" class="hidden text-center py-20">
+        <p class="text-xl font-bold text-slate-400">No articles match your search.</p>
+        <p class="text-sm text-slate-400 mt-2">Try a different keyword or clear filters.</p>
+      </div>
+
+      {/* CTA */}
       <div class="mt-16 p-8 rounded-3xl bg-gradient-to-br from-teal-900 via-teal-800 to-teal-950 text-white text-center">
         <p class="text-2xl font-black mb-3">Write for the RetainOS Blog</p>
         <p class="text-teal-200 text-sm mb-6 max-w-lg mx-auto">We publish guest posts from practising dentists. Share your clinical and operational expertise with 5,000+ dental professionals.</p>
@@ -267,4 +304,59 @@ const sortedPosts = [...posts].sort((a, b) => new Date(b.date) - new Date(a.date
   </section>
   <Footer />
   <StickyMobileCta />
+
+  <script>
+    const searchInput = document.getElementById('blog-search') as HTMLInputElement;
+    const tagButtons = document.querySelectorAll('.tag-btn');
+    const postCards = document.querySelectorAll('.post-card');
+    const noResults = document.getElementById('no-results');
+    let activeTag = 'all';
+
+    function filterPosts() {
+      const query = searchInput?.value.toLowerCase() || '';
+      let visible = 0;
+
+      postCards.forEach(card => {
+        const title = card.getAttribute('data-title') || '';
+        const excerpt = card.getAttribute('data-excerpt') || '';
+        const tags = (card.getAttribute('data-tags') || '').split(',');
+
+        const matchesSearch = !query || title.includes(query) || excerpt.includes(query);
+        const matchesTag = activeTag === 'all' || tags.includes(activeTag);
+
+        if (matchesSearch && matchesTag) {
+          (card as HTMLElement).style.display = '';
+          visible++;
+        } else {
+          (card as HTMLElement).style.display = 'none';
+        }
+      });
+
+      if (noResults) noResults.classList.toggle('hidden', visible > 0);
+    }
+
+    searchInput?.addEventListener('input', filterPosts);
+
+    tagButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        activeTag = btn.getAttribute('data-tag') || 'all';
+        tagButtons.forEach(b => {
+          b.classList.remove('active');
+          b.classList.remove('bg-teal-600', 'text-white', 'border-teal-600');
+          b.classList.add('bg-white', 'text-slate-500', 'border-gray-200');
+        });
+        btn.classList.add('active');
+        btn.classList.add('bg-teal-600', 'text-white', 'border-teal-600');
+        btn.classList.remove('bg-white', 'text-slate-500', 'border-gray-200');
+        filterPosts();
+      });
+    });
+
+    // Init active state
+    const activeBtn = document.querySelector('.tag-btn.active');
+    if (activeBtn) {
+      activeBtn.classList.add('bg-teal-600', 'text-white', 'border-teal-600');
+      activeBtn.classList.remove('bg-white', 'text-slate-500', 'border-gray-200');
+    }
+  </script>
 </Layout>

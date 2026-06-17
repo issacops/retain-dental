@@ -3,16 +3,15 @@ import Layout from '../layouts/Layout.astro'
 import Navbar from '../components/Navbar.astro'
 import Hero from '../components/Hero.astro'
 import TrustBar from '../components/TrustBar.astro'
-import LeakyBucket from '../components/LeakyBucket.astro'
-import LiveProductShowcase from '../components/LiveProductShowcase.astro'
+import ProblemSection from '../components/ProblemSection.astro'
+import SolutionSection from '../components/SolutionSection.astro'
+import FeatureShowcase from '../components/FeatureShowcase.astro'
+import HowItWorks from '../components/HowItWorks.astro'
 import Comparison from '../components/Comparison.astro'
-import PilotProgram from '../components/PilotProgram.astro'
-import Consolidation from '../components/Consolidation.astro'
-import ProductPillars from '../components/ProductPillars.astro'
-import RoiCalculator from '../components/RoiCalculator.tsx'
+import Testimonials from '../components/Testimonials.astro'
 import FAQSection from '../components/FAQSection.astro'
 import CTA from '../components/CTA.astro'
-import WaitlistForm from '../components/WaitlistForm.tsx'
+import DemoForm from '../components/DemoForm'
 import StickyMobileCta from '../components/StickyMobileCta.astro'
 import Footer from '../components/Footer.astro'
 ---
@@ -21,16 +20,15 @@ import Footer from '../components/Footer.astro'
   <Navbar />
   <Hero />
   <div class="reveal"><TrustBar /></div>
-  <div class="reveal"><LeakyBucket /></div>
-  <div class="reveal"><LiveProductShowcase /></div>
+  <div class="reveal"><ProblemSection /></div>
+  <div class="reveal"><SolutionSection /></div>
+  <div class="reveal"><FeatureShowcase /></div>
+  <div class="reveal"><HowItWorks /></div>
   <div class="reveal"><Comparison /></div>
-  <div class="reveal"><PilotProgram /></div>
-  <div class="reveal"><Consolidation /></div>
-  <div class="reveal"><ProductPillars /></div>
-  <div class="reveal"><RoiCalculator client:load /></div>
+  <div class="reveal"><Testimonials /></div>
   <div class="reveal"><FAQSection /></div>
   <div class="reveal"><CTA /></div>
-  <div class="reveal"><WaitlistForm client:load /></div>
+  <div id="demo-form" class="reveal"><DemoForm client:load /></div>
   <Footer />
   <StickyMobileCta />
 

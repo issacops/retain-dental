@@ -1,0 +1,230 @@
+---
+import FeaturePatientPwa from './demos/FeaturePatientPwa';
+import FeatureRecall from './demos/FeatureRecall';
+import FeatureLoyalty from './demos/FeatureLoyalty';
+import FeatureSocial from './demos/FeatureSocial';
+import FeatureReviews from './demos/FeatureReviews';
+import FeatureDashboard from './demos/FeatureDashboard';
+---
+
+<section class="py-24 px-6 bg-cream-50" id="features">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center max-w-2xl mx-auto mb-16">
+      <p class="text-sm font-bold text-teal-600 uppercase tracking-widest mb-4">Features</p>
+      <h2 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter mb-6">See RetainOS in action.</h2>
+      <p class="text-lg text-slate-500 leading-relaxed">Click each feature to explore how it works. Built from the actual platform — not mockups.</p>
+    </div>
+
+    <div id="feature-demos" data-interactive="true">
+      <!-- Feature 1: Patient PWA -->
+      <div class="mb-20 feature-demo-block" data-feature="patient-pwa">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+          <div class="order-2 lg:order-1">
+            <div class="inline-flex items-center gap-2 px-3 py-1 bg-teal-50 rounded-full mb-4 border border-teal-100">
+              <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
+              <span class="text-[10px] font-bold text-teal-700 uppercase tracking-widest">Patient PWA</span>
+            </div>
+            <h3 class="text-3xl font-black text-slate-900 tracking-tighter mb-4">Your branded app.<br/>Patients actually use it.</h3>
+            <p class="text-slate-500 leading-relaxed mb-6">A progressive web app with wallet, care rituals, scheduling, and loyalty — white-labeled to your clinic. No app store needed.</p>
+            <ul class="space-y-2.5">
+              <li class="flex items-center gap-2.5 text-sm text-slate-600">
+                <svg class="w-4 h-4 text-teal-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Digital wallet with loyalty points
+              </li>
+              <li class="flex items-center gap-2.5 text-sm text-slate-600">
+                <svg class="w-4 h-4 text-teal-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Daily care rituals with tap-to-complete
+              </li>
+              <li class="flex items-center gap-2.5 text-sm text-slate-600">
+                <svg class="w-4 h-4 text-teal-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Household family pooling
+              </li>
+              <li class="flex items-center gap-2.5 text-sm text-slate-600">
+                <svg class="w-4 h-4 text-teal-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                In-app appointment booking
+              </li>
+            </ul>
+          </div>
+          <div class="order-1 lg:order-2">
+            <FeaturePatientPwa client:load />
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature 2: Recall -->
+      <div class="mb-20 feature-demo-block" data-feature="recall">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 bg-teal-50 rounded-full mb-4 border border-teal-100">
+              <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
+              <span class="text-[10px] font-bold text-teal-700 uppercase tracking-widest">Recall Automation</span>
+            </div>
+            <h3 class="text-3xl font-black text-slate-900 tracking-tighter mb-4">3x more patients<br/>come back automatically.</h3>
+            <p class="text-slate-500 leading-relaxed mb-6">Automated multi-channel sequences that bring back no-show patients without a single manual phone call.</p>
+            <ul class="space-y-2.5">
+              <li class="flex items-center gap-2.5 text-sm text-slate-600">
+                <svg class="w-4 h-4 text-teal-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                SMS + email + push sequences
+              </li>
+              <li class="flex items-center gap-2.5 text-sm text-slate-600">
+                <svg class="w-4 h-4 text-teal-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Missed-appointment reactivation
+              </li>
+              <li class="flex items-center gap-2.5 text-sm text-slate-600">
+                <svg class="w-4 h-4 text-teal-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Post-treatment aftercare follow-ups
+              </li>
+              <li class="flex items-center gap-2.5 text-sm text-slate-600">
+                <svg class="w-4 h-4 text-teal-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Zero manual phone calls needed
+              </li>
+            </ul>
+          </div>
+          <div>
+            <FeatureRecall client:load />
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature 3: Loyalty -->
+      <div class="mb-20 feature-demo-block" data-feature="loyalty">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+          <div class="order-2 lg:order-1">
+            <div class="inline-flex items-center gap-2 px-3 py-1 bg-amber-50 rounded-full mb-4 border border-amber-100">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+              <span class="text-[10px] font-bold text-amber-700 uppercase tracking-widest">Loyalty Engine</span>
+            </div>
+            <h3 class="text-3xl font-black text-slate-900 tracking-tighter mb-4">Points, tiers &<br/>family pooling.</h3>
+            <p class="text-slate-500 leading-relaxed mb-6">A loyalty program patients actually engage with. Silver → Gold → Platinum tiers with household pooling that drives 68% higher lifetime value.</p>
+            <ul class="space-y-2.5">
+              <li class="flex items-center gap-2.5 text-sm text-slate-600">
+                <svg class="w-4 h-4 text-amber-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Points for visits, referrals, reviews
+              </li>
+              <li class="flex items-center gap-2.5 text-sm text-slate-600">
+                <svg class="w-4 h-4 text-amber-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                3-tier VIP progression
+              </li>
+              <li class="flex items-center gap-2.5 text-sm text-slate-600">
+                <svg class="w-4 h-4 text-amber-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Household point pooling
+              </li>
+              <li class="flex items-center gap-2.5 text-sm text-slate-600">
+                <svg class="w-4 h-4 text-amber-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Reward redemption catalog
+              </li>
+            </ul>
+          </div>
+          <div class="order-1 lg:order-2">
+            <FeatureLoyalty client:load />
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature 4: Social -->
+      <div class="mb-20 feature-demo-block" data-feature="social">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 bg-violet-50 rounded-full mb-4 border border-violet-100">
+              <span class="w-1.5 h-1.5 rounded-full bg-violet-500"></span>
+              <span class="text-[10px] font-bold text-violet-700 uppercase tracking-widest">Social Studio</span>
+            </div>
+            <h3 class="text-3xl font-black text-slate-900 tracking-tighter mb-4">AI-powered social<br/>content in seconds.</h3>
+            <p class="text-slate-500 leading-relaxed mb-6">Generate branded social posts from templates — transformation stories, myth busters, reviews, and offers — with your clinic's branding baked in.</p>
+            <ul class="space-y-2.5">
+              <li class="flex items-center gap-2.5 text-sm text-slate-600">
+                <svg class="w-4 h-4 text-violet-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                5 post templates (Trust, Education, Sales)
+              </li>
+              <li class="flex items-center gap-2.5 text-sm text-slate-600">
+                <svg class="w-4 h-4 text-violet-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Auto-branded with your logo + colors
+              </li>
+              <li class="flex items-center gap-2.5 text-sm text-slate-600">
+                <svg class="w-4 h-4 text-violet-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Download or share directly to Instagram
+              </li>
+              <li class="flex items-center gap-2.5 text-sm text-slate-600">
+                <svg class="w-4 h-4 text-violet-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                87% faster recall response rate
+              </li>
+            </ul>
+          </div>
+          <div>
+            <FeatureSocial client:load />
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature 5: Reviews -->
+      <div class="mb-20 feature-demo-block" data-feature="reviews">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+          <div class="order-2 lg:order-1">
+            <div class="inline-flex items-center gap-2 px-3 py-1 bg-amber-50 rounded-full mb-4 border border-amber-100">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+              <span class="text-[10px] font-bold text-amber-700 uppercase tracking-widest">Review Collection</span>
+            </div>
+            <h3 class="text-3xl font-black text-slate-900 tracking-tighter mb-4">3.4x more reviews.<br/>Automatically.</h3>
+            <p class="text-slate-500 leading-relaxed mb-6">Automated post-visit review requests that grow your Google rating. Happy patients get prompted at exactly the right moment.</p>
+            <ul class="space-y-2.5">
+              <li class="flex items-center gap-2.5 text-sm text-slate-600">
+                <svg class="w-4 h-4 text-amber-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Timed review requests (Day 7)
+              </li>
+              <li class="flex items-center gap-2.5 text-sm text-slate-600">
+                <svg class="w-4 h-4 text-amber-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                SMS with direct review link
+              </li>
+              <li class="flex items-center gap-2.5 text-sm text-slate-600">
+                <svg class="w-4 h-4 text-amber-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                92% response rate
+              </li>
+              <li class="flex items-center gap-2.5 text-sm text-slate-600">
+                <svg class="w-4 h-4 text-amber-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Verified review badges
+              </li>
+            </ul>
+          </div>
+          <div class="order-1 lg:order-2">
+            <FeatureReviews client:load />
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature 6: Dashboard -->
+      <div class="feature-demo-block" data-feature="dashboard">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 bg-teal-50 rounded-full mb-4 border border-teal-100">
+              <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
+              <span class="text-[10px] font-bold text-teal-700 uppercase tracking-widest">Analytics Dashboard</span>
+            </div>
+            <h3 class="text-3xl font-black text-slate-900 tracking-tighter mb-4">All your metrics.<br/>One dashboard.</h3>
+            <p class="text-slate-500 leading-relaxed mb-6">Revenue, retention, reviews, and loyalty — all in one real-time dashboard. No more spreadsheet wrangling across 6 tools.</p>
+            <ul class="space-y-2.5">
+              <li class="flex items-center gap-2.5 text-sm text-slate-600">
+                <svg class="w-4 h-4 text-teal-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Real-time KPI tracking
+              </li>
+              <li class="flex items-center gap-2.5 text-sm text-slate-600">
+                <svg class="w-4 h-4 text-teal-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Retention trend charts
+              </li>
+              <li class="flex items-center gap-2.5 text-sm text-slate-600">
+                <svg class="w-4 h-4 text-teal-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Power household leaderboard
+              </li>
+              <li class="flex items-center gap-2.5 text-sm text-slate-600">
+                <svg class="w-4 h-4 text-teal-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Churn risk alerts with AI insights
+              </li>
+            </ul>
+          </div>
+          <div>
+            <FeatureDashboard client:load />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
