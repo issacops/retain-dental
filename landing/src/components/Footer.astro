@@ -11,8 +11,8 @@
       <div>
         <p class="text-sm font-bold text-slate-900 mb-4 uppercase tracking-widest">Product</p>
         <ul class="space-y-3">
-          {[{ href: '#platform', label: 'Platform' }, { href: '#how-it-works', label: 'How It Works' }, { href: '#faq', label: 'FAQ' }, { href: '#waitlist', label: 'Get Started' }, { href: '/blog', label: 'Blog' }, { href: '/blog/dental-loyalty-app-guide', label: 'Loyalty App Guide' }].map(item => (
-            <li><a href={item.href} class="text-sm text-slate-500 hover:text-slate-900 transition-colors">{item.label}</a></li>
+          {[{ href: '#platform', label: 'Platform' }, { href: '#how-it-works', label: 'How It Works' }, { href: '#faq', label: 'FAQ' }, { href: '#', label: 'Get Started' }, { href: '/blog', label: 'Blog' }, { href: '/blog/dental-loyalty-app-guide', label: 'Loyalty App Guide' }].map(item => (
+            <li><a href={item.href} onclick={item.label === 'Get Started' ? "window.dispatchEvent(new Event('open-demo-form')); event.preventDefault();" : undefined} class="text-sm text-slate-500 hover:text-slate-900 transition-colors">{item.label}</a></li>
           ))}
         </ul>
       </div>

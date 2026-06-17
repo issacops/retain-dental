@@ -26,9 +26,9 @@ const { activeSection = 'hero' } = Astro.props;
       <a href="https://app.retaindental.com" class="hidden md:inline-block px-5 py-2.5 bg-white border border-gray-200 text-slate-700 hover:bg-cream-100 rounded-full text-xs font-black uppercase tracking-widest transition-all">
         Free Trial
       </a>
-      <a href="#waitlist" class="px-5 py-2.5 bg-teal-600 text-white hover:bg-teal-700 rounded-full text-xs font-black uppercase tracking-widest transition-all shadow-lg shadow-teal-600/20 hover:shadow-teal-600/30">
+      <button onclick="window.dispatchEvent(new Event('open-demo-form'))" class="px-5 py-2.5 bg-teal-600 text-white hover:bg-teal-700 rounded-full text-xs font-black uppercase tracking-widest transition-all shadow-lg shadow-teal-600/20 hover:shadow-teal-600/30">
         Launch My App
-      </a>
+      </button>
     </div>
   </div>
 </nav>
