@@ -4,38 +4,35 @@ export default {
   theme: {
     extend: {
       colors: {
-        clay: {
-          50: '#F9F5F0',
-          100: '#EFE6DC',
-          300: '#C9B8A8',
-          500: '#8C6F56',
-          700: '#5C4633',
-          900: '#2B1D14',
-        },
-        terracotta: {
-          100: '#F6E4D8',
-          500: '#D97A4D',
-          600: '#C1572D',
-        },
-        sage: {
-          100: '#E4ECE2',
-          600: '#5C7A5E',
-        },
-        cream: {
-          50: '#FBF7F1',
-          0: '#FFFFFF',
-        },
         ink: {
-          error: '#B4453B',
+          950: '#0F0712',
+          900: '#170B1C',
+          800: '#211029',
+          border: '#3A2640',
+        },
+        violet: {
+          200: '#D9CCFF',
+          400: '#A78BFA',
+          600: '#7C5CFF',
+          glow: 'rgba(124,92,255,0.35)',
+        },
+        paper: {
+          50: '#FAF8F3',
+          0: '#FFFFFF',
+          line: '#E8E3D9',
+        },
+        text: {
+          900: '#16131A',
+          600: '#57515E',
+        },
+        'text-onDark': {
+          100: '#F5F2FA',
+          500: '#9C93A8',
         },
       },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        display: ['Fraunces', 'Georgia', 'ui-serif', 'serif'],
-      },
-      borderRadius: {
-        sm: '4px',
-        DEFAULT: '4px',
+        serif: ['Newsreader', 'Georgia', 'ui-serif', 'serif'],
       },
     },
   },

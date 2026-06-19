@@ -1,10 +1,10 @@
-<section id="faq" class="py-24 px-6 bg-cream-50" itemscope itemtype="https://schema.org/FAQPage">
+<section id="faq" class="py-24 px-6 bg-paper-50" itemscope itemtype="https://schema.org/FAQPage">
   <div class="max-w-7xl mx-auto">
     <div class="text-center max-w-2xl mx-auto mb-16 space-y-4">
-      <h2 class="text-4xl md:text-5xl font-display font-[540] text-clay-900 tracking-tighter">
-        Frequently asked <span class="text-terracotta-600">questions.</span>
+      <h2 class="font-sans font-[400] text-4xl md:text-5xl tracking-tight">
+        Frequently asked <span class="font-serif italic text-violet-600">questions.</span>
       </h2>
-      <p class="text-lg text-clay-700">Everything you need to know about RetainOS.</p>
+      <p class="text-text-600 font-sans text-lg">Everything you need to know about RetainOS.</p>
     </div>
 
     <div class="max-w-3xl mx-auto">
@@ -18,12 +18,12 @@
         { q: 'Can patients earn rewards on paid treatments?', a: 'Absolutely. You define the earning rules — points per dollar, bonus points for specific treatments, and VIP tier multipliers. Patients redeem points toward future services.' },
         { q: 'What support do you provide during onboarding?', a: 'You get a dedicated onboarding specialist who walks your team through configuration, staff training, and patient launch. Ongoing support is available via in-app chat and email.' }
       ].map((faq) => (
-        <details class="group border-b border-clay-300 py-5">
+        <details class="group border-b border-paper-line py-5">
           <summary class="flex justify-between items-center cursor-pointer list-none">
-            <span class="text-base font-bold text-clay-900 pr-4">{faq.q}</span>
-            <svg class="w-5 h-5 text-clay-500 shrink-0 group-open:rotate-180 group-open:text-terracotta-600 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            <span class="text-base font-sans font-[500] text-text-900 pr-4">{faq.q}</span>
+            <svg class="w-5 h-5 text-text-600 shrink-0 group-open:rotate-180 group-open:text-violet-600 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
           </summary>
-          <p class="mt-4 text-clay-700 leading-relaxed">{faq.a}</p>
+          <p class="mt-4 text-text-600 leading-relaxed">{faq.a}</p>
         </details>
       ))}
     </div>

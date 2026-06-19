@@ -1,51 +1,51 @@
-<footer class="py-16 px-6 bg-clay-900">
+<footer class="py-16 px-6 bg-ink-900">
   <div class="max-w-7xl mx-auto">
     <div class="grid md:grid-cols-4 gap-10">
       <div class="space-y-4">
-        <p class="text-xl font-display font-[540] text-cream-50">Retain<span class="text-terracotta-600">OS</span></p>
-        <p class="text-sm text-clay-300 leading-relaxed max-w-xs">
+        <p class="text-xl font-sans text-onDark-100">Retain<span class="text-violet-400">OS</span></p>
+        <p class="text-sm text-onDark-500 leading-relaxed max-w-xs">
           The operating system for modern dental practices. Launch your branded patient app in 20 minutes.
         </p>
       </div>
 
       <div>
-        <p class="text-sm font-bold text-cream-50 mb-4 uppercase tracking-widest">Product</p>
+        <p class="text-xs font-semibold text-onDark-100 mb-4 uppercase tracking-[0.1em]">Product</p>
         <ul class="space-y-3">
           {[{ href: '#platform', label: 'Platform' }, { href: '#how-it-works', label: 'How It Works' }, { href: '#faq', label: 'FAQ' }, { href: '#', label: 'Get Started' }, { href: '/blog', label: 'Blog' }, { href: '/blog/dental-loyalty-app-guide', label: 'Loyalty App Guide' }].map(item => (
-            <li><a href={item.href} onclick={item.label === 'Get Started' ? "window.dispatchEvent(new Event('open-demo-form')); event.preventDefault();" : undefined} class="text-sm text-clay-300 hover:text-cream-50 transition-colors">{item.label}</a></li>
+            <li><a href={item.href} onclick={item.label === 'Get Started' ? "window.dispatchEvent(new Event('open-demo-form')); event.preventDefault();" : undefined} class="text-sm text-onDark-500 hover:text-onDark-100 transition-colors">{item.label}</a></li>
           ))}
         </ul>
       </div>
 
       <div>
-        <p class="text-sm font-bold text-cream-50 mb-4 uppercase tracking-widest">Company</p>
+        <p class="text-xs font-semibold text-onDark-100 mb-4 uppercase tracking-[0.1em]">Company</p>
         <ul class="space-y-3">
-          <li><a href="/about" class="text-sm text-clay-300 hover:text-cream-50 transition-colors">About</a></li>
-          <li><a href="/blog" class="text-sm text-clay-300 hover:text-cream-50 transition-colors">Blog</a></li>
-          <li><a href="/careers" class="text-sm text-clay-300 hover:text-cream-50 transition-colors">Careers</a></li>
-          <li><a href="/contact" class="text-sm text-clay-300 hover:text-cream-50 transition-colors">Contact</a></li>
+          <li><a href="/about" class="text-sm text-onDark-500 hover:text-onDark-100 transition-colors">About</a></li>
+          <li><a href="/blog" class="text-sm text-onDark-500 hover:text-onDark-100 transition-colors">Blog</a></li>
+          <li><a href="/careers" class="text-sm text-onDark-500 hover:text-onDark-100 transition-colors">Careers</a></li>
+          <li><a href="/contact" class="text-sm text-onDark-500 hover:text-onDark-100 transition-colors">Contact</a></li>
         </ul>
       </div>
 
       <div>
-        <p class="text-sm font-bold text-cream-50 mb-4 uppercase tracking-widest">Legal</p>
+        <p class="text-xs font-semibold text-onDark-100 mb-4 uppercase tracking-[0.1em]">Legal</p>
         <ul class="space-y-3">
-          <li><a href="/privacy" class="text-sm text-clay-300 hover:text-cream-50 transition-colors">Privacy Policy</a></li>
-          <li><a href="/terms" class="text-sm text-clay-300 hover:text-cream-50 transition-colors">Terms of Service</a></li>
-          <li><a href="/hipaa" class="text-sm text-clay-300 hover:text-cream-50 transition-colors">HIPAA Compliance</a></li>
-          <li><a href="/security" class="text-sm text-clay-300 hover:text-cream-50 transition-colors">Security</a></li>
+          <li><a href="/privacy" class="text-sm text-onDark-500 hover:text-onDark-100 transition-colors">Privacy Policy</a></li>
+          <li><a href="/terms" class="text-sm text-onDark-500 hover:text-onDark-100 transition-colors">Terms of Service</a></li>
+          <li><a href="/hipaa" class="text-sm text-onDark-500 hover:text-onDark-100 transition-colors">HIPAA Compliance</a></li>
+          <li><a href="/security" class="text-sm text-onDark-500 hover:text-onDark-100 transition-colors">Security</a></li>
         </ul>
       </div>
     </div>
 
-    <div class="mt-12 pt-8 border-t border-clay-700 flex flex-col md:flex-row items-center justify-between gap-4">
-      <p class="text-xs text-clay-500">&copy; {new Date().getFullYear()} RetainOS. All rights reserved.</p>
+    <div class="mt-12 pt-8 border-t border-ink-border flex flex-col md:flex-row items-center justify-between gap-4">
+      <p class="text-xs text-onDark-500">&copy; {new Date().getFullYear()} RetainOS. All rights reserved.</p>
       <div class="flex items-center gap-4">
-        <span class="text-xs text-clay-500">HIPAA-Ready Architecture</span>
-        <span class="w-1 h-1 rounded-full bg-clay-500"></span>
-        <span class="text-xs text-clay-500">SOC 2 In Progress</span>
-        <span class="w-1 h-1 rounded-full bg-clay-500"></span>
-        <span class="text-xs text-clay-500">AES-256 Encrypted</span>
+        <span class="text-xs text-onDark-500">HIPAA-Ready Architecture</span>
+        <span class="w-1 h-1 rounded-full bg-ink-border"></span>
+        <span class="text-xs text-onDark-500">SOC 2 In Progress</span>
+        <span class="w-1 h-1 rounded-full bg-ink-border"></span>
+        <span class="text-xs text-onDark-500">AES-256 Encrypted</span>
       </div>
     </div>
   </div>

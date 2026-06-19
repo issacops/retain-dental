@@ -24,31 +24,31 @@ export default function FeatureDashboard() {
       {/* KPI cards */}
       <div className="grid grid-cols-2 gap-2">
         {kpis.map((kpi, i) => (
-          <div key={i} className="bg-white rounded-2xl p-3.5 border border-cream-200 shadow-sm hover:shadow-md transition-all">
+          <div key={i} className="bg-ink-900 rounded p-3.5 border border-ink-border shadow-sm hover:shadow-md transition-all">
             <div className="flex items-center justify-between mb-1">
-              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{kpi.label}</span>
+              <span className="text-[9px] font-semibold text-onDark-500 uppercase tracking-widest">{kpi.label}</span>
               <span className="text-sm">{kpi.icon}</span>
             </div>
-            <p className="text-xl font-black text-slate-900">{kpi.value}</p>
-            <span className={`text-[10px] font-bold text-${kpi.color}-600`}>{kpi.change}</span>
+            <p className="text-xl font-semibold text-onDark-100">{kpi.value}</p>
+            <span className="text-[10px] font-semibold text-violet-600">{kpi.change}</span>
           </div>
         ))}
       </div>
 
       {/* Retention chart */}
-      <div className="bg-white rounded-3xl p-4 border border-cream-200 shadow-sm">
+      <div className="bg-ink-900 rounded p-4 border border-ink-border shadow-sm">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <p className="text-xs font-bold text-slate-900">Patient Retention</p>
-            <p className="text-[9px] text-slate-400">Last 6 months</p>
+            <p className="text-xs font-semibold text-onDark-100">Patient Retention</p>
+            <p className="text-[9px] text-onDark-500">Last 6 months</p>
           </div>
-          <div className="flex bg-slate-100 rounded-full p-0.5">
+          <div className="flex bg-ink-800 rounded p-0.5">
             {['1W', '1M', '3M', '1Y'].map(r => (
               <button
                 key={r}
                 onClick={() => setTimeRange(r)}
-                className={`px-2.5 py-1 rounded-full text-[9px] font-bold transition-all ${
-                  timeRange === r ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-400'
+                className={`px-2.5 py-1 rounded text-[9px] font-semibold transition-all ${
+                  timeRange === r ? 'bg-ink-900 text-onDark-100 shadow-sm' : 'text-onDark-500'
                 }`}
               >
                 {r}
@@ -92,28 +92,28 @@ export default function FeatureDashboard() {
           {/* X labels */}
           <div className="absolute bottom-0 left-0 right-0 flex justify-between px-1">
             {chartMonths.map(m => (
-              <span key={m} className="text-[8px] text-slate-400 font-semibold">{m}</span>
+              <span key={m} className="text-[8px] text-onDark-500 font-semibold">{m}</span>
             ))}
           </div>
         </div>
       </div>
 
       {/* Top families */}
-      <div className="bg-white rounded-3xl p-4 border border-cream-200 shadow-sm">
-        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-3">Power Households</p>
+      <div className="bg-ink-900 rounded p-4 border border-ink-border shadow-sm">
+        <p className="text-[9px] font-semibold text-onDark-500 uppercase tracking-widest mb-3">Power Households</p>
         <div className="space-y-2">
           {topFamilies.map((f, i) => (
-            <div key={i} className="flex items-center gap-3 p-2 rounded-xl bg-slate-50">
-              <div className={`w-7 h-7 rounded-full flex items-center justify-center text-white text-[9px] font-bold ${
+            <div key={i} className="flex items-center gap-3 p-2 rounded bg-ink-800">
+              <div className={`w-7 h-7 rounded flex items-center justify-center text-white text-[9px] font-semibold ${
                 i === 0 ? 'bg-gradient-to-br from-amber-400 to-amber-600' : i === 1 ? 'bg-gradient-to-br from-slate-400 to-slate-500' : 'bg-gradient-to-br from-amber-600 to-amber-700'
               }`}>
                 #{i + 1}
               </div>
               <div className="flex-1">
-                <p className="text-xs font-bold text-slate-900">{f.name}</p>
-                <p className="text-[9px] text-slate-400">{f.tier} tier</p>
+                <p className="text-xs font-semibold text-onDark-100">{f.name}</p>
+                <p className="text-[9px] text-onDark-500">{f.tier} tier</p>
               </div>
-              <span className="text-xs font-black text-slate-700">{f.spend}</span>
+              <span className="text-xs font-semibold text-onDark-500">{f.spend}</span>
             </div>
           ))}
         </div>

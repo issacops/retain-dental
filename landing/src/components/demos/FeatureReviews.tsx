@@ -19,14 +19,14 @@ export default function FeatureReviews() {
   return (
     <div className="max-w-md mx-auto space-y-4">
       {/* Review request flow */}
-      <div className="bg-white rounded-3xl p-5 border border-cream-200 shadow-sm">
+      <div className="bg-ink-900 rounded p-5 border border-ink-border shadow-sm">
         <div className="flex items-center gap-2 mb-3">
-          <div className="w-8 h-8 rounded-xl bg-teal-100 flex items-center justify-center">
+          <div className="w-8 h-8 rounded bg-ink-800 flex items-center justify-center">
             <span className="text-sm">⭐</span>
           </div>
           <div>
-            <p className="text-xs font-bold text-slate-900">Automated Review Request</p>
-            <p className="text-[9px] text-slate-400">Sent 7 days after visit</p>
+            <p className="text-xs font-semibold text-onDark-100">Automated Review Request</p>
+            <p className="text-[9px] text-onDark-500">Sent 7 days after visit</p>
           </div>
         </div>
 
@@ -34,10 +34,10 @@ export default function FeatureReviews() {
           <button
             onClick={handleSend}
             disabled={sending}
-            className={`w-full py-3 rounded-2xl font-bold text-sm transition-all ${
+            className={`w-full py-3 rounded font-semibold text-sm transition-all ${
               sending
-                ? 'bg-teal-100 text-teal-600 cursor-wait'
-                : 'bg-teal-600 text-white hover:bg-teal-700 hover:shadow-lg'
+                ? 'bg-ink-800 text-violet-600 cursor-wait'
+                : 'bg-violet-600 text-white hover:bg-violet-600 hover:shadow-lg'
             }`}
           >
             {sending ? (
@@ -51,55 +51,55 @@ export default function FeatureReviews() {
           </button>
         ) : (
           <div className="text-center py-3">
-            <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-2">
+            <div className="w-10 h-10 rounded bg-emerald-100 flex items-center justify-center mx-auto mb-2">
               <span className="text-emerald-600 text-lg">✓</span>
             </div>
-            <p className="text-xs font-bold text-emerald-700">Request sent to patient!</p>
-            <p className="text-[9px] text-slate-400 mt-0.5">They'll receive an SMS with a review link</p>
+            <p className="text-xs font-semibold text-emerald-700">Request sent to patient!</p>
+            <p className="text-[9px] text-onDark-500 mt-0.5">They'll receive an SMS with a review link</p>
           </div>
         )}
       </div>
 
       {/* Recent reviews */}
       <div className="space-y-2">
-        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest px-1">Recent Reviews</p>
+        <p className="text-[9px] font-semibold text-onDark-500 uppercase tracking-widest px-1">Recent Reviews</p>
         {reviews.map((r, i) => (
-          <div key={i} className="bg-white rounded-2xl p-3.5 border border-cream-200 hover:shadow-md transition-all">
+          <div key={i} className="bg-ink-900 rounded p-3.5 border border-ink-border hover:shadow-md transition-all">
             <div className="flex items-center justify-between mb-1.5">
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center text-white text-[8px] font-bold">
+                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center text-white text-[8px] font-semibold">
                   {r.name[0]}
                 </div>
-                <span className="text-xs font-bold text-slate-900">{r.name}</span>
+                <span className="text-xs font-semibold text-onDark-100">{r.name}</span>
                 {r.verified && (
-                  <span className="px-1.5 py-0.5 bg-emerald-50 rounded text-[7px] font-bold text-emerald-600 border border-emerald-200">VERIFIED</span>
+                  <span className="px-1.5 py-0.5 bg-emerald-50 rounded text-[7px] font-semibold text-emerald-600 border border-emerald-200">VERIFIED</span>
                 )}
               </div>
-              <span className="text-[9px] text-slate-400">{r.time}</span>
+              <span className="text-[9px] text-onDark-500">{r.time}</span>
             </div>
             <div className="flex gap-0.5 mb-1">
               {Array.from({ length: 5 }).map((_, j) => (
-                <span key={j} className={`text-xs ${j < r.stars ? 'text-amber-400' : 'text-slate-200'}`}>★</span>
+                <span key={j} className={`text-xs ${j < r.stars ? 'text-amber-400' : 'text-onDark-500'}`}>★</span>
               ))}
             </div>
-            <p className="text-[11px] text-slate-600 leading-relaxed">{r.text}</p>
+            <p className="text-[11px] text-onDark-500 leading-relaxed">{r.text}</p>
           </div>
         ))}
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-2">
-        <div className="bg-teal-50 rounded-2xl p-3 text-center border border-teal-100">
-          <p className="text-lg font-black text-teal-700">3.4x</p>
-          <p className="text-[8px] font-bold text-teal-600 uppercase tracking-widest">More reviews</p>
+        <div className="bg-ink-800 rounded p-3 text-center border border-ink-border">
+          <p className="text-lg font-semibold text-violet-600">3.4x</p>
+          <p className="text-[8px] font-semibold text-violet-600 uppercase tracking-widest">More reviews</p>
         </div>
-        <div className="bg-amber-50 rounded-2xl p-3 text-center border border-amber-100">
-          <p className="text-lg font-black text-amber-700">4.8</p>
-          <p className="text-[8px] font-bold text-amber-600 uppercase tracking-widest">Avg rating</p>
+        <div className="bg-ink-800 rounded p-3 text-center border border-ink-border">
+          <p className="text-lg font-semibold text-violet-600">4.8</p>
+          <p className="text-[8px] font-semibold text-violet-600 uppercase tracking-widest">Avg rating</p>
         </div>
-        <div className="bg-emerald-50 rounded-2xl p-3 text-center border border-emerald-100">
-          <p className="text-lg font-black text-emerald-700">92%</p>
-          <p className="text-[8px] font-bold text-emerald-600 uppercase tracking-widest">Response rate</p>
+        <div className="bg-emerald-50 rounded p-3 text-center border border-emerald-100">
+          <p className="text-lg font-semibold text-emerald-700">92%</p>
+          <p className="text-[8px] font-semibold text-emerald-600 uppercase tracking-widest">Response rate</p>
         </div>
       </div>
     </div>

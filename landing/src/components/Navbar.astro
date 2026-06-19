@@ -2,26 +2,41 @@
 const { activeSection = 'hero' } = Astro.props;
 ---
 
-<nav class="fixed top-0 left-0 right-0 z-50 border-b border-clay-100 bg-cream-50/90 backdrop-blur-xl">
+<nav class="fixed top-0 left-0 right-0 z-50 bg-transparent transition-all duration-300">
   <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
     <a href="/" class="flex items-center gap-3 group">
-      <span class="text-xl font-display font-medium text-clay-900 tracking-tighter">Retain<span class="text-terracotta-600">OS</span></span>
+      <span class="text-lg font-sans text-onDark-100 tracking-tight">Retain<span class="text-violet-400">OS</span></span>
     </a>
 
     <div class="hidden lg:flex items-center gap-8">
-      <a href="/how-it-works" class="text-sm font-medium text-clay-700 hover:text-clay-900 transition-colors">How It Works</a>
-      <a href="/pricing" class="text-sm font-medium text-clay-700 hover:text-clay-900 transition-colors">Product</a>
-      <a href="/blog" class="text-sm font-medium text-clay-700 hover:text-clay-900 transition-colors">Resources</a>
-      <a href="/#faq" class="text-sm font-medium text-clay-700 hover:text-clay-900 transition-colors">FAQ</a>
+      <a href="/how-it-works" class="text-sm font-medium font-sans text-onDark-500 hover:text-onDark-100 transition-colors">How It Works</a>
+      <a href="/pricing" class="text-sm font-medium font-sans text-onDark-500 hover:text-onDark-100 transition-colors">Product</a>
+      <a href="/blog" class="text-sm font-medium font-sans text-onDark-500 hover:text-onDark-100 transition-colors">Resources</a>
+      <a href="/#faq" class="text-sm font-medium font-sans text-onDark-500 hover:text-onDark-100 transition-colors">FAQ</a>
     </div>
 
     <div class="flex items-center gap-4">
-      <a href="https://app.retaindental.com" class="text-sm font-semibold text-clay-500 hover:text-clay-900 transition-colors hidden md:block">
+      <a href="https://app.retaindental.com" class="text-sm font-semibold font-sans text-onDark-500 hover:text-onDark-100 transition-colors hidden md:block">
         Sign In
       </a>
-      <button onclick="window.dispatchEvent(new Event('open-demo-form'))" class="px-5 py-2.5 bg-terracotta-600 text-white hover:bg-terracotta-500 rounded text-sm font-semibold transition-all">
+      <button onclick="window.dispatchEvent(new Event('open-demo-form'))" class="rounded-full px-5 py-2.5 bg-violet-600 text-white text-sm font-semibold hover:bg-violet-400 transition-all">
         Launch My App
       </button>
     </div>
   </div>
 </nav>
+
+<script>
+  const nav = document.querySelector('nav');
+  const onScroll = () => {
+    if (window.scrollY > window.innerHeight * 0.8) {
+      nav.classList.add('bg-ink-950', 'border-b', 'border-ink-border');
+      nav.classList.remove('bg-transparent');
+    } else {
+      nav.classList.remove('bg-ink-950', 'border-b', 'border-ink-border');
+      nav.classList.add('bg-transparent');
+    }
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+</script>

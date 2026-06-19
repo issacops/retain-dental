@@ -1,0 +1,51 @@
+# RetainOS
+
+RetainOS is a dental practice patient retention platform that replaces 6 separate tools (recall automation, loyalty program, patient portal, review generator, payment terminal, analytics, and automated aftercare) with one branded patient app.
+
+## Who it's for
+
+- Solo dental practices
+- Multi-location dental groups
+- Dental Service Organizations (DSOs)
+
+## Core features
+
+- **White-label patient app** — Custom-branded PWA for iOS and Android, no app store submission needed
+- **Recall automation** — Multi-channel (SMS, push, email) automated sequences to bring patients back
+- **Loyalty engine** — Points, tiers (Silver/Gold/Platinum), and household family pooling
+- **Review collection** — Post-visit automated review requests to grow Google rating
+- **Payment collection** — In-app card-on-file payments reducing outstanding balances
+- **Analytics dashboard** — Real-time retention metrics, churn prediction, VIP alerts
+- **Aftercare checklists** — Automated procedure-specific aftercare follow-ups via text/email
+- **Social post generator** — AI-powered branded social media content templates
+
+## Integrations
+
+- Dentrix
+- Eaglesoft
+- Open Dental
+- More PMS integrations available on Enterprise plans
+
+## Pricing
+
+- Starter: $299/month per location
+- Growth: $599/month per location
+- Enterprise: Custom pricing for DSOs and multi-location groups
+- Free 14-day trial available (no credit card required)
+
+## Key pages
+
+- Homepage: https://retaindental.com
+- Pricing: https://retaindental.com/pricing
+- Blog: https://retaindental.com/blog
+- DSO solutions: https://retaindental.com/dso
+- Solo practice: https://retaindental.com/solo-practice
+- vs Dentrix: https://retaindental.com/vs-dentrix
+- vs Yapi: https://retaindental.com/vs-yapi
+- Privacy policy: https://retaindental.com/privacy
+- Terms of service: https://retaindental.com/terms
+- HIPAA compliance: https://retaindental.com/hipaa
+- Security: https://retaindental.com/security
+- About: https://retaindental.com/about
+- Careers: https://retaindental.com/careers
+- Contact: https://retaindental.com/contact
