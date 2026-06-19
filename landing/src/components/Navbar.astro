@@ -2,31 +2,24 @@
 const { activeSection = 'hero' } = Astro.props;
 ---
 
-<nav class="fixed top-0 left-0 right-0 z-50 border-b border-gray-200/80 bg-cream-50/90 backdrop-blur-2xl">
+<nav class="fixed top-0 left-0 right-0 z-50 border-b border-clay-100 bg-cream-50/90 backdrop-blur-xl">
   <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
     <a href="/" class="flex items-center gap-3 group">
-      <div class="w-10 h-10 bg-gradient-to-br from-teal-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg shadow-teal-600/10 group-hover:shadow-teal-600/20 transition-shadow">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-      </div>
-      <span class="text-xl font-black text-slate-900 tracking-tighter">Retain<span class="text-teal-600">OS</span></span>
+      <span class="text-xl font-display font-medium text-clay-900 tracking-tighter">Retain<span class="text-terracotta-600">OS</span></span>
     </a>
 
     <div class="hidden lg:flex items-center gap-8">
-      <a href="/#how-it-works" class="text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors">How It Works</a>
-      <a href="/#features" class="text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors">Product</a>
-      <a href="/pricing" class="text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors">Pricing</a>
-      <a href="/blog" class="text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors">Resources</a>
-      <a href="/#faq" class="text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors">FAQ</a>
+      <a href="/how-it-works" class="text-sm font-medium text-clay-700 hover:text-clay-900 transition-colors">How It Works</a>
+      <a href="/pricing" class="text-sm font-medium text-clay-700 hover:text-clay-900 transition-colors">Product</a>
+      <a href="/blog" class="text-sm font-medium text-clay-700 hover:text-clay-900 transition-colors">Resources</a>
+      <a href="/#faq" class="text-sm font-medium text-clay-700 hover:text-clay-900 transition-colors">FAQ</a>
     </div>
 
     <div class="flex items-center gap-4">
-      <a href="https://app.retaindental.com" class="text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors hidden md:block">
+      <a href="https://app.retaindental.com" class="text-sm font-semibold text-clay-500 hover:text-clay-900 transition-colors hidden md:block">
         Sign In
       </a>
-      <a href="https://app.retaindental.com" class="hidden md:inline-block px-5 py-2.5 bg-white border border-gray-200 text-slate-700 hover:bg-cream-100 rounded-full text-xs font-black uppercase tracking-widest transition-all">
-        Free Trial
-      </a>
-      <button onclick="window.dispatchEvent(new Event('open-demo-form'))" class="px-5 py-2.5 bg-teal-600 text-white hover:bg-teal-700 rounded-full text-xs font-black uppercase tracking-widest transition-all shadow-lg shadow-teal-600/20 hover:shadow-teal-600/30">
+      <button onclick="window.dispatchEvent(new Event('open-demo-form'))" class="px-5 py-2.5 bg-terracotta-600 text-white hover:bg-terracotta-500 rounded text-sm font-semibold transition-all">
         Launch My App
       </button>
     </div>

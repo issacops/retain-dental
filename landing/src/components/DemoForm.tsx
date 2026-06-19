@@ -145,37 +145,37 @@ export default function DemoForm() {
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={close}>
       <div
-        className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto relative animate-in zoom-in-95 duration-300"
+          className="bg-cream-0 rounded max-w-4xl w-full max-h-[90vh] overflow-y-auto relative shadow-[0_8px_24px_rgba(43,29,20,0.08)]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close button */}
-        <button onClick={close} className="absolute top-5 right-5 z-10 w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center transition-colors">
+        <button onClick={close} className="absolute top-5 right-5 z-10 w-10 h-10 rounded bg-clay-100 hover:bg-clay-300 flex items-center justify-center transition-colors">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
 
         {state === 'success' ? (
           <div className="p-12 text-center space-y-6">
-            <div className="w-20 h-20 bg-teal-100 rounded-full flex items-center justify-center mx-auto">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#0d9488" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <div className="w-20 h-20 bg-sage-100 rounded-full flex items-center justify-center mx-auto">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#5C7A5E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
             </div>
             <div>
-              <h3 className="text-3xl font-black text-slate-900 mb-3">You're in.</h3>
-              <p className="text-slate-500 text-lg leading-relaxed max-w-md mx-auto">We'll be in touch within 24 hours to schedule your personalized 30-minute demo.</p>
+              <h3 className="text-3xl font-display font-[540] text-clay-900 mb-3">You're in.</h3>
+              <p className="text-clay-700 text-lg leading-relaxed max-w-md mx-auto">We'll be in touch within 24 hours to schedule your personalized 30-minute demo.</p>
             </div>
-            <div className="p-6 rounded-2xl bg-cream-50 border border-cream-200 max-w-md mx-auto">
-              <p className="text-sm text-slate-600 leading-relaxed">While you wait: a walkthrough of your branded patient app, a custom migration plan, and a live Q&A with our team.</p>
+            <div className="p-6 rounded bg-cream-50 border border-clay-100 max-w-md mx-auto">
+              <p className="text-sm text-clay-700 leading-relaxed">While you wait: a walkthrough of your branded patient app, a custom migration plan, and a live Q&A with our team.</p>
             </div>
-            <button onClick={close} className="px-8 py-3 bg-teal-600 text-white rounded-full font-bold hover:bg-teal-700 transition-colors">
+            <button onClick={close} className="px-8 py-3 bg-terracotta-600 text-cream-0 rounded font-semibold hover:bg-terracotta-500 transition-colors">
               Close
             </button>
           </div>
         ) : (
           <div className="grid lg:grid-cols-2 gap-0">
             {/* Left side - info */}
-            <div className="p-8 lg:p-10 bg-cream-50 rounded-l-3xl space-y-6">
+            <div className="p-8 lg:p-10 bg-cream-50 space-y-6">
               <div>
-                <h2 className="text-2xl lg:text-3xl font-black text-slate-900 tracking-tight mb-3">What to expect from<br/>your RetainOS demo</h2>
-                <p className="text-slate-500 leading-relaxed text-sm">See how RetainOS replaces your recall, loyalty, and review tools with one branded patient app.</p>
+                <h2 className="text-2xl lg:text-3xl font-display font-[540] text-clay-900 tracking-tight mb-3">What to expect from<br/>your RetainOS demo</h2>
+                <p className="text-clay-700 leading-relaxed text-sm">See how RetainOS replaces your recall, loyalty, and review tools with one branded patient app.</p>
               </div>
 
               <div className="space-y-4">
@@ -186,25 +186,25 @@ export default function DemoForm() {
                   'See how <strong>12 pilot clinics</strong> increased retention by 4.2x in 90 days',
                 ].map((text, i) => (
                   <div key={i} className="flex items-start gap-3">
-                    <div className="w-6 h-6 rounded-full bg-teal-100 flex items-center justify-center shrink-0 mt-0.5">
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0d9488" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    <div className="w-6 h-6 rounded bg-terracotta-100 flex items-center justify-center shrink-0 mt-0.5">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#C1572D" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                     </div>
-                    <p className="text-slate-700 text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: text }} />
+                    <p className="text-clay-700 text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: text }} />
                   </div>
                 ))}
               </div>
 
-              <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-cream-200">
-                <span className="flex items-center gap-1.5 text-xs text-slate-500">
-                  <svg className="w-3.5 h-3.5 text-teal-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-clay-100">
+                <span className="flex items-center gap-1.5 text-xs text-clay-500">
+                  <svg className="w-3.5 h-3.5 text-sage-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
                   HIPAA-ready
                 </span>
-                <span className="flex items-center gap-1.5 text-xs text-slate-500">
-                  <svg className="w-3.5 h-3.5 text-teal-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span className="flex items-center gap-1.5 text-xs text-clay-500">
+                  <svg className="w-3.5 h-3.5 text-sage-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
                   Dentrix & Eaglesoft
                 </span>
-                <span className="flex items-center gap-1.5 text-xs text-slate-500">
-                  <svg className="w-3.5 h-3.5 text-teal-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span className="flex items-center gap-1.5 text-xs text-clay-500">
+                  <svg className="w-3.5 h-3.5 text-sage-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
                   20 min setup
                 </span>
               </div>
@@ -214,34 +214,34 @@ export default function DemoForm() {
             <div className="p-8 lg:p-10">
               <form onSubmit={submit} className="space-y-4">
                 <div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-1">Request a personalized demo</h3>
-                  <p className="text-sm text-slate-500">Fill out the form and we'll schedule a 30-minute session.</p>
+                  <h3 className="text-xl font-semibold text-clay-900 mb-1">Request a personalized demo</h3>
+                  <p className="text-sm text-clay-500">Fill out the form and we'll schedule a 30-minute session.</p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">Full Name *</label>
-                  <input type="text" required value={form.name} onInput={(e) => update('name', (e.target as HTMLInputElement).value)} placeholder="Dr. Jane Smith" className="w-full px-4 py-3 rounded-xl border border-cream-300 bg-cream-50 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-sm" />
+                  <label className="block text-sm font-semibold text-clay-700 mb-1.5">Full Name *</label>
+                  <input type="text" required value={form.name} onInput={(e) => update('name', (e.target as HTMLInputElement).value)} placeholder="Dr. Jane Smith" className="w-full px-4 py-3 rounded border border-clay-300 bg-cream-50 text-clay-900 placeholder-clay-500 focus:outline-none focus:ring-2 focus:ring-terracotta-500 focus:border-transparent transition-all text-sm" />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">Work Email *</label>
-                  <input type="email" required value={form.email} onInput={(e) => update('email', (e.target as HTMLInputElement).value)} placeholder="jane@practice.com" className="w-full px-4 py-3 rounded-xl border border-cream-300 bg-cream-50 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-sm" />
+                  <label className="block text-sm font-semibold text-clay-700 mb-1.5">Work Email *</label>
+                  <input type="email" required value={form.email} onInput={(e) => update('email', (e.target as HTMLInputElement).value)} placeholder="jane@practice.com" className="w-full px-4 py-3 rounded border border-clay-300 bg-cream-50 text-clay-900 placeholder-clay-500 focus:outline-none focus:ring-2 focus:ring-terracotta-500 focus:border-transparent transition-all text-sm" />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">Phone *</label>
+                  <label className="block text-sm font-semibold text-clay-700 mb-1.5">Phone *</label>
                   <PhoneInput value={form.phone} countryCode={form.countryCode} onPhoneChange={(v) => update('phone', v)} onCountryChange={(v) => update('countryCode', v)} />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">Practice Name</label>
-                  <input type="text" value={form.clinic} onInput={(e) => update('clinic', (e.target as HTMLInputElement).value)} placeholder="Your Practice Name" className="w-full px-4 py-3 rounded-xl border border-cream-300 bg-cream-50 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-sm" />
+                  <label className="block text-sm font-semibold text-clay-700 mb-1.5">Practice Name</label>
+                  <input type="text" value={form.clinic} onInput={(e) => update('clinic', (e.target as HTMLInputElement).value)} placeholder="Your Practice Name" className="w-full px-4 py-3 rounded border border-clay-300 bg-cream-50 text-clay-900 placeholder-clay-500 focus:outline-none focus:ring-2 focus:ring-terracotta-500 focus:border-transparent transition-all text-sm" />
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-1.5">Practice Type</label>
-                    <select value={form.practiceType} onChange={(e) => update('practiceType', (e.target as HTMLSelectElement).value)} className="w-full px-4 py-3 rounded-xl border border-cream-300 bg-cream-50 text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all appearance-none text-sm">
+                    <label className="block text-sm font-semibold text-clay-700 mb-1.5">Practice Type</label>
+                    <select value={form.practiceType} onChange={(e) => update('practiceType', (e.target as HTMLSelectElement).value)} className="w-full px-4 py-3 rounded border border-clay-300 bg-cream-50 text-clay-900 focus:outline-none focus:ring-2 focus:ring-terracotta-500 focus:border-transparent transition-all appearance-none text-sm">
                       <option value="">Select...</option>
                       <option value="solo">Solo Practice</option>
                       <option value="multi">Multi-Location</option>
@@ -249,20 +249,20 @@ export default function DemoForm() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-1.5">Locations</label>
-                    <input type="number" min="1" value={form.locations} onInput={(e) => update('locations', (e.target as HTMLInputElement).value)} placeholder="e.g. 3" className="w-full px-4 py-3 rounded-xl border border-cream-300 bg-cream-50 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-sm" />
+                    <label className="block text-sm font-semibold text-clay-700 mb-1.5">Locations</label>
+                    <input type="number" min="1" value={form.locations} onInput={(e) => update('locations', (e.target as HTMLInputElement).value)} placeholder="e.g. 3" className="w-full px-4 py-3 rounded border border-clay-300 bg-cream-50 text-clay-900 placeholder-clay-500 focus:outline-none focus:ring-2 focus:ring-terracotta-500 focus:border-transparent transition-all text-sm" />
                   </div>
                 </div>
 
-                <button type="submit" disabled={state === 'submitting'} className="w-full py-4 bg-gradient-to-r from-teal-500 to-teal-600 text-white rounded-xl font-bold text-lg hover:scale-[1.02] hover:shadow-xl hover:shadow-teal-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-2">
+                <button type="submit" disabled={state === 'submitting'} className="w-full py-4 bg-terracotta-600 text-cream-0 rounded font-semibold text-lg hover:bg-terracotta-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-2">
                   {state === 'submitting' ? 'Submitting...' : 'Book My Demo'}
                 </button>
 
                 {state === 'error' && (
-                  <p className="text-center text-sm text-rose-600">Something went wrong. Please try again.</p>
+                  <p className="text-center text-sm text-ink-error">Something went wrong. Please try again.</p>
                 )}
 
-                <p className="text-center text-xs text-slate-400">By submitting, you agree to our <a href="/privacy" className="underline hover:text-slate-600">Privacy Policy</a>.</p>
+                <p className="text-center text-xs text-clay-500">By submitting, you agree to our <a href="/privacy" className="underline hover:text-clay-700">Privacy Policy</a>.</p>
               </form>
             </div>
           </div>
