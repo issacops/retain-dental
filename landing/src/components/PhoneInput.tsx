@@ -91,22 +91,22 @@ export default function PhoneInput({ value, countryCode, onPhoneChange, onCountr
         <button
           type="button"
           onClick={() => setOpen(!open)}
-          className="flex items-center gap-1.5 px-3 py-3 bg-cream-50 border border-r-0 border-cream-300 rounded-l-xl text-sm font-medium text-slate-700 hover:bg-cream-100 transition-colors shrink-0"
+          className="flex items-center gap-1.5 px-3 py-3 bg-cream-50 border border-r-0 border-clay-300 rounded-l text-sm font-medium text-clay-700 hover:bg-clay-100 transition-colors shrink-0"
         >
           <span className="text-base">{selected.flag}</span>
           <span>{selected.dial}</span>
-          <svg className={`w-3 h-3 text-slate-400 transition-transform ${open ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M6 9l6 6 6-6"/></svg>
+          <svg className={`w-3 h-3 text-clay-500 transition-transform ${open ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M6 9l6 6 6-6"/></svg>
         </button>
 
         {open && (
-          <div className="absolute top-full left-0 z-50 mt-1 w-72 bg-white border border-cream-200 rounded-xl shadow-2xl overflow-hidden">
-            <div className="p-2 border-b border-cream-100">
+          <div className="absolute top-full left-0 z-50 mt-1 w-72 bg-cream-0 border border-clay-300 rounded shadow-2xl overflow-hidden">
+            <div className="p-2 border-b border-clay-100">
               <input
                 type="text"
                 value={search}
                 onInput={(e) => setSearch((e.target as HTMLInputElement).value)}
                 placeholder="Search country..."
-                className="w-full px-3 py-2 text-sm bg-cream-50 border border-cream-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-3 py-2 text-sm bg-cream-50 border border-clay-300 rounded focus:outline-none focus:ring-2 focus:ring-terracotta-500"
                 autoFocus
               />
             </div>
@@ -116,11 +116,11 @@ export default function PhoneInput({ value, countryCode, onPhoneChange, onCountr
                   key={c.code}
                   type="button"
                   onClick={() => { onCountryChange(c.dial); setOpen(false); setSearch('') }}
-                  className={`w-full flex items-center gap-3 px-3 py-2 text-sm hover:bg-teal-50 transition-colors ${c.dial === countryCode ? 'bg-teal-50 text-teal-700 font-semibold' : 'text-slate-700'}`}
+                  className={`w-full flex items-center gap-3 px-3 py-2 text-sm hover:bg-terracotta-100 transition-colors ${c.dial === countryCode ? 'bg-terracotta-100 text-terracotta-600 font-semibold' : 'text-clay-700'}`}
                 >
                   <span className="text-base">{c.flag}</span>
                   <span className="flex-1 text-left">{c.name}</span>
-                  <span className="text-slate-400 font-mono text-xs">{c.dial}</span>
+                  <span className="text-clay-500 font-mono text-xs">{c.dial}</span>
                 </button>
               ))}
             </div>
@@ -132,7 +132,7 @@ export default function PhoneInput({ value, countryCode, onPhoneChange, onCountr
           value={value}
           onInput={(e) => onPhoneChange((e.target as HTMLInputElement).value)}
           placeholder="(555) 123-4567"
-          className="flex-1 px-4 py-3 bg-cream-50 border border-cream-300 rounded-r-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
+          className="flex-1 px-4 py-3 bg-cream-50 border border-clay-300 rounded-r text-clay-900 placeholder:text-clay-500 focus:outline-none focus:ring-2 focus:ring-terracotta-500 focus:border-transparent transition-all"
         />
       </div>
     </div>
