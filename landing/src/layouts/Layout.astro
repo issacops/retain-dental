@@ -18,7 +18,7 @@ export interface Props {
 
 const {
   title = 'RetainOS — The Operating System for Modern Dental Practices',
-  description = 'Launch your custom-branded dental patient app in 20 minutes. Automate recalls, loyalty, and payments with a HIPAA-ready platform built to grow your practice.',
+  description = 'Launch your branded dental patient app in 20 minutes. Automate recalls, loyalty, and payments with a HIPAA-ready platform for your practice.',
   image = '/assets/screens/landing-preview.png',
   pageType = 'website',
   keywords,
@@ -211,6 +211,7 @@ const breadcrumbSchema = breadcrumbs && breadcrumbs.length > 0 ? {
     <link rel="canonical" href={pageUrl} />
     <link rel="alternate" hrefLang="en" href={pageUrl} />
     <link rel="alternate" hrefLang="x-default" href={pageUrl} />
+    <link rel="alternate" hrefLang="en" href={`${siteUrl}${Astro.url.pathname}`} />
 
     <meta property="og:type" content={pageType} />
     <meta property="og:url" content={pageUrl} />

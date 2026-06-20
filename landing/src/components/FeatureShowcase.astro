@@ -79,7 +79,7 @@ const features = [
         A retention system, not a point solution
       </h2>
       <p class="text-white/70 text-[clamp(1rem,1.5vw,1.125rem)] mt-4 max-w-2xl mx-auto">
-        A unified platform working in sync, so nothing slips through the cracks.
+        One platform that works as one, so nothing falls through.
       </p>
     </div>
 
@@ -109,25 +109,25 @@ const features = [
                 </div>
               </div>
               <div>
-                {feature.component === 'FeaturePatientPwa' && <FeaturePatientPwa client:load />}
-                {feature.component === 'FeatureRecall' && <FeatureRecall client:load />}
-                {feature.component === 'FeatureAftercare' && <FeatureAftercare client:load />}
-                {feature.component === 'FeatureLoyalty' && <FeatureLoyalty client:load />}
-                {feature.component === 'FeatureSocial' && <FeatureSocial client:load />}
-                {feature.component === 'FeatureDashboard' && <FeatureDashboard client:load />}
-                {feature.component === 'FeatureReviews' && <FeatureReviews client:load />}
+                {feature.component === 'FeaturePatientPwa' && <FeaturePatientPwa client:visible />}
+                {feature.component === 'FeatureRecall' && <FeatureRecall client:visible />}
+                {feature.component === 'FeatureAftercare' && <FeatureAftercare client:visible />}
+                {feature.component === 'FeatureLoyalty' && <FeatureLoyalty client:visible />}
+                {feature.component === 'FeatureSocial' && <FeatureSocial client:visible />}
+                {feature.component === 'FeatureDashboard' && <FeatureDashboard client:visible />}
+                {feature.component === 'FeatureReviews' && <FeatureReviews client:visible />}
               </div>
             </>
           ) : (
             <>
               <div class="order-2 lg:order-1">
-                {feature.component === 'FeaturePatientPwa' && <FeaturePatientPwa client:load />}
-                {feature.component === 'FeatureRecall' && <FeatureRecall client:load />}
-                {feature.component === 'FeatureAftercare' && <FeatureAftercare client:load />}
-                {feature.component === 'FeatureLoyalty' && <FeatureLoyalty client:load />}
-                {feature.component === 'FeatureSocial' && <FeatureSocial client:load />}
-                {feature.component === 'FeatureDashboard' && <FeatureDashboard client:load />}
-                {feature.component === 'FeatureReviews' && <FeatureReviews client:load />}
+                {feature.component === 'FeaturePatientPwa' && <FeaturePatientPwa client:visible />}
+                {feature.component === 'FeatureRecall' && <FeatureRecall client:visible />}
+                {feature.component === 'FeatureAftercare' && <FeatureAftercare client:visible />}
+                {feature.component === 'FeatureLoyalty' && <FeatureLoyalty client:visible />}
+                {feature.component === 'FeatureSocial' && <FeatureSocial client:visible />}
+                {feature.component === 'FeatureDashboard' && <FeatureDashboard client:visible />}
+                {feature.component === 'FeatureReviews' && <FeatureReviews client:visible />}
               </div>
               <div class="order-1 lg:order-2">
                 <span class="text-[40px] font-black text-white/20 leading-none">{feature.number}</span>

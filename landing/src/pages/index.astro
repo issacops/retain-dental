@@ -14,7 +14,10 @@ import Footer from '../components/Footer.astro'
 import DemoForm from '../components/DemoForm'
 ---
 
-<Layout title="RetainOS — Launch Your Branded Dental Patient App in 20 Minutes">
+<Layout
+  title="RetainOS — Launch Your Branded Dental App in 20 Minutes"
+  breadcrumbs={[{ name: 'Home', url: '/' }]}
+>
   <Hero />
   <div class="reveal"><ProblemSection /></div>
   <div class="reveal"><SolutionSection /></div>
@@ -24,7 +27,7 @@ import DemoForm from '../components/DemoForm'
   <div class="reveal"><SecuritySection /></div>
   <div class="reveal"><IntegrationsSection /></div>
   <div class="reveal"><CTA /></div>
-  <DemoForm client:load />
+  <DemoForm client:visible />
 
   <style>
     .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.5s ease-out, transform 0.5s ease-out; }
