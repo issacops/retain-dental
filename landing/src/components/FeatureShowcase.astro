@@ -1,12 +1,4 @@
 ---
-import FeaturePatientPwa from './demos/FeaturePatientPwa';
-import FeatureRecall from './demos/FeatureRecall';
-import FeatureAftercare from './demos/FeatureAftercare';
-import FeatureLoyalty from './demos/FeatureLoyalty';
-import FeatureSocial from './demos/FeatureSocial';
-import FeatureReviews from './demos/FeatureReviews';
-import FeatureDashboard from './demos/FeatureDashboard';
-
 const features = [
   {
     id: 'patient-app',
@@ -15,7 +7,8 @@ const features = [
     headline: 'Your branded app. Patients actually use it.',
     description: 'A branded app with wallet, care plans, booking, and loyalty — no app store needed.',
     details: ['Digital wallet with loyalty points', 'Daily care rituals with tap-to-complete', 'Household family pooling', 'In-app appointment booking'],
-    component: 'FeaturePatientPwa',
+    image: '/screens/patient-login-form.png',
+    alt: 'Patient access login with Health Key PIN entry',
     align: 'left',
   },
   {
@@ -25,7 +18,8 @@ const features = [
     headline: '3x more patients come back automatically.',
     description: 'Multi-channel sequences that bring back no-show patients with zero manual calls.',
     details: ['SMS + email + push sequences', 'Missed-appointment reactivation', 'Post-treatment aftercare follow-ups', 'Zero manual phone calls needed'],
-    component: 'FeatureRecall',
+    image: '/screens/login-choice.png',
+    alt: 'RetainOS login choice between Patient Access and Clinic Workspace',
     align: 'right',
   },
   {
@@ -35,7 +29,8 @@ const features = [
     headline: 'Aftercare that follows up itself.',
     description: 'Procedure-specific checklists that text and email patients exactly when needed.',
     details: ['Procedure-specific task templates', 'Automated SMS/email reminders', 'Progress tracking with confirmations', 'Integration with recall scheduling'],
-    component: 'FeatureAftercare',
+    image: '/screens/activate-account.png',
+    alt: 'Account activation screen for new clinic users',
     align: 'left',
   },
   {
@@ -45,7 +40,8 @@ const features = [
     headline: 'Points, tiers & family pooling.',
     description: 'A loyalty program patients love. Member → Gold → Platinum tiers with family pooling that drives 68% higher value.',
     details: ['Points for visits, referrals, reviews', '3-tier VIP progression', 'Household point pooling', 'Reward redemption catalog'],
-    component: 'FeatureLoyalty',
+    image: '/screens/doctor-login.png',
+    alt: 'Clinic Workspace secure login for doctors and staff',
     align: 'right',
   },
   {
@@ -55,7 +51,8 @@ const features = [
     headline: 'AI-powered social content in seconds.',
     description: 'Branded social posts from templates — stories, myth busters, reviews, and offers.',
     details: ['5 post templates (Trust, Education, Sales)', 'Auto-branded with your logo + colors', 'Download or share to Instagram', '87% faster recall response rate'],
-    component: 'FeatureSocial',
+    image: '/screens/doctor-login-filled.png',
+    alt: 'Clinic Workspace with credentials entered ready to login',
     align: 'left',
   },
   {
@@ -65,7 +62,8 @@ const features = [
     headline: 'All your metrics. One dashboard.',
     description: 'Revenue, retention, reviews, and loyalty — one real-time dashboard. No more spreadsheets.',
     details: ['Real-time KPI tracking', 'Retention trend charts', 'Household leaderboard', 'Churn risk alerts with AI insights'],
-    component: 'FeatureDashboard',
+    image: '/screens/login-choice.png',
+    alt: 'RetainOS platform entry with role-based access',
     align: 'right',
   },
 ];
@@ -74,7 +72,7 @@ const features = [
 <section class="relative py-24 px-6 bg-ink-900 overflow-hidden border-b border-white/5" id="features">
   <div class="max-w-6xl mx-auto relative z-10">
     <div class="text-center max-w-3xl mx-auto mb-16">
-      <p class="text-xs font-semibold text-violet-400 uppercase tracking-[0.15em] mb-4">How RetainOS works</p>
+      <p class="text-xs font-semibold text-amber-400 uppercase tracking-[0.15em] mb-4">How RetainOS works</p>
       <h2 class="text-[clamp(1.75rem,3.5vw,2.75rem)] font-bold text-white leading-[1.05] tracking-tight text-balance">
         A retention system, not a point solution
       </h2>
@@ -83,74 +81,49 @@ const features = [
       </p>
     </div>
 
-    {features.map((feature, idx) => (
+    {features.map((feature) => (
       <div class="mb-16 last:mb-0">
-        <div class={`grid lg:grid-cols-2 gap-10 lg:gap-16 items-center ${feature.align === 'right' ? '' : ''}`}>
-          {feature.align === 'left' ? (
-            <>
-              <div>
-                <span class="text-[40px] font-black text-white/20 leading-none">{feature.number}</span>
-                <div class="flex items-center gap-2 mt-2 mb-3">
-                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                  <span class="text-xs font-semibold text-white/80 uppercase tracking-[0.12em]">{feature.title}</span>
+        <div class={`grid lg:grid-cols-2 gap-10 lg:gap-16 items-center`}>
+          <div class={feature.align === 'right' ? 'order-2 lg:order-1' : ''}>
+            <span class="text-[40px] font-black text-white/20 leading-none">{feature.number}</span>
+            <div class="flex items-center gap-2 mt-2 mb-3">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              <span class="text-xs font-semibold text-white/80 uppercase tracking-[0.12em]">{feature.title}</span>
+            </div>
+            <h3 class="text-[clamp(1.5rem,2.5vw,1.75rem)] font-black text-white leading-[1.1] tracking-tighter mb-4">{feature.headline}</h3>
+            <p class="text-white/70 leading-relaxed mb-6">{feature.description}</p>
+            <div class="space-y-2">
+              {feature.details.map((detail) => (
+                <div class="flex items-center gap-2.5 text-sm text-white/70">
+                  <svg class="w-4 h-4 text-amber-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  {detail}
                 </div>
-                <h3 class="text-[clamp(1.5rem,2.5vw,1.75rem)] font-black text-white leading-[1.1] tracking-tighter mb-4">{feature.headline}</h3>
-                <p class="text-white/70 leading-relaxed mb-6">{feature.description}</p>
-                <div class="space-y-2">
-                  {feature.details.map((detail) => (
-                    <div class="flex items-center gap-2.5 text-sm text-white/70">
-                      <svg class="w-4 h-4 text-violet-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                      {detail}
-                    </div>
-                  ))}
-                </div>
-                <div class="mt-4 text-xs text-white/50">
-                  <span class="font-semibold text-white/80">Works with:</span> Integrates with scheduling, billing, and patient data
-                </div>
-              </div>
-              <div>
-                {feature.component === 'FeaturePatientPwa' && <FeaturePatientPwa client:visible />}
-                {feature.component === 'FeatureRecall' && <FeatureRecall client:visible />}
-                {feature.component === 'FeatureAftercare' && <FeatureAftercare client:visible />}
-                {feature.component === 'FeatureLoyalty' && <FeatureLoyalty client:visible />}
-                {feature.component === 'FeatureSocial' && <FeatureSocial client:visible />}
-                {feature.component === 'FeatureDashboard' && <FeatureDashboard client:visible />}
-                {feature.component === 'FeatureReviews' && <FeatureReviews client:visible />}
-              </div>
-            </>
-          ) : (
-            <>
-              <div class="order-2 lg:order-1">
-                {feature.component === 'FeaturePatientPwa' && <FeaturePatientPwa client:visible />}
-                {feature.component === 'FeatureRecall' && <FeatureRecall client:visible />}
-                {feature.component === 'FeatureAftercare' && <FeatureAftercare client:visible />}
-                {feature.component === 'FeatureLoyalty' && <FeatureLoyalty client:visible />}
-                {feature.component === 'FeatureSocial' && <FeatureSocial client:visible />}
-                {feature.component === 'FeatureDashboard' && <FeatureDashboard client:visible />}
-                {feature.component === 'FeatureReviews' && <FeatureReviews client:visible />}
-              </div>
-              <div class="order-1 lg:order-2">
-                <span class="text-[40px] font-black text-white/20 leading-none">{feature.number}</span>
-                <div class="flex items-center gap-2 mt-2 mb-3">
-                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                  <span class="text-xs font-semibold text-white/80 uppercase tracking-[0.12em]">{feature.title}</span>
-                </div>
-                <h3 class="text-[clamp(1.5rem,2.5vw,1.75rem)] font-black text-white leading-[1.1] tracking-tighter mb-4">{feature.headline}</h3>
-                <p class="text-white/70 leading-relaxed mb-6">{feature.description}</p>
-                <div class="space-y-2">
-                  {feature.details.map((detail) => (
-                    <div class="flex items-center gap-2.5 text-sm text-white/70">
-                      <svg class="w-4 h-4 text-violet-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                      {detail}
-                    </div>
-                  ))}
-                </div>
-                <div class="mt-4 text-xs text-white/50">
-                  <span class="font-semibold text-white/80">Works with:</span> Integrates with scheduling, billing, and patient data
+              ))}
+            </div>
+            <div class="mt-4 text-xs text-white/50">
+              <span class="font-semibold text-white/80">Works with:</span> Integrates with scheduling, billing, and patient data
+            </div>
+          </div>
+          <div class={feature.align === 'right' ? 'order-1 lg:order-2' : ''}>
+            <div class="rounded-xl overflow-hidden border border-white/10 shadow-2xl shadow-amber-900/10 bg-white/5">
+              <div class="flex items-center gap-1.5 px-4 py-2.5 bg-white/[0.03] border-b border-white/5">
+                <div class="w-3 h-3 rounded-full bg-red-400/70"></div>
+                <div class="w-3 h-3 rounded-full bg-amber-400/70"></div>
+                <div class="w-3 h-3 rounded-full bg-emerald-400/70"></div>
+                <div class="ml-3 flex-1 max-w-[240px]">
+                  <div class="h-5 rounded bg-white/5 flex items-center px-2">
+                    <span class="text-[9px] text-white/30 font-mono truncate">app.retaindental.com</span>
+                  </div>
                 </div>
               </div>
-            </>
-          )}
+              <img
+                src={feature.image}
+                alt={feature.alt}
+                class="w-full h-auto block"
+                loading="lazy"
+              />
+            </div>
+          </div>
         </div>
       </div>
     ))}
