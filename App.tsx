@@ -613,12 +613,6 @@ const App = () => {
       <ErrorBoundary>
         <BrowserRouter>
           <Routes>
-            {/* Root handled by AppRouter (no landing page) */}
-            <Route path="/" element={<AppRouter appState={data} handlers={handlers} backendService={backendService} />} />
-
-
-
-            {/* Catch-all for App usage (once logged in or if subdomain exists) */}
             <Route path="/*" element={
               <>
                 <AuthHandler currentUser={data.currentUser} onRoleChange={() => { }} />

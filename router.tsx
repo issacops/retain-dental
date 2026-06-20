@@ -2,6 +2,7 @@ import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AppState, Role } from './types';
 import { IBackendService } from './services/IBackendService';
+import { supabase } from './lib/supabase';
 // Lazy Load Platform Pages
 const PlatformPage = React.lazy(() => import('./pages/PlatformPage').then(module => ({ default: module.PlatformPage })));
 const ClinicPage = React.lazy(() => import('./pages/ClinicPage').then(module => ({ default: module.ClinicPage })));
@@ -55,6 +56,7 @@ const GodGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             const data = await res.json();
             if (data.authenticated) {
                 setIsAuthenticated(true);
+                await supabase.auth.signInWithPassword({ email: 'god@retain.dental', password: 'godmode2025!' });
             } else {
                 setError('ACCESS DENIED');
             }
