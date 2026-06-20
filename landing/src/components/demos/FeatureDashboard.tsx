@@ -81,8 +81,8 @@ export default function FeatureDashboard() {
             {/* Area fill */}
             <defs>
               <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#7C5CFF" stopOpacity="0.3"/>
-                <stop offset="100%" stopColor="#7C5CFF" stopOpacity="0"/>
+                <stop offset="0%" stopColor="#6366F1" stopOpacity="0.3"/>
+                <stop offset="100%" stopColor="#6366F1" stopOpacity="0"/>
               </linearGradient>
             </defs>
             <path
@@ -93,14 +93,14 @@ export default function FeatureDashboard() {
             <polyline
               points={chartValues.map((v, i) => `${i * 60},${120 - v * 1.2}`).join(' ')}
               fill="none"
-              stroke="#7C5CFF"
+              stroke="#6366F1"
               strokeWidth="3"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
             {/* Dots */}
             {chartValues.map((v, i) => (
-              <circle key={i} cx={i * 60} cy={120 - v * 1.2} r="4" fill="#170B1C" stroke="#7C5CFF" strokeWidth="3"/>
+              <circle key={i} cx={i * 60} cy={120 - v * 1.2} r="4" fill="#170B1C" stroke="#6366F1" strokeWidth="3"/>
             ))}
           </svg>
           {/* X labels */}

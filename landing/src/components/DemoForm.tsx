@@ -156,7 +156,7 @@ export default function DemoForm() {
         {state === 'success' ? (
           <div className="p-12 text-center space-y-6">
             <div className="w-20 h-20 bg-violet-600/20 rounded-full flex items-center justify-center mx-auto">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#7C5CFF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#6366F1" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
             </div>
             <div>
               <h3 className="text-3xl font-sans font-[400] text-onDark-100 mb-3">You're in.</h3>

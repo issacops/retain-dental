@@ -192,7 +192,7 @@ export default function FeatureSocial() {
                   <StarIcon key={s} className="w-4 h-4 text-amber-300 fill-amber-300" />
                 ))}
               </div>
-              <h3 className="text-lg font-bold mb-4 leading-tight font-serif italic">
+              <h3 className="text-lg font-bold mb-4 leading-tight italic">
                 &ldquo;Best dental experience I&apos;ve ever had. The team made me feel so comfortable!&rdquo;
               </h3>
               <p className="text-xs font-bold uppercase tracking-wider text-white/80">Sarah J.</p>
