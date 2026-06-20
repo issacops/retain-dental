@@ -2,39 +2,51 @@
 const { activeSection = 'hero' } = Astro.props;
 ---
 
-<nav class="fixed top-0 left-0 right-0 z-50 bg-transparent transition-all duration-300">
-  <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-    <a href="/" class="flex items-center gap-3 group">
-      <span class="text-lg font-sans text-onDark-100 tracking-tight">Retain<span class="text-violet-400">OS</span></span>
-    </a>
-
-    <div class="hidden lg:flex items-center gap-8">
-      <a href="/how-it-works" class="text-sm font-medium font-sans text-onDark-500 hover:text-onDark-100 transition-colors">How It Works</a>
-      <a href="/pricing" class="text-sm font-medium font-sans text-onDark-500 hover:text-onDark-100 transition-colors">Product</a>
-      <a href="/blog" class="text-sm font-medium font-sans text-onDark-500 hover:text-onDark-100 transition-colors">Resources</a>
-      <a href="/#faq" class="text-sm font-medium font-sans text-onDark-500 hover:text-onDark-100 transition-colors">FAQ</a>
-    </div>
-
-    <div class="flex items-center gap-4">
-      <a href="https://app.retaindental.com" class="text-sm font-semibold font-sans text-onDark-500 hover:text-onDark-100 transition-colors hidden md:block">
-        Sign In
+<nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-500">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="flex items-center justify-between h-20 border-b border-transparent transition-all duration-500">
+      <a href="/" class="flex items-center gap-2 group shrink-0">
+        <div class="w-8 h-8 rounded-lg bg-violet-600 flex items-center justify-center">
+          <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <span class="text-lg font-semibold text-onDark-100 tracking-tight">Retain<span class="text-violet-400">OS</span></span>
       </a>
-      <button onclick="window.dispatchEvent(new Event('open-demo-form'))" class="rounded-full px-5 py-2.5 bg-violet-600 text-white text-sm font-semibold hover:bg-violet-400 transition-all">
-        Launch My App
-      </button>
+
+      <div class="hidden lg:flex items-center gap-10">
+        <a href="/" class="text-sm font-medium text-onDark-500 hover:text-onDark-100 transition-colors duration-200">Home</a>
+        <a href="/pricing" class="text-sm font-medium text-onDark-500 hover:text-onDark-100 transition-colors duration-200">Product</a>
+        <a href="/how-it-works" class="text-sm font-medium text-onDark-500 hover:text-onDark-100 transition-colors duration-200">How It Works</a>
+        <a href="/blog" class="text-sm font-medium text-onDark-500 hover:text-onDark-100 transition-colors duration-200">Blog</a>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <a href="https://app.retaindental.com" class="text-sm font-medium text-onDark-500 hover:text-onDark-100 transition-colors duration-200 hidden md:block">
+          Sign In
+        </a>
+        <button onclick="window.dispatchEvent(new Event('open-demo-form'))" class="rounded-full px-6 py-2.5 bg-violet-600 text-white text-sm font-semibold hover:bg-violet-500 transition-all duration-200 shadow-glow hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]">
+          Build My App
+        </button>
+      </div>
     </div>
   </div>
 </nav>
 
 <script>
   const nav = document.querySelector('nav');
+  const inner = nav.querySelector('div > div');
   const onScroll = () => {
-    if (window.scrollY > window.innerHeight * 0.8) {
-      nav.classList.add('bg-ink-950', 'border-b', 'border-ink-border');
-      nav.classList.remove('bg-transparent');
+    if (window.scrollY > 64) {
+      nav.style.background = 'rgba(8,6,10,0.85)';
+      nav.style.backdropFilter = 'blur(12px)';
+      nav.style.webkitBackdropFilter = 'blur(12px)';
+      nav.style.borderBottom = '1px solid rgba(46,30,64,0.5)';
+      inner.style.borderBottomColor = 'transparent';
     } else {
-      nav.classList.remove('bg-ink-950', 'border-b', 'border-ink-border');
-      nav.classList.add('bg-transparent');
+      nav.style.background = 'transparent';
+      nav.style.backdropFilter = 'none';
+      nav.style.webkitBackdropFilter = 'none';
+      nav.style.borderBottom = 'none';
+      inner.style.borderBottomColor = 'transparent';
     }
   };
   window.addEventListener('scroll', onScroll, { passive: true });

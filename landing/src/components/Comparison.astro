@@ -1,73 +1,102 @@
-<section class="py-24 px-6 bg-paper-50 relative overflow-hidden">
-  <div class="max-w-7xl mx-auto">
-    <div class="text-center max-w-2xl mx-auto mb-16 space-y-4">
-      <h2 class="font-sans font-[400] text-4xl md:text-5xl tracking-tight">
-        Old Way vs. <span class="font-serif italic text-violet-600">RetainOS</span>
+---
+const oldWay = [
+  "Patients call to book — and hang up if you don\u2019t answer",
+  "Front desk spends 15+ min per recall call",
+  "Paper new-patient forms at every visit",
+  "Missed appointments cost $200+ per no-show",
+  "No visibility into who\u2019s due for treatment",
+  "Whitening and elective offers buried in voicemail",
+];
+
+const retainBenefits = [
+  "Patients book online 24/7 in under 60 seconds",
+  "Automated recall sequences bring 40% more back",
+  "Digital forms filled before they walk in",
+  "Smart reminders cut no-shows by 60%+",
+  "Dashboard shows every patient\u2019s next due date",
+  "Push treatment plans and offers to their phone",
+];
+---
+
+<section class="bg-paper-50 py-24 lg:py-32">
+  <div class="mx-auto max-w-7xl px-6 lg:px-8">
+    <div class="mx-auto max-w-2xl text-center">
+      <h2 class="text-4xl font-bold tracking-tight text-text-900 sm:text-5xl">
+        Old Way <span class="italic text-violet-600">vs.</span> RetainOS
       </h2>
-      <p class="text-text-600 font-sans text-lg">The difference between renting patients and owning them.</p>
+      <p class="mt-4 text-lg text-text-600">
+        See why hundreds of DSOs and private practices are making the switch.
+      </p>
     </div>
 
-    <div class="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-      <div class="p-6 sm:p-8 rounded-[2rem] bg-paper-line/30">
-        <div class="flex items-center gap-3 mb-6 sm:mb-8">
-          <div class="w-10 h-10 rounded-xl bg-text-600/10 flex items-center justify-center shrink-0">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-text-600"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          </div>
-          <div class="min-w-0">
-            <p class="text-lg font-bold text-text-900">Old Way</p>
-            <p class="text-sm text-text-600">Manual recalls, missed opportunities</p>
-          </div>
-        </div>
-        <ul class="space-y-4">
-          {[
-            'Spend $500+/mo on Google Ads to acquire patients you\'ll never see again',
-            'Nurse spends 12+ hours/week on manual reminder calls',
-            '60% of patients never return after their first visit',
-            'No payment infrastructure — chase checks and cash',
-            'Zero data about who your top patients are',
-            'Patient loyalty? You\'re hoping, not engineering it'
-          ].map(item => (
-            <li class="flex gap-3 items-start">
-              <svg class="w-5 h-5 text-text-600 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-              <span class="text-text-600 text-sm sm:text-base">{item}</span>
+    <div
+      class="mx-auto mt-16 grid max-w-5xl gap-8 md:grid-cols-2"
+    >
+      <div class="rounded-2xl border border-paper-line bg-white px-8 py-10">
+        <h3
+          class="flex items-center gap-3 text-xl font-bold text-text-900"
+        >
+          <span
+            class="flex h-8 w-8 items-center justify-center rounded-lg border border-paper-line bg-paper-50 text-sm text-text-600"
+            aria-hidden="true"
+          >
+            &#10005;
+          </span>
+          Old Way
+        </h3>
+        <ul class="mt-8 space-y-5">
+          {oldWay.map((item) => (
+            <li class="flex items-start gap-3">
+              <span
+                class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center text-sm text-text-600"
+                aria-hidden="true"
+              >
+                &#10005;
+              </span>
+              <span class="text-base text-text-600">{item}</span>
             </li>
           ))}
         </ul>
       </div>
 
-      <div class="p-6 sm:p-8 rounded-[2rem] bg-violet-200/20">
-        <div class="flex items-center gap-3 mb-6 sm:mb-8">
-          <div class="w-10 h-10 rounded-xl bg-violet-600/20 flex items-center justify-center shrink-0">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-violet-600"><polyline points="20 6 9 17 4 12"/></svg>
-          </div>
-          <div class="min-w-0">
-            <p class="text-lg font-bold text-violet-600">RetainOS Way</p>
-            <p class="text-sm text-violet-600">Owned relationship, recurring revenue</p>
-          </div>
-        </div>
-        <ul class="space-y-4">
-          {[
-            'Your own branded app — patients book, pay, earn rewards without Google in the middle',
-            '90% reduction in admin overhead — auto-recalls via push, SMS, and email',
-            '96% patient retention rate with automated loyalty + aftercare sequences',
-            'Built-in card-on-file payments — get paid before they leave the chair',
-            'Full analytics — VIP alerts, treatment acceptance, churn prediction',
-            'You own the relationship. Patients love coming back.'
-          ].map(item => (
-            <li class="flex gap-3 items-start">
-              <svg class="w-5 h-5 text-violet-600 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-              <span class="text-text-600 text-sm sm:text-base">{item}</span>
+      <div
+        class="rounded-2xl border border-violet-200 bg-violet-200/20 px-8 py-10"
+      >
+        <h3
+          class="flex items-center gap-3 text-xl font-bold text-text-900"
+        >
+          <span
+            class="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-600 text-white"
+            aria-hidden="true"
+          >
+            &#10003;
+          </span>
+          RetainOS
+        </h3>
+        <ul class="mt-8 space-y-5">
+          {retainBenefits.map((item) => (
+            <li class="flex items-start gap-3">
+              <span
+                class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center text-violet-600"
+                aria-hidden="true"
+              >
+                &#10003;
+              </span>
+              <span class="text-base text-text-900">{item}</span>
             </li>
           ))}
         </ul>
       </div>
     </div>
 
-    <div class="text-center mt-12">
-      <button onclick="window.dispatchEvent(new Event('open-demo-form'))" class="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-violet-600 text-violet-600 hover:bg-violet-600 hover:text-white transition-all text-sm font-semibold">
+    <div class="mt-12 text-center">
+      <a
+        href="#"
+        class="inline-flex items-center gap-2 rounded-full border border-violet-600 px-8 py-3 text-sm font-semibold text-violet-600 transition-colors hover:bg-violet-600 hover:text-white"
+      >
         See the full platform
-        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-      </button>
+        <span aria-hidden="true">&rarr;</span>
+      </a>
     </div>
   </div>
 </section>

@@ -1,35 +1,83 @@
-<section class="py-24 px-6 bg-ink-950">
-  <div class="max-w-3xl mx-auto text-center space-y-8">
-    <h2 class="font-sans font-[400] text-4xl md:text-5xl tracking-tight text-onDark-100 leading-tight">
-      Ready to stop renting patients<br />
-      and <span class="font-serif italic text-violet-400">start owning them?</span>
-    </h2>
+---
+---
 
-    <p class="text-xl text-onDark-500 max-w-2xl mx-auto leading-relaxed">
-      Join 20+ clinics already growing with RetainOS. Get your branded app live in 20 minutes — no code, no meetings, no risk.
-    </p>
+<section class="bg-ink-950 py-24 lg:py-32">
+  <div class="mx-auto max-w-7xl px-6 lg:px-8">
+    <div class="mx-auto max-w-3xl text-center">
+      <h2
+        class="text-4xl font-bold tracking-tight text-onDark-100 sm:text-5xl"
+      >
+        Ready to stop renting patients
+        <br />
+        and start <span class="italic text-violet-400">owning them?</span>
+      </h2>
+      <p class="mt-6 text-lg text-onDark-500">
+        Join 20+ clinics already growing their practice with a branded patient
+        app. No dev team. No long contract. Go live in 20 minutes.
+      </p>
+      <div class="mt-10">
+        <button
+          type="button"
+          onclick="window.dispatchEvent(new CustomEvent('open-demo-form'))"
+          class="inline-flex items-center gap-2 rounded-full bg-violet-600 px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-violet-500"
+        >
+          Build My App
+          <span aria-hidden="true">&rarr;</span>
+        </button>
+      </div>
 
-    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-      <button onclick="window.dispatchEvent(new Event('open-demo-form'))" class="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-violet-600 text-white font-semibold text-lg hover:bg-violet-400 transition-colors">
-        Build My App
-        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-      </button>
-      <p class="text-sm text-onDark-500">No contract. Cancel anytime.</p>
-    </div>
-
-    <div class="flex items-center justify-center gap-8 pt-4 text-sm text-onDark-500">
-      <span class="flex items-center gap-2">
-        <svg class="w-4 h-4 text-violet-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-        Free onboarding
-      </span>
-      <span class="flex items-center gap-2">
-        <svg class="w-4 h-4 text-violet-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-        HIPAA compliant
-      </span>
-      <span class="flex items-center gap-2">
-        <svg class="w-4 h-4 text-violet-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-        No dev team needed
-      </span>
+      <div
+        class="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-8"
+      >
+        <div class="flex items-center gap-2 text-sm text-onDark-500">
+          <svg
+            class="h-5 w-5 text-violet-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M4.5 12.75l6 6 9-13.5"
+            />
+          </svg>
+          Free onboarding
+        </div>
+        <div class="flex items-center gap-2 text-sm text-onDark-500">
+          <svg
+            class="h-5 w-5 text-violet-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M4.5 12.75l6 6 9-13.5"
+            />
+          </svg>
+          HIPAA compliant
+        </div>
+        <div class="flex items-center gap-2 text-sm text-onDark-500">
+          <svg
+            class="h-5 w-5 text-violet-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M4.5 12.75l6 6 9-13.5"
+            />
+          </svg>
+          No dev team needed
+        </div>
+      </div>
     </div>
   </div>
 </section>

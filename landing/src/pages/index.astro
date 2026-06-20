@@ -1,7 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro'
 import Hero from '../components/Hero.astro'
-import TrustBar from '../components/TrustBar.astro'
 import ProblemSection from '../components/ProblemSection.astro'
 import SolutionSection from '../components/SolutionSection.astro'
 import FeatureShowcase from '../components/FeatureShowcase.astro'
@@ -17,50 +16,54 @@ import StickyMobileCta from '../components/StickyMobileCta.astro'
 
 <Layout title="RetainOS — Launch Your Branded Dental Patient App in 20 Minutes">
   <Hero />
-  <div class="reveal"><TrustBar /></div>
   <div class="reveal"><ProblemSection /></div>
   <div class="reveal"><SolutionSection /></div>
+  <div class="reveal"><HowItWorks /></div>
   <div class="reveal"><FeatureShowcase /></div>
   <div class="reveal"><PlatformShowcase /></div>
-  <div class="reveal"><HowItWorks /></div>
-  <div class="reveal"><Comparison /></div>
   <div class="reveal"><Testimonials /></div>
+  <div class="reveal"><Comparison /></div>
   <div class="reveal"><FAQSection /></div>
   <div class="reveal"><CTA /></div>
   <DemoForm client:load />
   <StickyMobileCta />
 
   <style>
-    .reveal { opacity: 0; transform: translateY(12px); transition: opacity 0.3s ease-out, transform 0.3s ease-out; }
-    .reveal.show { opacity: 1; transform: translateY(0); }
+    .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.5s ease-out, transform 0.5s ease-out; }
+    .reveal.revealed { opacity: 1; transform: translateY(0); }
     @media (prefers-reduced-motion: reduce) {
-      .reveal { opacity: 1; transform: translateY(0) !important; transition: none !important; }
+      .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
     }
   </style>
   <noscript>
-    <style>.reveal { opacity: 1 !important; transform: translateY(0) !important; }</style>
+    <style>.reveal { opacity: 1 !important; transform: none !important; }</style>
   </noscript>
   <script>
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!prefersReducedMotion) {
-      const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
+    (function() {
+      var els = document.querySelectorAll('.reveal');
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        els.forEach(function(el) { el.classList.add('revealed'); });
+        return;
+      }
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
           if (entry.isIntersecting) {
-            entry.target.classList.add('show');
+            entry.target.classList.add('revealed');
             observer.unobserve(entry.target);
           }
         });
       }, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
-      document.querySelectorAll('.reveal').forEach(el => {
-        const rect = el.getBoundingClientRect();
-        if (rect.top < window.innerHeight && rect.bottom > 0) {
-          el.classList.add('show');
+      els.forEach(function(el) {
+        var rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight) {
+          el.classList.add('revealed');
         } else {
           observer.observe(el);
         }
       });
-    } else {
-      document.querySelectorAll('.reveal').forEach(el => el.classList.add('show'));
-    }
+      setTimeout(function() {
+        els.forEach(function(el) { el.classList.add('revealed'); });
+      }, 600);
+    })();
   </script>
 </Layout>

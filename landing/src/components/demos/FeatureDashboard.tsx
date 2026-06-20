@@ -1,10 +1,10 @@
 import { useState } from 'react';
 
 const kpis = [
-  { label: 'Revenue', value: '$48.2K', change: '+12%', icon: '💰', color: 'emerald' },
-  { label: 'Patients', value: '1,247', change: '+8%', icon: '👥', color: 'teal' },
-  { label: 'Retention', value: '96.4%', change: '+3.2%', icon: '📈', color: 'teal' },
-  { label: 'Reviews', value: '4.8★', change: '+0.3', icon: '⭐', color: 'amber' },
+  { label: 'Revenue', value: '$48.2K', change: '+12%', icon: '💰' },
+  { label: 'Patients', value: '1,247', change: '+8%', icon: '👥' },
+  { label: 'Retention', value: '96.4%', change: '+3.2%', icon: '📈' },
+  { label: 'Reviews', value: '4.8★', change: '+0.3', icon: '⭐' },
 ];
 
 const chartMonths = ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -30,7 +30,7 @@ export default function FeatureDashboard() {
               <span className="text-sm">{kpi.icon}</span>
             </div>
             <p className="text-xl font-semibold text-onDark-100">{kpi.value}</p>
-            <span className="text-[10px] font-semibold text-violet-600">{kpi.change}</span>
+            <span className="text-[10px] font-semibold text-violet-400">{kpi.change}</span>
           </div>
         ))}
       </div>
@@ -62,13 +62,13 @@ export default function FeatureDashboard() {
           <svg viewBox="0 0 300 120" className="w-full h-full" preserveAspectRatio="none">
             {/* Grid lines */}
             {[0, 30, 60, 90, 120].map(y => (
-              <line key={y} x1="0" y1={y} x2="300" y2={y} stroke="#f1f5f9" strokeWidth="1"/>
+              <line key={y} x1="0" y1={y} x2="300" y2={y} stroke="#2A1A32" strokeWidth="1"/>
             ))}
             {/* Area fill */}
             <defs>
               <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#0d9488" stopOpacity="0.3"/>
-                <stop offset="100%" stopColor="#0d9488" stopOpacity="0"/>
+                <stop offset="0%" stopColor="#7C5CFF" stopOpacity="0.3"/>
+                <stop offset="100%" stopColor="#7C5CFF" stopOpacity="0"/>
               </linearGradient>
             </defs>
             <path
@@ -79,14 +79,14 @@ export default function FeatureDashboard() {
             <polyline
               points={chartValues.map((v, i) => `${i * 60},${120 - v * 1.2}`).join(' ')}
               fill="none"
-              stroke="#0d9488"
+              stroke="#7C5CFF"
               strokeWidth="3"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
             {/* Dots */}
             {chartValues.map((v, i) => (
-              <circle key={i} cx={i * 60} cy={120 - v * 1.2} r="4" fill="white" stroke="#0d9488" strokeWidth="3"/>
+              <circle key={i} cx={i * 60} cy={120 - v * 1.2} r="4" fill="#170B1C" stroke="#7C5CFF" strokeWidth="3"/>
             ))}
           </svg>
           {/* X labels */}
@@ -105,7 +105,7 @@ export default function FeatureDashboard() {
           {topFamilies.map((f, i) => (
             <div key={i} className="flex items-center gap-3 p-2 rounded bg-ink-800">
               <div className={`w-7 h-7 rounded flex items-center justify-center text-white text-[9px] font-semibold ${
-                i === 0 ? 'bg-gradient-to-br from-amber-400 to-amber-600' : i === 1 ? 'bg-gradient-to-br from-slate-400 to-slate-500' : 'bg-gradient-to-br from-amber-600 to-amber-700'
+                i === 0 ? 'bg-violet-600' : i === 1 ? 'bg-violet-400' : 'bg-violet-200 text-ink-950'
               }`}>
                 #{i + 1}
               </div>

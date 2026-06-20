@@ -30,7 +30,6 @@ const {
 } = Astro.props
 
 const DEFAULT_KEYWORDS = [
-  // Tier 1 — high intent
   'dental practice management software',
   'dental patient engagement software',
   'dental recall software',
@@ -39,7 +38,6 @@ const DEFAULT_KEYWORDS = [
   'dental CRM',
   'dental practice software',
   'dental clinic software',
-  // Tier 2 — mid-funnel
   'best dental software 2026',
   'dental practice marketing software',
   'dental loyalty program software',
@@ -50,7 +48,6 @@ const DEFAULT_KEYWORDS = [
   'dental aftercare software',
   'dental patient app',
   'dental care plan software',
-  // Tier 3 — long-tail differentiators
   'dental app for patients white label',
   'branded dental app',
   'dental aligner tracking app',
@@ -92,7 +89,6 @@ const DEFAULT_KEYWORDS = [
   'dental recall automation',
   'dental practice growth',
   'dental revenue cycle',
-  // Tier 4 — LLM citation / comparison targets
   'best dental patient retention software',
   'dental patient app for dso',
   'white label dental app',
@@ -159,13 +155,6 @@ const organizationSchema = {
   ],
 }
 
-const dentistSchema = {
-  "@context": "https://schema.org",
-  "@type": "MedicalSpecialty",
-  "name": "Dental Practice Management",
-  "medicalSpecialty": "Dentistry",
-}
-
 const speakableSchema = pageType === 'article' ? {
   "@context": "https://schema.org",
   "@type": "WebPage",
@@ -213,7 +202,7 @@ const breadcrumbSchema = breadcrumbs && breadcrumbs.length > 0 ? {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#0F0712" />
+    <meta name="theme-color" content="#08060A" />
 
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -223,7 +212,6 @@ const breadcrumbSchema = breadcrumbs && breadcrumbs.length > 0 ? {
     <link rel="alternate" hrefLang="en" href={pageUrl} />
     <link rel="alternate" hrefLang="x-default" href={pageUrl} />
 
-    <!-- Open Graph / Facebook -->
     <meta property="og:type" content={pageType} />
     <meta property="og:url" content={pageUrl} />
     <meta property="og:title" content={title} />
@@ -234,7 +222,6 @@ const breadcrumbSchema = breadcrumbs && breadcrumbs.length > 0 ? {
     <meta property="og:site_name" content="RetainOS" />
     <meta property="og:locale" content="en_US" />
 
-    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content={pageUrl} />
     <meta name="twitter:title" content={title} />
@@ -270,16 +257,18 @@ const breadcrumbSchema = breadcrumbs && breadcrumbs.length > 0 ? {
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Newsreader:ital,wght@0,400;0,500;1,400;1,500;1,600&display=swap" rel="stylesheet" />
 
     <style>
       :root { --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif; --font-serif: 'Newsreader', Georgia, ui-serif, serif; }
       *:focus-visible { outline: 2px solid #7C5CFF; outline-offset: 2px; border-radius: 4px; }
-      body { font-family: var(--font-sans); }
-      h1, h2, h3, h4 { font-family: var(--font-sans); font-weight: 400; letter-spacing: -0.01em; }
+      body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+      h1, h2, h3, h4 { font-family: var(--font-sans); letter-spacing: -0.02em; }
       .font-serif { font-family: var(--font-serif); }
       .reading-progress { position: fixed; top: 0; left: 0; height: 2px; background: #7C5CFF; z-index: 9999; transition: width 0.1s linear; }
       .text-balance { text-wrap: balance; }
+      ::selection { background: rgba(124,92,255,0.25); }
+      ::-moz-selection { background: rgba(124,92,255,0.25); }
     </style>
   </head>
   <body class="bg-ink-950 text-text-onDark-100 antialiased selection:bg-violet-600/30 text-base leading-relaxed">

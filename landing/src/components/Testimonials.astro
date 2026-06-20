@@ -1,23 +1,26 @@
-<section class="py-24 px-6 bg-paper-50">
+---
+---
+
+<section class="py-32 px-6 bg-paper-50" id="testimonials">
   <div class="max-w-6xl mx-auto">
     <div class="text-center max-w-2xl mx-auto mb-16">
-      <p class="text-xs font-semibold uppercase tracking-[0.1em] mb-4">
-        <span class="text-violet-600">■</span> TESTIMONIALS
-      </p>
-      <h2 class="font-sans font-[400] text-4xl md:text-5xl tracking-tight mb-6">Dental professionals <span class="font-serif italic text-violet-600">love RetainOS.</span></h2>
+      <p class="text-xs font-semibold text-violet-600 uppercase tracking-[0.1em] mb-4"><span class="text-violet-600">■</span> TESTIMONIALS</p>
+      <h2 class="font-sans font-[400] text-4xl md:text-5xl tracking-tight text-text-900 mb-6">Dental professionals <span class="font-serif italic text-violet-600">love RetainOS.</span></h2>
     </div>
 
+    <!-- 2x2 testimonial grid -->
     <div class="grid md:grid-cols-2 gap-12 md:gap-x-16 gap-y-12">
+      <!-- Card 1: Dr. Rebecca Chen -->
       <div class="relative pl-14">
         <svg class="absolute left-0 top-0 w-10 h-10 text-violet-200 select-none" aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M9.983 3v7.391c0 5.704-3.731 9.57-8.983 10.609l-.995-2.151c2.432-.917 3.995-3.638 3.995-5.849h-4v-10h9.983zm14.017 0v7.391c0 5.704-3.748 9.571-9 10.609l-.996-2.151c2.433-.917 3.996-3.638 3.996-5.849h-3.983v-10h9.983z"/></svg>
         <div class="flex gap-1 mb-3">
           {Array.from({ length: 5 }).map(() => (
-            <span class="text-amber-500 text-lg">★</span>
+            <span class="text-violet-400 text-lg">★</span>
           ))}
         </div>
         <p class="text-text-900 font-sans leading-relaxed mb-6">"We replaced 5 separate tools with RetainOS. Our no-show rate dropped from 18% to under 4% in the first month. The recall automation alone pays for itself."</p>
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-full bg-violet-200 flex items-center justify-center text-text-900 text-sm font-bold">DR</div>
+          <div class="w-10 h-10 rounded-full bg-violet-600/20 flex items-center justify-center text-violet-600 text-sm font-bold">RC</div>
           <div>
             <p class="text-sm font-bold text-text-900">Dr. Rebecca Chen</p>
             <p class="text-xs text-text-600">Smile Clinic, San Francisco</p>
@@ -25,16 +28,17 @@
         </div>
       </div>
 
+      <!-- Card 2: Dr. Michael Torres -->
       <div class="relative pl-14">
         <svg class="absolute left-0 top-0 w-10 h-10 text-violet-200 select-none" aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M9.983 3v7.391c0 5.704-3.731 9.57-8.983 10.609l-.995-2.151c2.432-.917 3.995-3.638 3.995-5.849h-4v-10h9.983zm14.017 0v7.391c0 5.704-3.748 9.571-9 10.609l-.996-2.151c2.433-.917 3.996-3.638 3.996-5.849h-3.983v-10h9.983z"/></svg>
         <div class="flex gap-1 mb-3">
           {Array.from({ length: 5 }).map(() => (
-            <span class="text-amber-500 text-lg">★</span>
+            <span class="text-violet-400 text-lg">★</span>
           ))}
         </div>
-        <p class="text-text-900 font-sans leading-relaxed mb-6">"The loyalty program changed everything. Patients are actually excited to come back now. Our 5-star reviews went from 12 to 47 in 3 months."</p>
+        <p class="text-text-900 font-sans leading-relaxed mb-6">"The loyalty program changed everything. Our 5-star reviews went from 12 to 47 in 3 months. Patients actually compete for the Gold tier — it's wild."</p>
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-full bg-violet-200 flex items-center justify-center text-text-900 text-sm font-bold">MT</div>
+          <div class="w-10 h-10 rounded-full bg-violet-600/20 flex items-center justify-center text-violet-600 text-sm font-bold">MT</div>
           <div>
             <p class="text-sm font-bold text-text-900">Dr. Michael Torres</p>
             <p class="text-xs text-text-600">Metro Dental, Austin</p>
@@ -42,16 +46,17 @@
         </div>
       </div>
 
+      <!-- Card 3: Dr. Priya Sharma -->
       <div class="relative pl-14">
         <svg class="absolute left-0 top-0 w-10 h-10 text-violet-200 select-none" aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M9.983 3v7.391c0 5.704-3.731 9.57-8.983 10.609l-.995-2.151c2.432-.917 3.995-3.638 3.995-5.849h-4v-10h9.983zm14.017 0v7.391c0 5.704-3.748 9.571-9 10.609l-.996-2.151c2.433-.917 3.996-3.638 3.996-5.849h-3.983v-10h9.983z"/></svg>
         <div class="flex gap-1 mb-3">
           {Array.from({ length: 5 }).map(() => (
-            <span class="text-amber-500 text-lg">★</span>
+            <span class="text-violet-400 text-lg">★</span>
           ))}
         </div>
-        <p class="text-text-900 font-sans leading-relaxed mb-6">"Our patients love the app. They use it for everything — booking, payments, care instructions. It's like having a front desk in their pocket."</p>
+        <p class="text-text-900 font-sans leading-relaxed mb-6">"Our patients love the branded app. They use it for booking, payments, aftercare checklists — it's like having our front desk in their pocket. Retention went up 40%."</p>
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-full bg-violet-200 flex items-center justify-center text-text-900 text-sm font-bold">PS</div>
+          <div class="w-10 h-10 rounded-full bg-violet-600/20 flex items-center justify-center text-violet-600 text-sm font-bold">PS</div>
           <div>
             <p class="text-sm font-bold text-text-900">Dr. Priya Sharma</p>
             <p class="text-xs text-text-600">Prime Smiles, Chicago</p>
@@ -59,21 +64,35 @@
         </div>
       </div>
 
+      <!-- Card 4: Dr. James O'Brien -->
       <div class="relative pl-14">
         <svg class="absolute left-0 top-0 w-10 h-10 text-violet-200 select-none" aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M9.983 3v7.391c0 5.704-3.731 9.57-8.983 10.609l-.995-2.151c2.432-.917 3.995-3.638 3.995-5.849h-4v-10h9.983zm14.017 0v7.391c0 5.704-3.748 9.571-9 10.609l-.996-2.151c2.433-.917 3.996-3.638 3.996-5.849h-3.983v-10h9.983z"/></svg>
         <div class="flex gap-1 mb-3">
           {Array.from({ length: 5 }).map(() => (
-            <span class="text-amber-500 text-lg">★</span>
+            <span class="text-violet-400 text-lg">★</span>
           ))}
         </div>
-        <p class="text-text-900 font-sans leading-relaxed mb-6">"As a DSO with 14 locations, having one platform for all our clinics is a game-changer. The analytics alone give us insights we never had before."</p>
+        <p class="text-text-900 font-sans leading-relaxed mb-6">"DSO analytics across 14 locations used to take my ops director 3 days. Now it's a dashboard refresh. Cross-practice recall rates jumped 34% in one quarter."</p>
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-full bg-violet-200 flex items-center justify-center text-text-900 text-sm font-bold">JO</div>
+          <div class="w-10 h-10 rounded-full bg-violet-600/20 flex items-center justify-center text-violet-600 text-sm font-bold">JO</div>
           <div>
             <p class="text-sm font-bold text-text-900">Dr. James O'Brien</p>
             <p class="text-xs text-text-600">Jackson Ortho, 14 locations</p>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- Bottom trust band -->
+    <div class="mt-20 pt-12 border-t border-paper-line">
+      <p class="text-center text-xs font-semibold text-violet-600 uppercase tracking-[0.1em] mb-8">Trusted by leading dental clinics</p>
+      <div class="flex flex-wrap items-center justify-center gap-8 md:gap-12">
+        <span class="text-sm font-semibold text-text-600 opacity-50 hover:opacity-100 transition-opacity">Smile Clinic</span>
+        <span class="text-sm font-semibold text-text-600 opacity-50 hover:opacity-100 transition-opacity">Metro Dental</span>
+        <span class="text-sm font-semibold text-text-600 opacity-50 hover:opacity-100 transition-opacity">Prime Smiles</span>
+        <span class="text-sm font-semibold text-text-600 opacity-50 hover:opacity-100 transition-opacity">Jackson Ortho</span>
+        <span class="text-sm font-semibold text-text-600 opacity-50 hover:opacity-100 transition-opacity">Bright Dental</span>
+        <span class="text-sm font-semibold text-text-600 opacity-50 hover:opacity-100 transition-opacity">Care Partners</span>
       </div>
     </div>
   </div>

@@ -37,7 +37,7 @@ export default function FeatureReviews() {
             className={`w-full py-3 rounded font-semibold text-sm transition-all ${
               sending
                 ? 'bg-ink-800 text-violet-600 cursor-wait'
-                : 'bg-violet-600 text-white hover:bg-violet-600 hover:shadow-lg'
+                : 'bg-violet-600 text-white hover:bg-violet-400 hover:shadow-lg hover:shadow-violet-600/20'
             }`}
           >
             {sending ? (
@@ -51,10 +51,10 @@ export default function FeatureReviews() {
           </button>
         ) : (
           <div className="text-center py-3">
-            <div className="w-10 h-10 rounded bg-emerald-100 flex items-center justify-center mx-auto mb-2">
-              <span className="text-emerald-600 text-lg">✓</span>
+            <div className="w-10 h-10 rounded bg-violet-600/20 flex items-center justify-center mx-auto mb-2">
+              <span className="text-violet-400 text-lg">✓</span>
             </div>
-            <p className="text-xs font-semibold text-emerald-700">Request sent to patient!</p>
+            <p className="text-xs font-semibold text-violet-400">Request sent to patient!</p>
             <p className="text-[9px] text-onDark-500 mt-0.5">They'll receive an SMS with a review link</p>
           </div>
         )}
@@ -67,19 +67,19 @@ export default function FeatureReviews() {
           <div key={i} className="bg-ink-900 rounded p-3.5 border border-ink-border hover:shadow-md transition-all">
             <div className="flex items-center justify-between mb-1.5">
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center text-white text-[8px] font-semibold">
+                <div className="w-6 h-6 rounded-full bg-violet-600 flex items-center justify-center text-white text-[8px] font-semibold">
                   {r.name[0]}
                 </div>
                 <span className="text-xs font-semibold text-onDark-100">{r.name}</span>
                 {r.verified && (
-                  <span className="px-1.5 py-0.5 bg-emerald-50 rounded text-[7px] font-semibold text-emerald-600 border border-emerald-200">VERIFIED</span>
+                  <span className="px-1.5 py-0.5 bg-violet-600/10 rounded text-[7px] font-semibold text-violet-400 border border-violet-600/20">VERIFIED</span>
                 )}
               </div>
               <span className="text-[9px] text-onDark-500">{r.time}</span>
             </div>
             <div className="flex gap-0.5 mb-1">
               {Array.from({ length: 5 }).map((_, j) => (
-                <span key={j} className={`text-xs ${j < r.stars ? 'text-amber-400' : 'text-onDark-500'}`}>★</span>
+                <span key={j} className={`text-xs ${j < r.stars ? 'text-violet-400' : 'text-onDark-500'}`}>★</span>
               ))}
             </div>
             <p className="text-[11px] text-onDark-500 leading-relaxed">{r.text}</p>
@@ -90,16 +90,16 @@ export default function FeatureReviews() {
       {/* Stats */}
       <div className="grid grid-cols-3 gap-2">
         <div className="bg-ink-800 rounded p-3 text-center border border-ink-border">
-          <p className="text-lg font-semibold text-violet-600">3.4x</p>
-          <p className="text-[8px] font-semibold text-violet-600 uppercase tracking-widest">More reviews</p>
+          <p className="text-lg font-semibold text-violet-400">3.4x</p>
+          <p className="text-[8px] font-semibold text-violet-400 uppercase tracking-widest">More reviews</p>
         </div>
         <div className="bg-ink-800 rounded p-3 text-center border border-ink-border">
-          <p className="text-lg font-semibold text-violet-600">4.8</p>
-          <p className="text-[8px] font-semibold text-violet-600 uppercase tracking-widest">Avg rating</p>
+          <p className="text-lg font-semibold text-violet-400">4.8</p>
+          <p className="text-[8px] font-semibold text-violet-400 uppercase tracking-widest">Avg rating</p>
         </div>
-        <div className="bg-emerald-50 rounded p-3 text-center border border-emerald-100">
-          <p className="text-lg font-semibold text-emerald-700">92%</p>
-          <p className="text-[8px] font-semibold text-emerald-600 uppercase tracking-widest">Response rate</p>
+        <div className="bg-ink-800 rounded p-3 text-center border border-violet-600/20">
+          <p className="text-lg font-semibold text-violet-400">92%</p>
+          <p className="text-[8px] font-semibold text-violet-400 uppercase tracking-widest">Response rate</p>
         </div>
       </div>
     </div>

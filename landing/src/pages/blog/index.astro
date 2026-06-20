@@ -194,16 +194,16 @@ const allTags = [...new Set(posts.flatMap(p => p.tags))].sort();
   description="Expert advice on dental patient retention, Invisalign compliance tracking, launching loyalty apps, and growing your dental practice with technology. Written by practicing dentists."
   canonical="https://retaindental.com/blog"
 >
-  <section class="pt-32 pb-24 px-6 bg-cream-50 min-h-screen">
+  <section class="pt-32 pb-24 px-6 bg-paper-50 min-h-screen">
     <div class="max-w-6xl mx-auto">
 
       {/* Header */}
       <div class="text-center mb-16 space-y-4">
-        <span class="text-terracotta-600 text-xs font-semibold uppercase tracking-[0.08em]">The RetainOS Blog</span>
-        <h1 class="text-5xl md:text-7xl font-display font-[540] text-clay-900 tracking-tight leading-[1.05]">
-          Dental Practice <span class="text-terracotta-600">Growth Insights</span>
+        <span class="text-violet-600 text-xs font-semibold uppercase tracking-[0.08em]">The RetainOS Blog</span>
+        <h1 class="text-5xl md:text-7xl font-sans font-[400] text-text-900 tracking-tight leading-[1.05]">
+          Dental Practice <span class="text-violet-600">Growth Insights</span>
         </h1>
-        <p class="text-clay-500 text-lg max-w-2xl mx-auto">
+        <p class="text-text-600 text-lg max-w-2xl mx-auto">
           Expert guides, benchmarks, and strategies written by practising dentists. No fluff. No theory. Just what actually works in real clinics.
         </p>
       </div>
@@ -211,12 +211,12 @@ const allTags = [...new Set(posts.flatMap(p => p.tags))].sort();
       {/* Search + Tags */}
       <div class="max-w-2xl mx-auto mb-14">
         <div class="relative mb-6">
-          <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-clay-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           <input
             type="text"
             id="blog-search"
             placeholder="Search articles..."
-            class="w-full pl-12 pr-6 py-4 bg-white border border-clay-300 rounded text-sm font-medium text-clay-900 placeholder:text-clay-500 outline-none focus:border-terracotta-500 focus:ring-2 focus:ring-terracotta-100 transition-all"
+            class="w-full pl-12 pr-6 py-4 bg-white border border-paper-line rounded text-sm font-medium text-text-900 placeholder:text-text-600 outline-none focus:border-violet-600 focus:ring-2 focus:ring-violet-600/10 transition-all"
           />
         </div>
         <div class="flex flex-wrap gap-2 justify-center" id="tag-filters">
@@ -230,28 +230,28 @@ const allTags = [...new Set(posts.flatMap(p => p.tags))].sort();
       {/* Featured Post */}
       {featuredPost && (
         <a href={`/blog/${featuredPost.slug}`} class="block group mb-16">
-          <article class="rounded bg-clay-900 text-cream-0 border border-clay-700 p-10 md:p-14 hover:border-terracotta-600/30 hover:shadow-2xl hover:shadow-clay-900/10 transition-all duration-300 relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-64 h-64 bg-terracotta-600/10 rounded blur-[80px]"></div>
+          <article class="rounded bg-ink-900 text-white border border-ink-800 p-10 md:p-14 hover:border-violet-600/30 hover:shadow-2xl hover:shadow-ink-950/10 transition-all duration-300 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-violet-600/10 rounded blur-[80px]"></div>
             <div class="relative z-10">
               <div class="flex items-center gap-3 mb-6">
-                <span class="px-3 py-1 bg-terracotta-600/20 text-terracotta-500 text-[10px] font-black uppercase tracking-widest rounded">Featured</span>
+                <span class="px-3 py-1 bg-violet-600/20 text-violet-400 text-[10px] font-black uppercase tracking-widest rounded">Featured</span>
                 <div class="flex gap-2">
                   {featuredPost.tags.map(tag => (
-                    <span class="text-[10px] font-black text-terracotta-500 bg-terracotta-600/20 px-2.5 py-1 rounded uppercase tracking-widest">{tag}</span>
+                    <span class="text-[10px] font-black text-violet-400 bg-violet-600/20 px-2.5 py-1 rounded uppercase tracking-widest">{tag}</span>
                   ))}
                 </div>
               </div>
-              <h2 class="text-3xl md:text-5xl font-display font-[540] tracking-tight mb-4 group-hover:text-terracotta-500 transition-colors leading-tight">
+              <h2 class="text-3xl md:text-5xl font-sans font-[400] tracking-tight mb-4 group-hover:text-violet-400 transition-colors leading-tight">
                 {featuredPost.title}
               </h2>
-              <p class="text-clay-300/80 leading-relaxed mb-6 max-w-3xl text-lg">{featuredPost.excerpt}</p>
+              <p class="text-text-onDark-500/80 leading-relaxed mb-6 max-w-3xl text-lg">{featuredPost.excerpt}</p>
               <div class="flex items-center gap-3 text-sm">
                 <div class="w-10 h-10 rounded bg-white/20 flex items-center justify-center text-xs font-black">
                   {featuredPost.author.split(' ').map(w => w[0]).join('').slice(0, 2)}
                 </div>
-                <span class="text-clay-300">{featuredPost.author}</span>
-                <span class="text-clay-300/60">·</span>
-                <span class="text-clay-300/60">{new Date(featuredPost.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                <span class="text-text-onDark-500">{featuredPost.author}</span>
+                <span class="text-text-onDark-500/60">·</span>
+                <span class="text-text-onDark-500/60">{new Date(featuredPost.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
               </div>
             </div>
           </article>
@@ -262,23 +262,23 @@ const allTags = [...new Set(posts.flatMap(p => p.tags))].sort();
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="post-grid">
         {regularPosts.map(post => (
           <a href={`/blog/${post.slug}`} class="block group post-card" data-tags={post.tags.join(',')} data-title={post.title.toLowerCase()} data-excerpt={post.excerpt.toLowerCase()}>
-            <article class="h-full rounded bg-white border border-clay-300 p-7 hover:border-terracotta-600/30 hover:shadow-xl hover:shadow-clay-900/5 transition-all duration-300 flex flex-col">
+            <article class="h-full rounded bg-white border border-paper-line p-7 hover:border-violet-600/30 hover:shadow-xl hover:shadow-ink-950/5 transition-all duration-300 flex flex-col">
               <div class="flex flex-wrap gap-1.5 mb-4">
                 {post.tags.map(tag => (
-                  <span class="text-[10px] font-black text-terracotta-600 bg-terracotta-100 px-2 py-0.5 rounded uppercase tracking-widest">{tag}</span>
+                  <span class="text-[10px] font-black text-violet-600 bg-violet-600/10 px-2 py-0.5 rounded uppercase tracking-widest">{tag}</span>
                 ))}
               </div>
-              <h2 class="text-lg font-display font-[540] text-clay-900 tracking-tight mb-3 group-hover:text-terracotta-600 transition-colors leading-snug flex-grow">
+              <h2 class="text-lg font-sans font-[400] text-text-900 tracking-tight mb-3 group-hover:text-violet-600 transition-colors leading-snug flex-grow">
                 {post.title}
               </h2>
-              <p class="text-sm text-clay-500 leading-relaxed mb-5 line-clamp-3">{post.excerpt}</p>
-              <div class="flex items-center gap-2.5 text-xs mt-auto pt-4 border-t border-gray-100">
-                <div class="w-7 h-7 rounded bg-terracotta-100 flex items-center justify-center text-[9px] font-black text-terracotta-600">
+              <p class="text-sm text-text-600 leading-relaxed mb-5 line-clamp-3">{post.excerpt}</p>
+              <div class="flex items-center gap-2.5 text-xs mt-auto pt-4 border-t border-paper-line">
+                <div class="w-7 h-7 rounded bg-violet-600/10 flex items-center justify-center text-[9px] font-black text-violet-600">
                   {post.author.split(' ').map(w => w[0]).join('').slice(0, 2)}
                 </div>
-                <span class="text-clay-500 font-semibold">{post.author}</span>
-                <span class="text-clay-300">·</span>
-                <span class="text-clay-500">{new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                <span class="text-text-600 font-semibold">{post.author}</span>
+                <span class="text-text-onDark-500">·</span>
+                <span class="text-text-600">{new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
               </div>
             </article>
           </a>
@@ -287,15 +287,15 @@ const allTags = [...new Set(posts.flatMap(p => p.tags))].sort();
 
       {/* Empty state */}
       <div id="no-results" class="hidden text-center py-20">
-        <p class="text-xl font-bold text-clay-500">No articles match your search.</p>
-        <p class="text-sm text-clay-500 mt-2">Try a different keyword or clear filters.</p>
+        <p class="text-xl font-bold text-text-600">No articles match your search.</p>
+        <p class="text-sm text-text-600 mt-2">Try a different keyword or clear filters.</p>
       </div>
 
       {/* CTA */}
-      <div class="mt-16 p-8 rounded bg-clay-900 text-cream-0 text-center">
+      <div class="mt-16 p-8 rounded bg-ink-900 text-white text-center">
         <p class="text-2xl font-black mb-3">Write for the RetainOS Blog</p>
-        <p class="text-clay-200 text-sm mb-6 max-w-lg mx-auto">We publish guest posts from practising dentists. Share your clinical and operational expertise with 5,000+ dental professionals.</p>
-        <a href="https://app.retaindental.com" class="inline-flex items-center gap-2 px-6 py-3 bg-terracotta-600 text-cream-0 rounded text-sm font-black hover:bg-terracotta-100 hover:scale-105 transition-all">Get in touch →</a>
+        <p class="text-text-onDark-500 text-sm mb-6 max-w-lg mx-auto">We publish guest posts from practising dentists. Share your clinical and operational expertise with 5,000+ dental professionals.</p>
+        <a href="https://app.retaindental.com" class="inline-flex items-center gap-2 px-6 py-3 bg-violet-600 text-white rounded text-sm font-black hover:bg-violet-500 hover:scale-105 transition-all">Get in touch →</a>
       </div>
     </div>
   </section>
@@ -338,12 +338,12 @@ const allTags = [...new Set(posts.flatMap(p => p.tags))].sort();
         activeTag = btn.getAttribute('data-tag') || 'all';
         tagButtons.forEach(b => {
           b.classList.remove('active');
-          b.classList.remove('bg-terracotta-600', 'text-white', 'border-terracotta-600');
-          b.classList.add('bg-white', 'text-clay-500', 'border-clay-300');
+          b.classList.remove('bg-violet-600', 'text-white', 'border-violet-600');
+          b.classList.add('bg-white', 'text-text-600', 'border-paper-line');
         });
         btn.classList.add('active');
-        btn.classList.add('bg-terracotta-600', 'text-white', 'border-terracotta-600');
-        btn.classList.remove('bg-white', 'text-clay-500', 'border-clay-300');
+        btn.classList.add('bg-violet-600', 'text-white', 'border-violet-600');
+        btn.classList.remove('bg-white', 'text-text-600', 'border-paper-line');
         filterPosts();
       });
     });
@@ -351,8 +351,8 @@ const allTags = [...new Set(posts.flatMap(p => p.tags))].sort();
     // Init active state
     const activeBtn = document.querySelector('.tag-btn.active');
     if (activeBtn) {
-      activeBtn.classList.add('bg-terracotta-600', 'text-white', 'border-terracotta-600');
-      activeBtn.classList.remove('bg-white', 'text-clay-500', 'border-clay-300');
+      activeBtn.classList.add('bg-violet-600', 'text-white', 'border-violet-600');
+      activeBtn.classList.remove('bg-white', 'text-text-600', 'border-paper-line');
     }
   </script>
 </Layout>

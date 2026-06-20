@@ -1,11 +1,11 @@
 import { useState } from 'react';
 
 const templates = [
-  { id: 'story', name: 'Transformation Story', category: 'Trust', gradient: 'from-teal-500 to-teal-700', icon: '✨' },
-  { id: 'review', name: 'Hero Review', category: 'Trust', gradient: 'from-amber-500 to-amber-700', icon: '⭐' },
-  { id: 'myth', name: 'Myth Buster', category: 'Education', gradient: 'from-rose-500 to-rose-700', icon: '🔬' },
-  { id: 'offer', name: 'Limited Offer', category: 'Sales', gradient: 'from-violet-500 to-violet-700', icon: '🎁' },
-  { id: 'update', name: 'Clinic Update', category: 'Engagement', gradient: 'from-slate-700 to-slate-900', icon: '📢' },
+  { id: 'story', name: 'Transformation Story', category: 'Trust', gradient: 'from-violet-600 to-violet-800', icon: '✨' },
+  { id: 'review', name: 'Hero Review', category: 'Trust', gradient: 'from-violet-400 to-violet-600', icon: '⭐' },
+  { id: 'myth', name: 'Myth Buster', category: 'Education', gradient: 'from-violet-200 to-violet-400', icon: '🔬' },
+  { id: 'offer', name: 'Limited Offer', category: 'Sales', gradient: 'from-ink-800 to-ink-950', icon: '🎁' },
+  { id: 'update', name: 'Clinic Update', category: 'Engagement', gradient: 'from-ink-900 to-ink-950', icon: '📢' },
 ];
 
 export default function FeatureSocial() {
@@ -20,8 +20,8 @@ export default function FeatureSocial() {
             onClick={() => setSelected(i)}
             className={`rounded p-3 text-center transition-all ${
               selected === i
-                ? `bg-gradient-to-br ${t.gradient} text-white shadow-lg scale-[1.05] ring-2 ring-white`
-                : 'bg-ink-900 border border-ink-border hover:border-gray-300 hover:shadow-md'
+                ? `bg-gradient-to-br ${t.gradient} text-white shadow-lg shadow-violet-600/20 scale-[1.05] ring-2 ring-violet-400`
+                : 'bg-ink-900 border border-ink-border hover:border-violet-400 hover:shadow-md'
             }`}
           >
             <span className="text-xl block mb-1">{t.icon}</span>
@@ -36,7 +36,7 @@ export default function FeatureSocial() {
       </div>
 
       {/* Preview card */}
-      <div className={`rounded bg-gradient-to-br ${templates[selected].gradient} p-8 text-white shadow-2xl relative overflow-hidden`}>
+      <div className={`rounded bg-gradient-to-br ${templates[selected].gradient} p-8 text-white shadow-2xl shadow-violet-600/10 relative overflow-hidden`}>
         <div className="absolute inset-0 opacity-10" style={{backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)', backgroundSize: '20px 20px'}}></div>
         <div className="relative z-10">
           <div className="flex items-center gap-2 mb-4">
@@ -66,7 +66,7 @@ export default function FeatureSocial() {
         <button className="px-4 py-2 bg-ink-900 rounded text-xs font-semibold text-onDark-500 border border-ink-border hover:shadow-md transition-all">
           Download Post
         </button>
-        <button className="px-4 py-2 bg-violet-600 rounded text-xs font-semibold text-white hover:bg-violet-600 transition-all">
+        <button className="px-4 py-2 bg-violet-600 rounded text-xs font-semibold text-white hover:bg-violet-400 transition-all">
           Share to Instagram
         </button>
       </div>

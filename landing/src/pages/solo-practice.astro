@@ -22,42 +22,42 @@ const features = [
     { name: 'For Solo Practices', url: 'https://retaindental.com/solo-practice' },
   ]}
 >
-  <section class="pt-32 pb-16 px-6 bg-gradient-to-b from-cream-100 to-cream-50">
+  <section class="pt-32 pb-16 px-6 bg-gradient-to-b from-ink-950 to-ink-900">
     <div class="max-w-5xl mx-auto text-center space-y-6">
-      <span class="inline-flex items-center gap-2 px-3 py-1 bg-terracotta-100 border border-clay-300 rounded text-xs font-semibold uppercase tracking-[0.08em] text-terracotta-600">
+      <span class="inline-flex items-center gap-2 px-3 py-1 bg-violet-600/10 border border-violet-600/20 rounded text-xs font-semibold uppercase tracking-[0.08em] text-violet-400">
         For Solo Practices
       </span>
-      <h1 class="text-5xl md:text-7xl font-display font-[540] text-clay-900 tracking-tight leading-[1.05]">
+      <h1 class="text-5xl md:text-7xl font-sans font-[400] text-white tracking-tight leading-[1.05]">
         Run your practice <br />
-        <span class="text-terracotta-600">like a brand.</span>
+        <span class="text-violet-400">like a brand.</span>
       </h1>
-      <p class="text-xl text-clay-500 max-w-2xl mx-auto leading-relaxed">
+      <p class="text-xl text-text-onDark-500 max-w-2xl mx-auto leading-relaxed">
         You don't need a marketing team or a 20-location DSO to compete.
         You need a brand patients actually open on their phone.
       </p>
       <div class="flex flex-col sm:flex-row gap-3 justify-center pt-4">
-        <a href="https://app.retaindental.com" class="px-8 py-4 bg-terracotta-600 text-white rounded font-bold hover:bg-terracotta-500 transition-all shadow-lg shadow-terracotta-600/20 flex items-center justify-center gap-2">
+        <a href="https://app.retaindental.com" class="px-8 py-4 bg-violet-600 text-white rounded font-bold hover:bg-violet-500 transition-all shadow-lg shadow-violet-600/20 flex items-center justify-center gap-2">
           Start 14-day free trial →
         </a>
-        <a href="/pricing" class="px-8 py-4 bg-white text-clay-700 border border-clay-300 rounded font-bold hover:bg-cream-100 transition-all flex items-center justify-center">
+        <a href="/pricing" class="px-8 py-4 bg-white/10 backdrop-blur text-text-onDark-500 border border-white/20 rounded font-bold hover:bg-white/20 transition-all flex items-center justify-center">
           See pricing
         </a>
       </div>
     </div>
   </section>
 
-  <section class="py-24 px-6 bg-cream-50">
+  <section class="py-24 px-6 bg-paper-50">
     <div class="max-w-7xl mx-auto">
       <div class="text-center mb-16 space-y-4">
-        <h2 class="text-4xl md:text-6xl font-display font-[540] text-clay-900 tracking-tight">
+        <h2 class="text-4xl md:text-6xl font-sans font-[400] text-text-900 tracking-tight">
           Everything a solo practice needs. <br />
-          <span class="text-terracotta-600">Nothing it doesn't.</span>
+          <span class="text-violet-600">Nothing it doesn't.</span>
         </h2>
       </div>
       <div class="grid md:grid-cols-3 gap-6">
         {features.map((f) => (
-          <div class="bg-white rounded-3xl p-6 border border-clay-300 hover:shadow-lg transition-all">
-            <div class="h-10 w-10 bg-terracotta-100 text-terracotta-600 rounded flex items-center justify-center mb-4">
+          <div class="bg-white rounded-3xl p-6 border border-paper-line hover:shadow-lg transition-all">
+            <div class="h-10 w-10 bg-violet-600/10 text-violet-600 rounded flex items-center justify-center mb-4">
               {f.icon === 'phone' && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>}
               {f.icon === 'calendar' && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>}
               {f.icon === 'wallet' && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"/><path d="M4 6v12c0 1.1.9 2 2 2h14v-4"/><path d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z"/></svg>}
@@ -65,21 +65,21 @@ const features = [
               {f.icon === 'sparkles' && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/></svg>}
               {f.icon === 'check' && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>}
             </div>
-            <h3 class="text-lg font-black text-clay-900 mb-2">{f.title}</h3>
-            <p class="text-sm text-slate-600 leading-relaxed">{f.desc}</p>
+            <h3 class="text-lg font-black text-text-900 mb-2">{f.title}</h3>
+            <p class="text-sm text-text-600 leading-relaxed">{f.desc}</p>
           </div>
         ))}
       </div>
     </div>
   </section>
 
-  <section class="py-16 px-6 bg-cream-100">
+  <section class="py-16 px-6 bg-paper-50">
     <div class="max-w-4xl mx-auto text-center">
-      <div class="bg-white border border-clay-300 rounded-3xl p-8 shadow-sm">
-        <p class="text-[10px] font-semibold text-terracotta-600 uppercase tracking-[0.08em] mb-3">A 14-day trial. No credit card.</p>
-        <h3 class="text-3xl font-black text-clay-900 mb-2">Try it on your real patients.</h3>
-        <p class="text-clay-500 mb-6">If you don't see a measurable retention lift in 30 days, we'll help you offboard.</p>
-        <a href="https://app.retaindental.com" class="inline-block px-8 py-4 bg-terracotta-600 text-white rounded font-bold hover:bg-terracotta-500 transition-all">
+      <div class="bg-white border border-paper-line rounded-3xl p-8 shadow-sm">
+        <p class="text-[10px] font-semibold text-violet-600 uppercase tracking-[0.08em] mb-3">A 14-day trial. No credit card.</p>
+        <h3 class="text-3xl font-black text-text-900 mb-2">Try it on your real patients.</h3>
+        <p class="text-text-600 mb-6">If you don't see a measurable retention lift in 30 days, we'll help you offboard.</p>
+        <a href="https://app.retaindental.com" class="inline-block px-8 py-4 bg-violet-600 text-white rounded font-bold hover:bg-violet-500 transition-all">
           Get started free →
         </a>
       </div>

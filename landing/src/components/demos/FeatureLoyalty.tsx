@@ -1,9 +1,9 @@
 import { useState } from 'react';
 
 const tiers = [
-  { name: 'Silver', range: '0–499 pts', gradient: 'from-slate-400 to-slate-300', bg: 'bg-ink-800', perks: ['5% off products', 'Free checkup'] },
-  { name: 'Gold', range: '500–1,999 pts', gradient: 'from-amber-400 to-yellow-500', bg: 'bg-ink-800', perks: ['10% off services', 'Free whitening', 'Priority booking'] },
-  { name: 'Platinum', range: '2,000+ pts', gradient: 'from-rose-500 to-amber-500', bg: 'bg-ink-800', perks: ['20% off everything', 'Free cleaning', 'VIP lounge', 'Family perks'] },
+  { name: 'Silver', range: '0–499 pts', badge: 'bg-violet-200', bg: 'bg-ink-800', perks: ['5% off products', 'Free checkup'] },
+  { name: 'Gold', range: '500–1,999 pts', badge: 'bg-violet-400', bg: 'bg-ink-800', perks: ['10% off services', 'Free whitening', 'Priority booking'] },
+  { name: 'Platinum', range: '2,000+ pts', badge: 'bg-violet-600', bg: 'bg-ink-800', perks: ['20% off everything', 'Free cleaning', 'VIP lounge', 'Family perks'] },
 ];
 
 const earnItems = [
@@ -15,8 +15,8 @@ const earnItems = [
 
 const familyMembers = [
   { name: 'Sarah', points: 2450, color: 'bg-violet-600' },
-  { name: 'Mike', points: 1200, color: 'bg-amber-500' },
-  { name: 'Emma', points: 800, color: 'bg-ink-800' },
+  { name: 'Mike', points: 1200, color: 'bg-violet-400' },
+  { name: 'Emma', points: 800, color: 'bg-violet-200' },
 ];
 
 export default function FeatureLoyalty() {
@@ -33,11 +33,11 @@ export default function FeatureLoyalty() {
             onClick={() => setSelectedTier(i)}
             className={`flex-1 rounded p-3 border-2 transition-all ${
               selectedTier === i
-                ? `${tier.bg} border-current shadow-lg scale-[1.03]`
-                : 'bg-ink-900 border-ink-border hover:border-gray-300'
+                ? `${tier.bg} border-violet-600 shadow-lg shadow-violet-600/10 scale-[1.03]`
+                : 'bg-ink-900 border-ink-border hover:border-violet-400'
             }`}
           >
-            <div className={`w-8 h-8 rounded bg-gradient-to-br ${tier.gradient} flex items-center justify-center mx-auto mb-1.5`}>
+            <div className={`w-8 h-8 rounded ${tier.badge} flex items-center justify-center mx-auto mb-1.5`}>
               <span className="text-white text-sm">★</span>
             </div>
             <p className="text-xs font-semibold text-onDark-100">{tier.name}</p>
@@ -47,7 +47,7 @@ export default function FeatureLoyalty() {
       </div>
 
       {/* Selected tier perks */}
-      <div className={`rounded p-4 border ${tiers[selectedTier].bg} border-current`}>
+      <div className="rounded p-4 border border-violet-600/30 bg-ink-800">
         <p className="text-sm font-semibold text-onDark-100 mb-2">{tiers[selectedTier].name} Perks</p>
         <div className="flex flex-wrap gap-1.5">
           {tiers[selectedTier].perks.map((perk, i) => (
@@ -61,11 +61,11 @@ export default function FeatureLoyalty() {
       {/* Earn grid */}
       <div className="grid grid-cols-2 gap-2">
         {earnItems.map((item, i) => (
-          <div key={i} className="bg-ink-900 rounded p-3 border border-ink-border flex items-center gap-2.5 hover:shadow-md transition-all cursor-pointer hover:scale-[1.02]">
+          <div key={i} className="bg-ink-900 rounded p-3 border border-ink-border flex items-center gap-2.5 hover:shadow-md hover:shadow-violet-600/5 transition-all cursor-pointer hover:scale-[1.02]">
             <span className="text-lg">{item.icon}</span>
             <div>
               <p className="text-[10px] font-semibold text-onDark-100">{item.label}</p>
-              <p className="text-xs font-semibold text-emerald-600">{item.points}</p>
+              <p className="text-xs font-semibold text-violet-400">{item.points}</p>
             </div>
           </div>
         ))}
@@ -74,7 +74,7 @@ export default function FeatureLoyalty() {
       {/* Household pooling toggle */}
       <button
         onClick={() => setShowFamily(!showFamily)}
-        className="w-full bg-gradient-to-r from-teal-50 to-amber-50 rounded p-4 border border-teal-100 text-left hover:shadow-md transition-all"
+        className="w-full bg-ink-800 rounded p-4 border border-violet-600/20 text-left hover:shadow-md hover:shadow-violet-600/5 transition-all"
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -90,12 +90,12 @@ export default function FeatureLoyalty() {
               <p className="text-[10px] text-onDark-500">3 members</p>
             </div>
           </div>
-          <span className="text-lg font-semibold text-violet-600">
+          <span className="text-lg font-semibold text-violet-400">
             {familyMembers.reduce((a, m) => a + m.points, 0).toLocaleString()}
           </span>
         </div>
         {showFamily && (
-          <div className="mt-3 pt-3 border-t border-teal-200/50 space-y-1.5">
+          <div className="mt-3 pt-3 border-t border-ink-border space-y-1.5">
             {familyMembers.map((m, i) => (
               <div key={i} className="flex items-center justify-between">
                 <span className="text-[10px] font-semibold text-onDark-500">{m.name}</span>

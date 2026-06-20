@@ -1,29 +1,99 @@
-<section id="faq" class="py-24 px-6 bg-paper-50" itemscope itemtype="https://schema.org/FAQPage">
-  <div class="max-w-7xl mx-auto">
-    <div class="text-center max-w-2xl mx-auto mb-16 space-y-4">
-      <h2 class="font-sans font-[400] text-4xl md:text-5xl tracking-tight">
-        Frequently asked <span class="font-serif italic text-violet-600">questions.</span>
+---
+const faqs = [
+  {
+    question: "How long does it really take to set up?",
+    answer:
+      "Most practices go live in under 20 minutes. We integrate with your existing PMS, pull your patient roster, and generate your branded app in one sitting. No code, no IT ticket.",
+  },
+  {
+    question: "Which practice management systems do you support?",
+    answer:
+      "We support Dentrix, Eaglesoft, Open Dental, Practice-Web, and most cloud-based PMS platforms. If yours isn\u2019t listed, we\u2019ll build the connector \u2014 typically within 48 hours.",
+  },
+  {
+    question: "Is RetainOS HIPAA compliant?",
+    answer:
+      "Yes. We are fully HIPAA compliant with SOC 2 Type II certification in progress. All patient data is encrypted at rest and in transit, and we sign BAAs with every practice.",
+  },
+  {
+    question: "Can patients really schedule online 24/7?",
+    answer:
+      "Absolutely. Your branded app syncs live availability from your PMS and lets patients book, reschedule, or cancel from their phone \u2014 no login required. It works while your front desk is asleep.",
+  },
+  {
+    question: "What about recalls and reactivations?",
+    answer:
+      "Our recall engine automatically identifies patients past due, overdue, or flagged for treatment and sends personalized SMS, email, or app-push sequences. Practices see 40%+ recall response rates.",
+  },
+  {
+    question: "Do patients need to download an app?",
+    answer:
+      "Nope. Your RetainOS app lives as a progressive web app (PWA) under your brand and domain. Patients access it via a texted link, QR code in your lobby, or a button on your website.",
+  },
+  {
+    question: "Can I control what modules my patients see?",
+    answer:
+      "Yes. You toggle every module \u2014 booking, forms, messaging, treatment plans, whitening offers, reviews \u2014 on or off from your dashboard. Roll out features at your own pace.",
+  },
+  {
+    question: "What does pricing look like?",
+    answer:
+      "Pricing starts at $299/mo per location with unlimited patients and no long-term contract. Enterprise DSO pricing is available for multi-location groups. We also offer a 14-day free trial.",
+  },
+];
+---
+
+<section
+  class="bg-paper-50 py-24 lg:py-32"
+  itemscope
+  itemtype="https://schema.org/FAQPage"
+>
+  <div class="mx-auto max-w-7xl px-6 lg:px-8">
+    <div class="mx-auto max-w-2xl text-center">
+      <h2 class="text-4xl font-bold tracking-tight text-text-900 sm:text-5xl">
+        Frequently asked <span class="italic text-violet-600">questions.</span>
       </h2>
-      <p class="text-text-600 font-sans text-lg">Everything you need to know about RetainOS.</p>
+      <p class="mt-4 text-lg text-text-600">
+        Everything you need to know about RetainOS \u2014 and if we missed
+        something, our team is a click away.
+      </p>
     </div>
 
-    <div class="max-w-3xl mx-auto">
-      {[
-        { q: 'How fast can I get my branded app live?', a: 'Most clinics go live in under 20 minutes. We handle app store submission, branding, and configuration — you just provide your logo and preferences.' },
-        { q: 'Do patients need to download a new app?', a: 'Yes — your patients download your custom-branded app from the Apple App Store and Google Play. They use it to book appointments, earn loyalty points, make payments, and receive recall notifications.' },
-        { q: 'How does the pricing work?', a: 'Plans start at $299/month per location with no long-term contract. All modules — loyalty, recall, payments, analytics — are included. Volume discounts are available for multi-location groups.' },
-        { q: 'Does RetainOS integrate with my existing PMS?', a: 'Yes, we integrate with the major Practice Management Systems including Dentrix, Eaglesoft, Open Dental, and more. Our team handles the integration during onboarding.' },
-        { q: 'What happens if a patient misses their appointment?', a: 'RetainOS automatically triggers a reactivation sequence — an SMS reminder, a push notification, and a follow-up email over 3 days. Your team doesn\'t lift a finger.' },
-        { q: 'Is my patient data secure?', a: 'Yes. RetainOS is built on a HIPAA-ready architecture with AES-256 encryption at rest and TLS 1.3 in transit. SOC 2 Type II certification is in progress; BAA documentation is available on Enterprise plans.' },
-        { q: 'Can patients earn rewards on paid treatments?', a: 'Absolutely. You define the earning rules — points per dollar, bonus points for specific treatments, and VIP tier multipliers. Patients redeem points toward future services.' },
-        { q: 'What support do you provide during onboarding?', a: 'You get a dedicated onboarding specialist who walks your team through configuration, staff training, and patient launch. Ongoing support is available via in-app chat and email.' }
-      ].map((faq) => (
-        <details class="group border-b border-paper-line py-5">
-          <summary class="flex justify-between items-center cursor-pointer list-none">
-            <span class="text-base font-sans font-[500] text-text-900 pr-4">{faq.q}</span>
-            <svg class="w-5 h-5 text-text-600 shrink-0 group-open:rotate-180 group-open:text-violet-600 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+    <div class="mx-auto mt-16 max-w-3xl divide-y divide-paper-line">
+      {faqs.map((faq, i) => (
+        <details
+          class="group py-5"
+          itemscope
+          itemprop="mainEntity"
+          itemtype="https://schema.org/Question"
+        >
+          <summary
+            class="flex cursor-pointer items-center justify-between text-lg font-semibold text-text-900"
+          >
+            <span itemprop="name">{faq.question}</span>
+            <svg
+              class="h-5 w-5 shrink-0 text-text-600 transition-transform duration-200 group-open:rotate-180 group-open:text-violet-600"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                clip-rule="evenodd"
+              />
+            </svg>
           </summary>
-          <p class="mt-4 text-text-600 leading-relaxed">{faq.a}</p>
+          <div
+            class="mt-3"
+            itemscope
+            itemprop="acceptedAnswer"
+            itemtype="https://schema.org/Answer"
+          >
+            <p itemprop="text" class="text-base leading-relaxed text-text-600">
+              {faq.answer}
+            </p>
+          </div>
         </details>
       ))}
     </div>

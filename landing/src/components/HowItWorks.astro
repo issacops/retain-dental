@@ -1,61 +1,80 @@
-<section id="how-it-works" class="py-24 px-6 bg-paper-50">
-  <div class="max-w-6xl mx-auto">
-    <div class="text-center max-w-2xl mx-auto mb-16">
-      <p class="text-xs font-semibold uppercase tracking-[0.1em] mb-4">
-        <span class="text-violet-600">■</span> HOW IT WORKS
+---
+const steps = [
+  {
+    number: "01",
+    title: "Connect Your PMS",
+    description:
+      "We integrate directly with Dentrix, Eaglesoft, Open Dental, and more. Your patient data syncs in minutes — no CSV exports or manual imports.",
+    tags: ["Dentrix", "Eaglesoft", "Open Dental", "PracticeWeb"],
+  },
+  {
+    number: "02",
+    title: "Customize Your App",
+    description:
+      "Match your brand colors, upload your logo, and choose which modules to enable — recall campaigns, online scheduling, whitening offers, new patient forms.",
+    tags: ["Brand Match", "Module Toggle", "Smart Forms"],
+  },
+  {
+    number: "03",
+    title: "Go Live",
+    description:
+      "Publish your branded patient app under your domain. Your team gets a QR code, SMS link, and web embed — patients start booking same day.",
+    tags: ["QR Code", "SMS Link", "Web Embed", "Same-Day Launch"],
+  },
+];
+---
+
+<section class="bg-paper-50 py-24 lg:py-32 overflow-hidden">
+  <div class="mx-auto max-w-7xl px-6 lg:px-8">
+    <div class="mx-auto max-w-2xl text-center">
+      <div class="mb-4 flex justify-center">
+        <span
+          class="inline-flex items-center gap-x-1.5 rounded-full border border-violet-200 bg-violet-50 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-violet-600"
+        >
+          How It Works
+        </span>
+      </div>
+      <h2 class="text-4xl font-bold tracking-tight text-text-900 sm:text-5xl">
+        Live in <span class="italic text-violet-600">20 minutes.</span>
+      </h2>
+      <p class="mt-4 text-lg text-text-600">
+        No dev teams, no long implementations. Three steps from signup to your
+        first booked appointment.
       </p>
-      <h2 class="font-sans font-[400] text-4xl md:text-5xl tracking-tight mb-6">Live in <span class="font-serif italic text-violet-600">20 minutes.</span></h2>
-      <p class="text-text-600 font-sans text-lg leading-relaxed">No developers. No app store wait. No complexity. Just your branded patient app — running today.</p>
     </div>
 
-    <div class="relative">
-      <div class="hidden md:block absolute top-[2.5rem] left-[16.67%] right-[16.67%] h-px bg-paper-line"></div>
-
-      <div class="grid md:grid-cols-3 gap-8 md:gap-12">
-        <div class="relative text-center">
-          <div class="relative z-10 mb-6">
-            <span class="font-serif italic text-6xl text-violet-600 leading-none">1</span>
-          </div>
-          <h3 class="text-xl font-sans font-[500] text-text-900 tracking-tight mb-3">Connect Your PMS</h3>
-          <p class="text-sm text-text-600 leading-relaxed max-w-xs mx-auto">
-            We integrate with Dentrix, Eaglesoft, Open Dental, and more. Your patient data syncs automatically — no manual entry.
-          </p>
-          <div class="mt-4 flex flex-wrap gap-3 justify-center">
-            <span class="text-xs text-text-600">Dentrix</span>
-            <span class="text-xs text-text-600">Eaglesoft</span>
-            <span class="text-xs text-text-600">Open Dental</span>
-          </div>
-        </div>
-
-        <div class="relative text-center">
-          <div class="relative z-10 mb-6">
-            <span class="font-serif italic text-6xl text-violet-600 leading-none">2</span>
-          </div>
-          <h3 class="text-xl font-sans font-[500] text-text-900 tracking-tight mb-3">Customize Your App</h3>
-          <p class="text-sm text-text-600 leading-relaxed max-w-xs mx-auto">
-            Upload your logo, pick your colors, set your loyalty rules. We build your branded patient app — white-labeled to your clinic.
-          </p>
-          <div class="mt-4 flex flex-wrap gap-3 justify-center">
-            <span class="text-xs text-text-600">Your Logo</span>
-            <span class="text-xs text-text-600">Your Colors</span>
-            <span class="text-xs text-text-600">Your Rules</span>
-          </div>
-        </div>
-
-        <div class="relative text-center">
-          <div class="relative z-10 mb-6">
-            <span class="font-serif italic text-6xl text-violet-600 leading-none">3</span>
-          </div>
-          <h3 class="text-xl font-sans font-[500] text-text-900 tracking-tight mb-3">Go Live</h3>
-          <p class="text-sm text-text-600 leading-relaxed max-w-xs mx-auto">
-            Your patients get the app. Recall, loyalty, reviews, and payments start working automatically. Watch retention climb.
-          </p>
-          <div class="mt-4 flex flex-wrap gap-3 justify-center">
-            <span class="text-xs text-text-600">96.4% Retention</span>
-            <span class="text-xs text-text-600">Zero Manual Work</span>
-          </div>
-        </div>
+    <div
+      class="relative mx-auto mt-20 grid max-w-5xl gap-12 md:grid-cols-3 md:gap-8"
+    >
+      <div
+        class="absolute left-1/2 top-16 hidden h-px w-[66%] -translate-x-1/2 md:block"
+        aria-hidden="true"
+      >
+        <div class="h-px w-full border-t border-dashed border-paper-line"></div>
       </div>
+
+      {steps.map((step, i) => (
+        <div key={i} class="relative flex flex-col items-center text-center">
+          <span
+            class="font-serif text-6xl italic leading-none text-violet-600"
+          >
+            {step.number}
+          </span>
+          <h3 class="mt-6 text-xl font-bold text-text-900">{step.title}</h3>
+          <p class="mt-3 text-base leading-relaxed text-text-600">
+            {step.description}
+          </p>
+          <div class="mt-5 flex flex-wrap justify-center gap-2">
+            {step.tags.map((tag) => (
+              <span
+                class="inline-block rounded-full border border-paper-line bg-white px-3 py-1 text-xs font-medium text-text-600"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        </div>
+      ))}
     </div>
   </div>
 </section>

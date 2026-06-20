@@ -30,52 +30,52 @@ const rows = [
     { name: 'Vs Yapi', url: 'https://retaindental.com/vs-yapi' },
   ]}
 >
-  <section class="pt-32 pb-12 px-6 bg-cream-50">
+  <section class="pt-32 pb-12 px-6 bg-paper-50">
     <div class="max-w-4xl mx-auto text-center space-y-5">
-      <span class="inline-flex items-center gap-2 px-3 py-1 bg-terracotta-100 border border-clay-300 rounded text-xs font-semibold text-terracotta-600 uppercase tracking-[0.08em]">
+      <span class="inline-flex items-center gap-2 px-3 py-1 bg-violet-600/10 border border-paper-line rounded text-xs font-semibold text-violet-600 uppercase tracking-[0.08em]">
         Comparison
       </span>
-      <h1 class="text-4xl md:text-6xl font-display font-[540] text-clay-900 tracking-tight leading-[1.05]">
-        RetainOS vs <span class="text-terracotta-600">Yapi</span>
+      <h1 class="text-4xl md:text-6xl font-sans font-[400] text-text-900 tracking-tight leading-[1.05]">
+        RetainOS vs <span class="text-violet-600">Yapi</span>
       </h1>
-      <p class="text-lg text-clay-500 max-w-2xl mx-auto">
+      <p class="text-lg text-text-600 max-w-2xl mx-auto">
         Yapi is the workhorse of dental patient communication. RetainOS is what you put
         on top — the brand, the loyalty, and the patient app.
       </p>
     </div>
   </section>
 
-  <section class="py-12 px-6 bg-cream-50">
+  <section class="py-12 px-6 bg-paper-50">
     <div class="max-w-6xl mx-auto">
-      <div class="overflow-x-auto bg-white rounded-3xl border border-clay-300 shadow-sm">
+      <div class="overflow-x-auto bg-white rounded-3xl border border-paper-line shadow-sm">
         <table class="w-full text-sm">
           <thead>
-            <tr class="border-b border-clay-300">
-              <th class="text-left p-5 font-black text-clay-700 w-2/5">Feature</th>
-              <th class="p-5 font-black text-terracotta-600 bg-terracotta-100/50 w-1/5">RetainOS</th>
-              <th class="p-5 font-black text-clay-700 w-1/5">Yapi</th>
+            <tr class="border-b border-paper-line">
+              <th class="text-left p-5 font-black text-text-600 w-2/5">Feature</th>
+              <th class="p-5 font-black text-violet-600 bg-violet-600/5 w-1/5">RetainOS</th>
+              <th class="p-5 font-black text-text-600 w-1/5">Yapi</th>
             </tr>
           </thead>
           <tbody>
             {rows.map((r) => (
-              <tr class="border-b border-gray-100 last:border-0">
-                <td class="p-4 text-clay-700">{r.feature}</td>
-                <td class="p-4 text-center bg-terracotta-100/30">
+              <tr class="border-b border-paper-line last:border-0">
+                <td class="p-4 text-text-600">{r.feature}</td>
+                <td class="p-4 text-center bg-violet-600/5">
                   {r.retain === true ? (
-                    <svg class="text-terracotta-600 mx-auto" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                    <svg class="text-violet-600 mx-auto" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
                   ) : r.retain === false ? (
-                    <svg class="text-slate-300 mx-auto" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    <svg class="text-text-onDark-500 mx-auto" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                   ) : (
-                    <span class="text-xs font-bold text-clay-700">{r.retain}</span>
+                    <span class="text-xs font-bold text-text-600">{r.retain}</span>
                   )}
                 </td>
                 <td class="p-4 text-center">
                   {r.yapi === true ? (
-                    <svg class="text-terracotta-600 mx-auto" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                    <svg class="text-violet-600 mx-auto" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
                   ) : r.yapi === false ? (
-                    <svg class="text-slate-300 mx-auto" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    <svg class="text-text-onDark-500 mx-auto" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                   ) : (
-                    <span class="text-xs font-bold text-clay-700">{r.yapi}</span>
+                    <span class="text-xs font-bold text-text-600">{r.yapi}</span>
                   )}
                 </td>
               </tr>
@@ -86,28 +86,28 @@ const rows = [
     </div>
   </section>
 
-  <section class="py-20 px-6 bg-cream-100">
+  <section class="py-20 px-6 bg-paper-50">
     <div class="max-w-4xl mx-auto">
-      <h2 class="text-3xl md:text-4xl font-display font-[540] text-clay-900 tracking-tight text-center mb-10">Where Yapi wins</h2>
+      <h2 class="text-3xl md:text-4xl font-sans font-[400] text-text-900 tracking-tight text-center mb-10">Where Yapi wins</h2>
       <div class="grid md:grid-cols-2 gap-4">
-        <div class="bg-white rounded p-6 border border-clay-300">
-          <svg class="text-clay-500 mb-3" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/></svg>
-          <h3 class="font-black text-clay-900 mb-1">Insurance verification</h3>
-          <p class="text-sm text-clay-700">Yapi has a 200+ insurance database integrated. RetainOS doesn't touch insurance workflows yet.</p>
+        <div class="bg-white rounded p-6 border border-paper-line">
+          <svg class="text-text-600 mb-3" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/></svg>
+          <h3 class="font-black text-text-900 mb-1">Insurance verification</h3>
+          <p class="text-sm text-text-600">Yapi has a 200+ insurance database integrated. RetainOS doesn't touch insurance workflows yet.</p>
         </div>
-        <div class="bg-white rounded p-6 border border-clay-300">
-          <svg class="text-clay-500 mb-3" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/></svg>
-          <h3 class="font-black text-clay-900 mb-1">Intra-office chat</h3>
-          <p class="text-sm text-clay-700">Yapi's team chat is solid. RetainOS focuses on the patient-facing experience.</p>
+        <div class="bg-white rounded p-6 border border-paper-line">
+          <svg class="text-text-600 mb-3" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/></svg>
+          <h3 class="font-black text-text-900 mb-1">Intra-office chat</h3>
+          <p class="text-sm text-text-600">Yapi's team chat is solid. RetainOS focuses on the patient-facing experience.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="py-20 px-6 bg-clay-900 text-center">
+  <section class="py-20 px-6 bg-ink-900 text-center">
     <h2 class="text-3xl md:text-5xl font-display font-[540] text-white tracking-tight mb-4">Try RetainOS for 14 days.</h2>
-    <p class="text-clay-300 mb-8 max-w-xl mx-auto">Layer it on top of your existing stack. Or replace what you have. Either way, 14 days free.</p>
-    <a href="https://app.retaindental.com" class="inline-block px-8 py-4 bg-terracotta-600 text-cream-0 rounded font-semibold text-lg hover:scale-105 transition-transform">
+    <p class="text-text-onDark-500 mb-8 max-w-xl mx-auto">Layer it on top of your existing stack. Or replace what you have. Either way, 14 days free.</p>
+    <a href="https://app.retaindental.com" class="inline-block px-8 py-4 bg-violet-600 text-white rounded font-semibold text-lg hover:scale-105 transition-transform">
       Start free trial →
     </a>
   </section>

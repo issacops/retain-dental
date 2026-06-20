@@ -49,5 +49,14 @@ landing/.astro/
 # Test artifacts
 tests-videos/
 
+# Screenshots
+screenshots-v7/
+
+# Temp scripts
+capture-all.mjs
+
+# opencode
+.opencode/
+
 # Landing build output
 landing/dist/
