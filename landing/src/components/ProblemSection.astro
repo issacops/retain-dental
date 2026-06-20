@@ -1,95 +1,23 @@
-<section class="relative py-32 px-6 bg-ink-950 overflow-hidden">
-  <!-- Ambient glow -->
-  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-violet-600/5 rounded-full blur-3xl pointer-events-none"></div>
+<section class="py-24 px-6 bg-beige" id="problem">
+  <div class="max-w-5xl mx-auto text-center">
+    <h2 class="text-[clamp(1.75rem,3.5vw,2.75rem)] font-black text-dark-blue leading-[1.05] tracking-tighter text-balance">
+      You're not short on patients.<br />
+      <span class="text-violet-600">You're short on retention.</span>
+    </h2>
+  </div>
 
-  <div class="max-w-6xl mx-auto relative z-10">
-    <div class="text-center max-w-3xl mx-auto mb-16">
-      <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-600/10 border border-violet-600/20 mb-5">
-        <span class="w-1.5 h-1.5 rounded-full bg-violet-400"></span>
-        <span class="text-violet-400 text-xs font-semibold uppercase tracking-[0.12em]">The Problem</span>
-      </span>
-      <h2 class="text-4xl md:text-5xl font-sans font-[400] text-onDark-100 tracking-tight leading-tight text-balance">
-        Your 6-tool stack is <span class="italic text-violet-400">leaking patients.</span>
-      </h2>
-      <p class="text-lg text-text-onDark-500 font-sans leading-relaxed max-w-2xl mx-auto mt-5">
-        Every disconnected tool creates a gap where patients fall through. No-shows go unhandled. Loyalty goes unrewarded. Reviews go unrequested.
-      </p>
+  <div class="max-w-4xl mx-auto mt-16 space-y-0">
+    <div class="py-8 border-t border-dashed border-dark-blue/30">
+      <p class="text-[clamp(3rem,6vw,4.25rem)] font-black text-dark-blue leading-[0.96]">Up to 40%</p>
+      <p class="text-[clamp(1rem,1.5vw,1.125rem)] text-dark-blue/75 mt-2 max-w-lg">of new patients never return after their first visit because practices lack a retention system.</p>
     </div>
-
-    <div class="grid lg:grid-cols-5 gap-10 mb-16">
-      <!-- Chart card -->
-      <div class="lg:col-span-3 bg-ink-900 rounded-2xl border border-ink-border p-8 shadow-card">
-        <div class="flex items-center justify-between mb-6">
-          <p class="text-sm font-semibold text-onDark-100">Retention rate without a unified platform</p>
-          <div class="flex items-center gap-1.5">
-            <span class="w-2 h-2 rounded-full bg-violet-400"></span>
-            <span class="text-[10px] text-text-onDark-500">Declining</span>
-          </div>
-        </div>
-        <svg viewBox="0 0 400 140" class="w-full h-40">
-          <defs>
-            <linearGradient id="declineGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#6366F1" stop-opacity="0.3"/>
-              <stop offset="100%" stop-color="#6366F1" stop-opacity="0"/>
-            </linearGradient>
-          </defs>
-          <line x1="0" y1="0" x2="400" y2="0" stroke="#2E1E40" stroke-width="0.5"/>
-          <line x1="0" y1="35" x2="400" y2="35" stroke="#2E1E40" stroke-width="0.5"/>
-          <line x1="0" y1="70" x2="400" y2="70" stroke="#2E1E40" stroke-width="0.5"/>
-          <line x1="0" y1="105" x2="400" y2="105" stroke="#2E1E40" stroke-width="0.5"/>
-          <line x1="0" y1="140" x2="400" y2="140" stroke="#2E1E40" stroke-width="0.5"/>
-          <path d="M0,95 C50,88 100,82 150,72 C200,62 250,55 300,45 C350,38 400,30 L400,140 L0,140 Z" fill="url(#declineGrad)"/>
-          <path d="M0,95 C50,88 100,82 150,72 C200,62 250,55 300,45 C350,38 400,30" fill="none" stroke="#6366F1" stroke-width="2.5" stroke-linecap="round"/>
-          <circle cx="400" cy="30" r="3.5" fill="#6366F1" stroke="#100A18" stroke-width="2"/>
-          {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'].map((m, i) => (
-            <text x={i * 80} y="130" fill="#948BA8" font-size="9" font-family="Inter, sans-serif">{m}</text>
-          ))}
-        </svg>
-        <p class="text-xs text-text-onDark-500 mt-3">Average retention without a unified platform continues to decline</p>
-      </div>
-
-      <!-- Problem copy -->
-      <div class="lg:col-span-2 flex flex-col justify-center">
-        <h3 class="text-2xl md:text-3xl font-sans font-[400] text-onDark-100 tracking-tight mb-4">
-          Every disconnected tool <span class="italic text-violet-400">costs you patients.</span>
-        </h3>
-        <p class="text-text-onDark-500 font-sans text-sm leading-relaxed">
-          When your tools don't talk to each other, patients fall through the cracks. Each disconnected system creates friction that costs your practice revenue and reputation.
-        </p>
-      </div>
+    <div class="py-8 border-t border-dashed border-dark-blue/30">
+      <p class="text-[clamp(3rem,6vw,4.25rem)] font-black text-dark-blue leading-[0.96]">2-5 hrs/day</p>
+      <p class="text-[clamp(1rem,1.5vw,1.125rem)] text-dark-blue/75 mt-2 max-w-lg">per staff member lost to manual recall calls, follow-ups, and chasing no-shows.</p>
     </div>
-
-    <!-- 6 problem items -->
-    <div class="grid md:grid-cols-2 gap-x-8 gap-y-0">
-      {[
-        { icon: 'calendar', label: 'Recall System', desc: 'Manual phone calls, forgotten follow-ups' },
-        { icon: 'star', label: 'Loyalty Program', desc: 'Paper punch cards, no engagement' },
-        { icon: 'user', label: 'Patient Portal', desc: 'Clunky, nobody logs in' },
-        { icon: 'message', label: 'Review Generator', desc: 'Hope they remember, pray they leave stars' },
-        { icon: 'credit-card', label: 'Payment Terminal', desc: 'Separate system, no integration' },
-        { icon: 'bar-chart', label: 'Analytics', desc: 'Scattered across every tool' },
-      ].map(({ icon, label, desc }) => (
-        <div class="flex items-start gap-3.5 py-5 border-b border-ink-border">
-          <div class="w-9 h-9 rounded-lg bg-ink-800 border border-ink-border flex items-center justify-center shrink-0 mt-0.5">
-            <svg class="w-4 h-4 text-text-onDark-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-              {icon === 'calendar' && <><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="10" y1="14" x2="14" y2="18"/><line x1="14" y1="14" x2="10" y2="18"/></>}
-              {icon === 'star' && <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>}
-              {icon === 'user' && <><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></>}
-              {icon === 'message' && <><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></>}
-              {icon === 'credit-card' && <><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></>}
-              {icon === 'bar-chart' && <><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></>}
-            </svg>
-          </div>
-          <div class="min-w-0">
-            <p class="text-sm font-semibold text-onDark-100">{label}</p>
-            <p class="text-xs text-text-onDark-500 mt-0.5">{desc}</p>
-          </div>
-        </div>
-      ))}
-    </div>
-
-    <div class="mt-12 rounded-xl bg-ink-900 border border-ink-border px-6 py-4 text-center">
-      <p class="text-sm font-medium text-onDark-100">Each gap = lost patients, lost revenue, lost time</p>
+    <div class="py-8 border-t border-dashed border-dark-blue/30">
+      <p class="text-[clamp(3rem,6vw,4.25rem)] font-black text-dark-blue leading-[0.96]">$146K</p>
+      <p class="text-[clamp(1rem,1.5vw,1.125rem)] text-dark-blue/75 mt-2 max-w-lg">in average annual revenue lost per practice from patient churn and missed recall opportunities.</p>
     </div>
   </div>
 </section>

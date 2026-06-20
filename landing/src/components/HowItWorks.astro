@@ -1,80 +1,54 @@
----
-const steps = [
-  {
-    number: "01",
-    title: "Connect Your PMS",
-    description:
-      "We integrate directly with Dentrix, Eaglesoft, Open Dental, and more. Your patient data syncs in minutes — no CSV exports or manual imports.",
-    tags: ["Dentrix", "Eaglesoft", "Open Dental", "PracticeWeb"],
-  },
-  {
-    number: "02",
-    title: "Customize Your App",
-    description:
-      "Match your brand colors, upload your logo, and choose which modules to enable — recall campaigns, online scheduling, whitening offers, new patient forms.",
-    tags: ["Brand Match", "Module Toggle", "Smart Forms"],
-  },
-  {
-    number: "03",
-    title: "Go Live",
-    description:
-      "Publish your branded patient app under your domain. Your team gets a QR code, SMS link, and web embed — patients start booking same day.",
-    tags: ["QR Code", "SMS Link", "Web Embed", "Same-Day Launch"],
-  },
-];
----
-
-<section class="bg-paper-50 py-24 lg:py-32 overflow-hidden">
-  <div class="mx-auto max-w-7xl px-6 lg:px-8">
-    <div class="mx-auto max-w-2xl text-center">
-      <div class="mb-4 flex justify-center">
-        <span
-          class="inline-flex items-center gap-x-1.5 rounded-full border border-violet-200 bg-violet-50 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-violet-600"
-        >
-          How It Works
-        </span>
-      </div>
-      <h2 class="text-4xl font-bold tracking-tight text-text-900 sm:text-5xl">
-        Live in <span class="italic text-violet-600">20 minutes.</span>
+<section class="py-24 px-6 bg-beige" id="how-it-works">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-16">
+      <h2 class="text-[clamp(1.75rem,3.5vw,2.75rem)] font-black text-dark-blue leading-[1.05] tracking-tighter text-balance">
+        We don't just deploy. We partner.
       </h2>
-      <p class="mt-4 text-lg text-text-600">
-        No dev teams, no long implementations. Three steps from signup to your
-        first booked appointment.
+      <p class="text-dark-blue/70 text-[clamp(1rem,1.5vw,1.125rem)] mt-4 max-w-2xl mx-auto">
+        Every week, we review performance data together to identify friction, refine workflows, and ensure your practice gets the most out of RetainOS.
       </p>
     </div>
 
-    <div
-      class="relative mx-auto mt-20 grid max-w-5xl gap-12 md:grid-cols-3 md:gap-8"
-    >
-      <div
-        class="absolute left-1/2 top-16 hidden h-px w-[66%] -translate-x-1/2 md:block"
-        aria-hidden="true"
-      >
-        <div class="h-px w-full border-t border-dashed border-paper-line"></div>
+    <div class="grid md:grid-cols-2 gap-8">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 rounded-xl bg-violet-600/10 flex items-center justify-center shrink-0">
+          <svg class="w-6 h-6 text-violet-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-dark-blue mb-2">Weekly working sessions</h3>
+          <p class="text-dark-blue/70 text-sm leading-relaxed">Every week, we review performance data together to identify friction, refine workflows, and ensure your agents are solving the right problems.</p>
+        </div>
       </div>
 
-      {steps.map((step, i) => (
-        <div key={i} class="relative flex flex-col items-center text-center">
-          <span
-            class="text-6xl italic leading-none text-violet-600"
-          >
-            {step.number}
-          </span>
-          <h3 class="mt-6 text-xl font-bold text-text-900">{step.title}</h3>
-          <p class="mt-3 text-base leading-relaxed text-text-600">
-            {step.description}
-          </p>
-          <div class="mt-5 flex flex-wrap justify-center gap-2">
-            {step.tags.map((tag) => (
-              <span
-                class="inline-block rounded-full border border-paper-line bg-white px-3 py-1 text-xs font-medium text-text-600"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 rounded-xl bg-violet-600/10 flex items-center justify-center shrink-0">
+          <svg class="w-6 h-6 text-violet-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
         </div>
-      ))}
+        <div>
+          <h3 class="text-lg font-bold text-dark-blue mb-2">Continuous data review</h3>
+          <p class="text-dark-blue/70 text-sm leading-relaxed">We continuously monitor your retention metrics, spot trends, and proactively suggest optimizations to maximize your ROI.</p>
+        </div>
+      </div>
+
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 rounded-xl bg-violet-600/10 flex items-center justify-center shrink-0">
+          <svg class="w-6 h-6 text-violet-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-dark-blue mb-2">On-site engineers when needed</h3>
+          <p class="text-dark-blue/70 text-sm leading-relaxed">For complex integrations or workflow customization, our engineers work alongside your team to ensure everything runs smoothly.</p>
+        </div>
+      </div>
+
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 rounded-xl bg-violet-600/10 flex items-center justify-center shrink-0">
+          <svg class="w-6 h-6 text-violet-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-dark-blue mb-2">Custom workflows built with you</h3>
+          <p class="text-dark-blue/70 text-sm leading-relaxed">Your practice is unique. We build custom recall sequences, loyalty rules, and automation workflows tailored to your patient base.</p>
+        </div>
+      </div>
     </div>
   </div>
 </section>

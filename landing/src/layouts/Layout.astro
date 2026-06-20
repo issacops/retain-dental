@@ -202,7 +202,7 @@ const breadcrumbSchema = breadcrumbs && breadcrumbs.length > 0 ? {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#08060A" />
+    <meta name="theme-color" content="#06222F" />
 
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -270,7 +270,7 @@ const breadcrumbSchema = breadcrumbs && breadcrumbs.length > 0 ? {
       ::-moz-selection { background: rgba(99,102,241,0.25); }
     </style>
   </head>
-  <body class="bg-ink-950 text-text-onDark-100 antialiased selection:bg-violet-600/30 text-base leading-relaxed">
+  <body class="bg-ink-950 text-white antialiased selection:bg-violet-600/30 text-base leading-relaxed">
     <Analytics />
     <Navbar />
     {pageType === 'article' && <div class="reading-progress" id="reading-progress"></div>}
