@@ -13,7 +13,7 @@ export default function BrandShowcase() {
       <div class="max-w-7xl mx-auto">
         <div class="text-center max-w-2xl mx-auto mb-16 space-y-4">
           <h2 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter">
-            See RetainOS in <span class="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-amber-600">Action</span>
+            See RetainOS in <span class="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-violet-400">Action</span>
           </h2>
           <p class="text-lg text-slate-500">
             A fully branded experience for every user — clinic owners, staff, and patients.

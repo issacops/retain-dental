@@ -1,10 +1,10 @@
 import { useState } from 'react';
 
 const tabs = [
-  { id: 'home', label: 'HOME', icon: '🏠' },
-  { id: 'wallet', label: 'WALLET', icon: '💳' },
-  { id: 'care', label: 'CARE', icon: '🦷' },
-  { id: 'profile', label: 'PROFILE', icon: '👤' },
+  { id: 'home', label: 'HOME' },
+  { id: 'wallet', label: 'WALLET' },
+  { id: 'care', label: 'CARE' },
+  { id: 'profile', label: 'PROFILE' },
 ];
 
 const walletItems = [
@@ -31,7 +31,7 @@ export default function FeaturePatientPwa() {
 
   return (
     <div className="relative mx-auto w-[280px] sm:w-[300px]">
-      <div className="rounded-[2.5rem] bg-gradient-to-b from-[#fdf8f0] to-[#f0e8db] border border-gray-200 shadow-2xl shadow-teal-900/10 overflow-hidden">
+      <div className="rounded-[2.5rem] bg-gradient-to-b from-[#fdf8f0] to-[#f0e8db] border border-gray-200 shadow-2xl shadow-violet-600/10 overflow-hidden">
         {/* Status bar */}
         <div className="flex items-center justify-between px-6 pt-3 pb-1">
           <span className="text-[10px] font-semibold text-onDark-500">9:41</span>
@@ -64,7 +64,7 @@ export default function FeaturePatientPwa() {
                 </div>
                 <p className="text-2xl font-semibold text-onDark-100">2,450 <span className="text-sm font-semibold text-onDark-500">Pts</span></p>
                 <div className="mt-2 h-1 bg-ink-800 rounded overflow-hidden">
-                  <div className="h-full w-[62%] bg-gradient-to-r from-teal-500 to-amber-500 rounded"></div>
+                  <div className="h-full w-[62%] bg-gradient-to-r from-violet-600 to-violet-400 rounded"></div>
                 </div>
                 <p className="text-[9px] text-onDark-500 mt-1">550 pts to Platinum</p>
               </div>
@@ -155,7 +155,7 @@ export default function FeaturePatientPwa() {
           {activeTab === 'profile' && (
             <div className="space-y-3">
               <div className="bg-ink-900 rounded p-4 shadow-sm border border-ink-border text-center">
-                <div className="w-16 h-16 rounded bg-gradient-to-br from-teal-500 to-teal-700 flex items-center justify-center text-white text-xl font-semibold mx-auto">S</div>
+                <div className="w-16 h-16 rounded bg-gradient-to-br from-violet-600 to-violet-400 flex items-center justify-center text-white text-xl font-semibold mx-auto">S</div>
                 <p className="text-sm font-semibold text-onDark-100 mt-2">Sarah Johnson</p>
                 <p className="text-[10px] text-onDark-500">Gold Member since 2024</p>
               </div>
@@ -187,7 +187,10 @@ export default function FeaturePatientPwa() {
                   activeTab === tab.id ? 'bg-violet-600 text-white shadow-md' : 'text-onDark-500'
                 }`}
               >
-                <span className="text-sm">{tab.icon}</span>
+                {tab.id === 'home' && <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>}
+                {tab.id === 'wallet' && <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 10h20"/></svg>}
+                {tab.id === 'care' && <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>}
+                {tab.id === 'profile' && <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>}
                 <span className="text-[7px] font-semibold tracking-wider">{tab.label}</span>
               </button>
             ))}

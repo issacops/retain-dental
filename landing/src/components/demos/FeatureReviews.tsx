@@ -18,11 +18,12 @@ export default function FeatureReviews() {
 
   return (
     <div className="max-w-md mx-auto space-y-4">
+      <span className="inline-block px-2.5 py-0.5 rounded-full bg-violet-600/15 text-violet-400 text-[9px] font-semibold uppercase tracking-widest border border-violet-600/20">Coming Soon</span>
       {/* Review request flow */}
       <div className="bg-ink-900 rounded p-5 border border-ink-border shadow-sm">
         <div className="flex items-center gap-2 mb-3">
           <div className="w-8 h-8 rounded bg-ink-800 flex items-center justify-center">
-            <span className="text-sm">⭐</span>
+            <svg className="w-4 h-4 text-amber-400" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
           </div>
           <div>
             <p className="text-xs font-semibold text-onDark-100">Automated Review Request</p>
@@ -41,7 +42,7 @@ export default function FeatureReviews() {
             }`}
           >
             {sending ? (
-              <span className="flex items-center justify-center gap-2">
+              <span className="flex items-center justify-center gap-2 cursor-wait">
                 <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" className="opacity-25"/><path d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" fill="currentColor" className="opacity-75"/></svg>
                 Sending request...
               </span>
@@ -64,7 +65,7 @@ export default function FeatureReviews() {
       <div className="space-y-2">
         <p className="text-[9px] font-semibold text-onDark-500 uppercase tracking-widest px-1">Recent Reviews</p>
         {reviews.map((r, i) => (
-          <div key={i} className="bg-ink-900 rounded p-3.5 border border-ink-border hover:shadow-md transition-all">
+          <div key={i} className="bg-ink-900 rounded p-3.5 border border-ink-border hover:shadow-md transition-all cursor-pointer">
             <div className="flex items-center justify-between mb-1.5">
               <div className="flex items-center gap-2">
                 <div className="w-6 h-6 rounded-full bg-violet-600 flex items-center justify-center text-white text-[8px] font-semibold">
