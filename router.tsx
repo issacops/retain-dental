@@ -38,10 +38,9 @@ const GodGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [error, setError] = React.useState('');
+    const [checking, setChecking] = React.useState(false);
 
     if (isAuthenticated) return <>{children}</>;
-
-    const [checking, setChecking] = React.useState(false);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
