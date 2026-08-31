@@ -112,7 +112,7 @@ const App = () => {
       let subdomain = null;
 
       // 1. Handle Localhost (e.g. city.localhost)
-      if (hostname.includes('localhost') && parts.length > 1) {
+      if (hostname.includes('localhost') && parts.length > 1 && parts[0] !== 'localhost') {
         subdomain = parts[0];
       }
       // 2. Handle Custom Domains (e.g. citydental.app.retaindental.com)

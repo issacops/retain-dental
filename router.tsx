@@ -48,15 +48,9 @@ const GodGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         setChecking(true);
         setError('');
         try {
-            const res = await fetch('/api/auth/god', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }),
-            });
-            const data = await res.json();
-            if (data.authenticated) {
+            if (email === 'god@retain.dental' && password === 'godmode2025!') {
                 setIsAuthenticated(true);
-                await supabase.auth.signInWithPassword({ email: 'god@retain.dental', password: 'godmode2025!' });
+                await supabase.auth.signInWithPassword({ email, password });
             } else {
                 setError('ACCESS DENIED');
             }
