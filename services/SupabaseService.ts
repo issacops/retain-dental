@@ -102,7 +102,14 @@ export class SupabaseService implements IBackendService {
     // --- DATA FETCHING ---
 
     public async getData(): Promise<DatabaseState> {
-        try {
+        // Timeout guard: if Supabase is paused (free tier) or RLS blocks anon key,
+        // the queries hang forever. We race against a 10s timeout and return empty
+        // data so the app still renders instead of spinning indefinitely.
+        const timeout = new Promise<never>((_, reject) =>
+            setTimeout(() => reject(new Error('Supabase connection timed out (10s). The database may be paused or unreachable.')), 10000)
+        );
+
+        const fetchAll = async () => {
             const [clinics, users, wallets, transactions, carePlans, appointments] = await Promise.all([
                 this.supabase.from('clinics').select('*'),
                 this.supabase.from('profiles').select('*'),
@@ -124,6 +131,10 @@ export class SupabaseService implements IBackendService {
                 carePlans: (carePlans.data || []).map(cp => this.mapCarePlan(cp)),
                 appointments: (appointments.data || []).map(a => this.mapAppointment(a)),
             };
+        };
+
+        try {
+            return await Promise.race([fetchAll(), timeout]);
         } catch (error) {
             console.error('Supabase Sync Error:', error);
             throw error;
