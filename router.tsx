@@ -47,9 +47,9 @@ const GodGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         setChecking(true);
         setError('');
         try {
-            if (email === 'god@retain.dental' && password === 'godmode2025!') {
+            if (email.trim().toLowerCase() === 'god@retain.dental' && password === 'godmode2025!') {
                 setIsAuthenticated(true);
-                await supabase.auth.signInWithPassword({ email, password });
+                await supabase.auth.signInWithPassword({ email: email.trim().toLowerCase(), password });
             } else {
                 setError('ACCESS DENIED');
             }
