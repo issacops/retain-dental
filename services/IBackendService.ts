@@ -129,4 +129,6 @@ export interface IBackendService {
 
     // Admin
     hardDeleteUser(userId: string): Promise<ServiceResponse>;
+
+    getRetentionMetrics(clinicId: string): Promise<any>;
 }

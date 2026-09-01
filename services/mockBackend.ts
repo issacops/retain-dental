@@ -610,4 +610,51 @@ export class MockBackendService implements IBackendService {
     }
     return user;
   }
+
+  public async getRetentionMetrics(clinicId: string): Promise<any> {
+    const patients = this.users.filter(u => u.clinicId === clinicId && u.role === Role.PATIENT);
+    const clinicWallets = this.wallets.filter(w => patients.find(p => p.id === w.userId));
+    const clinicTxs = this.transactions.filter(t => t.clinicId === clinicId);
+
+    const totalPatients = patients.length;
+    const totalRevenue = clinicTxs
+      .filter(t => t.type === TransactionType.EARN)
+      .reduce((sum, t) => sum + t.amountPaid, 0);
+    const totalPointsIssued = clinicTxs
+      .filter(t => t.type === TransactionType.EARN)
+      .reduce((sum, t) => sum + t.pointsEarned, 0);
+    const totalPointsRedeemed = Math.abs(clinicTxs
+      .filter(t => t.type === TransactionType.REDEEM)
+      .reduce((sum, t) => sum + t.pointsEarned, 0));
+
+    const sixMonthsAgo = new Date();
+    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+    const activePatients = patients.filter(p => {
+      const wallet = this.wallets.find(w => w.userId === p.id);
+      if (!wallet?.lastTransactionAt) return false;
+      return new Date(wallet.lastTransactionAt) >= sixMonthsAgo;
+    }).length;
+
+    const retentionRate = totalPatients > 0 ? Math.round((activePatients / totalPatients) * 100) : 0;
+    const avgLTV = totalPatients > 0 ? Math.round(totalRevenue / totalPatients) : 0;
+    const redemptionRate = totalPointsIssued > 0 ? Math.round((totalPointsRedeemed / totalPointsIssued) * 100) : 0;
+
+    const tierBreakdown = [Tier.MEMBER, Tier.SILVER, Tier.GOLD, Tier.PLATINUM].map(tier => ({
+      tier,
+      count: patients.filter(p => p.currentTier === tier).length,
+    }));
+
+    return {
+      totalPatients,
+      activePatients,
+      retentionRate,
+      avgLTV,
+      totalRevenue,
+      totalPointsIssued,
+      totalPointsRedeemed,
+      redemptionRate,
+      tierBreakdown,
+    };
+  }
 }
+
