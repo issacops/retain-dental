@@ -373,11 +373,19 @@ export class SupabaseService implements IBackendService {
 
             if (clinicSlug) {
                 const lookup = publicClient || this.supabase;
-                const { data: clinic } = await lookup.from('clinics').select('id').eq('slug', clinicSlug).maybeSingle();
+                const { data: clinic } = await lookup
+                    .from('clinics')
+                    .select('id, admin_email')
+                    .eq('slug', clinicSlug)
+                    .maybeSingle();
                 if (clinic) {
                     clinicId = clinic.id;
-                    role = 'ADMIN'; // If signing up via Clinic Link, they request Admin access
-                    status = 'PENDING'; // Must be approved by Super Admin
+                    role = 'ADMIN'; // Signing up via a clinic link requests admin access
+                    // The clinic's invited email is auto-approved; anyone else
+                    // stays PENDING until a super admin clears them.
+                    const invited = (clinic.admin_email || '').trim().toLowerCase();
+                    const signingUp = (email || '').trim().toLowerCase();
+                    status = invited && invited === signingUp ? 'ACTIVE' : 'PENDING';
                 }
             }
 
