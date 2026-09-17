@@ -12,6 +12,13 @@ import { IBackendService, ServiceResponse } from './IBackendService';
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || '';
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
+// Session-less client for public lookups (e.g. resolving a clinic by slug during
+// onboarding). A brand-new signup has no profile yet, so tenant RLS would hide
+// the clinic from them if we used the authenticated client.
+const publicClient = SUPABASE_URL && SUPABASE_ANON_KEY
+    ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: false, autoRefreshToken: false } })
+    : null;
+
 export class SupabaseService implements IBackendService {
     private static instance: SupabaseService;
     private supabase: SupabaseClient;
@@ -365,7 +372,8 @@ export class SupabaseService implements IBackendService {
             let status = 'ACTIVE'; // Patients are active by default
 
             if (clinicSlug) {
-                const { data: clinic } = await this.supabase.from('clinics').select('id').eq('slug', clinicSlug).single();
+                const lookup = publicClient || this.supabase;
+                const { data: clinic } = await lookup.from('clinics').select('id').eq('slug', clinicSlug).maybeSingle();
                 if (clinic) {
                     clinicId = clinic.id;
                     role = 'ADMIN'; // If signing up via Clinic Link, they request Admin access
@@ -373,8 +381,8 @@ export class SupabaseService implements IBackendService {
                 }
             }
 
-            // 2. Check if Profile exists
-            const { data: existing } = await this.supabase.from('profiles').select('id').eq('id', userId).single();
+            // 2. Check if Profile exists (maybeSingle avoids a 406 on zero rows)
+            const { data: existing } = await this.supabase.from('profiles').select('id').eq('id', userId).maybeSingle();
             if (existing) {
                 return { success: true, message: 'Profile already exists' };
             }
