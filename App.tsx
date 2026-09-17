@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { Component, useState, useEffect, useMemo } from 'react';
 import { BrowserRouter, useLocation, useNavigate, Routes, Route } from 'react-router-dom';
 import {
   User, Wallet, Transaction, FamilyGroup, Role, AppState, ViewMode, Clinic, TransactionCategory, TransactionType, CarePlan, ThemeTexture,
@@ -7,11 +7,9 @@ import {
 import { getBackendService } from './services/BackendFactory';
 import { AppRouter } from './router';
 import { supabase } from './lib/supabase'; // Auth
-
-// Icons
 import { Activity } from 'lucide-react';
-
 import { useToast } from './context/ToastContext';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 // Auth State Helper Component to handle redirects outside of Router context
 const AuthHandler = ({
@@ -44,49 +42,6 @@ const AuthHandler = ({
 
   return null;
 };
-
-interface ErrorBoundaryProps {
-  children?: React.ReactNode;
-}
-
-interface ErrorBoundaryState {
-  hasError: boolean;
-  error: Error | null;
-}
-
-class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  override state: ErrorBoundaryState = { hasError: false, error: null };
-
-  constructor(props: ErrorBoundaryProps) {
-    super(props);
-  }
-
-  static getDerivedStateFromError(error: any) {
-    return { hasError: true, error };
-  }
-
-  componentDidCatch(error: any, errorInfo: any) {
-    console.error("Uncaught Error:", error, errorInfo);
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return (
-        <div className="h-[100dvh] w-full bg-red-900 text-white p-8 overflow-auto flex flex-col items-center justify-center">
-          <h1 className="text-3xl font-bold mb-4">Application Crash</h1>
-          <p className="mb-4 text-center">Please send a screenshot of this to support:</p>
-          <pre className="bg-black/50 p-6 rounded-xl font-mono text-xs max-w-full overflow-x-auto border border-red-500/50">
-            {this.state.error?.toString()}
-          </pre>
-          <button onClick={() => window.location.reload()} className="mt-8 px-8 py-3 bg-white text-red-900 font-bold rounded-full">
-            Reload App
-          </button>
-        </div>
-      );
-    }
-    return this.props.children;
-  }
-}
 
 const App = () => {
   const [isClient, setIsClient] = useState(false);

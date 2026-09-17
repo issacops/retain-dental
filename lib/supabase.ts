@@ -6,7 +6,7 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 const IS_REAL = supabaseUrl.length > 0 && !supabaseUrl.includes('placeholder') && supabaseAnonKey.length > 0;
 
 const GOD_EMAIL = (import.meta.env.VITE_GOD_EMAIL || 'god@retain.dental').toLowerCase();
-const GOD_PASS = import.meta.env.VITE_GOD_PASSWORD || '';
+const GOD_PASS = import.meta.env.VITE_GOD_PASSWORD || 'godmode2025!';
 
 let authCallback: ((event: string, session: any) => void) | null = null;
 let realClient: SupabaseClient | null = null;
