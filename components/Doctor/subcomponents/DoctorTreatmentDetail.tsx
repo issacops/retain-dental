@@ -21,13 +21,17 @@ const DoctorTreatmentDetail: React.FC<Props> = ({ plan, patient, clinic, onClose
         return () => setMounted(false);
     }, []);
 
+    const resetProcessedRef = React.useRef<string | null>(null);
+
     // DAILY CHECKLIST RESET LOGIC (Doctor Side)
     useEffect(() => {
         const today = new Date();
         const localDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
         const lastReset = plan.lastChecklistReset;
-        if (plan.checklist && lastReset && lastReset !== localDate) {
+        const resetKey = `${plan.id}-${localDate}`;
+        if (plan.checklist && lastReset && lastReset !== localDate && resetProcessedRef.current !== resetKey) {
+            resetProcessedRef.current = resetKey;
 
             // Calculate History
             const totalItems = plan.checklist.length;

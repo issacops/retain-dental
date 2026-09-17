@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Microscope, Sparkles, User as UserIcon, X } from 'lucide-react';
+import { Microscope, Sparkles, User as UserIcon, X, Plus } from 'lucide-react';
 import { Clinic, User } from '../../../../types';
 import { TREATMENT_TEMPLATES } from '../../../../constants';
 

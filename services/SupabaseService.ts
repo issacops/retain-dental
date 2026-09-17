@@ -147,7 +147,7 @@ export class SupabaseService implements IBackendService {
         try {
             // 1. Fetch Users & Transactions
             const { data: users } = await this.supabase.from('profiles').select('id, joined_at, family_group_id').eq('clinic_id', clinicId).eq('role', 'PATIENT');
-            const { data: wallets } = await this.supabase.from('wallets').select('user_id, balance');
+            const { data: wallets } = await this.supabase.from('wallets').select('id, user_id, balance');
             const { data: transactions } = await this.supabase.from('transactions').select('*').eq('clinic_id', clinicId);
 
             if (!users || !wallets || !transactions) return {};

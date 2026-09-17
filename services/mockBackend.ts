@@ -639,7 +639,7 @@ export class MockBackendService implements IBackendService {
     const avgLTV = totalPatients > 0 ? Math.round(totalRevenue / totalPatients) : 0;
     const redemptionRate = totalPointsIssued > 0 ? Math.round((totalPointsRedeemed / totalPointsIssued) * 100) : 0;
 
-    const tierBreakdown = [Tier.MEMBER, Tier.SILVER, Tier.GOLD, Tier.PLATINUM].map(tier => ({
+    const tierBreakdown = [Tier.MEMBER, Tier.GOLD, Tier.PLATINUM].map(tier => ({
       tier,
       count: patients.filter(p => p.currentTier === tier).length,
     }));

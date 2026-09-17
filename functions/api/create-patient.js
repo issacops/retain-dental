@@ -3,8 +3,9 @@ import { createClient } from '@supabase/supabase-js';
 export async function onRequest(context) {
   const { request, env } = context;
 
+  const origin = request.headers.get('Origin') || '*';
   const headers = new Headers({
-    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Origin': origin,
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
     'Content-Type': 'application/json',
@@ -38,7 +39,7 @@ export async function onRequest(context) {
     });
 
     const email = `${mobile}@retain.dental`;
-    const password = pin || '123456';
+    const password = pin || Math.floor(100000 + Math.random() * 900000).toString();
 
     const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.createUser({
       email,

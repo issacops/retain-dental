@@ -12,10 +12,15 @@ DECLARE
   target_user_id UUID;
   caller_role TEXT;
 BEGIN
-  -- 1. Check if caller is Super Admin (You can implement your own role check here)
-  -- For now, we assume if you can call this, you are authorized, OR check public.profiles
-  -- SELECT role INTO caller_role FROM public.profiles WHERE id = auth.uid();
-  -- IF caller_role != 'SUPER_ADMIN' THEN RAISE EXCEPTION 'Unauthorized'; END IF;
+  -- 1. Check if caller is Super Admin
+  IF auth.uid() IS NULL THEN
+    RAISE EXCEPTION 'Unauthorized: Authentication required';
+  END IF;
+
+  SELECT role INTO caller_role FROM public.profiles WHERE id = auth.uid();
+  IF caller_role != 'SUPER_ADMIN' THEN
+    RAISE EXCEPTION 'Unauthorized: Super Admin role required';
+  END IF;
 
   -- 2. Find User ID
   SELECT id INTO target_user_id FROM auth.users WHERE email = email_input;

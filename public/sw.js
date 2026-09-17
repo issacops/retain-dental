@@ -12,8 +12,37 @@ self.addEventListener('activate', (event) => {
 
 // Cache-First strategy for static assets, network-first for API
 self.addEventListener('fetch', (event) => {
-    // Only intercept basic GET requests
     if (event.request.method !== 'GET') return;
+
+    const url = new URL(event.request.url);
+
+    // Network-first for API requests
+    if (url.pathname.startsWith('/api') || url.hostname.includes('supabase')) {
+        event.respondWith(
+            fetch(event.request)
+                .then(response => {
+                    const clonedResponse = response.clone();
+                    caches.open(CACHE_NAME).then(cache => cache.put(event.request, clonedResponse));
+                    return response;
+                })
+                .catch(() => caches.match(event.request))
+        );
+        return;
+    }
+
+    // Cache-first for static assets with network fallback
+    event.respondWith(
+        caches.match(event.request).then(cachedResponse => {
+            if (cachedResponse) return cachedResponse;
+            return fetch(event.request).then(response => {
+                if (response && response.status === 200) {
+                    const clonedResponse = response.clone();
+                    caches.open(CACHE_NAME).then(cache => cache.put(event.request, clonedResponse));
+                }
+                return response;
+            });
+        })
+    );
 });
 
 // Listen for Push Notifications

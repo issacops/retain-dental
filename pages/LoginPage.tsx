@@ -39,21 +39,12 @@ export const LoginPage: React.FC<LoginPageProps> = ({ clinics = [], activeClinic
         setLoading(true);
         const email = `${cleanMobile}@retain.dental`;
         const { error } = await supabase.auth.signInWithPassword({ email, password: pin });
-        if (!error) { navigate('/patient'); return; }
-        // Fallback: create mock patient session for demo
-        try {
-            const { data: signUpData, error: signUpError } = await supabase.auth.signUp({ email, password: pin, options: { emailRedirectTo: undefined } });
-            if (!signUpError && signUpData.user) {
-                const svc = SupabaseService.getInstance();
-                await svc.provisionOnboardedUser(signUpData.user.id, email, undefined);
-                const { error: secondAttempt } = await supabase.auth.signInWithPassword({ email, password: pin });
-                if (!secondAttempt) { navigate('/patient'); setLoading(false); return; }
-            }
-        } catch (_) { /* fall through to mock */ }
-        if (import.meta.env.DEV) {
-            localStorage.setItem('retain_demo_patient', JSON.stringify({ mobile: cleanMobile, pin }));
+        if (!error) {
             navigate('/patient');
+            setLoading(false);
+            return;
         }
+        alert(error.message || "Invalid mobile number or PIN. Please check your credentials.");
         setLoading(false);
     };
 

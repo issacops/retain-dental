@@ -5,8 +5,8 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
 const IS_REAL = supabaseUrl.length > 0 && !supabaseUrl.includes('placeholder') && supabaseAnonKey.length > 0;
 
-const GOD_EMAIL = 'god@retain.dental';
-const GOD_PASS = 'godmode2025!';
+const GOD_EMAIL = (import.meta.env.VITE_GOD_EMAIL || 'god@retain.dental').toLowerCase();
+const GOD_PASS = import.meta.env.VITE_GOD_PASSWORD || '';
 
 let authCallback: ((event: string, session: any) => void) | null = null;
 let realClient: SupabaseClient | null = null;
@@ -29,9 +29,9 @@ function getGodSession() {
   return null;
 }
 
-function setGodSession() {
+function setGodSession(email: string) {
   const session = {
-    user: { id: 'local-god-' + Date.now(), email: GOD_EMAIL, user_metadata: { full_name: 'Platform Master' } },
+    user: { id: 'local-god-' + Date.now(), email, user_metadata: { full_name: 'Platform Master' } },
     access_token: 'local-god-token',
     refresh_token: 'local-god-token',
     expires_at: Date.now() + 86400000,
@@ -48,14 +48,16 @@ function createMockClient() {
   return {
     auth: {
       signInWithPassword: async ({ email, password }: { email: string; password: string }) => {
-        if (email.toLowerCase() === GOD_EMAIL && password === GOD_PASS) {
-          const session = setGodSession();
+        if (GOD_PASS && email.toLowerCase() === GOD_EMAIL && password === GOD_PASS) {
+          const session = setGodSession(email);
           emitAuthEvent('SIGNED_IN', session);
           return { data: { session, user: session.user }, error: null };
         }
         return { data: { session: null, user: null }, error: new Error('Invalid credentials or Supabase not configured') };
       },
-      signUp: async () => ({ data: { session: null, user: null }, error: new Error('Signup not available in mock mode') }),
+      signUp: async ({ email, password }: { email: string; password?: string }) => {
+        return { data: { session: null, user: null }, error: new Error('Signup not available in mock mode') };
+      },
       signOut: async () => {
         clearGodSession();
         emitAuthEvent('SIGNED_OUT', null);
@@ -116,13 +118,14 @@ const wrappedClient = realClient
       auth: {
         ...realClient!.auth,
         signInWithPassword: async ({ email, password }: { email: string; password: string }) => {
-          if (email.toLowerCase() === GOD_EMAIL && password === GOD_PASS) {
-            const session = setGodSession();
+          if (GOD_PASS && email.toLowerCase() === GOD_EMAIL && password === GOD_PASS) {
+            const session = setGodSession(email);
             emitAuthEvent('SIGNED_IN', session);
             return { data: { session, user: session.user }, error: null };
           }
           return realClient!.auth.signInWithPassword({ email, password });
         },
+        signUp: (credentials: any) => realClient!.auth.signUp(credentials),
         signOut: async () => {
           clearGodSession();
           return realClient!.auth.signOut();

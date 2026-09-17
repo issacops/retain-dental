@@ -3,7 +3,8 @@ import { createClient } from '@supabase/supabase-js';
 // Vercel Serverless Function to Create Auth User + CRM Profile
 export default async function handler(req, res) {
     // 1. Setup CORS
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    const origin = req.headers.origin || '*';
+    res.setHeader('Access-Control-Allow-Origin', origin);
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
@@ -40,7 +41,7 @@ export default async function handler(req, res) {
         // 3. Create Auth User
         // Email format: mobile@retain.dental (Unique per system)
         const email = `${mobile}@retain.dental`;
-        const password = pin || '123456';
+        const password = pin || Math.floor(100000 + Math.random() * 900000).toString();
 
         // Check if user exists first? Supabase createUser throws if exists usually.
         // But we might want to link existing? For now, assume fresh.

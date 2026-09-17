@@ -6,6 +6,10 @@ import GlobalStats from './subcomponents/GlobalStats';
 import ClinicCard from './subcomponents/ClinicCard';
 import { IBackendService } from '../../services/IBackendService';
 import { supabase } from '../../lib/supabase';
+import { LeadsTab } from './tabs/LeadsTab';
+import { WaitlistTab } from './tabs/WaitlistTab';
+import { DeploymentsTab } from './tabs/DeploymentsTab';
+import { ConfigTab } from './tabs/ConfigTab';
 
 interface PerformanceMetric {
    id: string;
@@ -60,7 +64,7 @@ const LiveHeartbeat = () => (
    </div>
 );
 
-const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, onEnterClinic, onUpdateConfig, onDeleteClinic, onUpdateClinic, onUpdateAdminAuth, backend }) => {
+const PlatformDashboard: React.FC<Props> = ({ clinics, stats, onOnboardClinic, onEnterClinic, onUpdateConfig, onDeleteClinic, onUpdateClinic, onUpdateAdminAuth, onHardDeleteUser, backend }) => {
    const [activeView, setActiveView] = useState<'HUB' | 'REVENUE' | 'SECURITY' | 'DEPLOYMENTS' | 'CONFIG' | 'WAITLIST' | 'LEADS'>('HUB');
    const [showOnboardModal, setShowOnboardModal] = useState(false);
    const [selectedClinicForManifest, setSelectedClinicForManifest] = useState<PerformanceMetric | null>(null);

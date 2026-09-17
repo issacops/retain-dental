@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { User, Wallet, Transaction, Tier, TransactionType, Clinic, CarePlan, TransactionCategory, FamilyGroup, AppointmentType, Appointment, TIER_THRESHOLDS, TIER_BENEFITS } from '../../types';
-import { Home, User as UserIcon, ShieldCheck, History, Calendar, Sparkles, HeartPulse, ChevronRight, PhoneCall, AlertTriangle, Zap, CircleCheck, ClipboardList, Trophy, Activity as ActivityIcon, Globe, Users, Lock, X, CheckCircle, Gift } from 'lucide-react';
+import { Home, User as UserIcon, ShieldCheck, History, Calendar, Sparkles, HeartPulse, ChevronRight, PhoneCall, AlertTriangle, Zap, CircleCheck, ClipboardList, Trophy, Activity as ActivityIcon, Globe, Users, Lock, X, CheckCircle, Gift, ArrowUpRight, ArrowDownLeft } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { motion, AnimatePresence } from 'framer-motion';
 

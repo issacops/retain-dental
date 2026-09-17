@@ -45,11 +45,19 @@ const AuthHandler = ({
   return null;
 };
 
-// GLOBAL ERROR BOUNDARY to catch "Black Screen" crashes
-class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean, error: Error | null }> {
-  state = { hasError: false, error: null as Error | null }; // TS Fix: Define simple property initializer
+interface ErrorBoundaryProps {
+  children?: React.ReactNode;
+}
 
-  constructor(props: any) {
+interface ErrorBoundaryState {
+  hasError: boolean;
+  error: Error | null;
+}
+
+class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  override state: ErrorBoundaryState = { hasError: false, error: null };
+
+  constructor(props: ErrorBoundaryProps) {
     super(props);
   }
 
@@ -165,12 +173,11 @@ const App = () => {
             found = { ...found, name: session.user.user_metadata.full_name };
           }
           activeUser = found;
-        } else if (session.user.email?.toLowerCase() === 'issaciconnect@gmail.com' || session.user.email?.toLowerCase() === 'god@retain.dental') {
+        } else if (session.user.email?.toLowerCase() === (import.meta.env.VITE_GOD_EMAIL || 'god@retain.dental').toLowerCase()) {
           // 2. Fallback: God Mode (Only if no specific profile exists)
-          const godName = session.user.email?.toLowerCase() === 'issaciconnect@gmail.com' ? 'Isaac Thomas' : 'Platform Master';
           activeUser = {
             id: session.user.id,
-            name: godName,
+            name: 'Platform Master',
             mobile: 'SUPER-ADMIN',
             role: Role.SUPER_ADMIN,
             clinicId: 'platform',

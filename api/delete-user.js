@@ -4,7 +4,8 @@ import { createClient } from '@supabase/supabase-js';
 // This is a "God Mode" function for Super Admins to clean up data.
 export default async function handler(req, res) {
     // 1. Setup CORS
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    const origin = req.headers.origin || '*';
+    res.setHeader('Access-Control-Allow-Origin', origin);
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 

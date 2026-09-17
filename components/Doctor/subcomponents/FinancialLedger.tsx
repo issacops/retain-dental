@@ -72,6 +72,17 @@ const FinancialLedger: React.FC<Props> = ({ clinic, transactions, wallets, allUs
         URL.revokeObjectURL(url);
     };
 
+    const escapeHtml = (str: string) => (str || '').replace(/[&<>"']/g, (m) => {
+        switch (m) {
+            case '&': return '&amp;';
+            case '<': return '&lt;';
+            case '>': return '&gt;';
+            case '"': return '&quot;';
+            case "'": return '&#39;';
+            default: return m;
+        }
+    });
+
     const handlePrintReceipt = (transaction: Transaction) => {
         const wallet = wallets.find(w => w.id === transaction.walletId);
         const patient = allUsers.find(u => u.id === wallet?.userId);
@@ -81,7 +92,7 @@ const FinancialLedger: React.FC<Props> = ({ clinic, transactions, wallets, allUs
             receiptWindow.document.write(`
                 <html>
                 <head>
-                    <title>Receipt #${transaction.id.slice(0, 8)}</title>
+                    <title>Receipt #${escapeHtml(transaction.id.slice(0, 8))}</title>
                     <style>
                         body { font-family: 'Inter', sans-serif; padding: 40px; color: #1e293b; max-width: 800px; mx-auto; }
                         .header { text-align: center; margin-bottom: 40px; border-bottom: 2px solid #f1f5f9; padding-bottom: 20px; }
@@ -99,20 +110,20 @@ const FinancialLedger: React.FC<Props> = ({ clinic, transactions, wallets, allUs
                 </head>
                 <body>
                     <div class="header">
-                        ${clinic.logoUrl ? `<img src="${clinic.logoUrl}" class="logo" />` : ''}
-                        <div class="clinic-name">${clinic.name}</div>
+                        ${clinic.logoUrl ? `<img src="${escapeHtml(clinic.logoUrl)}" class="logo" />` : ''}
+                        <div class="clinic-name">${escapeHtml(clinic.name)}</div>
                         <div style="font-size: 12px; color: #64748b; margin-top: 5px;">Official Payment Receipt</div>
                     </div>
 
                     <div class="meta">
                         <div>
                             <div class="label">Billed To</div>
-                            <div class="value">${patient?.name || 'Walk-in Patient'}</div>
-                            <div style="font-size: 12px; color: #64748b;">${patient?.mobile || ''}</div>
+                            <div class="value">${escapeHtml(patient?.name || 'Walk-in Patient')}</div>
+                            <div style="font-size: 12px; color: #64748b;">${escapeHtml(patient?.mobile || '')}</div>
                         </div>
                         <div style="text-align: right;">
                             <div class="label">Receipt Number</div>
-                            <div class="value">#${transaction.id.slice(0, 8).toUpperCase()}</div>
+                            <div class="value">#${escapeHtml(transaction.id.slice(0, 8).toUpperCase())}</div>
                             <br/>
                             <div class="label">Date Issued</div>
                             <div class="value">${new Date(transaction.date).toLocaleDateString()}</div>
@@ -129,8 +140,8 @@ const FinancialLedger: React.FC<Props> = ({ clinic, transactions, wallets, allUs
                         </thead>
                         <tbody>
                             <tr>
-                                <td>${transaction.description}</td>
-                                <td>${transaction.category}</td>
+                                <td>${escapeHtml(transaction.description)}</td>
+                                <td>${escapeHtml(transaction.category)}</td>
                                 <td style="text-align: right;">₹${transaction.amountPaid.toLocaleString()}</td>
                             </tr>
                         </tbody>

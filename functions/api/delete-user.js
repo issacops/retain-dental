@@ -3,8 +3,9 @@ import { createClient } from '@supabase/supabase-js';
 export async function onRequest(context) {
   const { request, env } = context;
 
+  const origin = request.headers.get('Origin') || '*';
   const headers = new Headers({
-    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Origin': origin,
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
     'Content-Type': 'application/json',

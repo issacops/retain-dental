@@ -8,9 +8,25 @@ const PlatformPage = React.lazy(() => import('./pages/PlatformPage').then(module
 const ClinicPage = React.lazy(() => import('./pages/ClinicPage').then(module => ({ default: module.ClinicPage })));
 const PatientPage = React.lazy(() => import('./pages/PatientPage').then(module => ({ default: module.PatientPage })));
 const LoginPage = React.lazy(() => import('./pages/LoginPage').then(module => ({ default: module.LoginPage })));
+export interface RouterHandlers {
+    onUpdateCarePlan: (planId: string, updates: any) => Promise<void>;
+    onToggleChecklistItem: (planId: string, itemId: string) => Promise<void>;
+    onSchedule: (appointment: any) => Promise<void>;
+    onAddFamilyMember: (groupName: string, memberMobile: string, memberName: string) => Promise<void>;
+    onSwitchProfile: (userId: string) => void;
+    onProcessTransaction: (amount: number, description: string, category: any, type: any) => Promise<void>;
+    onLinkFamily: (memberId: string) => Promise<void>;
+    onSelectClinic?: (id: string) => void;
+    onAddClinic?: (name: string, slug: string, color: string) => Promise<void>;
+    onHardDeleteClinic?: (id: string) => Promise<void>;
+    onUpdateClinicConfig?: (clinicId: string, updates: any) => Promise<void>;
+    onHardDeleteUser?: (id: string) => Promise<void>;
+    [key: string]: any;
+}
+
 interface RouterProps {
     appState: AppState;
-    handlers: any;
+    handlers: RouterHandlers;
     backendService: IBackendService;
 }
 
@@ -47,11 +63,14 @@ const GodGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         setChecking(true);
         setError('');
         try {
-            if (email.trim().toLowerCase() === 'god@retain.dental' && password.trim() === 'godmode2025!') {
-                setIsAuthenticated(true);
-                await supabase.auth.signInWithPassword({ email: email.trim().toLowerCase(), password: password.trim() });
+            const { data, error: authErr } = await supabase.auth.signInWithPassword({
+                email: email.trim().toLowerCase(),
+                password: password.trim()
+            });
+            if (authErr || !data.session) {
+                setError(authErr?.message || 'ACCESS DENIED (INVALID CREDENTIALS)');
             } else {
-                setError('ACCESS DENIED (INVALID CREDENTIALS)');
+                setIsAuthenticated(true);
             }
         } catch {
             setError('Connection failed');
@@ -98,6 +117,21 @@ const NotFound = () => (
     </div>
 );
 
+// Route Protection Guards
+const DoctorGuard: React.FC<{ appState: AppState; children: React.ReactNode }> = ({ appState, children }) => {
+    if (!appState?.currentUser) {
+        return <Navigate to="/login" replace />;
+    }
+    return <>{children}</>;
+};
+
+const PatientGuard: React.FC<{ appState: AppState; children: React.ReactNode }> = ({ appState, children }) => {
+    if (!appState?.currentUser) {
+        return <Navigate to="/login" replace />;
+    }
+    return <>{children}</>;
+};
+
 // Safe Router Wrapper
 export const AppRouter: React.FC<RouterProps> = ({ appState, handlers, backendService }) => {
     // Defensive access to clinics array
@@ -135,37 +169,41 @@ export const AppRouter: React.FC<RouterProps> = ({ appState, handlers, backendSe
                     </GodGuard>
                 } />
 
-                {/* DOCTOR / CLINIC OS - Unprotected */}
+                {/* DOCTOR / CLINIC OS - Guarded */}
                 <Route path="/doctor" element={
-                    <ClinicPage
-                        data={appState}
-                        clinic={activeClinic}
-                        backendService={backendService}
-                        onUpdateCarePlan={handlers.onUpdateCarePlan}
-                        onToggleChecklistItem={handlers.onToggleChecklistItem}
-                        {...handlers}
-                    />
+                    <DoctorGuard appState={appState}>
+                        <ClinicPage
+                            data={appState}
+                            clinic={activeClinic}
+                            backendService={backendService}
+                            onUpdateCarePlan={handlers.onUpdateCarePlan}
+                            onToggleChecklistItem={handlers.onToggleChecklistItem}
+                            {...handlers}
+                        />
+                    </DoctorGuard>
                 } />
 
-                {/* PATIENT APP - Unprotected */}
+                {/* PATIENT APP - Guarded */}
                 <Route path="/patient" element={
-                    <PatientPage
-                        currentUser={appState.currentUser}
-                        users={appState.users}
-                        wallets={appState.wallets}
-                        transactions={appState.transactions}
-                        carePlans={appState.carePlans}
-                        appointments={appState.appointments}
-                        familyGroups={appState.familyGroups || []}
-                        clinic={activeClinic}
-                        onToggleChecklistItem={handlers.onToggleChecklistItem}
-                        onUpdateCarePlan={handlers.onUpdateCarePlan}
-                        onSchedule={handlers.onSchedule}
-                        onAddFamilyMember={handlers.onAddFamilyMember}
-                        onSwitchProfile={handlers.onSwitchProfile}
-                        onRedeem={handlers.onProcessTransaction}
-                        onLinkFamily={handlers.onLinkFamily}
-                    />
+                    <PatientGuard appState={appState}>
+                        <PatientPage
+                            currentUser={appState.currentUser}
+                            users={appState.users}
+                            wallets={appState.wallets}
+                            transactions={appState.transactions}
+                            carePlans={appState.carePlans}
+                            appointments={appState.appointments}
+                            familyGroups={appState.familyGroups || []}
+                            clinic={activeClinic}
+                            onToggleChecklistItem={handlers.onToggleChecklistItem}
+                            onUpdateCarePlan={handlers.onUpdateCarePlan}
+                            onSchedule={handlers.onSchedule}
+                            onAddFamilyMember={handlers.onAddFamilyMember}
+                            onSwitchProfile={handlers.onSwitchProfile}
+                            onRedeem={handlers.onProcessTransaction}
+                            onLinkFamily={handlers.onLinkFamily}
+                        />
+                    </PatientGuard>
                 } />
 
                 {/* 404: Catch-all */}
