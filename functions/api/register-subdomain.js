@@ -23,13 +23,19 @@ export async function onRequest(context) {
     return new Response(JSON.stringify({ error: 'Missing slug' }), { headers, status: 400 });
   }
 
+  const cfToken = env.CF_API_TOKEN;
   const cfKey = env.CF_API_KEY;
   const cfEmail = env.CF_API_EMAIL;
   const zoneId = env.CF_ZONE_ID || '4d69d9139227318b62ae1a12218d7aa1';
   const accountId = env.CF_ACCOUNT_ID || 'fe5ada0021bdf255f183c95184b5eb96';
 
-  if (!cfKey || !cfEmail) {
-    return new Response(JSON.stringify({ error: 'Cloudflare not configured' }), { headers, status: 500 });
+  // Prefer a scoped API Token (Bearer). Fall back to the legacy Global API Key.
+  const authHeaders = cfToken
+    ? { Authorization: `Bearer ${cfToken}` }
+    : (cfKey && cfEmail ? { 'X-Auth-Key': cfKey, 'X-Auth-Email': cfEmail } : null);
+
+  if (!authHeaders) {
+    return new Response(JSON.stringify({ error: 'Cloudflare not configured (set CF_API_TOKEN, or CF_API_KEY + CF_API_EMAIL)' }), { headers, status: 500 });
   }
 
   const domain = `${slug}.app.retaindental.com`;
@@ -39,8 +45,7 @@ export async function onRequest(context) {
     const dnsRes = await fetch(`https://api.cloudflare.com/client/v4/zones/${zoneId}/dns_records`, {
       method: 'POST',
       headers: {
-        'X-Auth-Key': cfKey,
-        'X-Auth-Email': cfEmail,
+        ...authHeaders,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -58,8 +63,7 @@ export async function onRequest(context) {
     const pagesRes = await fetch(`https://api.cloudflare.com/client/v4/accounts/${accountId}/pages/projects/retaindental-app/domains`, {
       method: 'POST',
       headers: {
-        'X-Auth-Key': cfKey,
-        'X-Auth-Email': cfEmail,
+        ...authHeaders,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ name: domain }),

@@ -1,0 +1,12 @@
+# Cloudflare Pages security headers (copied from public/ into dist/ at build).
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  X-Robots-Tag: noindex, nofollow
+
+# Hashed build assets are content-addressed and safe to cache forever.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable

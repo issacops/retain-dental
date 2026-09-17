@@ -5,8 +5,10 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
 const IS_REAL = supabaseUrl.length > 0 && !supabaseUrl.includes('placeholder') && supabaseAnonKey.length > 0;
 
-const GOD_EMAIL = (import.meta.env.VITE_GOD_EMAIL || 'god@retain.dental').toLowerCase();
-const GOD_PASS = import.meta.env.VITE_GOD_PASSWORD || 'godmode2025!';
+const GOD_EMAIL = (import.meta.env.VITE_GOD_EMAIL || 'god@retain.dental').trim().toLowerCase();
+// Fallback passkey used when VITE_GOD_PASSWORD is not set or is empty
+const _GOD_PASS_ENV = import.meta.env.VITE_GOD_PASSWORD?.trim() || '';
+const GOD_PASS = _GOD_PASS_ENV.length > 0 ? _GOD_PASS_ENV : 'godmode2025!';
 
 let authCallback: ((event: string, session: any) => void) | null = null;
 let realClient: SupabaseClient | null = null;

@@ -5,6 +5,10 @@ import { SupabaseService } from '../services/SupabaseService';
 import { ArrowRight, Smartphone, Lock, Activity, Command, Loader2, Sparkles, Shield } from 'lucide-react';
 import { Clinic } from '../types';
 
+// Match tenant slugs loosely: host "citydental" === slug "city-dental".
+const normalizeSlug = (value: string | null | undefined) =>
+    (value || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+
 interface LoginPageProps {
     clinics?: Clinic[];
     activeClinic?: Clinic;
@@ -22,7 +26,11 @@ export const LoginPage: React.FC<LoginPageProps> = ({ clinics = [], activeClinic
     const [isSignUp, setIsSignUp] = useState(false);
 
     const querySubdomain = new URLSearchParams(window.location.search).get('subdomain');
-    const slugClinic = slug ? clinics.find(c => c.slug === slug) : (querySubdomain ? clinics.find(c => c.slug === querySubdomain) : undefined);
+    const slugClinic = slug
+        ? clinics.find(c => normalizeSlug(c.slug) === normalizeSlug(slug))
+        : (querySubdomain
+            ? clinics.find(c => normalizeSlug(c.slug) === normalizeSlug(querySubdomain))
+            : undefined);
     const targetClinic = slugClinic || activeClinic;
     const isBranded = !!targetClinic && targetClinic.id !== 'platform';
     const brandColor = targetClinic?.primaryColor || '#0d9488';

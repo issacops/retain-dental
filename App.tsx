@@ -11,6 +11,11 @@ import { Activity } from 'lucide-react';
 import { useToast } from './context/ToastContext';
 import { ErrorBoundary } from './components/ErrorBoundary';
 
+// Tenant slugs are matched loosely so a hostname like "citydental" resolves to
+// the clinic slug "city-dental" (and vice versa).
+const normalizeSlug = (value: string | null | undefined) =>
+  (value || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+
 // Auth State Helper Component to handle redirects outside of Router context
 const AuthHandler = ({
   currentUser,
@@ -106,7 +111,7 @@ const App = () => {
 
       if (subdomain === 'platform') {
       } else if (subdomain && !IGNORED_SUBDOMAINS.includes(subdomain)) {
-        tenantClinic = dbData.clinics.find(c => c.slug === subdomain);
+        tenantClinic = dbData.clinics.find(c => normalizeSlug(c.slug) === normalizeSlug(subdomain));
         if (tenantClinic) {
           derivedClinicId = tenantClinic.id;
         }
