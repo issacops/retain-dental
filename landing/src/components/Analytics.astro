@@ -1,7 +1,9 @@
 ---
 // Env-gated analytics. Every tag only renders when its PUBLIC_* id is set,
 // so the site never ships a broken or blocking script in local/preview builds.
-const GA4 = import.meta.env.PUBLIC_GA4_ID;
+// Public measurement ID. Env var overrides; the default makes GA work on deploy
+// without extra configuration.
+const GA4 = import.meta.env.PUBLIC_GA4_ID || 'G-5J8B78RGYN';
 const CLARITY = import.meta.env.PUBLIC_CLARITY_ID;
 const META_PIXEL = import.meta.env.PUBLIC_META_PIXEL_ID;
 const LINKEDIN = import.meta.env.PUBLIC_LINKEDIN_PARTNER_ID;
