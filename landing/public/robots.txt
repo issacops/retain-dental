@@ -23,4 +23,4 @@ Allow: /
 User-agent: Applebot-Extended
 Allow: /
 
-Sitemap: https://retaindental.com/sitemap-index.xml
+Sitemap: https://www.retaindental.com/sitemap-index.xml

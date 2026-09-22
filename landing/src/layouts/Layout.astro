@@ -2,6 +2,7 @@
 import Analytics from '../components/Analytics.astro'
 import Navbar from '../components/Navbar.astro'
 import Footer from '../components/Footer.astro'
+import { site } from '../data/site'
 
 export interface Props {
   title?: string
@@ -89,9 +90,10 @@ const organizationSchema = {
   contactPoint: {
     '@type': 'ContactPoint',
     contactType: 'sales',
-    email: 'hello@retaindental.com',
+    email: site.email,
     availableLanguage: ['English'],
   },
+  ...(site.socials.length ? { sameAs: site.socials.map((s) => s.href) } : {}),
 }
 
 const websiteSchema = {
