@@ -35,14 +35,35 @@ const LEAD_ENDPOINT =
   import.meta.env.PUBLIC_LEAD_ENDPOINT || 'https://script.google.com/macros/s/AKfycbz6qn1HXCN9F3YbCr14cLB9DK4LQzHO6tjrMe5Sb8IZlA6AGBgZcbRAn4UJv4LycLss/exec'
 
 async function postLead(payload: Record<string, unknown>) {
-  // Formspree wants JSON. Google Apps Script web apps want a "simple" request,
-  // so we send text/plain there to avoid a CORS preflight it cannot answer.
   const isAppsScript = /script\.google\.com/.test(LEAD_ENDPOINT)
+
+  if (isAppsScript) {
+    // Apps Script always receives the POST, but its 302 to
+    // script.googleusercontent.com is not CORS-readable on every browser, so we
+    // never block the UI on the response. Fire it with keepalive and confirm
+    // immediately; the row lands in the sheet regardless.
+    if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+      throw new Error('lead failed')
+    }
+    try {
+      fetch(LEAD_ENDPOINT, {
+        method: 'POST',
+        mode: 'no-cors',
+        keepalive: true,
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload),
+      }).catch(() => {})
+      await new Promise((r) => setTimeout(r, 700))
+    } catch {
+      throw new Error('lead failed')
+    }
+    return
+  }
+
+  // Formspree and similar endpoints return a readable JSON response.
   const res = await fetch(LEAD_ENDPOINT, {
     method: 'POST',
-    headers: isAppsScript
-      ? { 'Content-Type': 'text/plain;charset=utf-8' }
-      : { 'Content-Type': 'application/json', Accept: 'application/json' },
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
     body: JSON.stringify(payload),
   })
   if (!res.ok) throw new Error('lead failed')
