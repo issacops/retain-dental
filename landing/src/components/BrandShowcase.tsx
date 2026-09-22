@@ -12,11 +12,11 @@ export default function BrandShowcase() {
     <section className="py-24 px-6 bg-cream-100 relative overflow-hidden">
       <div className="max-w-7xl mx-auto">
         <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
-          <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter">
-            See RetainOS in <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-violet-400">Action</span>
+          <h2 className="text-4xl md:text-5xl font-semibold text-slate-900 tracking-tight">
+            See Retain Dental in <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-violet-400">Action</span>
           </h2>
           <p className="text-lg text-slate-500">
-            A fully branded experience for every user — clinic owners, staff, and patients.
+            A fully branded experience for every user, clinic owners, staff, and patients.
           </p>
         </div>
 
@@ -25,7 +25,7 @@ export default function BrandShowcase() {
             <button
               key={i}
               onClick={() => setActive(i)}
-              className={`px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 ${
+              className={`px-6 py-3 rounded-full text-sm font-semibold transition-all duration-300 ${
                 active === i
                   ? 'bg-white text-slate-900 shadow-xl'
                   : 'bg-cream-100/70 text-slate-500 border border-gray-200 hover:border-white/30'

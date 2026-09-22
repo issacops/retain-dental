@@ -1,57 +1,86 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from '../layouts/Layout.astro'
+import Footer from '../components/Footer.astro'
+const updated = 'September 22, 2026'
 ---
-
 <Layout
-  title="Privacy Policy | RetainOS"
-  description="How RetainOS collects, uses, and protects your data. We take privacy and HIPAA compliance seriously."
-  breadcrumbs={[
-    { name: 'Home', url: 'https://retaindental.com/' },
-    { name: 'Privacy Policy', url: 'https://retaindental.com/privacy' },
-  ]}
+  title="Privacy Policy | Retain Dental"
+  description="How Retain Dental collects, uses, and protects data, including how we handle protected health information under HIPAA."
+  canonical="/privacy"
+  breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Privacy Policy', url: '/privacy' }]}
 >
-  <section class="pt-36 pb-24 px-6 bg-paper-50">
-    <div class="max-w-3xl mx-auto">
-      <div class="text-center max-w-2xl mx-auto mb-16">
-        <h1 class="text-5xl md:text-6xl font-sans font-[400] text-text-900 tracking-tight mb-6">Privacy <span class="text-violet-600">Policy</span>.</h1>
-        <p class="text-text-600">Last updated: June 15, 2026</p>
+  <article class="bg-cream-100 pb-24 pt-32 sm:pt-40">
+    <div class="mx-auto max-w-3xl px-5 sm:px-8">
+      <p class="eyebrow text-teal-700">Legal</p>
+      <h1 class="mt-4 font-heading text-[clamp(2rem,4.2vw,3rem)] font-semibold leading-[1.08] tracking-tight text-ink-900">Privacy Policy</h1>
+      <p class="mt-4 text-sm text-ink-500">Last updated {updated}</p>
+
+      <div class="mt-10 space-y-6 text-[16px] leading-relaxed text-ink-700 [&_h2]:mt-12 [&_h2]:mb-3 [&_h2]:font-heading [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:tracking-tight [&_h2]:text-ink-900 [&_h3]:mt-8 [&_h3]:mb-2 [&_h3]:font-semibold [&_h3]:text-ink-900 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6 [&_a]:text-teal-700 [&_a]:underline [&_a]:decoration-teal-300 [&_a]:underline-offset-4">
+        <p>This Privacy Policy explains how Retain Dental ("we", "us") collects, uses, and protects information when you visit our website or use our platform. It applies to our marketing site and to the services we provide to dental practices.</p>
+
+        <h2>Who we are</h2>
+        <p>Retain Dental provides a patient retention platform for dental practices. When a practice uses Retain Dental, the practice is the data controller for its patient information and Retain Dental acts as a service provider (a Business Associate under HIPAA). We process that information only on the practice's instructions.</p>
+
+        <h2>Information we collect</h2>
+        <ul>
+          <li><strong>Information you give us</strong> when you start a trial, book a demo, or contact us: name, work email, mobile number, practice name, practice type, number of locations, and any branding preferences you select.</li>
+          <li><strong>Patient information</strong> that a dental practice enters or imports into the platform, which may include protected health information (PHI). We handle this only to provide the service to that practice.</li>
+          <li><strong>Usage and device information</strong> such as pages viewed, referring source, approximate location derived from IP address, browser and device type, and interactions with the product. This helps us improve the platform and understand what is working.</li>
+          <li><strong>Cookies and similar technologies</strong> used for essential functionality and, where enabled, analytics and advertising measurement.</li>
+        </ul>
+
+        <h2>How we use information</h2>
+        <ul>
+          <li>To provide, operate, and improve the platform, including recalls, aftercare, loyalty, referrals, and reporting.</li>
+          <li>To create and manage your account and to respond to your requests.</li>
+          <li>To send service messages, and, where you have opted in, marketing messages you can unsubscribe from at any time.</li>
+          <li>To measure performance and detect security incidents, fraud, or misuse.</li>
+          <li>To comply with legal obligations.</li>
+        </ul>
+
+        <h2>Protected health information and HIPAA</h2>
+        <p>Retain Dental is HIPAA-aligned. We enter into a Business Associate Agreement (BAA) with every practice, and we require our subprocessors that handle PHI to do the same. PHI is encrypted in transit and at rest, access is role-based and logged, and we limit PHI to what is needed to deliver the service. We do not sell PHI.</p>
+
+        <h2>Sharing</h2>
+        <p>We share information only with service providers who help us operate the platform, and only under contracts that protect it. Our core subprocessors include:</p>
+        <ul>
+          <li><strong>Supabase</strong> for database and authentication, on SOC 2-audited infrastructure.</li>
+          <li><strong>Cloudflare</strong> for content delivery, hosting, and edge functions.</li>
+          <li><strong>Vercel</strong> for hosting our marketing site.</li>
+          <li><strong>Analytics and advertising providers</strong> where enabled, for measurement of site performance.</li>
+        </ul>
+        <p>We may also disclose information if required by law or to protect the rights, safety, and security of our users.</p>
+
+        <h2>Data retention</h2>
+        <p>We keep account and lead information for as long as needed to provide the service or as required by law. If a practice cancels, patient data is exported or deleted according to the practice's instructions and the terms of our agreement.</p>
+
+        <h2>Security</h2>
+        <p>We use encryption in transit (TLS 1.3) and at rest, role-based access controls, audit logging, and least-privilege practices across our infrastructure. No system is perfectly secure, but we take these protections seriously and review them regularly. See our <a href="/security">Security page</a> for more detail.</p>
+
+        <h2>Your rights</h2>
+        <p>Depending on where you live, you may have the right to access, correct, delete, or restrict processing of your personal information, and to object to marketing. To make a request, email <a href="mailto:hello@retaindental.com">hello@retaindental.com</a>. If your request concerns patient information held by a practice, please contact that practice directly, since they control that data.</p>
+
+        <h2>International transfers</h2>
+        <p>We process information in the United States and may use service providers in other regions. Where we transfer personal information across borders, we use appropriate safeguards.</p>
+
+        <h2>Children</h2>
+        <p>Our website and platform are intended for dental practices and their adult staff. We do not knowingly collect personal information from children through our marketing site.</p>
+
+        <h2>Changes to this policy</h2>
+        <p>We may update this policy from time to time. When we do, we will revise the date at the top of this page.</p>
+
+        <h2>Contact</h2>
+        <p>Questions about privacy? Email <a href="mailto:hello@retaindental.com">hello@retaindental.com</a> and we will respond, usually within one business day.</p>
       </div>
 
-      <div class="prose prose-slate max-w-none prose-headings:text-text-900 prose-headings:font-bold prose-headings:tracking-tight prose-p:font-sans prose-p:text-text-600 prose-p:leading-relaxed prose-a:text-violet-600 prose-a:font-medium prose-strong:text-text-900 prose-li:font-sans prose-li:text-text-600">
-        <h2>1. Information We Collect</h2>
-        <p>We collect information you provide directly: name, email, phone number, clinic name, and billing details when you sign up for RetainOS. We also collect usage data — pages visited, features used, session duration — to improve the platform.</p>
-
-        <h2>2. Patient Data (PHI)</h2>
-        <p>RetainOS is designed as a HIPAA-ready platform. Patient data (Protected Health Information) is encrypted at rest and in transit. We store PHI only as necessary to provide recall, loyalty, and communication features. We never sell, rent, or share PHI with third parties. Patients own their data; clinics control access.</p>
-
-        <h2>3. How We Use Data</h2>
-        <p>We use your data to: operate and maintain the platform, send transactional communications (appointment reminders, recall notifications), improve and develop new features, comply with legal obligations.</p>
-
-        <h2>4. Data Sharing</h2>
-        <p>We share data only with trusted subprocessors who help us run the platform: Supabase (database), Cloudflare (CDN and edge functions), Formspree (contact form). Each processor is bound by a Data Processing Agreement that meets HIPAA standards.</p>
-
-        <h2>5. Data Retention</h2>
-        <p>We retain clinic account data for the duration of your subscription plus 90 days. Patient data is retained per the clinic's data retention policy (configurable in settings). You may request deletion at any time by contacting <a href="mailto:privacy@retaindental.com">privacy@retaindental.com</a>.</p>
-
-        <h2>6. Your Rights</h2>
-        <p>You have the right to: access your data, correct inaccuracies, request deletion, and data portability. To exercise these rights, contact your clinic administrator or email us directly.</p>
-
-        <h2>7. Cookies</h2>
-        <p>We use essential cookies for authentication and session management. No tracking cookies, no third-party analytics cookies, no fingerprinting. We respect Do Not Track signals.</p>
-
-        <h2>8. Security</h2>
-        <p>We encrypt all data at rest (AES-256) and in transit (TLS 1.3). We conduct regular security audits and penetration testing. Our infrastructure runs on Cloudflare's edge network and Supabase's SOC 2-compliant infrastructure.</p>
-
-        <h2>9. Changes</h2>
-        <p>We'll notify you of material changes to this policy via email and an in-app notification. Continued use after changes constitutes acceptance.</p>
-
-        <h2>10. Contact</h2>
-        <p>Privacy questions? Email <a href="mailto:privacy@retaindental.com">privacy@retaindental.com</a> or write to: RetainOS, Austin, Texas.</p>
-      </div>
-
-      <div class="mt-12 pt-8 border-t border-paper-line text-center">
-        <a href="/" class="text-sm text-violet-600 font-semibold hover:underline">&larr; Back to home</a>
+      <div class="card mt-14 flex flex-col items-start gap-4 p-7 sm:flex-row sm:items-center sm:justify-between">
+        <p class="text-[15px] text-ink-700">Looking for our security and compliance detail?</p>
+        <div class="flex gap-3">
+          <a href="/security" class="btn-ghost min-h-[44px]">Security</a>
+          <a href="/hipaa" class="btn-ghost min-h-[44px]">HIPAA</a>
+        </div>
       </div>
     </div>
-  </section>
+  </article>
+  <Footer />
 </Layout>

@@ -1,358 +1,114 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import StickyMobileCta from '../../components/StickyMobileCta.astro';
+import Layout from '../../layouts/Layout.astro'
+import { sortedPosts, featuredPosts, allTags } from '../../data/posts'
+import CTA from '../../components/CTA.astro'
 
-const posts = [
-  {
-    slug: 'dental-patient-reactivation',
-    title: 'The Dental Patient Reactivation Playbook: How We Won Back 34% of Lost Patients in 90 Days',
-    excerpt: 'Every dental practice has a graveyard of inactive patients. Here is a systematic reactivation framework — with call scripts, email sequences, and offer structures — that recovered 34% of lapsed patients across 6 pilot clinics.',
-    date: '2026-05-12',
-    author: 'Dr. Vikram Singh',
-    tags: ['Growth', 'Playbook'],
-    featured: true,
-  },
-  {
-    slug: 'dental-marketing-roi',
-    title: 'Dental Practice Marketing ROI: A Data-Driven Framework for Every Dollar',
-    excerpt: 'Most dental practices cannot tell you which marketing channel delivers their best patients. Here is a tracking framework — with real attribution data from 18 clinics.',
-    date: '2026-03-15',
-    author: 'Dr. Aditya Verma',
-    tags: ['Analytics', 'Marketing'],
-  },
-  {
-    slug: 'dental-sms-marketing-tcpa',
-    title: 'Dental SMS Marketing in 2025: TCPA Compliance, Consent, and Best Practices',
-    excerpt: 'New TCPA rulings have changed how dental practices can communicate via SMS. Here is what is allowed, what is not, and how to build a compliant messaging strategy.',
-    date: '2026-01-08',
-    author: 'Dr. Ananya Shah',
-    tags: ['Compliance', 'Marketing'],
-  },
-  {
-    slug: 'dental-website-conversion',
-    title: 'Dental Website Conversion Optimisation: 7 Changes That Doubled Our Booking Rate',
-    excerpt: 'Your dental website is your most important marketing asset. Here are the exact changes that doubled our booking conversion from 2.1% to 4.3%.',
-    date: '2025-11-20',
-    author: 'Dr. Karan Malhotra',
-    tags: ['Digital', 'Marketing'],
-  },
-  {
-    slug: 'dental-social-media-compliance',
-    title: 'Dental Social Media Marketing Without Getting Sued: A Compliance Guide',
-    excerpt: 'The line between effective dental social media and a HIPAA violation is thinner than most dentists realise. Here is how to market on Instagram without exposing PHI.',
-    date: '2025-10-12',
-    author: 'Dr. Neha Reddy',
-    tags: ['Marketing', 'Compliance'],
-  },
-  {
-    slug: 'patient-onboarding-automation',
-    title: 'Dental Patient Onboarding Automation: Saved Our Front Desk 12 Hours Per Week',
-    excerpt: 'The patient onboarding process is the highest-friction moment in the dental experience. Here is how we automated intake forms, insurance verification, and consent collection.',
-    date: '2025-09-05',
-    author: 'Dr. Deepa Iyer',
-    tags: ['Operations', 'Technology'],
-  },
-  {
-    slug: 'dental-membership-plan-guide',
-    title: 'The Complete Guide to Dental Membership Plans: Pricing, Tiers, and Retention Data',
-    excerpt: 'In-house dental membership plans are the fastest-growing alternative to insurance. Data-backed guide on pricing, tier structure, and retention benchmarks from 25 clinics.',
-    date: '2025-08-15',
-    author: 'Dr. Rohan Kapoor',
-    tags: ['Revenue', 'Strategy'],
-  },
-  {
-    slug: 'ai-dental-patient-engagement',
-    title: 'AI in Dental Patient Engagement: What Actually Works in 2025',
-    excerpt: 'From automated compliance tracking to AI-powered recall prioritisation — what artificial intelligence realistically does for dental practices today.',
-    date: '2025-07-28',
-    author: 'Dr. Sanjay Gupta',
-    tags: ['Technology', 'Innovation'],
-  },
-  {
-    slug: 'multi-location-dental-branding',
-    title: 'How We Unified 6 Dental Brands Under One Patient Loyalty System',
-    excerpt: 'Multi-location groups face a unique challenge: build network loyalty without erasing local doctor relationships. Here is exactly how we did it.',
-    date: '2025-07-01',
-    author: 'Dr. Kavita Joshi',
-    tags: ['Branding', 'DSO'],
-  },
-  {
-    slug: 'patient-lifetime-value',
-    title: 'Why Most Dentists Calculate Patient Lifetime Value Wrong',
-    excerpt: 'The standard LTV formula ignores retention curves, referral multipliers, and household effects. Here is a better model — backed by 5 years of data from 30+ clinics.',
-    date: '2025-06-08',
-    author: 'Dr. Arjun Nair',
-    tags: ['Finance', 'Analytics'],
-  },
-  {
-    slug: 'retention-playbook',
-    title: 'How to Reduce Patient Attrition: The Dental Loyalty Playbook',
-    excerpt: 'A practical 5-step framework to cut patient attrition in your dental practice — built from the data of 12 pilot clinics on RetainOS.',
-    date: '2026-06-10',
-    author: 'RetainOS Team',
-    tags: ['Retention', 'Playbook'],
-    featured: true,
-  },
-  {
-    slug: 'white-label-app',
-    title: 'Why Your Dental Practice Needs a Branded Patient App in 2026',
-    excerpt: 'A branded patient app is no longer a "nice to have" — it\'s the difference between a practice patients remember and a practice they forget.',
-    date: '2026-06-04',
-    author: 'RetainOS Team',
-    tags: ['Branding', 'Mobile'],
-  },
-  {
-    slug: 'recall-showdown',
-    title: 'Recall Software Showdown: Manual SMS vs Automated Workflows',
-    excerpt: 'We benchmarked manual SMS recall against automated workflow recall across 12 pilot clinics. Here\'s what the data says.',
-    date: '2026-05-28',
-    author: 'RetainOS Team',
-    tags: ['Recall', 'Benchmark'],
-  },
-  {
-    slug: 'dental-google-reviews-strategy',
-    title: 'How We Built a 4.9-Star Google Reputation (Without Violating HIPAA)',
-    excerpt: 'The complete playbook for earning more Google reviews in dentistry — legally, ethically, and at scale. 85 reviews to 640+ in 8 months.',
-    date: '2025-05-18',
-    author: 'Dr. Meera Desai',
-    tags: ['Marketing', 'Reputation'],
-  },
-  {
-    slug: 'hipaa-patient-communication',
-    title: 'HIPAA-Compliant Patient Communication: What Every Practice Needs to Know in 2025',
-    excerpt: 'New HIPAA guidance on patient communication channels means your practice may be exposing PHI without realising it. Here is your compliance roadmap.',
-    date: '2025-04-22',
-    author: 'Dr. Vikram Singh',
-    tags: ['Compliance', 'Legal'],
-  },
-  {
-    slug: 'recall-system-comparison',
-    title: 'Manual Recall vs Automated Recall: We Benchmarked 12 Clinics',
-    excerpt: 'A 6-month head-to-head comparison of manual recall vs automated multi-channel workflow. The automated system delivered 42% higher recall completion.',
-    date: '2025-04-02',
-    author: 'Dr. Anika Patel',
-    tags: ['Operations', 'Benchmark'],
-  },
-  {
-    slug: 'dso-patient-retention',
-    title: 'Why DSOs Lose Patients Faster Than Solo Practices (And What We Did)',
-    excerpt: 'DSOs face a unique retention problem: patients feel loyal to the doctor, not the brand. Here is how a 14-clinic DSO cut churn by 31%.',
-    date: '2025-03-10',
-    author: 'Dr. Rajesh Kumar',
-    tags: ['DSO', 'Strategy'],
-  },
-  {
-    slug: 'invisalign-compliance-roi',
-    title: 'The Real Cost of Invisalign Non-Compliance (And How We Fixed It)',
-    excerpt: 'Poor aligner compliance is the #1 reason Invisalign cases run long. Daily selfie tracking pushed compliance from 12 hours to 21.5 hours.',
-    date: '2025-02-14',
-    author: 'Dr. Priya Sharma',
-    tags: ['Orthodontics', 'Research'],
-  },
-  {
-    slug: 'no-show-prevention',
-    title: 'Why Dental Patients No-Show (And the System That Finally Fixed It)',
-    excerpt: 'After losing $120K+ annually to no-shows, we built a layered prevention system that cut missed appointments by 68%. Exact scripts and workflows included.',
-    date: '2025-01-20',
-    author: 'Dr. Aarav Mehta',
-    tags: ['Operations', 'Popular'],
-    featured: true,
-  },
-  {
-    slug: 'dental-loyalty-app-guide',
-    title: 'How to Launch a Dental Loyalty App for Your Clinic in 2026',
-    excerpt: 'A step-by-step guide to launching a custom-branded patient loyalty app for your dental practice — from PMS integration to patient onboarding.',
-    date: '2025-06-01',
-    author: 'RetainOS Team',
-    tags: ['App', 'Loyalty'],
-  },
-  {
-    slug: 'invisalign-compliance-tracking',
-    title: 'How Invisalign Compliance Tracking Boosts Treatment Outcomes',
-    excerpt: 'Using AI-powered selfie analysis to track aligner wear time and improve patient compliance — real data from 12 pilot clinics.',
-    date: '2025-05-15',
-    author: 'RetainOS Team',
-    tags: ['Invisalign', 'Compliance'],
-  },
-  {
-    slug: 'reduce-dental-patient-churn',
-    title: '6 Proven Strategies to Reduce Dental Patient Churn',
-    excerpt: 'Stop bleeding patients with automated recalls, family rewards pooling, and cosmetic lock strategies that actually work.',
-    date: '2025-04-20',
-    author: 'RetainOS Team',
-    tags: ['Retention', 'Marketing'],
-  },
-];
-
-const featuredPost = posts.find(p => p.slug === 'retention-playbook');
-const regularPosts = posts.filter(p => p.slug !== 'retention-playbook').sort((a, b) => new Date(b.date) - new Date(a.date));
-const allTags = [...new Set(posts.flatMap(p => p.tags))].sort();
+const featured = featuredPosts.slice(0, 3)
+const featuredSlugs = new Set(featured.map((p) => p.slug))
+const rest = sortedPosts.filter((p) => !featuredSlugs.has(p.slug))
 ---
-
 <Layout
-  title="RetainOS Blog — Dental Practice Growth & Patient Retention Insights"
-  description="Expert advice on dental patient retention, Invisalign compliance tracking, launching loyalty apps, and growing your dental practice with technology. Written by practicing dentists."
-  canonical="https://retaindental.com/blog"
+  title="Blog | Dental Patient Retention, Aftercare and Referral Guides"
+  description="Practical guides on dental patient retention, aftercare, recall, loyalty, and referrals. Written for practice owners who want patients to come back and bring friends."
+  canonical="/blog"
+  breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Blog', url: '/blog' }]}
 >
-  <section class="pt-32 pb-24 px-6 bg-paper-50 min-h-screen">
-    <div class="max-w-6xl mx-auto">
+  <section class="relative overflow-hidden bg-cream-100 pt-32 pb-16 sm:pt-40">
+    <div aria-hidden="true" class="pointer-events-none absolute inset-0 -z-10">
+      <div class="absolute -top-24 right-1/4 h-[28rem] w-[28rem] rounded-full bg-teal-200/40 blur-[120px]"></div>
+    </div>
+    <div class="mx-auto max-w-3xl px-5 text-center sm:px-8">
+      <p class="eyebrow text-teal-700">The Retain Dental blog</p>
+      <h1 class="mt-4 font-heading text-[clamp(2.2rem,5vw,3.5rem)] font-semibold leading-[1.06] tracking-tight text-ink-900 text-balance">
+        Dental growth, without the fluff.
+      </h1>
+      <p class="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-ink-600">
+        Practical guides on retention, aftercare, recall, loyalty, and referrals, written for practice owners who want patients to come back and bring friends.
+      </p>
+    </div>
+  </section>
 
-      {/* Header */}
-      <div class="text-center mb-16 space-y-4">
-        <span class="text-violet-600 text-xs font-semibold uppercase tracking-[0.08em]">The RetainOS Blog</span>
-        <h1 class="text-5xl md:text-7xl font-sans font-[400] text-text-900 tracking-tight leading-[1.05]">
-          Dental Practice <span class="text-violet-600">Growth Insights</span>
-        </h1>
-        <p class="text-text-600 text-lg max-w-2xl mx-auto">
-          Expert guides, benchmarks, and strategies written by practising dentists. No fluff. No theory. Just what actually works in real clinics.
-        </p>
-      </div>
-
-      {/* Search + Tags */}
-      <div class="max-w-2xl mx-auto mb-14">
-        <div class="relative mb-6">
-          <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input
-            type="text"
-            id="blog-search"
-            placeholder="Search articles..."
-            class="w-full pl-12 pr-6 py-4 bg-white border border-paper-line rounded text-sm font-medium text-text-900 placeholder:text-text-600 outline-none focus:border-violet-600 focus:ring-2 focus:ring-violet-600/10 transition-all"
-          />
-        </div>
-        <div class="flex flex-wrap gap-2 justify-center" id="tag-filters">
-          <button class="tag-btn active text-xs font-bold px-3 py-1.5 rounded transition-colors border" data-tag="all">All</button>
-          {allTags.map(tag => (
-            <button class="tag-btn text-xs font-bold px-3 py-1.5 rounded transition-colors border" data-tag={tag}>{tag}</button>
-          ))}
-        </div>
-      </div>
-
-      {/* Featured Post */}
-      {featuredPost && (
-        <a href={`/blog/${featuredPost.slug}`} class="block group mb-16">
-          <article class="rounded bg-ink-900 text-white border border-ink-800 p-10 md:p-14 hover:border-violet-600/30 hover:shadow-2xl hover:shadow-ink-950/10 transition-all duration-300 relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-64 h-64 bg-violet-600/10 rounded blur-[80px]"></div>
-            <div class="relative z-10">
-              <div class="flex items-center gap-3 mb-6">
-                <span class="px-3 py-1 bg-violet-600/20 text-violet-400 text-[10px] font-black uppercase tracking-widest rounded">Featured</span>
-                <div class="flex gap-2">
-                  {featuredPost.tags.map(tag => (
-                    <span class="text-[10px] font-black text-violet-400 bg-violet-600/20 px-2.5 py-1 rounded uppercase tracking-widest">{tag}</span>
-                  ))}
-                </div>
-              </div>
-              <h2 class="text-3xl md:text-5xl font-sans font-[400] tracking-tight mb-4 group-hover:text-violet-400 transition-colors leading-tight">
-                {featuredPost.title}
-              </h2>
-              <p class="text-text-onDark-500/80 leading-relaxed mb-6 max-w-3xl text-lg">{featuredPost.excerpt}</p>
-              <div class="flex items-center gap-3 text-sm">
-                <div class="w-10 h-10 rounded bg-white/20 flex items-center justify-center text-xs font-black">
-                  {featuredPost.author.split(' ').map(w => w[0]).join('').slice(0, 2)}
-                </div>
-                <span class="text-text-onDark-500">{featuredPost.author}</span>
-                <span class="text-text-onDark-500/60">·</span>
-                <span class="text-text-onDark-500/60">{new Date(featuredPost.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-              </div>
-            </div>
-          </article>
-        </a>
-      )}
-
-      {/* Post Grid */}
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="post-grid">
-        {regularPosts.map(post => (
-          <a href={`/blog/${post.slug}`} class="block group post-card" data-tags={post.tags.join(',')} data-title={post.title.toLowerCase()} data-excerpt={post.excerpt.toLowerCase()}>
-            <article class="h-full rounded bg-white border border-paper-line p-7 hover:border-violet-600/30 hover:shadow-xl hover:shadow-ink-950/5 transition-all duration-300 flex flex-col">
-              <div class="flex flex-wrap gap-1.5 mb-4">
-                {post.tags.map(tag => (
-                  <span class="text-[10px] font-black text-violet-600 bg-violet-600/10 px-2 py-0.5 rounded uppercase tracking-widest">{tag}</span>
-                ))}
-              </div>
-              <h2 class="text-lg font-sans font-[400] text-text-900 tracking-tight mb-3 group-hover:text-violet-600 transition-colors leading-snug flex-grow">
-                {post.title}
-              </h2>
-              <p class="text-sm text-text-600 leading-relaxed mb-5 line-clamp-3">{post.excerpt}</p>
-              <div class="flex items-center gap-2.5 text-xs mt-auto pt-4 border-t border-paper-line">
-                <div class="w-7 h-7 rounded bg-violet-600/10 flex items-center justify-center text-[9px] font-black text-violet-600">
-                  {post.author.split(' ').map(w => w[0]).join('').slice(0, 2)}
-                </div>
-                <span class="text-text-600 font-semibold">{post.author}</span>
-                <span class="text-text-onDark-500">·</span>
-                <span class="text-text-600">{new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-              </div>
-            </article>
+  <section class="bg-cream-100 pb-20 sm:pb-28">
+    <div class="mx-auto max-w-8xl px-5 sm:px-8">
+      <!-- Featured -->
+      <div class="grid gap-6 lg:grid-cols-3">
+        {featured.map((p) => (
+          <a href={`/blog/${p.slug}`} class="card card-lift flex flex-col p-7">
+            <span class="eyebrow text-teal-700">{p.tags.join(' | ')}</span>
+            <h2 class="mt-3 font-heading text-xl font-semibold leading-snug tracking-tight text-ink-900">{p.title}</h2>
+            <p class="mt-3 flex-1 text-[15px] leading-relaxed text-ink-600">{p.excerpt}</p>
+            <span class="mt-5 text-[13px] text-ink-500">{p.author} | {new Date(p.date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
           </a>
         ))}
       </div>
 
-      {/* Empty state */}
-      <div id="no-results" class="hidden text-center py-20">
-        <p class="text-xl font-bold text-text-600">No articles match your search.</p>
-        <p class="text-sm text-text-600 mt-2">Try a different keyword or clear filters.</p>
+      <!-- Search + filters -->
+      <div class="mt-16 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+        <div class="relative w-full lg:max-w-sm">
+          <svg class="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input id="blog-search" type="text" placeholder="Search articles" aria-label="Search articles"
+            class="w-full rounded-full border border-cream-300 bg-white py-3 pl-11 pr-5 text-sm text-ink-900 outline-none transition-colors placeholder:text-ink-400 focus:border-teal-500" />
+        </div>
+        <div class="flex flex-wrap gap-2" id="tag-filters">
+          <button class="tag-btn rounded-full border border-teal-600 bg-teal-600 px-3.5 py-1.5 text-xs font-semibold text-white" data-tag="all">All</button>
+          {allTags.map((t) => (
+            <button class="tag-btn rounded-full border border-cream-300 bg-white px-3.5 py-1.5 text-xs font-semibold text-ink-600 transition-colors hover:border-teal-300" data-tag={t}>{t}</button>
+          ))}
+        </div>
       </div>
 
-      {/* CTA */}
-      <div class="mt-16 p-8 rounded bg-ink-900 text-white text-center">
-        <p class="text-2xl font-black mb-3">Write for the RetainOS Blog</p>
-        <p class="text-text-onDark-500 text-sm mb-6 max-w-lg mx-auto">We publish guest posts from practising dentists. Share your clinical and operational expertise with 5,000+ dental professionals.</p>
-        <a href="https://app.retaindental.com" class="inline-flex items-center gap-2 px-6 py-3 bg-violet-600 text-white rounded text-sm font-black hover:bg-violet-500 transition-all">Get in touch →</a>
+      <!-- Grid -->
+      <div class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3" id="post-grid">
+        {rest.map((p) => (
+          <a href={`/blog/${p.slug}`} class="post-card card card-lift flex flex-col p-7" data-tags={p.tags.join(',')} data-title={p.title.toLowerCase()} data-excerpt={p.excerpt.toLowerCase()}>
+            <span class="eyebrow text-teal-700">{p.tags[0]}</span>
+            <h2 class="mt-3 font-heading text-lg font-semibold leading-snug tracking-tight text-ink-900">{p.title}</h2>
+            <p class="mt-3 flex-1 text-[15px] leading-relaxed text-ink-600">{p.excerpt}</p>
+            <span class="mt-5 text-[13px] text-ink-500">{p.author} | {new Date(p.date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
+          </a>
+        ))}
       </div>
+
+      <p id="no-results" class="hidden py-20 text-center text-ink-500">No articles match your search.</p>
     </div>
   </section>
-  <StickyMobileCta />
+
+  <CTA />
 
   <script>
-    const searchInput = document.getElementById('blog-search') as HTMLInputElement;
-    const tagButtons = document.querySelectorAll('.tag-btn');
-    const postCards = document.querySelectorAll('.post-card');
-    const noResults = document.getElementById('no-results');
-    let activeTag = 'all';
+    const searchInput = document.getElementById('blog-search') as HTMLInputElement | null
+    const tagButtons = document.querySelectorAll('.tag-btn')
+    const postCards = document.querySelectorAll('.post-card')
+    const noResults = document.getElementById('no-results')
+    let activeTag = 'all'
 
     function filterPosts() {
-      const query = searchInput?.value.toLowerCase() || '';
-      let visible = 0;
-
-      postCards.forEach(card => {
-        const title = card.getAttribute('data-title') || '';
-        const excerpt = card.getAttribute('data-excerpt') || '';
-        const tags = (card.getAttribute('data-tags') || '').split(',');
-
-        const matchesSearch = !query || title.includes(query) || excerpt.includes(query);
-        const matchesTag = activeTag === 'all' || tags.includes(activeTag);
-
-        if (matchesSearch && matchesTag) {
-          (card as HTMLElement).style.display = '';
-          visible++;
-        } else {
-          (card as HTMLElement).style.display = 'none';
-        }
-      });
-
-      if (noResults) noResults.classList.toggle('hidden', visible > 0);
+      const query = searchInput?.value.toLowerCase() || ''
+      let visible = 0
+      postCards.forEach((card) => {
+        const el = card as HTMLElement
+        const title = el.getAttribute('data-title') || ''
+        const excerpt = el.getAttribute('data-excerpt') || ''
+        const tags = (el.getAttribute('data-tags') || '').split(',')
+        const matches = (!query || title.includes(query) || excerpt.includes(query)) && (activeTag === 'all' || tags.includes(activeTag))
+        el.style.display = matches ? '' : 'none'
+        if (matches) visible++
+      })
+      noResults?.classList.toggle('hidden', visible > 0)
     }
 
-    searchInput?.addEventListener('input', filterPosts);
-
-    tagButtons.forEach(btn => {
+    searchInput?.addEventListener('input', filterPosts)
+    tagButtons.forEach((btn) => {
       btn.addEventListener('click', () => {
-        activeTag = btn.getAttribute('data-tag') || 'all';
-        tagButtons.forEach(b => {
-          b.classList.remove('active');
-          b.classList.remove('bg-violet-600', 'text-white', 'border-violet-600');
-          b.classList.add('bg-white', 'text-text-600', 'border-paper-line');
-        });
-        btn.classList.add('active');
-        btn.classList.add('bg-violet-600', 'text-white', 'border-violet-600');
-        btn.classList.remove('bg-white', 'text-text-600', 'border-paper-line');
-        filterPosts();
-      });
-    });
-
-    // Init active state
-    const activeBtn = document.querySelector('.tag-btn.active');
-    if (activeBtn) {
-      activeBtn.classList.add('bg-violet-600', 'text-white', 'border-violet-600');
-      activeBtn.classList.remove('bg-white', 'text-text-600', 'border-paper-line');
-    }
+        activeTag = btn.getAttribute('data-tag') || 'all'
+        tagButtons.forEach((b) => {
+          b.classList.remove('bg-teal-600', 'text-white', 'border-teal-600')
+          b.classList.add('bg-white', 'text-ink-600', 'border-cream-300')
+        })
+        btn.classList.add('bg-teal-600', 'text-white', 'border-teal-600')
+        btn.classList.remove('bg-white', 'text-ink-600', 'border-cream-300')
+        filterPosts()
+      })
+    })
   </script>
 </Layout>

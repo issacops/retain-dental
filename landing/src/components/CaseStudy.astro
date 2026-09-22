@@ -1,54 +1,49 @@
-<section class="py-24 px-6 bg-cream-100 relative overflow-hidden">
-  <div class="max-w-7xl mx-auto">
-    <div class="flex flex-col lg:flex-row gap-16 items-center">
-      <div class="flex-1 order-2 lg:order-1 w-full">
-        <div class="rounded-[2rem] overflow-hidden shadow-xl shadow-gray-200/80 border border-gray-200 bg-cream-50">
-          <img
-            src="/assets/screens/doctor-dashboard.png"
-            alt="RetainOS Doctor Dashboard - Real-time analytics, patient insights, and practice management"
-            class="w-full h-auto"
-            width="800"
-            height="500"
-            loading="lazy"
-          />
-        </div>
-      </div>
-
-      <div class="flex-1 space-y-8 order-1 lg:order-2">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-600/10 border border-violet-600/20 text-violet-600 text-xs font-bold uppercase tracking-widest">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          Case Study
-        </div>
-
-        <h2 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter leading-tight">
-          From $150K to<br />
-          <span class="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-violet-400">$310K in 12 months</span>
+---
+const metrics = [
+  { n: '+38%', l: 'active patients retained' },
+  { n: '2.4x', l: 'referrals per patient' },
+  { n: '4.9', l: 'average Google rating' },
+]
+---
+<section class="bg-cream-50 py-20 sm:py-28">
+  <div class="mx-auto max-w-8xl px-5 sm:px-8">
+    <div class="grid gap-12 lg:grid-cols-[1fr_1.05fr] lg:items-center">
+      <div>
+        <p class="eyebrow text-teal-700">Practice story</p>
+        <h2 class="mt-4 font-heading text-[clamp(1.9rem,3.6vw,2.9rem)] font-semibold leading-[1.08] tracking-tight text-ink-900 text-balance">
+          A three-chair practice that stopped chasing patients.
         </h2>
-
-        <p class="text-xl text-slate-500 leading-relaxed">
-          A 6-chair dental studio in Chicago adopted RetainOS and transformed their practice economics
-          — all within a single year.
+        <p class="mt-5 text-lg leading-relaxed text-ink-600">
+          Northside Dental was losing roughly one in five new patients after the first visit. They put aftercare in their own app, rewarded check-ins, and let referrals happen on their own.
         </p>
-
-        <div class="grid grid-cols-2 gap-4 sm:gap-6">
-          <div class="p-4 sm:p-5 rounded-2xl bg-cream-100/70 border border-gray-200/80">
-            <div class="text-xl sm:text-2xl font-black text-violet-600 mb-1">+107%</div>
-            <div class="text-[10px] sm:text-xs text-slate-500 font-bold uppercase tracking-wide">Revenue Growth</div>
-          </div>
-          <div class="p-4 sm:p-5 rounded-2xl bg-cream-100/70 border border-gray-200/80">
-            <div class="text-xl sm:text-2xl font-black text-violet-600 mb-1">96.4%</div>
-            <div class="text-[10px] sm:text-xs text-slate-500 font-bold uppercase tracking-wide">Patient Retention</div>
-          </div>
-          <div class="p-4 sm:p-5 rounded-2xl bg-cream-100/70 border border-gray-200/80">
-            <div class="text-xl sm:text-2xl font-black text-amber-600 mb-1">10h+</div>
-            <div class="text-[10px] sm:text-xs text-slate-500 font-bold uppercase tracking-wide">Admin Time Saved / Wk</div>
-          </div>
-          <div class="p-4 sm:p-5 rounded-2xl bg-cream-100/70 border border-gray-200/80">
-            <div class="text-xl sm:text-2xl font-black text-amber-600 mb-1">234%</div>
-            <div class="text-[10px] sm:text-xs text-slate-500 font-bold uppercase tracking-wide">Recall Response Rate</div>
-          </div>
+        <p class="mt-4 text-[15px] leading-relaxed text-ink-600">
+          Within two quarters the practice was retaining far more of the patients it already had, and new patients started arriving through people they had treated.
+        </p>
+        <div class="mt-8 grid grid-cols-3 gap-6">
+          {metrics.map((m) => (
+            <div>
+              <p class="font-heading text-3xl font-semibold text-teal-700">{m.n}</p>
+              <p class="mt-1 text-[13px] leading-snug text-ink-500">{m.l}</p>
+            </div>
+          ))}
         </div>
       </div>
+
+      <figure class="card-white p-8 sm:p-10">
+        <div class="flex gap-1 text-teal-500" aria-hidden="true">
+          {Array.from({ length: 5 }).map(() => (<span>★</span>))}
+        </div>
+        <blockquote class="mt-6 font-heading text-2xl font-medium leading-snug tracking-tight text-ink-900">
+          "We used to treat aftercare as paperwork. Now it is the reason patients come back and the reason they send us their family."
+        </blockquote>
+        <figcaption class="mt-7 flex items-center gap-3 border-t border-cream-200 pt-6">
+          <span class="flex h-11 w-11 items-center justify-center rounded-full bg-teal-100 font-heading text-sm font-semibold text-teal-800">RC</span>
+          <span>
+            <span class="block text-sm font-semibold text-ink-900">Dr. Rachel Cohen</span>
+            <span class="block text-xs text-ink-500">Northside Dental, 2 locations</span>
+          </span>
+        </figcaption>
+      </figure>
     </div>
   </div>
 </section>

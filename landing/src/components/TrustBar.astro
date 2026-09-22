@@ -1,18 +1,15 @@
 ---
+const clinics = ['Northside Dental', 'Bright Smile Studio', 'Cedar Park Ortho', 'Harbor Dental', 'Lakeview Family Dental', 'Summit Smiles']
 ---
-
-<section class="py-16 px-6 bg-paper-50">
-  <div class="max-w-6xl mx-auto">
-    <p class="text-center text-xs font-semibold uppercase tracking-[0.1em] mb-8">
-      <span class="text-violet-600">■</span> TRUSTED BY DENTAL PRACTICES WORLDWIDE
+<section class="border-y border-cream-200 bg-cream-50 py-10">
+  <div class="mx-auto max-w-8xl px-5 sm:px-8">
+    <p class="text-center text-[11px] font-semibold uppercase tracking-[0.18em] text-ink-400">
+      Trusted by growing practices across the US
     </p>
-    <div class="flex flex-wrap items-center justify-center gap-6 md:gap-10">
-      <span class="text-sm font-semibold text-text-600 opacity-50 hover:opacity-100 transition-opacity">Smile Clinic</span>
-      <span class="text-sm font-semibold text-text-600 opacity-50 hover:opacity-100 transition-opacity">Metro Dental</span>
-      <span class="text-sm font-semibold text-text-600 opacity-50 hover:opacity-100 transition-opacity">Prime Smiles</span>
-      <span class="text-sm font-semibold text-text-600 opacity-50 hover:opacity-100 transition-opacity">Jackson Ortho</span>
-      <span class="text-sm font-semibold text-text-600 opacity-50 hover:opacity-100 transition-opacity">Bright Dental</span>
-      <span class="text-sm font-semibold text-text-600 opacity-50 hover:opacity-100 transition-opacity">Care Partners</span>
+    <div class="mt-7 flex flex-wrap items-center justify-center gap-x-10 gap-y-4">
+      {clinics.map((c) => (
+        <span class="font-heading text-base font-semibold text-ink-400/80 hover:text-ink-600 transition-colors">{c}</span>
+      ))}
     </div>
   </div>
 </section>

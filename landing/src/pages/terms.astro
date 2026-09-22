@@ -1,60 +1,78 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from '../layouts/Layout.astro'
+import Footer from '../components/Footer.astro'
+const updated = 'September 22, 2026'
 ---
-
 <Layout
-  title="Terms of Service | RetainOS"
-  description="Terms and conditions for using RetainOS platform and services."
-  breadcrumbs={[
-    { name: 'Home', url: 'https://retaindental.com/' },
-    { name: 'Terms of Service', url: 'https://retaindental.com/terms' },
-  ]}
+  title="Terms of Service | Retain Dental"
+  description="The terms that govern use of the Retain Dental platform, including subscriptions, customer data, HIPAA responsibilities, and acceptable use."
+  canonical="/terms"
+  breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Terms of Service', url: '/terms' }]}
 >
-  <section class="pt-36 pb-24 px-6 bg-paper-50">
-    <div class="max-w-3xl mx-auto">
-      <div class="text-center max-w-2xl mx-auto mb-16">
-        <h1 class="text-5xl md:text-6xl font-sans font-[400] text-text-900 tracking-tight mb-6">Terms of <span class="text-violet-600">Service</span>.</h1>
-        <p class="text-text-600">Last updated: June 15, 2026</p>
+  <article class="bg-cream-100 pb-24 pt-32 sm:pt-40">
+    <div class="mx-auto max-w-3xl px-5 sm:px-8">
+      <p class="eyebrow text-teal-700">Legal</p>
+      <h1 class="mt-4 font-heading text-[clamp(2rem,4.2vw,3rem)] font-semibold leading-[1.08] tracking-tight text-ink-900">Terms of Service</h1>
+      <p class="mt-4 text-sm text-ink-500">Last updated {updated}</p>
+
+      <div class="mt-10 space-y-6 text-[16px] leading-relaxed text-ink-700 [&_h2]:mt-12 [&_h2]:mb-3 [&_h2]:font-heading [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:tracking-tight [&_h2]:text-ink-900 [&_h3]:mt-8 [&_h3]:mb-2 [&_h3]:font-semibold [&_h3]:text-ink-900 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6 [&_a]:text-teal-700 [&_a]:underline [&_a]:decoration-teal-300 [&_a]:underline-offset-4">
+        <p>These Terms of Service govern your access to and use of the Retain Dental platform and website. By creating an account or using the service, you agree to these terms on behalf of the practice you represent.</p>
+
+        <h2>1. The service</h2>
+        <p>Retain Dental provides a patient retention platform for dental practices. It includes a branded patient app, aftercare plans, recall automation, loyalty and referral features, review collection, payments, and analytics. We may improve or change features over time.</p>
+
+        <h2>2. Accounts and eligibility</h2>
+        <p>You must be at least 18 and authorized to act for the practice you register. You are responsible for keeping your credentials secure and for activity under your account.</p>
+
+        <h2>3. Free trial and subscriptions</h2>
+        <ul>
+          <li>New practices receive a 14-day free trial. No credit card is required to start.</li>
+          <li>Paid plans are billed per location based on active patients, and are explained during your demo. There are no setup fees and no per-feature upcharges.</li>
+          <li>Unless a separate agreement says otherwise, subscriptions renew until cancelled, and you may cancel at any time.</li>
+        </ul>
+
+        <h2>4. Customer data and ownership</h2>
+        <p>Your practice owns its patient data and the content it uploads. We process that data only to provide the service, as described in our <a href="/privacy">Privacy Policy</a> and any BAA. You can export your data at any time. We do not sell your data.</p>
+
+        <h2>5. HIPAA responsibilities</h2>
+        <p>We enter into a Business Associate Agreement (BAA) with each practice and require our PHI-handling subprocessors to do the same. As the Covered Entity, the practice is responsible for its own HIPAA compliance program, including workforce training, policies, and the lawful basis for contacting patients.</p>
+
+        <h2>6. Acceptable use</h2>
+        <p>You agree not to use the service to send unlawful messages, to upload data you do not have the right to use, to attempt to breach security, to reverse engineer the platform, or to resell the service without our written permission. Messaging features must be used in line with applicable law, including consent and opt-out requirements.</p>
+
+        <h2>7. Third-party integrations</h2>
+        <p>The service can connect with third-party systems such as practice management software. Your use of those systems is governed by their own terms, and we are not responsible for them.</p>
+
+        <h2>8. Intellectual property</h2>
+        <p>We own the platform, our software, and our brand. You receive a limited, non-exclusive right to use the service during your subscription. You retain all rights to your own content and data.</p>
+
+        <h2>9. Disclaimers</h2>
+        <p>The service is provided on an "as is" basis. We do not provide clinical advice, and the platform does not replace your professional judgment. Retain Dental does not guarantee any particular business outcome, including a specific retention or revenue result.</p>
+
+        <h2>10. Limitation of liability</h2>
+        <p>To the maximum extent permitted by law, Retain Dental is not liable for indirect, incidental, or consequential damages, and our total liability is limited to the fees you paid in the twelve months before the claim.</p>
+
+        <h2>11. Termination</h2>
+        <p>You may cancel at any time. We may suspend or terminate access for material breach of these terms or non-payment. On termination, we will make your data available for export for a reasonable period, after which it is deleted in line with our retention practices.</p>
+
+        <h2>12. Governing law</h2>
+        <p>These terms are governed by the laws of the State of Texas, United States, without regard to its conflict of law rules.</p>
+
+        <h2>13. Changes</h2>
+        <p>We may update these terms from time to time. Material changes will be communicated to account holders, and continued use after a change means you accept the updated terms.</p>
+
+        <h2>14. Contact</h2>
+        <p>Questions about these terms? Email <a href="mailto:hello@retaindental.com">hello@retaindental.com</a>.</p>
       </div>
 
-      <div class="prose prose-slate max-w-none prose-headings:text-text-900 prose-headings:font-bold prose-headings:tracking-tight prose-p:font-sans prose-p:text-text-600 prose-p:leading-relaxed prose-a:text-violet-600 prose-a:font-medium prose-strong:text-text-900 prose-li:font-sans prose-li:text-text-600">
-        <h2>1. Acceptance</h2>
-        <p>By signing up for or using RetainOS, you agree to these Terms of Service. If you are accepting on behalf of a clinic or DSO, you represent that you have authority to bind that entity.</p>
-
-        <h2>2. Description of Service</h2>
-        <p>RetainOS provides a white-label patient engagement platform including: branded patient mobile app, recall automation, loyalty program, review management, patient communication, analytics, and payment processing. We grant you a non-exclusive, non-transferable right to use the platform during your subscription term.</p>
-
-        <h2>3. Subscription & Billing</h2>
-        <p>Plans are billed monthly or annually as selected at signup. Pricing is available at <a href="/pricing">retaindental.com/pricing</a>. All fees are non-refundable except as required by law. We may change pricing with 30 days notice.</p>
-
-        <h2>4. Data Ownership</h2>
-        <p>You retain full ownership of all patient data and clinic content you enter into the platform. We claim no intellectual property rights over your data. We will not access your data except as necessary to provide support or maintain the platform.</p>
-
-        <h2>5. Prohibited Uses</h2>
-        <p>You may not: use the platform for any unlawful purpose, attempt to reverse-engineer the platform, use the platform to send spam, or sublicense the platform to third parties without our written consent.</p>
-
-        <h2>6. Uptime & SLA</h2>
-        <p>We target 99.9% uptime. Planned maintenance is scheduled during off-hours (2am–5am CT) with advance notice. If uptime falls below 99.5% in a calendar month, you receive a 10% service credit.</p>
-
-        <h2>7. Limitation of Liability</h2>
-        <p>To the maximum extent permitted by law, RetainOS's liability is limited to the fees paid in the 12 months preceding the claim. We are not liable for indirect, consequential, or incidental damages.</p>
-
-        <h2>8. Termination</h2>
-        <p>Either party may terminate with 30 days written notice. Upon termination, you may export your data within 30 days. After 90 days, your data is permanently deleted.</p>
-
-        <h2>9. Governing Law</h2>
-        <p>These terms are governed by the laws of the State of Texas. Disputes shall be resolved in Travis County, Texas.</p>
-
-        <h2>10. Changes</h2>
-        <p>We may modify these terms with 30 days email notice. Continued use after the notice period constitutes acceptance of the modified terms.</p>
-
-        <h2>11. Contact</h2>
-        <p>Questions? Email <a href="mailto:legal@retaindental.com">legal@retaindental.com</a>.</p>
-      </div>
-
-      <div class="mt-12 pt-8 border-t border-paper-line text-center">
-        <a href="/" class="text-sm text-violet-600 font-semibold hover:underline">&larr; Back to home</a>
+      <div class="card mt-14 flex flex-col items-start gap-4 p-7 sm:flex-row sm:items-center sm:justify-between">
+        <p class="text-[15px] text-ink-700">Need the privacy or security detail?</p>
+        <div class="flex gap-3">
+          <a href="/privacy" class="btn-ghost min-h-[44px]">Privacy</a>
+          <a href="/security" class="btn-ghost min-h-[44px]">Security</a>
+        </div>
       </div>
     </div>
-  </section>
+  </article>
+  <Footer />
 </Layout>

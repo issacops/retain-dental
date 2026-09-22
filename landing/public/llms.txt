@@ -1,51 +1,45 @@
-# RetainOS
+# Retain Dental
 
-RetainOS is a dental practice patient retention platform that replaces 6 separate tools (recall automation, loyalty program, patient portal, review generator, payment terminal, analytics, and automated aftercare) with one branded patient app.
+> Retain Dental is a patient retention platform for dental practices. It gives every clinic its own branded patient app where patients follow their aftercare, earn loyalty points, and refer friends, turning each visit into retention and referrals. Practices launch in about 20 minutes.
 
-## Who it's for
+Retain Dental is built for solo dental practices, multi-doctor practices, multi-location groups, and Dental Service Organizations (DSOs) in the United States.
 
-- Solo dental practices
-- Multi-location dental groups
-- Dental Service Organizations (DSOs)
+## What Retain Dental does
 
-## Core features
+- Branded patient app: a white-label progressive web app with the clinic's name, logo, and colors. Patients add it to their home screen in one tap, with no App Store submission.
+- Aftercare: procedure-specific aftercare plans (aligners, post-op, whitening) delivered as a daily checklist in the app, with adherence tracking for the clinic.
+- Recall and reactivation: automated multi-channel reminders that bring overdue patients back.
+- Loyalty and rewards: points on treatments and check-ins, membership tiers, and household pooling that lets a family combine points.
+- Referrals: patients share the clinic and pass along points, so a friend books and everyone is rewarded.
+- Reviews: post-visit review requests that grow the practice's public rating.
+- Payments: in-app balances and treatment payments.
+- Analytics: retention rate, adherence, referrals, and lifetime value in one dashboard.
+- Social content: on-brand post templates generated from the practice's own data.
 
-- **White-label patient app** — Custom-branded PWA for iOS and Android, no app store submission needed
-- **Recall automation** — Multi-channel (SMS, push, email) automated sequences to bring patients back
-- **Loyalty engine** — Points, tiers (Silver/Gold/Platinum), and household family pooling
-- **Review collection** — Post-visit automated review requests to grow Google rating
-- **Payment collection** — In-app card-on-file payments reducing outstanding balances
-- **Analytics dashboard** — Real-time retention metrics, churn prediction, VIP alerts
-- **Aftercare checklists** — Automated procedure-specific aftercare follow-ups via text/email
-- **Social post generator** — AI-powered branded social media content templates
+## Common questions
 
-## Integrations
-
-- Dentrix
-- Eaglesoft
-- Open Dental
-- More PMS integrations available on Enterprise plans
-
-## Pricing
-
-- Starter: $299/month per location
-- Growth: $599/month per location
-- Enterprise: Custom pricing for DSOs and multi-location groups
-- Free 14-day trial available (no credit card required)
+- What is Retain Dental? A patient retention platform that gives dental practices a branded app for aftercare, recalls, rewards, and referrals.
+- How is it different from practice management software? Your PMS runs clinical and billing. Retain Dental runs the patient relationship between visits.
+- Do patients need to download an app? No. It is a progressive web app; patients add it to their home screen in one tap.
+- Is it HIPAA compliant? Retain Dental is HIPAA-aligned, signs a Business Associate Agreement with every practice, and encrypts data in transit and at rest. SOC 2 Type II is in progress.
+- How long does setup take? About 20 minutes.
+- How much does it cost? Simple per-location pricing based on active patients, with no setup fees. Book a demo for a quote.
 
 ## Key pages
 
-- Homepage: https://retaindental.com
-- Pricing: https://retaindental.com/pricing
-- Blog: https://retaindental.com/blog
-- DSO solutions: https://retaindental.com/dso
-- Solo practice: https://retaindental.com/solo-practice
-- vs Dentrix: https://retaindental.com/vs-dentrix
-- vs Yapi: https://retaindental.com/vs-yapi
-- Privacy policy: https://retaindental.com/privacy
-- Terms of service: https://retaindental.com/terms
-- HIPAA compliance: https://retaindental.com/hipaa
-- Security: https://retaindental.com/security
-- About: https://retaindental.com/about
-- Careers: https://retaindental.com/careers
-- Contact: https://retaindental.com/contact
+- Homepage: https://www.retaindental.com
+- Plans: https://www.retaindental.com/pricing
+- For DSOs: https://www.retaindental.com/dso
+- For solo practices: https://www.retaindental.com/solo-practice
+- Compare vs Dentrix: https://www.retaindental.com/vs-dentrix
+- Compare vs Yapi: https://www.retaindental.com/vs-yapi
+- Blog and guides: https://www.retaindental.com/blog
+- About: https://www.retaindental.com/about
+- Security: https://www.retaindental.com/security
+- HIPAA: https://www.retaindental.com/hipaa
+- Contact: https://www.retaindental.com/contact
+
+## Contact
+
+- Sales and demos: hello@retaindental.com
+- Start free trial: https://app.retaindental.com/signup

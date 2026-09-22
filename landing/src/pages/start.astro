@@ -1,0 +1,64 @@
+---
+import Layout from '../layouts/Layout.astro'
+import OnboardingFlow from '../components/OnboardingFlow.tsx'
+---
+<Layout
+  title="Start free trial | Retain Dental"
+  description="Create your clinic's branded patient app in about 20 minutes. 14 days free, no credit card, no setup fee."
+  canonical="/start"
+  breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Start free trial', url: '/start' }]}
+>
+  <section class="relative overflow-hidden bg-cream-100 pt-28 pb-20 sm:pt-36">
+    <div aria-hidden="true" class="pointer-events-none absolute inset-0 -z-10">
+      <div class="absolute -top-24 left-10 h-[30rem] w-[30rem] rounded-full bg-teal-200/40 blur-[120px]"></div>
+      <div class="absolute bottom-0 right-0 h-[26rem] w-[26rem] rounded-full bg-sky-100/70 blur-[120px]"></div>
+    </div>
+
+    <div class="mx-auto max-w-8xl px-5 sm:px-8">
+      <div class="grid gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
+        <!-- Left: pitch -->
+        <div class="lg:pt-6">
+          <p class="eyebrow text-teal-700">Free trial</p>
+          <h1 class="mt-4 font-heading text-[clamp(2.1rem,4.6vw,3.3rem)] font-semibold leading-[1.06] tracking-tight text-ink-900 text-balance">
+            Your branded app, live in about 20 minutes.
+          </h1>
+          <p class="mt-5 max-w-lg text-lg leading-relaxed text-ink-600">
+            Three short steps, then your app is ready to send to patients. No credit card, no setup fee, and no drag-along migration.
+          </p>
+
+          <ul class="mt-8 space-y-4">
+            {[
+              'Your logo, your colours, your clinic name',
+              'Aftercare, recalls, rewards, and referrals in one app',
+              'Works alongside Dentrix, Eaglesoft, and Open Dental',
+              'HIPAA-aligned, with a BAA for every practice',
+            ].map((f) => (
+              <li class="flex items-start gap-3 text-[15px] text-ink-700">
+                <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-teal-100 text-teal-700">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                {f}
+              </li>
+            ))}
+          </ul>
+
+          <figure class="card mt-10 p-6">
+            <div class="flex gap-1 text-teal-500" aria-hidden="true">{Array.from({ length: 5 }).map(() => (<span>★</span>))}</div>
+            <blockquote class="mt-4 text-[15px] leading-relaxed text-ink-700">
+              "We used to treat aftercare as paperwork. Now it is the reason patients come back and the reason they send us their family."
+            </blockquote>
+            <figcaption class="mt-4 text-[13px] text-ink-500">Dr. Rachel Cohen | Northside Dental</figcaption>
+          </figure>
+        </div>
+
+        <!-- Right: onboarding -->
+        <div>
+          <OnboardingFlow client:load />
+          <p class="mt-4 text-center text-xs text-ink-500">
+            Prefer to talk first? <a href="/contact" class="font-semibold text-teal-700 underline decoration-teal-300 underline-offset-4">Book a demo</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

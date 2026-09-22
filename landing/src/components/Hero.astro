@@ -1,84 +1,136 @@
-<section class="relative min-h-[650px] flex items-center overflow-hidden bg-ink-950">
-  <div class="absolute inset-0 bg-gradient-to-b from-ink-950/40 via-ink-950/60 to-ink-950/30 pointer-events-none z-10"></div>
-  <div class="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(217,119,6,0.15),transparent)] pointer-events-none"></div>
+---
+const activities = [
+  { text: 'Aftercare checklist completed' },
+  { text: 'Gold tier unlocked | +1,500 pts' },
+  { text: 'Patient shared points with a friend' },
+  { text: 'Recall sent to 42 overdue patients' },
+  { text: 'Family pool reached 1,850 pts' },
+]
+---
+<section class="relative overflow-hidden bg-cream-100 pt-28 pb-16 sm:pt-36 sm:pb-24">
+  <div aria-hidden="true" class="pointer-events-none absolute inset-0 -z-10">
+    <div class="absolute -top-32 -left-24 h-[36rem] w-[36rem] rounded-full bg-teal-200/40 blur-[120px]"></div>
+    <div class="absolute top-24 right-0 h-[32rem] w-[32rem] rounded-full bg-sky-100/70 blur-[120px]"></div>
+  </div>
 
-  <div class="relative z-20 w-full max-w-7xl mx-auto px-6 pt-28 pb-20">
-    <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-      <!-- Left: Content -->
+  <div class="mx-auto max-w-8xl px-5 sm:px-8">
+    <div class="grid items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
+      <!-- Copy -->
       <div class="max-w-xl">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 mb-6">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span class="text-white/80 text-xs font-semibold uppercase tracking-[0.12em]">Replace 6 tools with 1 platform</span>
-        </div>
-        <h1 class="text-[clamp(2.5rem,5vw,4.5rem)] font-black text-white leading-[1.05] tracking-tighter text-balance">
-          Patient retention is constant.<br />
-          <span class="text-violet-400">RetainOS brings the calm.</span>
-        </h1>
-        <p class="text-[clamp(1.115rem,2vw,1.25rem)] text-white/80 max-w-[600px] mt-6 leading-relaxed">
-          Smart tools to automate recalls, build loyalty, and free up your team's day.
+        <p class="inline-flex items-center gap-2 rounded-full border border-teal-200 bg-white/70 px-4 py-1.5 text-[13px] font-medium text-teal-800">
+          <span class="h-1.5 w-1.5 rounded-full bg-teal-500"></span>
+          The branded clinic app for aftercare, retention &amp; referrals
         </p>
-        <div class="flex flex-col sm:flex-row gap-4 mt-10">
-          <button onclick="window.dispatchEvent(new Event('open-demo-form'))" class="inline-flex items-center gap-2 rounded-[32px] px-8 py-4 bg-white text-dark-blue font-semibold text-lg hover:opacity-90 transition-all duration-200 shadow-sm min-h-[48px]">
-            Book a demo
-            <span class="ml-1">→</span>
-          </button>
-          <a href="#features" class="inline-flex items-center gap-2 text-white font-semibold text-lg hover:text-white/80 transition-colors duration-200 min-h-[48px] py-2">
-            See how it works <span>→</span>
+
+        <h1 class="mt-6 font-heading text-[clamp(2.3rem,5.2vw,3.9rem)] font-semibold leading-[1.03] tracking-tight text-ink-900 text-balance">
+          Aftercare your patients brag about.
+        </h1>
+
+        <p class="mt-6 text-[clamp(1.05rem,1.6vw,1.25rem)] leading-relaxed text-ink-600 text-pretty">
+          Retain Dental gives your clinic its own branded app, where every patient follows their aftercare, earns points, and brings their friends. Every visit becomes a retention and referral engine, automatically.
+        </p>
+
+        <div class="mt-9 flex flex-col sm:flex-row gap-3">
+          <a
+            href="/start"
+            data-cta="hero-start"
+            class="inline-flex items-center justify-center gap-2 rounded-full bg-teal-600 px-7 py-3.5 text-base font-semibold text-white shadow-card hover:bg-teal-700 transition-colors min-h-[52px]"
+          >
+            Start free trial
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a
+            href="#how"
+            class="inline-flex items-center justify-center gap-2 rounded-full border border-ink-900/15 bg-white/60 px-7 py-3.5 text-base font-semibold text-ink-900 hover:bg-white transition-colors min-h-[52px]"
+          >
+            See the 20-minute setup
           </a>
         </div>
 
-        <!-- Social proof row -->
-        <div class="mt-12 flex flex-wrap items-center gap-6">
-          <div class="flex -space-x-2">
-            {['SC', 'MT', 'PS', 'JO'].map((initials) => (
-              <div class="w-9 h-9 rounded-full bg-violet-600/30 border-2 border-ink-950 flex items-center justify-center text-[10px] font-bold text-violet-400">
-                {initials}
-              </div>
+        <p class="mt-5 text-[13px] text-ink-500">
+          No credit card | Your logo, your colors | HIPAA-aligned | Live in 20 minutes
+        </p>
+
+        <!-- Live loop ticker -->
+        <div class="mt-10">
+          <p class="text-[11px] font-semibold uppercase tracking-[0.18em] text-ink-400">The retention loop, running now</p>
+          <div id="ticker" class="mt-3 flex flex-wrap gap-2.5" aria-live="polite">
+            {activities.map((a, i) => (
+              <span
+                data-tick={i}
+                class:list={[
+                  'tick inline-flex items-center gap-2 rounded-full border border-cream-300 bg-white/80 px-3.5 py-2 text-[13px] font-medium text-ink-700 transition-all duration-500',
+                  i === 0 ? 'opacity-100' : 'opacity-40',
+                ]}
+              >
+                <span class="h-2 w-2 rounded-full bg-teal-500"></span>
+                {a.text}
+              </span>
             ))}
-          </div>
-          <div>
-            <p class="text-sm font-semibold text-white">12 pilot clinics worldwide</p>
-            <div class="flex flex-wrap items-center gap-x-5 gap-y-1 mt-1 text-xs text-white/50">
-              <span class="flex items-center gap-1.5">
-                <svg class="w-3 h-3 text-violet-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                No code required
-              </span>
-              <span class="flex items-center gap-1.5">
-                <svg class="w-3 h-3 text-violet-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                Live in 20 minutes
-              </span>
-              <span class="flex items-center gap-1.5">
-                <svg class="w-3 h-3 text-violet-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                HIPAA ready
-              </span>
-            </div>
           </div>
         </div>
       </div>
 
-      <!-- Right: Real platform screenshot -->
-      <div class="hidden lg:flex justify-center items-center relative">
-        <div class="relative w-full max-w-[560px]">
-          <div class="absolute -inset-4 bg-gradient-to-br from-violet-400/20 via-transparent to-transparent blur-3xl pointer-events-none"></div>
-          <div class="relative rounded-xl overflow-hidden shadow-2xl border border-white/10 bg-ink-900">
-            <div class="h-9 bg-ink-800 flex items-center gap-1.5 px-4 border-b border-white/5">
-              <div class="w-3 h-3 rounded-full bg-red-500/70"></div>
-              <div class="w-3 h-3 rounded-full bg-amber-500/70"></div>
-              <div class="w-3 h-3 rounded-full bg-emerald-500/70"></div>
-              <span class="ml-3 text-[11px] text-white/40 font-mono">app.retaindental.com</span>
+      <!-- Visual: aftercare-first patient app + clinic dashboard -->
+      <div class="relative">
+        <div class="relative mx-auto max-w-[560px]">
+          <div class="overflow-hidden rounded-3xl border border-cream-300 bg-white shadow-lift">
+            <div class="flex items-center gap-2 border-b border-cream-200 bg-cream-50 px-4 py-2.5">
+              <span class="h-2.5 w-2.5 rounded-full bg-[#FF5F57]"></span>
+              <span class="h-2.5 w-2.5 rounded-full bg-[#FEBC2E]"></span>
+              <span class="h-2.5 w-2.5 rounded-full bg-[#28C840]"></span>
+              <span class="ml-3 font-mono text-[11px] text-ink-500">app.retaindental.com/clinic</span>
             </div>
-            <img src="/screens/login-choice.png" alt="RetainOS platform login screen showing Patient Access and Clinic Workspace" class="w-full h-auto block" loading="eager" />
+            <img
+              src="/platform/clinic-retention.webp"
+              srcset="/platform/clinic-retention-720.webp 720w, /platform/clinic-retention.webp 1440w"
+              sizes="(max-width: 1024px) 92vw, 560px"
+              width="1440"
+              height="900"
+              alt="Clinic dashboard showing retention intelligence, adherence, and patient engagement"
+              class="block w-full"
+              fetchpriority="high"
+              decoding="async"
+            />
+          </div>
+
+          <!-- Floating patient aftercare app (the hook) -->
+          <div class="absolute -bottom-8 -left-6 w-[150px] sm:w-[178px]">
+            <div class="overflow-hidden rounded-[2rem] border-[6px] border-ink-900 bg-ink-900 shadow-lift">
+              <img
+                src="/platform/patient-care.webp"
+                width="430"
+                height="930"
+                alt="Patient aftercare checklist in the clinic's branded app, with daily rituals and progress"
+                class="block w-full"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+          </div>
+
+          <!-- Floating referral stat -->
+          <div class="absolute -right-4 top-10 rounded-2xl border border-cream-300 bg-white px-4 py-3 shadow-card">
+            <p class="eyebrow text-ink-500">Referred patients</p>
+            <p class="font-heading text-2xl font-semibold text-teal-700">2.3×</p>
           </div>
         </div>
       </div>
     </div>
   </div>
-
-  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2">
-    <span class="text-white/50 text-xs font-medium">Scroll</span>
-    <svg width="14" height="22" viewBox="0 0 14 22" fill="none" class="animate-bounce text-white/50">
-      <rect x="1.5" y="1.5" width="11" height="19" rx="5.5" stroke="currentColor" stroke-width="1.5"/>
-      <circle cx="7" cy="7" r="1.5" fill="currentColor" class="animate-pulse"/>
-    </svg>
-  </div>
 </section>
+
+<script>
+  const ticks = Array.from(document.querySelectorAll('#ticker .tick'));
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (ticks.length && !reduce) {
+    let i = 0;
+    setInterval(() => {
+      i = (i + 1) % ticks.length;
+      ticks.forEach((t, idx) => {
+        t.classList.toggle('opacity-100', idx === i);
+        t.classList.toggle('opacity-40', idx !== i);
+      });
+    }, 2600);
+  }
+</script>

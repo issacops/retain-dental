@@ -3,28 +3,28 @@ import Layout from '../layouts/Layout.astro';
 import StickyMobileCta from '../components/StickyMobileCta.astro';
 
 const rows = [
-  { feature: 'White-label patient app (your brand, your domain)', retain: true, other: false, solutionreach: false },
-  { feature: 'Branded social post generator (5 templates)', retain: true, other: false, solutionreach: false },
-  { feature: 'Loyalty tier system (Member / Gold / Platinum)', retain: true, other: false, solutionreach: false },
-  { feature: 'Household points pooling', retain: true, other: false, solutionreach: false },
-  { feature: 'Live protocol monitor (Invisalign, implants)', retain: true, other: false, solutionreach: false },
-  { feature: 'Multi-location dashboard', retain: true, other: true, solutionreach: true },
-  { feature: 'Automated re-care recall', retain: true, other: true, solutionreach: true },
-  { feature: 'Two-way texting', retain: true, other: true, solutionreach: true },
-  { feature: 'Patient intake forms', retain: true, other: true, solutionreach: true },
-  { feature: 'In-app invoice payment (Stripe)', retain: true, other: false, solutionreach: true },
-  { feature: 'PMS integration (Dentrix, Eaglesoft, Open Dental)', retain: true, other: true, solutionreach: true },
-  { feature: 'Native iOS + Android app', retain: true, other: false, solutionreach: true },
-  { feature: 'On-premise deployment option', retain: false, other: true, solutionreach: false },
-  { feature: 'Transparent self-serve pricing', retain: true, other: false, solutionreach: false },
-  { feature: 'Time to live', retain: '20 min', other: '4-8 weeks', solutionreach: '1-2 weeks' },
+  { feature: 'White-label patient app (your brand, your domain)', retain: true, other: false },
+  { feature: 'Branded social post generator (5 templates)', retain: true, other: false },
+  { feature: 'Loyalty tier system (Member / Gold / Platinum)', retain: true, other: false },
+  { feature: 'Household points pooling', retain: true, other: false },
+  { feature: 'Live protocol monitor (Invisalign, implants)', retain: true, other: false },
+  { feature: 'Multi-location dashboard', retain: true, other: true },
+  { feature: 'Automated re-care recall', retain: true, other: true },
+  { feature: 'Two-way texting', retain: true, other: true },
+  { feature: 'Patient intake forms', retain: true, other: true },
+  { feature: 'In-app invoice payment (Stripe)', retain: true, other: false },
+  { feature: 'PMS integration (Dentrix, Eaglesoft, Open Dental)', retain: true, other: true },
+  { feature: 'Branded patient app (add to home screen)', retain: true, other: false },
+  { feature: 'On-premise deployment option', retain: false, other: true },
+  { feature: 'Transparent self-serve pricing', retain: true, other: false },
+  { feature: 'Time to live', retain: '20 min', other: '4-8 weeks' },
 ];
 ---
 
 <Layout
-  title="RetainOS vs Dentrix — Why Dental Practices Switch"
-  description="RetainOS is the patient-engagement-first alternative to Dentrix. White-label app, loyalty tiers, and social post studio — features Dentrix doesn't ship."
-  keywords={['RetainOS vs Dentrix', 'Dentrix alternative', 'dental software alternative Dentrix', 'dental practice management Dentrix comparison']}
+  title="Retain Dental vs Dentrix, Why Dental Practices Switch"
+  description="Retain Dental is the patient-engagement-first alternative to Dentrix. White-label app, loyalty tiers, and social post studio, features Dentrix doesn't ship."
+  keywords={['Retain Dental vs Dentrix', 'Dentrix alternative', 'dental software alternative Dentrix', 'dental practice management Dentrix comparison']}
   canonical="https://retaindental.com/vs-dentrix"
   breadcrumbs={[
     { name: 'Home', url: 'https://retaindental.com/' },
@@ -36,11 +36,11 @@ const rows = [
       <span class="inline-flex items-center gap-2 px-3 py-1 bg-violet-600/10 border border-paper-line rounded text-xs font-semibold text-violet-600 uppercase tracking-[0.08em]">
         Comparison
       </span>
-      <h1 class="text-4xl md:text-6xl font-sans font-[400] text-text-900 tracking-tight leading-[1.05]">
-        RetainOS vs <span class="text-violet-600">Dentrix</span>
+      <h1 class="text-4xl md:text-6xl font-sans font-normal text-text-900 tracking-tight leading-[1.05]">
+        Retain Dental vs <span class="text-violet-600">Dentrix</span>
       </h1>
       <p class="text-lg text-text-600 max-w-2xl mx-auto">
-        Dentrix is the 30-year incumbent for dental practice management. RetainOS is the
+        Dentrix is the 30-year incumbent for dental practice management. Retain Dental is the
         patient-engagement-first alternative built for the brand-driven era.
       </p>
     </div>
@@ -52,9 +52,9 @@ const rows = [
         <table class="w-full text-sm">
           <thead>
             <tr class="border-b border-paper-line">
-              <th class="text-left p-5 font-black text-text-600 w-2/5">Feature</th>
-              <th class="p-5 font-black text-violet-600 bg-violet-600/5 w-1/5">RetainOS</th>
-              <th class="p-5 font-black text-text-600 w-1/5">Dentrix</th>
+              <th class="text-left p-5 font-semibold text-text-600 w-2/5">Feature</th>
+              <th class="p-5 font-semibold text-violet-600 bg-violet-600/5 w-1/5">Retain Dental</th>
+              <th class="p-5 font-semibold text-text-600 w-1/5">Dentrix</th>
             </tr>
           </thead>
           <tbody>
@@ -67,7 +67,7 @@ const rows = [
                   ) : r.retain === false ? (
                     <svg class="text-text-onDark-500 mx-auto" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                   ) : (
-                    <span class="text-xs font-bold text-text-600">{r.retain}</span>
+                    <span class="text-xs font-semibold text-text-600">{r.retain}</span>
                   )}
                 </td>
                 <td class="p-4 text-center">
@@ -76,7 +76,7 @@ const rows = [
                   ) : r.other === false ? (
                     <svg class="text-text-onDark-500 mx-auto" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                   ) : (
-                    <span class="text-xs font-bold text-text-600">{r.other}</span>
+                    <span class="text-xs font-semibold text-text-600">{r.other}</span>
                   )}
                 </td>
               </tr>
@@ -89,16 +89,16 @@ const rows = [
 
   <section class="py-20 px-6 bg-paper-50">
     <div class="max-w-4xl mx-auto">
-      <h2 class="text-3xl md:text-4xl font-sans font-[400] text-text-900 tracking-tight text-center mb-10">Where Dentrix wins</h2>
+      <h2 class="text-3xl md:text-4xl font-sans font-normal text-text-900 tracking-tight text-center mb-10">Where Dentrix wins</h2>
       <div class="grid md:grid-cols-2 gap-4">
         <div class="bg-white rounded p-6 border border-paper-line">
           <svg class="text-text-600 mb-3" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/></svg>
-          <h3 class="font-black text-text-900 mb-1">On-premise deployment</h3>
-          <p class="text-sm text-text-600">Some practices need a server in their office. RetainOS is cloud-only (for now).</p>
+          <h3 class="font-semibold text-text-900 mb-1">On-premise deployment</h3>
+          <p class="text-sm text-text-600">Some practices need a server in their office. Retain Dental is cloud-only (for now).</p>
         </div>
         <div class="bg-white rounded p-6 border border-paper-line">
           <svg class="text-text-600 mb-3" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/></svg>
-          <h3 class="font-black text-text-900 mb-1">30-year install base</h3>
+          <h3 class="font-semibold text-text-900 mb-1">30-year install base</h3>
           <p class="text-sm text-text-600">Dentrix is everywhere. If your staff already knows it, switching has a learning cost.</p>
         </div>
       </div>
@@ -106,8 +106,8 @@ const rows = [
   </section>
 
   <section class="py-20 px-6 bg-ink-900 text-center">
-    <h2 class="text-3xl md:text-5xl font-display font-[540] text-white tracking-tight mb-4">Try RetainOS for 14 days.</h2>
-    <p class="text-text-onDark-500 mb-8 max-w-xl mx-auto">No credit card. No sales call. Live on your real patients in under an hour.</p>
+    <h2 class="text-3xl md:text-5xl font-display font-[540] text-white tracking-tight mb-4">Try Retain Dental for 14 days.</h2>
+    <p class="text-text-onDark-500 mb-8 max-w-xl mx-auto">No credit card. No sales call. Live on your real patients in about 20 minutes.</p>
     <a href="https://app.retaindental.com" class="inline-block px-8 py-4 bg-violet-600 text-white rounded font-semibold text-lg transition-transform">
       Start free trial →
     </a>

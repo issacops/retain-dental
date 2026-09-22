@@ -1,17 +1,70 @@
-<footer class="border-t border-white/10 bg-ink-950">
-  <div class="max-w-7xl mx-auto px-6 py-8">
-    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-      <div class="flex items-center gap-2">
-        <div class="w-6 h-6 rounded-md bg-violet-600 flex items-center justify-center">
-          <svg class="w-3 h-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-        </div>
-        <span class="text-sm text-white/60">&copy; {new Date().getFullYear()} RetainOS. All rights reserved.</span>
+---
+const year = new Date().getFullYear()
+const product = [
+  { href: '/#features', label: 'Platform' },
+  { href: '/#how', label: 'How it works' },
+  { href: '/#screens', label: 'Product tour' },
+  { href: '/answers', label: 'Answers' },
+  { href: '/#faq', label: 'FAQ' },
+]
+const company = [
+  { href: '/about', label: 'About' },
+  { href: '/blog', label: 'Stories' },
+  { href: '/contact', label: 'Contact' },
+  { href: '/dso', label: 'For DSOs' },
+]
+const compare = [
+  { href: '/vs-dentrix', label: 'vs Dentrix' },
+  { href: '/vs-yapi', label: 'vs Yapi' },
+  { href: '/vs-solutionreach', label: 'vs Solutionreach' },
+  { href: '/vs-weave', label: 'vs Weave' },
+  { href: '/vs-podium', label: 'vs Podium' },
+  { href: '/solo-practice', label: 'For solo practices' },
+]
+---
+<footer class="bg-ink-900 text-cream-100">
+  <div class="mx-auto max-w-8xl px-5 sm:px-8 py-16">
+    <div class="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+      <div>
+        <img src="/brand/lockup-white.png" alt="Retain Dental" width="760" height="177" class="h-8 w-auto" />
+        <p class="mt-5 max-w-xs text-sm leading-relaxed text-cream-100/60">
+          The patient retention platform for modern dental practices. Turn first visits into lifelong patients.
+        </p>
+        <a href="/start" data-cta="footer-start" class="mt-6 inline-flex items-center gap-2 rounded-full bg-teal-500 px-5 py-2.5 text-sm font-semibold text-ink-900 hover:bg-teal-400 transition-colors">
+          Start free trial
+        </a>
       </div>
-      <div class="flex items-center gap-6">
-        <a href="/about" class="text-xs text-white/50 hover:text-white/80 transition-colors min-h-[48px] flex items-center">About</a>
-        <a href="/privacy" class="text-xs text-white/50 hover:text-white/80 transition-colors min-h-[48px] flex items-center">Privacy</a>
-        <a href="/terms" class="text-xs text-white/50 hover:text-white/80 transition-colors min-h-[48px] flex items-center">Terms</a>
-        <a href="/contact" class="text-xs text-white/50 hover:text-white/80 transition-colors min-h-[48px] flex items-center">Contact</a>
+
+      <div>
+        <h3 class="font-heading text-sm font-semibold uppercase tracking-[0.14em] text-cream-100/50">Product</h3>
+        <ul class="mt-5 space-y-3">
+          {product.map((l) => (<li><a href={l.href} class="text-sm text-cream-100/75 hover:text-white transition-colors">{l.label}</a></li>))}
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="font-heading text-sm font-semibold uppercase tracking-[0.14em] text-cream-100/50">Company</h3>
+        <ul class="mt-5 space-y-3">
+          {company.map((l) => (<li><a href={l.href} class="text-sm text-cream-100/75 hover:text-white transition-colors">{l.label}</a></li>))}
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="font-heading text-sm font-semibold uppercase tracking-[0.14em] text-cream-100/50">Compare</h3>
+        <ul class="mt-5 space-y-3">
+          {compare.map((l) => (<li><a href={l.href} class="text-sm text-cream-100/75 hover:text-white transition-colors">{l.label}</a></li>))}
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-14 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <p class="text-xs text-cream-100/50">© {year} Retain Dental. All rights reserved.</p>
+      <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-cream-100/60">
+        <a href="/privacy" class="hover:text-white transition-colors">Privacy</a>
+        <a href="/terms" class="hover:text-white transition-colors">Terms</a>
+        <a href="/security" class="hover:text-white transition-colors">Security</a>
+        <a href="/hipaa" class="hover:text-white transition-colors">HIPAA</a>
+        <span class="text-cream-100/40">HIPAA-aligned | SOC 2 Type II in progress</span>
       </div>
     </div>
   </div>

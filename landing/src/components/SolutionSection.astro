@@ -1,15 +1,62 @@
-<section class="relative py-24 px-6 bg-ink-900 overflow-hidden border-t border-b border-white/5" id="demo-callout">
-  <div class="max-w-5xl mx-auto text-center relative z-10">
-    <p class="text-xs font-semibold text-violet-400 uppercase tracking-[0.15em] mb-4">Hear how retention gets handled</p>
-    <h2 class="text-[clamp(1.75rem,3.5vw,2.75rem)] font-black text-white leading-[1.05] tracking-tighter text-balance">
-      Before your team even picks up the phone
-    </h2>
-    <p class="text-white/70 text-[clamp(1rem,1.5vw,1.125rem)] max-w-2xl mx-auto mt-4">
-      RetainOS spots missed appointments, sends recall reminders, and re-engages patients — no manual calls needed.
-    </p>
-    <button onclick="window.dispatchEvent(new Event('open-demo-form'))" class="inline-flex items-center gap-2 rounded-[25px] px-8 py-4 bg-violet-600 text-white font-semibold text-lg hover:opacity-90 transition-all duration-200 shadow-layer mt-8 min-h-[48px]">
-      See it in action
-      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-    </button>
+---
+const loop = [
+  { n: '01', t: 'Visit', d: 'A patient walks in. You do what you do best.' },
+  { n: '02', t: 'Aftercare', d: 'Their plan lands in your branded app and they follow it, daily.' },
+  { n: '03', t: 'Points', d: 'Every check-in earns points they keep, and can spend.' },
+  { n: '04', t: 'Return', d: 'They come back for the next visit, and bring family.' },
+  { n: '05', t: 'Refer', d: 'A friend needs a dentist. They share your name, and their points.' },
+]
+---
+<section class="relative overflow-hidden bg-ink-900 py-20 sm:py-28 text-cream-100">
+  <div aria-hidden="true" class="pointer-events-none absolute inset-0">
+    <div class="absolute -top-40 left-1/4 h-[32rem] w-[32rem] rounded-full bg-teal-600/20 blur-[120px]"></div>
+    <div class="absolute bottom-0 right-0 h-[28rem] w-[28rem] rounded-full bg-sky-600/15 blur-[120px]"></div>
+  </div>
+
+  <div class="relative mx-auto max-w-8xl px-5 sm:px-8">
+    <div class="grid gap-14 lg:grid-cols-[1fr_1fr] lg:items-center">
+      <div>
+        <p class="text-[11px] font-semibold uppercase tracking-[0.18em] text-teal-300">The retention loop</p>
+        <h2 class="mt-4 font-heading text-[clamp(1.9rem,3.6vw,3rem)] font-semibold leading-[1.06] tracking-tight text-balance">
+          Aftercare is the only reason a patient opens your app. So we built the app around it.
+        </h2>
+        <p class="mt-5 max-w-lg text-lg leading-relaxed text-cream-100/70">
+          Most patient apps get downloaded once and forgotten. Retain Dental gives patients a reason to open it every day, their aftercare, and turns that daily habit into retention, reviews, and referrals.
+        </p>
+        <a href="/start" data-cta="loop-start" class="mt-9 inline-flex items-center gap-2 rounded-full bg-teal-500 px-7 py-3.5 font-semibold text-ink-900 hover:bg-teal-400 transition-colors">
+          Start free trial
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+
+      <div class="relative">
+        <div class="overflow-hidden rounded-3xl border border-white/10 bg-ink-800 shadow-lift">
+          <img src="/platform/patient-care.webp" width="430" height="930" alt="Aftercare checklist delivered in a clinic's branded patient app" class="mx-auto block w-[300px]" loading="lazy" decoding="async" />
+        </div>
+        <div class="absolute -bottom-6 -right-4 rounded-2xl border border-white/10 bg-ink-900 px-5 py-4 shadow-lift">
+          <p class="eyebrow text-cream-100/50">Daily adherence</p>
+          <p class="font-heading text-3xl font-semibold text-teal-300">88%</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- The flywheel -->
+    <div class="mt-16">
+      <p class="text-center text-[11px] font-semibold uppercase tracking-[0.18em] text-teal-300">One visit. Five compounding outcomes.</p>
+      <ol class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        {loop.map((s, i) => (
+          <li class="relative rounded-2xl border border-white/10 bg-ink-800/70 p-6">
+            <span class="font-mono text-xs font-semibold text-teal-300">{s.n}</span>
+            <h3 class="mt-3 font-heading text-lg font-semibold text-white">{s.t}</h3>
+            <p class="mt-2 text-[14px] leading-relaxed text-cream-100/65">{s.d}</p>
+            {i < loop.length - 1 && (
+              <span aria-hidden="true" class="absolute -right-2.5 top-1/2 hidden h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-ink-900 text-teal-300 lg:flex">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </span>
+            )}
+          </li>
+        ))}
+      </ol>
+    </div>
   </div>
 </section>

@@ -1,131 +1,93 @@
 ---
 const features = [
   {
-    id: 'patient-app',
-    number: '01',
-    title: 'Patient App',
-    headline: 'Your branded app. Patients actually use it.',
-    description: 'A branded app with wallet, care plans, booking, and loyalty — no app store needed.',
-    details: ['Digital wallet with loyalty points', 'Daily care rituals with tap-to-complete', 'Household family pooling', 'In-app appointment booking'],
-    image: '/screens/patient-login-form.png',
-    alt: 'Patient access login with Health Key PIN entry',
-    align: 'left',
+    tag: 'Aftercare',
+    title: 'Aftercare that follows up, and gets brag-worthy.',
+    body: 'Assign a protocol from the dashboard and it lands in your branded app as a daily checklist: aligners, post-op, whitening. Patients feel looked after, adherence is tracked, and your team stops chasing.',
+    img: '/platform/patient-care.webp',
+    alt: 'Patient aftercare checklist with daily rituals and progress',
+    kind: 'phone',
   },
   {
-    id: 'recall',
-    number: '02',
-    title: 'Automated Recall',
-    headline: '3x more patients come back automatically.',
-    description: 'Multi-channel sequences that bring back no-show patients with zero manual calls.',
-    details: ['SMS + email + push sequences', 'Missed-appointment reactivation', 'Post-treatment aftercare follow-ups', 'Zero manual phone calls needed'],
-    image: '/screens/login-choice.png',
-    alt: 'RetainOS login choice between Patient Access and Clinic Workspace',
-    align: 'right',
+    tag: 'Your app',
+    title: 'A custom app with your clinic’s name on it.',
+    body: 'Your logo, your colors, your name. Patients open your app, not a generic portal, for aftercare, booking, balances, and rewards. No App Store wait; add to home screen in one tap.',
+    img: '/platform/patient-wallet.webp',
+    alt: 'Clinic-branded patient app wallet with membership tier and points',
+    kind: 'phone',
   },
   {
-    id: 'aftercare',
-    number: '03',
-    title: 'Aftercare Checklists',
-    headline: 'Aftercare that follows up itself.',
-    description: 'Procedure-specific checklists that text and email patients exactly when needed.',
-    details: ['Procedure-specific task templates', 'Automated SMS/email reminders', 'Progress tracking with confirmations', 'Integration with recall scheduling'],
-    image: '/screens/activate-account.png',
-    alt: 'Account activation screen for new clinic users',
-    align: 'left',
+    tag: 'Retention',
+    title: 'Points that bring them back.',
+    body: 'Every treatment and every check-in earns points. Tiers get perks, and household pooling turns one patient into a family, so the next visit is already booked in their mind.',
+    img: '/platform/patient-family.webp',
+    alt: 'Family hub showing linked members and a pooled points balance',
+    kind: 'phone',
   },
   {
-    id: 'loyalty',
-    number: '04',
-    title: 'Loyalty Engine',
-    headline: 'Points, tiers & family pooling.',
-    description: 'A loyalty program patients love. Member → Gold → Platinum tiers with family pooling that drives 68% higher value.',
-    details: ['Points for visits, referrals, reviews', '3-tier VIP progression', 'Household point pooling', 'Reward redemption catalog'],
-    image: '/screens/doctor-login.png',
-    alt: 'Clinic Workspace secure login for doctors and staff',
-    align: 'right',
+    tag: 'Referrals',
+    title: 'Your patients, your best marketing.',
+    body: 'When a friend needs a dentist, your patient shares your name, and their points. Referral rewards turn gratitude into new patients, automatically.',
+    img: '/platform/patient-rewards.webp',
+    alt: 'Rewards ledger showing points earned and referral bonuses',
+    kind: 'phone',
   },
   {
-    id: 'social',
-    number: '05',
-    title: 'Social Studio',
-    headline: 'AI-powered social content in seconds.',
-    description: 'Branded social posts from templates — stories, myth busters, reviews, and offers.',
-    details: ['5 post templates (Trust, Education, Sales)', 'Auto-branded with your logo + colors', 'Download or share to Instagram', '87% faster recall response rate'],
-    image: '/screens/doctor-login-filled.png',
-    alt: 'Clinic Workspace with credentials entered ready to login',
-    align: 'left',
+    tag: 'Recall',
+    title: 'Recalls that run themselves.',
+    body: 'Overdue patients get the right nudge at the right time, automatically. Bring back the patients you already paid to acquire.',
+    img: '/platform/clinic-patient.webp',
+    alt: 'Patient record with contact details and booking controls',
+    kind: 'desk',
   },
   {
-    id: 'dashboard',
-    number: '06',
-    title: 'Analytics Dashboard',
-    headline: 'All your metrics. One dashboard.',
-    description: 'Revenue, retention, reviews, and loyalty — one real-time dashboard. No more spreadsheets.',
-    details: ['Real-time KPI tracking', 'Retention trend charts', 'Household leaderboard', 'Churn risk alerts with AI insights'],
-    image: '/screens/login-choice.png',
-    alt: 'RetainOS platform entry with role-based access',
-    align: 'right',
+    tag: 'Insight',
+    title: 'See exactly what’s working.',
+    body: 'Retention rate, adherence, referrals, and lifetime value in one dashboard, so you can double down on the things that actually grow the practice.',
+    img: '/platform/clinic-retention.webp',
+    alt: 'Retention Intelligence dashboard with retention rate and tier distribution',
+    kind: 'desk',
   },
-];
+]
 ---
-
-<section class="relative py-24 px-6 bg-ink-900 overflow-hidden border-b border-white/5" id="features">
-  <div class="max-w-6xl mx-auto relative z-10">
-    <div class="text-center max-w-3xl mx-auto mb-16">
-      <p class="text-xs font-semibold text-amber-400 uppercase tracking-[0.15em] mb-4">How RetainOS works</p>
-      <h2 class="text-[clamp(1.75rem,3.5vw,2.75rem)] font-bold text-white leading-[1.05] tracking-tight text-balance">
-        A retention system, not a point solution
+<section id="features" class="scroll-mt-24 bg-cream-100 py-20 sm:py-28">
+  <div class="mx-auto max-w-8xl px-5 sm:px-8">
+    <div class="max-w-2xl">
+      <p class="text-[11px] font-semibold uppercase tracking-[0.18em] text-teal-700">The platform</p>
+      <h2 class="mt-4 font-heading text-[clamp(1.9rem,3.6vw,3rem)] font-semibold leading-[1.06] tracking-tight text-ink-900 text-balance">
+        One branded app. Aftercare, retention and referrals in one place.
       </h2>
-      <p class="text-white/70 text-[clamp(1rem,1.5vw,1.125rem)] mt-4 max-w-2xl mx-auto">
-        One platform that works as one, so nothing falls through.
+      <p class="mt-5 text-lg leading-relaxed text-ink-600">
+        Everything a patient touches between visits lives in your own app, and everything your team needs to grow lives in one dashboard.
       </p>
     </div>
 
-    {features.map((feature) => (
-      <div class="mb-16 last:mb-0">
-        <div class={`grid lg:grid-cols-2 gap-10 lg:gap-16 items-center`}>
-          <div class={feature.align === 'right' ? 'order-2 lg:order-1' : ''}>
-            <span class="text-[40px] font-black text-white/20 leading-none">{feature.number}</span>
-            <div class="flex items-center gap-2 mt-2 mb-3">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-              <span class="text-xs font-semibold text-white/80 uppercase tracking-[0.12em]">{feature.title}</span>
-            </div>
-            <h3 class="text-[clamp(1.5rem,2.5vw,1.75rem)] font-black text-white leading-[1.1] tracking-tighter mb-4">{feature.headline}</h3>
-            <p class="text-white/70 leading-relaxed mb-6">{feature.description}</p>
-            <div class="space-y-2">
-              {feature.details.map((detail) => (
-                <div class="flex items-center gap-2.5 text-sm text-white/70">
-                  <svg class="w-4 h-4 text-amber-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                  {detail}
-                </div>
-              ))}
-            </div>
-            <div class="mt-4 text-xs text-white/50">
-              <span class="font-semibold text-white/80">Works with:</span> Integrates with scheduling, billing, and patient data
-            </div>
-          </div>
-          <div class={feature.align === 'right' ? 'order-1 lg:order-2' : ''}>
-            <div class="rounded-xl overflow-hidden border border-white/10 shadow-2xl shadow-amber-900/10 bg-white/5">
-              <div class="flex items-center gap-1.5 px-4 py-2.5 bg-white/[0.03] border-b border-white/5">
-                <div class="w-3 h-3 rounded-full bg-red-400/70"></div>
-                <div class="w-3 h-3 rounded-full bg-amber-400/70"></div>
-                <div class="w-3 h-3 rounded-full bg-emerald-400/70"></div>
-                <div class="ml-3 flex-1 max-w-[240px]">
-                  <div class="h-5 rounded bg-white/5 flex items-center px-2">
-                    <span class="text-[9px] text-white/30 font-mono truncate">app.retaindental.com</span>
-                  </div>
-                </div>
+    <div class="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {features.map((f) => (
+        <article class="group flex flex-col overflow-hidden card card-lift">
+          <div class="relative h-60 overflow-hidden border-b border-cream-200 bg-gradient-to-br from-teal-50 via-cream-50 to-sky-100">
+            {f.kind === 'phone' ? (
+              <div class="absolute left-1/2 top-9 w-[38%] -translate-x-1/2 overflow-hidden rounded-[1.4rem] border-[5px] border-ink-900 bg-ink-900 shadow-card transition-transform duration-500 group-hover:-translate-y-1.5">
+                <img src={f.img} width="430" height="930" alt={f.alt} loading="lazy" decoding="async" class="block w-full" />
               </div>
-              <img
-                src={feature.image}
-                alt={feature.alt}
-                class="w-full h-auto block"
-                loading="lazy"
-              />
-            </div>
+            ) : (
+              <div class="absolute left-1/2 top-9 w-[86%] -translate-x-1/2 overflow-hidden rounded-xl border border-ink-900/10 bg-white shadow-card transition-transform duration-500 group-hover:-translate-y-1.5">
+                <div class="flex items-center gap-1.5 border-b border-cream-200 bg-cream-50 px-3 py-2">
+                  <span class="h-2 w-2 rounded-full bg-[#FF5F57]"></span>
+                  <span class="h-2 w-2 rounded-full bg-[#FEBC2E]"></span>
+                  <span class="h-2 w-2 rounded-full bg-[#28C840]"></span>
+                </div>
+                <img src={f.img} srcset={`${f.img.replace('.webp', '-720.webp')} 720w, ${f.img} 1440w`} sizes="(max-width: 768px) 88vw, 420px" width="1440" height="900" alt={f.alt} loading="lazy" decoding="async" class="block w-full" />
+              </div>
+            )}
           </div>
-        </div>
-      </div>
-    ))}
+          <div class="flex flex-1 flex-col p-7">
+            <p class="eyebrow text-teal-700">{f.tag}</p>
+            <h3 class="mt-3 font-heading text-xl font-semibold tracking-tight text-ink-900">{f.title}</h3>
+            <p class="mt-3 text-[15px] leading-relaxed text-ink-600">{f.body}</p>
+          </div>
+        </article>
+      ))}
+    </div>
   </div>
 </section>

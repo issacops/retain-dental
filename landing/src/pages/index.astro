@@ -1,70 +1,97 @@
 ---
 import Layout from '../layouts/Layout.astro'
 import Hero from '../components/Hero.astro'
+import TrustBar from '../components/TrustBar.astro'
 import ProblemSection from '../components/ProblemSection.astro'
+import StorySection from '../components/StorySection.astro'
 import SolutionSection from '../components/SolutionSection.astro'
+import LaunchVideo from '../components/LaunchVideo.astro'
 import FeatureShowcase from '../components/FeatureShowcase.astro'
-import PlatformShowcase from '../components/PlatformShowcase.astro'
+import CaseStudy from '../components/CaseStudy.astro'
 import HowItWorks from '../components/HowItWorks.astro'
-import SecuritySection from '../components/SecuritySection.astro'
-import IntegrationsSection from '../components/IntegrationsSection.astro'
+import PlatformShowcase from '../components/PlatformShowcase.astro'
 import Testimonials from '../components/Testimonials.astro'
+import Comparison from '../components/Comparison.astro'
+import SecuritySection from '../components/SecuritySection.astro'
+import FAQSection from '../components/FAQSection.astro'
 import CTA from '../components/CTA.astro'
-import Footer from '../components/Footer.astro'
-import DemoForm from '../components/DemoForm'
+
+const faqs = [
+  {
+    question: 'How does the aftercare work?',
+    answer:
+      'When treatment ends, you assign an aftercare plan from your dashboard, aligners, post-op, whitening, and more. It lands in your branded patient app as a simple daily checklist. Patients follow it, check off each step, and earn points for consistency, while your team sees adherence in real time instead of chasing it.',
+  },
+  {
+    question: 'Is this a custom app for my clinic?',
+    answer:
+      'Yes. Retain Dental is white-label: your clinic’s name, logo, and colors on the app your patients use. It works as a progressive web app (PWA), so patients add it to their home screen in one tap, no App Store approval, no download friction, and it updates instantly.',
+  },
+  {
+    question: 'How do referrals work?',
+    answer:
+      'Patients earn points for treatments and aftercare check-ins. When a friend or family member needs a dentist, the patient shares your clinic and can pass along their points, so the friend books, and everyone is rewarded. Referral bonuses turn your existing patients into your most reliable growth channel.',
+  },
+  {
+    question: 'How is this different from my practice management software?',
+    answer:
+      'Your PMS runs the clinical and billing side of the practice. Retain Dental sits alongside it and owns the patient relationship between visits, the aftercare, recalls, rewards, and referrals that keep patients engaged and coming back. It works with your existing systems rather than replacing them.',
+  },
+  {
+    question: 'Is it HIPAA compliant?',
+    answer:
+      'Retain Dental is HIPAA-aligned: we sign a Business Associate Agreement (BAA) with every practice and protect PHI with encryption in transit and at rest, role-based access, and audit logging. SOC 2 Type II is in progress, and we can share our current security documentation during your demo.',
+  },
+  {
+    question: 'How long does it take to get started?',
+    answer:
+      'Most practices are live in about 20 minutes. Add your branding, import your patient list or connect your PMS, and send your first aftercare plan and recall the same day. There is no migration project and no downtime.',
+  },
+  {
+    question: 'Can it handle multiple locations?',
+    answer:
+      'Yes. Multi-location groups and DSOs get a network view across every practice, with location-level retention, cross-practice reporting, and centralized branding, while each location keeps its own patient experience.',
+  },
+  {
+    question: 'What does it cost?',
+    answer:
+      'Simple per-location pricing based on the number of active patients you have, not a guess from a sales rep. There are no setup fees and no per-feature upcharges. Book a demo and we will show you exactly what it looks like for your practice.',
+  },
+]
+
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to launch your clinic’s branded aftercare and retention app with Retain Dental',
+  totalTime: 'PT20M',
+  step: [
+    { '@type': 'HowToStep', name: 'Make it your clinic’s app', text: 'Add your logo, colors, and practice name.' },
+    { '@type': 'HowToStep', name: 'Bring your patients', text: 'Import your patient list or connect your PMS.' },
+    { '@type': 'HowToStep', name: 'Assign aftercare and go live', text: 'Send your first aftercare plan and recall.' },
+  ],
+}
 ---
-
 <Layout
-  title="RetainOS — Launch Your Branded Dental App in 20 Minutes"
+  title="Retain Dental | Branded Clinic App for Aftercare, Retention & Referrals"
+  description="Give your clinic its own branded app. Patients follow their aftercare, earn points, and refer friends, turning every visit into retention and referrals. Live in 20 minutes."
+  canonical="/"
   breadcrumbs={[{ name: 'Home', url: '/' }]}
+  faqs={faqs}
 >
+  <script type="application/ld+json" set:html={JSON.stringify(howToSchema)} />
   <Hero />
-  <div class="reveal"><ProblemSection /></div>
-  <div class="reveal"><SolutionSection /></div>
-  <div class="reveal"><FeatureShowcase /></div>
-  <div class="reveal"><PlatformShowcase /></div>
-  <div class="reveal"><HowItWorks /></div>
-  <div class="reveal"><SecuritySection /></div>
-  <div class="reveal"><IntegrationsSection /></div>
-  <div class="reveal"><CTA /></div>
-  <DemoForm client:load />
-
-  <style>
-    .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.5s ease-out, transform 0.5s ease-out; }
-    .reveal.revealed { opacity: 1; transform: translateY(0); }
-    @media (prefers-reduced-motion: reduce) {
-      .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
-    }
-  </style>
-  <noscript>
-    <style>.reveal { opacity: 1 !important; transform: none !important; }</style>
-  </noscript>
-  <script>
-    (function() {
-      var els = document.querySelectorAll('.reveal');
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        els.forEach(function(el) { el.classList.add('revealed'); });
-        return;
-      }
-      var observer = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('revealed');
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
-      els.forEach(function(el) {
-        var rect = el.getBoundingClientRect();
-        if (rect.top < window.innerHeight) {
-          el.classList.add('revealed');
-        } else {
-          observer.observe(el);
-        }
-      });
-      setTimeout(function() {
-        els.forEach(function(el) { el.classList.add('revealed'); });
-      }, 600);
-    })();
-  </script>
+  <TrustBar />
+  <ProblemSection />
+  <StorySection />
+  <SolutionSection />
+  <LaunchVideo />
+  <FeatureShowcase />
+  <CaseStudy />
+  <HowItWorks />
+  <PlatformShowcase />
+  <Testimonials />
+  <Comparison />
+  <SecuritySection />
+  <FAQSection faqs={faqs} />
+  <CTA />
 </Layout>

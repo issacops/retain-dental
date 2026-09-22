@@ -1,13 +1,21 @@
 {
-  "name": "RetainOS — Dental Loyalty Operating System",
-  "short_name": "RetainOS",
-  "description": "Launch your dental practice's branded loyalty app in 20 minutes. Automate recalls, Invisalign tracking, and membership management.",
+  "name": "Retain Dental",
+  "short_name": "Retain",
+  "description": "Patient retention platform for dental practices. Aftercare, rewards, and referrals in one branded app.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#020617",
-  "theme_color": "#6366f1",
+  "theme_color": "#0D9488",
   "icons": [
-    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
   ]
 }

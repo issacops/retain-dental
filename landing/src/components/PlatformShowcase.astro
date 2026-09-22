@@ -1,69 +1,41 @@
-<section class="relative py-24 px-6 bg-ink-950 overflow-hidden border-t border-white/5">
-  <div class="absolute inset-0 bg-gradient-to-b from-ink-950/30 via-ink-950/50 to-ink-950/30 pointer-events-none"></div>
-
-  <div class="max-w-5xl mx-auto text-center relative z-10">
-    <h2 class="text-[clamp(1.75rem,3.5vw,2.75rem)] font-black text-white leading-[1.05] tracking-tighter text-balance">
-      Proof that retention pays off
-    </h2>
-
-    <div class="mt-12">
-      <p class="text-white/70 text-lg mb-2">Reduction in manual outreach</p>
-      <p class="text-[clamp(4rem,8vw,8rem)] font-black text-white leading-[0.96]">87%</p>
+---
+const screens = [
+  { src: '/platform/clinic-pulse.webp', alt: 'Practice Pulse dashboard with revenue, active patients, and chair time', label: 'Practice Pulse', w: 1440, h: 900 },
+  { src: '/platform/clinic-retention.webp', alt: 'Retention Intelligence dashboard with retention rate and tier distribution', label: 'Retention Intelligence', w: 1440, h: 900 },
+  { src: '/platform/patient-wallet.webp', alt: 'Patient wallet with membership tier and Smile Points', label: 'Patient wallet', w: 430, h: 930 },
+  { src: '/platform/patient-care.webp', alt: 'Aftercare checklist with daily rituals and adherence', label: 'Aftercare', w: 430, h: 930 },
+  { src: '/platform/patient-family.webp', alt: 'Family hub with pooled points', label: 'Family hub', w: 430, h: 930 },
+  { src: '/platform/clinic-schedule.webp', alt: 'Appointment schedule across the practice', label: 'Schedule', w: 1440, h: 900 },
+  { src: '/platform/clinic-social.webp', alt: 'Social studio with branded post templates', label: 'Social studio', w: 1440, h: 900 },
+  { src: '/platform/platform-network.webp', alt: 'Multi-location network hub for DSOs', label: 'Network hub', w: 1440, h: 900 },
+]
+---
+<section id="screens" class="scroll-mt-24 bg-ink-900 py-20 sm:py-28 text-cream-100">
+  <div class="mx-auto max-w-8xl px-5 sm:px-8">
+    <div class="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+      <div class="max-w-2xl">
+        <p class="text-[11px] font-semibold uppercase tracking-[0.18em] text-teal-300">Product tour</p>
+        <h2 class="mt-4 font-heading text-[clamp(1.9rem,3.6vw,3rem)] font-semibold leading-[1.06] tracking-tight text-balance">
+          See the whole system.
+        </h2>
+        <p class="mt-5 text-lg leading-relaxed text-cream-100/70">
+          The clinic workspace, the patient app, and the retention engine, real screens from the platform.
+        </p>
+      </div>
+      <a href="/start" data-cta="tour-start" class="shrink-0 inline-flex items-center gap-2 rounded-full bg-teal-500 px-6 py-3 font-semibold text-ink-900 hover:bg-teal-400 transition-colors">
+        Try it free
+      </a>
     </div>
 
-    <div class="mt-12 pt-8 border-t border-dashed border-white/20">
-      <div class="flex flex-wrap items-center justify-center gap-8 md:gap-12">
-        <span class="text-white/40 hover:text-white/80 transition-colors text-sm font-semibold tracking-wider">SMILE CLINIC</span>
-        <span class="text-white/40 hover:text-white/80 transition-colors text-sm font-semibold tracking-wider">METRO DENTAL</span>
-        <span class="text-white/40 hover:text-white/80 transition-colors text-sm font-semibold tracking-wider">PRIME SMILES</span>
-        <span class="text-white/40 hover:text-white/80 transition-colors text-sm font-semibold tracking-wider">JACKSON ORTHO</span>
-      </div>
-    </div>
-
-    <div class="mt-16 grid md:grid-cols-2 gap-8 text-left">
-      <div class="bg-dark-blue rounded-2xl border border-white/10 p-8 shadow-layer">
-        <p class="text-white text-lg leading-relaxed mb-6">"We replaced 5 separate tools with RetainOS. Our no-show rate dropped from 18% to under 4% in the first month. The recall automation alone pays for itself."</p>
-        <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-full bg-violet-600/20 flex items-center justify-center text-violet-400 text-sm font-bold">RC</div>
-          <div>
-            <p class="text-sm font-semibold text-white">Dr. Rebecca Chen</p>
-            <p class="text-xs text-white/60">Smile Clinic, San Francisco</p>
+    <div class="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      {screens.map((s) => (
+        <figure class="overflow-hidden rounded-2xl border border-white/10 bg-ink-800">
+          <div class="h-56 overflow-hidden bg-cream-50">
+            <img src={s.src} srcset={s.w === 1440 ? `${s.src.replace('.webp', '-720.webp')} 720w, ${s.src} 1440w` : undefined} sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 24vw" width={s.w} height={s.h} alt={s.alt} loading="lazy" decoding="async" class="h-full w-full object-cover object-top" />
           </div>
-        </div>
-      </div>
-
-      <div class="bg-dark-blue rounded-2xl border border-white/10 p-8 shadow-layer">
-        <p class="text-white text-lg leading-relaxed mb-6">"The loyalty program changed everything. Our 5-star reviews went from 12 to 47 in 3 months. Patients love competing for the Gold tier."</p>
-        <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-full bg-violet-600/20 flex items-center justify-center text-violet-400 text-sm font-bold">MT</div>
-          <div>
-            <p class="text-sm font-semibold text-white">Dr. Michael Torres</p>
-            <p class="text-xs text-white/60">Metro Dental, Austin</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-dark-blue rounded-2xl border border-white/10 p-8 shadow-layer">
-        <p class="text-white text-lg leading-relaxed mb-6">"Our patients love the branded app. They use it for booking, payments, aftercare checklists — retention went up 40%."</p>
-        <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-full bg-violet-600/20 flex items-center justify-center text-violet-400 text-sm font-bold">PS</div>
-          <div>
-            <p class="text-sm font-semibold text-white">Dr. Priya Sharma</p>
-            <p class="text-xs text-white/60">Prime Smiles, Chicago</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-dark-blue rounded-2xl border border-white/10 p-8 shadow-layer">
-        <p class="text-white text-lg leading-relaxed mb-6">"DSO analytics across 14 locations used to take 3 days. Now it's a dashboard refresh. Cross-practice recall rates jumped 34%."</p>
-        <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-full bg-violet-600/20 flex items-center justify-center text-violet-400 text-sm font-bold">JO</div>
-          <div>
-            <p class="text-sm font-semibold text-white">Dr. James O'Brien</p>
-            <p class="text-xs text-white/60">Jackson Ortho, 14 locations</p>
-          </div>
-        </div>
-      </div>
+          <figcaption class="border-t border-white/10 px-4 py-3 eyebrow text-cream-100/60">{s.label}</figcaption>
+        </figure>
+      ))}
     </div>
   </div>
 </section>

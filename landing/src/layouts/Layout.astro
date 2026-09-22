@@ -14,12 +14,13 @@ export interface Props {
   breadcrumbs?: { name: string; url: string }[]
   articlePublishedTime?: string
   readtime?: string
+  noindex?: boolean
 }
 
 const {
-  title = 'RetainOS — The Operating System for Modern Dental Practices',
-  description = 'Launch your branded dental patient app in 20 minutes. Automate recalls, loyalty, and payments with a HIPAA-ready platform for your practice.',
-  image = '/assets/screens/landing-preview.png',
+  title = 'Retain Dental, The Patient Retention Platform for Modern Practices',
+  description = 'Give every patient your own branded app. Automate recalls, aftercare, rewards, and reviews, and turn one-time visits into lifelong patients. Live in 20 minutes.',
+  image = '/og.png',
   pageType = 'website',
   keywords,
   canonical,
@@ -27,173 +28,97 @@ const {
   breadcrumbs,
   articlePublishedTime,
   readtime = '1 min',
+  noindex = false,
 } = Astro.props
 
+const SITE = 'https://www.retaindental.com'
+const url = Astro.url
+const pageUrl = canonical ? (canonical.startsWith('http') ? canonical : `${SITE}${canonical}`) : `${SITE}${url.pathname}`
+const ogImage = image.startsWith('http') ? image : `${SITE}${image}`
+const currentYear = new Date().getFullYear()
+
 const DEFAULT_KEYWORDS = [
-  'dental practice management software',
-  'dental patient engagement software',
-  'dental recall software',
-  'dental patient communication software',
-  'dental appointment reminder software',
-  'dental CRM',
-  'dental practice software',
-  'dental clinic software',
-  'best dental software 2026',
-  'dental practice marketing software',
-  'dental loyalty program software',
   'dental patient retention software',
-  'dental reactivation software',
-  'dental patient experience platform',
-  'dental membership software',
-  'dental aftercare software',
-  'dental patient app',
-  'dental care plan software',
-  'dental app for patients white label',
-  'branded dental app',
-  'dental aligner tracking app',
-  'dso patient engagement software',
-  'dental recall system automation',
-  'dental practice app custom branded',
-  'multi-location dental practice software',
-  'patient loyalty program dental',
-  'dental membership tier software',
-  'household dental rewards program',
-  'ai social media for dentists',
-  'dental post-op care app',
-  'dental treatment plan app',
-  'dental care plan tracking',
-  'dental check-in app',
-  'dental re-care reminder',
-  'dentist patient retention',
-  'patient recall software',
-  'dental membership rewards',
-  'dental patient portal',
-  'patient experience dental',
-  'dental treatment adherence',
-  'dso software',
-  'dso dashboard',
-  'multi-location dental software',
-  'dental front desk software',
-  'dental workflow automation',
-  'dental invoice app',
-  'dental payments app',
-  'aftercare dental',
-  'dental post-treatment',
-  'dental aftercare tracking',
-  'dental tray tracking',
-  'aligner compliance',
-  'post op dental',
-  'household loyalty points',
-  'dental cosmetic aftercare',
-  'dental patient reactivation',
-  'dental recall automation',
-  'dental practice growth',
-  'dental revenue cycle',
-  'best dental patient retention software',
-  'dental patient app for dso',
+  'dental patient engagement platform',
   'white label dental app',
-  'dental practice growth software',
-  'how to launch white-label dental app',
-  'dental software with loyalty program',
-  'dental software with rewards',
-  'dental software for small practice',
-  'dental software for dso',
-  'retention software for dentists',
-  'patient loyalty dental',
-  'dental app developer',
+  'dental recall automation',
+  'dental loyalty program software',
+  'dental aftercare software',
+  'dental membership software',
+  'dental patient app',
+  'dental CRM for practices',
+  'dso patient retention software',
+  'dental reactivation software',
+  'branded dental app',
 ]
 
-const url = Astro.url
-const siteUrl = `${url.protocol}//${url.host}`
-const pageUrl = canonical || `${siteUrl}${url.pathname}${url.search}`
-const currentYear = new Date().getFullYear()
-const mergedKeywords = (keywords && keywords.length > 0 ? keywords : DEFAULT_KEYWORDS).join(', ')
-
 const softwareSchema = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "RetainOS",
-  "applicationCategory": "BusinessApplication",
-  "applicationSubCategory": "Dental Practice Management",
-  "operatingSystem": "Web, iOS, Android",
-  "url": siteUrl,
-  "image": `${siteUrl}${image}`,
-  "description": "RetainOS replaces 6 separate dental practice tools with one branded patient app for recall, loyalty, reviews, payments, and aftercare.",
-  "featureList": [
-    "White-label patient app",
-    "Automated dental recall",
-    "Treatment plan tracking",
-    "Loyalty tier program",
-    "Household points pooling",
-    "Branded social post generator",
-    "Practice analytics dashboard",
-    "Patient intake forms",
-    "Appointment scheduling",
-    "Payment collection",
-    "Automated aftercare checklists",
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'Retain Dental',
+  applicationCategory: 'BusinessApplication',
+  applicationSubCategory: 'Dental Patient Retention',
+  operatingSystem: 'Web, iOS, Android',
+  url: SITE,
+  image: ogImage,
+  description:
+    'Retain Dental gives dental practices a branded patient app for automated recalls, aftercare checklists, loyalty rewards, and reviews, one platform instead of six.',
+  featureList: [
+    'White-label patient app',
+    'Automated recall and reactivation',
+    'Aftercare checklists and adherence tracking',
+    'Loyalty tiers and household points pooling',
+    'Referral rewards',
+    'Branded social content',
+    'Practice analytics dashboard',
+    'Appointment scheduling',
+    'Payments and balances',
   ],
-  "author": { "@type": "Organization", "name": "RetainOS" },
+  publisher: { '@type': 'Organization', name: 'Retain Dental' },
 }
 
 const organizationSchema = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "RetainOS",
-  "url": siteUrl,
-  "logo": `${siteUrl}/icon-512.png`,
-  "description": "Dental patient loyalty and retention platform for modern dental practices.",
-  "foundingDate": "2024",
-  "contactPoint": {
-    "@type": "ContactPoint",
-    "url:": siteUrl,
-    "contactType": "sales",
-    "availableLanguage": ["English"],
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Retain Dental',
+  url: SITE,
+  logo: `${SITE}/brand/lockup-teal.png`,
+  description: 'The patient retention platform for modern dental practices.',
+  foundingDate: '2024',
+  areaServed: 'US',
+  contactPoint: {
+    '@type': 'ContactPoint',
+    contactType: 'sales',
+    email: 'hello@retaindental.com',
+    availableLanguage: ['English'],
   },
-  "sameAs": [
-    "https://twitter.com/RetainOS",
-    "https://linkedin.com/company/retainos",
-  ],
 }
 
-const speakableSchema = pageType === 'article' ? {
-  "@context": "https://schema.org",
-  "@type": "WebPage",
-  "name": title,
-  "description": description,
-  "speakable": { "@type": "SpeakableSpecification", "cssSelector": [".speakable-summary", "meta[name=description]"] },
-  "url": pageUrl,
-} : null
-
 const websiteSchema = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "RetainOS",
-  "url": siteUrl,
-  "potentialAction": {
-    "@type": "SearchAction",
-    "target": { "@type": "EntryPoint", "urlTemplate": `${siteUrl}/search?q={search_term_string}` },
-    "query-input": "required name=search_term_string",
-  },
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Retain Dental',
+  url: SITE,
 }
 
 const faqSchema = faqs && faqs.length > 0 ? {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": faqs.map(f => ({
-    "@type": "Question",
-    "name": f.question,
-    "acceptedAnswer": { "@type": "Answer", "text": f.answer },
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.question,
+    acceptedAnswer: { '@type': 'Answer', text: f.answer },
   })),
 } : null
 
 const breadcrumbSchema = breadcrumbs && breadcrumbs.length > 0 ? {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": breadcrumbs.map((b, i) => ({
-    "@type": "ListItem",
-    "position": i + 1,
-    "name": b.name,
-    "item": b.url,
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: breadcrumbs.map((b, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: b.name,
+    item: b.url.startsWith('http') ? b.url : `${SITE}${b.url}`,
   })),
 } : null
 ---
@@ -202,92 +127,158 @@ const breadcrumbSchema = breadcrumbs && breadcrumbs.length > 0 ? {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#06222F" />
+    <meta name="theme-color" content="#0D9488" />
 
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="keywords" content={mergedKeywords} />
+    {keywords && keywords.length > 0 && <meta name="keywords" content={keywords.join(', ')} />}
 
     <link rel="canonical" href={pageUrl} />
-    <link rel="alternate" hrefLang="en" href={pageUrl} />
-    <link rel="alternate" hrefLang="x-default" href={pageUrl} />
+    {noindex ? <meta name="robots" content="noindex, nofollow" /> : <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />}
 
     <meta property="og:type" content={pageType} />
     <meta property="og:url" content={pageUrl} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={`${siteUrl}${image}`} />
+    <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:site_name" content="RetainOS" />
+    <meta property="og:site_name" content="Retain Dental" />
     <meta property="og:locale" content="en_US" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:url" content={pageUrl} />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={`${siteUrl}${image}`} />
-    <meta name="twitter:site" content="@RetainOS" />
+    <meta name="twitter:image" content={ogImage} />
 
     {pageType === 'article' && articlePublishedTime && (
       <>
         <meta property="article:published_time" content={articlePublishedTime} />
-        <meta property="article:author" content="RetainOS Team" />
-        <meta property="article:section" content="Dental Practice Management" />
+        <meta property="article:author" content="Retain Dental" />
       </>
     )}
 
-    <script type="application/ld+json" set:html={JSON.stringify(softwareSchema)}></script>
-    <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)}></script>
-    <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)}></script>
-    {speakableSchema && <script type="application/ld+json" set:html={JSON.stringify(speakableSchema)}></script>}
-    {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)}></script>}
-    {breadcrumbSchema && <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)}></script>}
-
-    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
-    <meta property="og:readtime" content={readtime} />
-    <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large" />
-    <meta name="author" content="RetainOS" />
-    <meta name="generator" content="Astro" />
-    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <script type="application/ld+json" set:html={JSON.stringify(softwareSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+    {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
+    {breadcrumbSchema && <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />}
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="author" href="/humans.txt" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" /></noscript>
+    <link rel="preload" href="/fonts/Geist-400-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Geist-600-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/fonts/fonts.css" />
 
-    <style>
-      :root { --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif; }
-      *:focus-visible { outline: 2px solid #D97706; outline-offset: 2px; border-radius: 4px; }
-      body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-      h1, h2, h3, h4 { font-family: var(--font-sans); letter-spacing: -0.02em; }
-      .reading-progress { position: fixed; top: 0; left: 0; height: 2px; background: #D97706; z-index: 9999; transition: width 0.1s linear; }
+    <style is:global>
+      :root {
+        --font-heading: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        --font-body: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      }
+      *:focus-visible { outline: 2px solid #0D9488; outline-offset: 3px; border-radius: 6px; }
+      body { font-family: var(--font-body); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+      h1, h2, h3, h4, .font-heading { font-family: var(--font-heading); font-weight: 600; letter-spacing: -0.025em; line-height: 1.12; }
       .text-balance { text-wrap: balance; }
-      ::selection { background: rgba(217,119,6,0.25); }
-      ::-moz-selection { background: rgba(217,119,6,0.25); }
+      .text-pretty { text-wrap: pretty; }
+      ::selection { background: rgba(13,148,136,0.22); }
+      .skip-link { position: absolute; left: -9999px; top: 0; z-index: 100; }
+      .skip-link:focus { left: 16px; top: 16px; background: #12212B; color: #fff; padding: 10px 16px; border-radius: 10px; }
+
+      /* ---------- design system ---------- */
+      .eyebrow {
+        font-family: var(--font-body);
+        font-weight: 600;
+        font-size: 12.5px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .card {
+        position: relative;
+        border-radius: 1.5rem;
+        background: #FBF9F5;
+        border: 1px solid #E7E1D6;
+        box-shadow: 0 1px 2px rgba(18,33,43,0.04), 0 18px 40px -28px rgba(18,33,43,0.25);
+      }
+      .card-white {
+        position: relative;
+        border-radius: 1.5rem;
+        background: #ffffff;
+        border: 1px solid #EDE8DE;
+        box-shadow: 0 1px 2px rgba(18,33,43,0.04), 0 18px 40px -28px rgba(18,33,43,0.22);
+      }
+      .card-lift { transition: transform 0.35s cubic-bezier(0.22,1,0.36,1), box-shadow 0.35s cubic-bezier(0.22,1,0.36,1), border-color 0.35s ease; }
+      .card-lift:hover { transform: translateY(-5px); border-color: rgba(13,148,136,0.28); box-shadow: 0 1px 2px rgba(18,33,43,0.05), 0 34px 60px -30px rgba(18,33,43,0.32); }
+      .ring-gradient::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        padding: 1px;
+        background: linear-gradient(135deg, rgba(20,184,166,0.55), rgba(56,189,248,0.28) 45%, rgba(255,255,255,0) 80%);
+        -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+        -webkit-mask-composite: xor;
+        mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+        mask-composite: exclude;
+        pointer-events: none;
+      }
+      .btn-primary {
+        display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+        border-radius: 999px; background: #0D9488; color: #fff;
+        padding: 0.875rem 1.75rem; font-weight: 600;
+        box-shadow: 0 12px 32px -12px rgba(13,148,136,0.5);
+        transition: background-color 0.2s ease, transform 0.2s ease;
+      }
+      .btn-primary:hover { background: #0F766E; transform: translateY(-1px); }
+      .btn-ghost {
+        display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+        border-radius: 999px; border: 1px solid rgba(18,33,43,0.14);
+        background: rgba(255,255,255,0.6); color: #12212B;
+        padding: 0.875rem 1.75rem; font-weight: 600;
+        transition: background-color 0.2s ease;
+      }
+      .btn-ghost:hover { background: #fff; }
+      .hairline { height: 1px; background: linear-gradient(90deg, transparent, rgba(18,33,43,0.12), transparent); }
+
+      .reading-progress { position: fixed; top: 0; left: 0; height: 2px; background: #0D9488; z-index: 9999; transition: width 0.1s linear; }
+      @media (prefers-reduced-motion: reduce) {
+        html { scroll-behavior: auto; }
+        *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+      }
     </style>
   </head>
-  <body class="bg-ink-950 text-white antialiased selection:bg-violet-600/30 text-base leading-relaxed">
+  <body class="bg-cream-100 text-ink-900 antialiased text-base leading-relaxed">
     <Analytics />
+    <a href="#main" class="skip-link">Skip to content</a>
     <Navbar />
     {pageType === 'article' && <div class="reading-progress" id="reading-progress"></div>}
-    <slot />
+    <main id="main">
+      <slot />
+    </main>
     <Footer />
-    {pageType === 'article' && <script define:vars={{}}><![CDATA[
-      const bar = document.getElementById('reading-progress');
-      if (bar) {
-        const update = () => {
-          const h = document.documentElement.scrollHeight - window.innerHeight;
+    {pageType === 'article' && <script is:inline>
+      (function () {
+        var bar = document.getElementById('reading-progress');
+        if (!bar) return;
+        var update = function () {
+          var h = document.documentElement.scrollHeight - window.innerHeight;
           bar.style.width = h > 0 ? Math.min((window.scrollY / h) * 100, 100) + '%' : '0%';
         };
         window.addEventListener('scroll', update, { passive: true });
         update();
-      }
-    ]]></script>}
+      })();
+    </script>}
+    <script is:inline>
+      // Fire every CTA (marked with data-cta) into the analytics hook.
+      document.addEventListener('click', function (e) {
+        var el = e.target && e.target.closest ? e.target.closest('[data-cta]') : null;
+        if (!el) return;
+        var name = el.getAttribute('data-cta') || 'cta_click';
+        if (typeof window.__retain_track === 'function') window.__retain_track(name, { label: (el.textContent || '').trim().slice(0, 60) });
+      }, { passive: true });
+    </script>
   </body>
 </html>

@@ -1,5 +1,7 @@
 ---
-import Layout from '../../layouts/Layout.astro';
+import PostLayout from '../../layouts/PostLayout.astro';
+import { posts } from '../../data/posts';
+const post = posts.find((p) => p.slug === 'patient-onboarding-automation');
 
 const title = 'Dental Patient Onboarding Automation: The Workflow That Saved Our Front Desk 12 Hours Per Week'
 const description = 'The patient onboarding process is the highest-friction moment in the dental experience. Here is how we automated intake forms, insurance verification, and consent collection across 3 clinics.'
@@ -9,47 +11,29 @@ const author = 'Dr. Deepa Iyer'
 const authorBio = 'Dr. Iyer runs a multi-specialty practice with multiple locations. She has a background in healthcare operations and has implemented digital workflows across her group.'
 ---
 
-<Layout
+<PostLayout
   title={title}
   description={description}
-  pageType="article"
-  articlePublishedTime={publishedDate}
   canonical={pageUrl}
-  breadcrumbs={[
-    { name: 'Home', url: 'https://retaindental.com/' },
-    { name: 'Blog', url: 'https://retaindental.com/blog' },
-    { name: 'Patient Onboarding', url: pageUrl },
-  ]}
+  slug={post?.slug ?? 'patient-onboarding-automation'}
+  author={post?.author}
+  date={post?.date ?? publishedDate}
+  tags={post?.tags ?? []}
+  quickAnswer={post?.quickAnswer}
 >
-  <article class="pt-32 pb-24 px-6 bg-cream-50 min-h-screen">
-    <div class="max-w-3xl mx-auto">
-      <a href="/blog" class="inline-flex items-center gap-2 text-xs font-bold text-violet-600 uppercase tracking-widest mb-6 hover:text-violet-400 transition-colors">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
-        Back to all posts
-      </a>
 
-      <div class="flex flex-wrap items-center gap-3 mb-6">
-        <span class="text-[10px] font-black text-violet-600 bg-violet-600/10 border border-violet-600/20 px-2.5 py-1 rounded-full uppercase tracking-widest">Operations</span>
-        <span class="text-sm text-text-600 font-medium">9 min read</span>
-        <span class="text-sm text-text-600 font-medium">·</span>
-        <span class="text-sm text-text-600 font-medium">{new Date(publishedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-      </div>
-
-      <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-text-900 tracking-tighter leading-[1.05] mb-6">
-        Dental Patient Onboarding Automation: <span class="text-violet-600">The Workflow That Saved Our Front Desk 12 Hours Per Week</span>
-      </h1>
 
       <div class="flex items-center gap-4 mb-12 p-4 bg-cream-100 rounded-2xl border border-gray-200">
-        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-violet-600 to-violet-400 flex items-center justify-center text-white font-black text-lg">DI</div>
+        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-violet-600 to-violet-400 flex items-center justify-center text-white font-semibold text-lg">DI</div>
         <div>
-          <p class="font-bold text-text-900 text-sm">{author}</p>
+          <p class="font-semibold text-text-900 text-sm">{author}</p>
           <p class="text-xs text-text-600"></p>
         </div>
       </div>
 
       <div class="prose prose-lg max-w-none text-text-600 leading-relaxed space-y-6">
         <p class="text-xl text-text-600 leading-relaxed font-medium">
-          Six months ago, I watched our front-desk coordinator spend 22 minutes onboarding a single new patient. Twenty-two minutes. For every new patient. Across three clinics, averaging 45 new patients per week, that was 16.5 hours of staff time — every week — on paperwork that added zero clinical value.
+          Six months ago, I watched our front-desk coordinator spend 22 minutes onboarding a single new patient. Twenty-two minutes. For every new patient. Across three clinics, averaging 45 new patients per week, that was 16.5 hours of staff time, every week, on paperwork that added zero clinical value.
         </p>
 
         <p>
@@ -68,7 +52,7 @@ const authorBio = 'Dr. Iyer runs a multi-specialty practice with multiple locati
           <li>Payment method setup: 1.0 minute (front desk)</li>
         </ul>
         <p>
-          The total: 18.7 minutes of combined patient and staff time per new patient. At 45 new patients per week across three clinics, that was 841 minutes — roughly 14 hours — of weekly labour dedicated to paperwork.
+          The total: 18.7 minutes of combined patient and staff time per new patient. At 45 new patients per week across three clinics, that was 841 minutes, roughly 14 hours, of weekly labour dedicated to paperwork.
         </p>
 
         <h2>The automated workflow we built</h2>
@@ -78,7 +62,7 @@ const authorBio = 'Dr. Iyer runs a multi-specialty practice with multiple locati
 
         <h3>Step 1: Pre-appointment digital intake</h3>
         <p>
-          When a new patient books an appointment — by phone, website, or app — they immediately receive an SMS with a secure link to a digital intake form. The form collects: name, DOB, contact information, medical history, current medications, dental history, insurance details, and emergency contact. The patient completes it on their phone, typically while waiting for their appointment date to arrive.
+          When a new patient books an appointment, by phone, website, or app, they immediately receive an SMS with a secure link to a digital intake form. The form collects: name, DOB, contact information, medical history, current medications, dental history, insurance details, and emergency contact. The patient completes it on their phone, typically while waiting for their appointment date to arrive.
         </p>
         <p>
           Results: 74% of patients completed the form before arrival. The remaining 26% arrived a few minutes early and completed it on a tablet at the front desk. Average time to complete on phone: 4.1 minutes (versus 7.2 minutes on paper).
@@ -89,12 +73,12 @@ const authorBio = 'Dr. Iyer runs a multi-specialty practice with multiple locati
           For patients with dental insurance, the intake form captures a photo of the insurance card. The image is automatically sent to our verification partner (we use a third-party eligibility service). Within 60 seconds, we receive a response with: coverage status, annual maximum remaining, deductible status, and procedure-specific coverage limits. The data is written directly to the patient record.
         </p>
         <p>
-          Previously, our front desk spent 3-5 minutes per patient calling insurance companies or checking portals. The automated verification reduced this to zero — the result arrived before the patient did.
+          Previously, our front desk spent 3-5 minutes per patient calling insurance companies or checking portals. The automated verification reduced this to zero, the result arrived before the patient did.
         </p>
 
         <h3>Step 3: Digital consent with e-signature</h3>
         <p>
-          Our consent forms — treatment consent, privacy notice, financial agreement — are now presented as a single digital document within the patient app. The patient reviews and signs using a finger-drawn signature. The signed document is stored with a timestamp and IP address for audit purposes.
+          Our consent forms, treatment consent, privacy notice, financial agreement, are now presented as a single digital document within the patient app. The patient reviews and signs using a finger-drawn signature. The signed document is stored with a timestamp and IP address for audit purposes.
         </p>
         <p>
           One unexpected benefit: patients actually <em>read</em> the consent form on the app (average reading time: 47 seconds) versus paper (estimated 5-8 seconds, usually just flipping to the signature line). This has reduced "I did not know I agreed to that" conversations by about 80%.
@@ -107,36 +91,36 @@ const authorBio = 'Dr. Iyer runs a multi-specialty practice with multiple locati
         <h2>The results after 120 days</h2>
         <div class="not-prose grid md:grid-cols-3 gap-4 my-8">
           <div class="bg-cream-100 rounded-2xl p-5 border border-gray-200 text-center">
-            <p class="text-3xl font-black text-violet-600 mb-1">18.7→4.9 min</p>
+            <p class="text-3xl font-semibold text-violet-600 mb-1">18.7→4.9 min</p>
             <p class="text-xs text-text-600 font-semibold uppercase tracking-widest">Avg onboarding time</p>
           </div>
           <div class="bg-cream-100 rounded-2xl p-5 border border-gray-200 text-center">
-            <p class="text-3xl font-black text-violet-600 mb-1">12 hrs/wk</p>
+            <p class="text-3xl font-semibold text-violet-600 mb-1">12 hrs/wk</p>
             <p class="text-xs text-text-600 font-semibold uppercase tracking-widest">Staff time saved</p>
           </div>
           <div class="bg-cream-100 rounded-2xl p-5 border border-gray-200 text-center">
-            <p class="text-3xl font-black text-violet-600 mb-1">+12%</p>
+            <p class="text-3xl font-semibold text-violet-600 mb-1">+12%</p>
             <p class="text-xs text-text-600 font-semibold uppercase tracking-widest">NPS score increase</p>
           </div>
         </div>
 
         <h2>The economics</h2>
         <p>
-          The digital intake platform costs us roughly $180 per year across three clinics. The saved staff time — 12 hours per week at an average loaded cost of $3.50 per hour — represents $2,600 in recovered labour per year. That is a 12x ROI before considering any of the downstream benefits: faster patient check-in, fewer data-entry errors, higher patient satisfaction, and improved consent compliance.
+          The digital intake platform costs us roughly $180 per year across three clinics. The saved staff time, 12 hours per week at an average loaded cost of $3.50 per hour, represents $2,600 in recovered labour per year. That is a 12x ROI before considering any of the downstream benefits: faster patient check-in, fewer data-entry errors, higher patient satisfaction, and improved consent compliance.
         </p>
         <p>
-          The single most important insight I can offer another dentist: the patient onboarding process is the highest-leverage workflow you can automate. It is the first impression patients have of your practice. A smooth, digital onboarding signals competence and modernity. A paper-based, error-prone onboarding signals the opposite. Your clinical care may be the best in the city, but the patient's perception starts at the front desk — and the front desk starts with the intake form.
+          The single most important insight I can offer another dentist: the patient onboarding process is the highest-use workflow you can automate. It is the first impression patients have of your practice. A smooth, digital onboarding signals competence and modernity. A paper-based, error-prone onboarding signals the opposite. Your clinical care may be the best in the city, but the patient's perception starts at the front desk, and the front desk starts with the intake form.
         </p>
         <p>
-          — <em>Dr. Deepa Iyer</em>
+         , <em>Dr. Deepa Iyer</em>
         </p>
 
         <div class="not-prose mt-12 p-8 rounded-3xl bg-gradient-to-br from-ink-900 via-ink-800 to-ink-800 text-white relative overflow-hidden">
           <div class="relative z-10">
-            <p class="text-2xl font-black mb-3">Automate your patient intake</p>
-            <p class="text-text-onDark-500 text-sm mb-6 max-w-lg">RetainOS includes digital intake forms, e-consent, and automated insurance verification — so new patients are ready before they walk through the door.</p>
+            <p class="text-2xl font-semibold mb-3">Automate your patient intake</p>
+            <p class="text-text-onDark-500 text-sm mb-6 max-w-lg">Retain Dental includes digital intake forms, e-consent, and automated insurance verification, so new patients are ready before they walk through the door.</p>
             <div class="flex flex-wrap gap-3">
-              <a href="https://app.retaindental.com" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-ink-900 rounded-full text-sm font-black hover:bg-violet-600/10 transition-all">Start free trial →</a>
+              <a href="https://app.retaindental.com" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-ink-900 rounded-full text-sm font-semibold hover:bg-violet-600/10 transition-all">Start free trial →</a>
               <a href="/blog" class="inline-flex items-center gap-2 px-6 py-3 bg-white/10 text-white rounded-full text-sm font-semibold hover:bg-white/20 transition-all border border-white/20">Read more posts</a>
             </div>
           </div>
@@ -144,4 +128,4 @@ const authorBio = 'Dr. Iyer runs a multi-specialty practice with multiple locati
       </div>
     </div>
   </article>
-</Layout>
+</PostLayout>

@@ -1,0 +1,194 @@
+---
+import Layout from '../layouts/Layout.astro'
+import CTA from '../components/CTA.astro'
+
+const groups = [
+  {
+    title: 'The basics',
+    faqs: [
+      {
+        question: 'What is Retain Dental?',
+        answer:
+          'Retain Dental is a patient retention platform for dental practices. It gives each clinic its own branded patient app where patients follow their aftercare, earn loyalty points, and refer friends, so every visit leads to the next one.',
+      },
+      {
+        question: 'Who is Retain Dental for?',
+        answer:
+          'Solo dental practices, multi-doctor practices, multi-location groups, and DSOs. Any practice that wants patients to come back and bring their family, rather than relying on paid ads to replace them.',
+      },
+      {
+        question: 'How is Retain Dental different from my practice management software?',
+        answer:
+          'Your PMS runs the clinical and billing side of the practice. Retain Dental runs the patient relationship between visits: aftercare, recall, rewards, reviews, and referrals. It works alongside Dentrix, Eaglesoft, and Open Dental rather than replacing them.',
+      },
+      {
+        question: 'Is Retain Dental only for dentistry?',
+        answer:
+          'Yes. It is built specifically for dental workflows, including aftercare protocols for aligners, implants, and post-op care, plus dental recall intervals and treatment-based rewards.',
+      },
+    ],
+  },
+  {
+    title: 'Aftercare',
+    faqs: [
+      {
+        question: 'How does aftercare work in Retain Dental?',
+        answer:
+          'When treatment ends, you assign an aftercare plan from your dashboard. It appears in the patient app as a daily checklist. Patients check off each step and earn points for consistency, while your team sees adherence in real time.',
+      },
+      {
+        question: 'Can I create my own aftercare protocols?',
+        answer:
+          'Yes. Retain Dental ships with dental protocols for clear aligners, implants, extractions, whitening, and more, and you can edit the steps or add your own tasks for any treatment.',
+      },
+      {
+        question: 'Does it track aligner wear and compliance?',
+        answer:
+          'Yes. Patients check in daily and can upload progress photos, which builds a compliance record your team can review before the next visit instead of discovering non-compliance at the chair.',
+      },
+    ],
+  },
+  {
+    title: 'Loyalty and referrals',
+    faqs: [
+      {
+        question: 'How does the loyalty program work?',
+        answer:
+          'Patients earn points for treatments and for aftercare check-ins. Points build towards membership tiers that unlock perks, and they can be redeemed for rewards your practice chooses.',
+      },
+      {
+        question: 'What is household points pooling?',
+        answer:
+          'Family members linked in the same household share a single points balance. It turns one patient into a family on a plan, and it is one of the strongest drivers of repeat visits.',
+      },
+      {
+        question: 'How do referrals work?',
+        answer:
+          'Patients can share your clinic with a friend and pass along points. When the friend books, both are rewarded, so referrals become a built-in mechanic rather than an occasional ask.',
+      },
+    ],
+  },
+  {
+    title: 'Branding and setup',
+    faqs: [
+      {
+        question: 'Is this a custom app for my clinic?',
+        answer:
+          'Yes. Retain Dental is white-label. Your clinic name, logo, and colors appear throughout the patient experience, on your own subdomain.',
+      },
+      {
+        question: 'Do patients have to download from the App Store?',
+        answer:
+          'No. Your app is a progressive web app (PWA). Patients tap a link and add it to their home screen, which means no app store review, no download friction, and instant updates.',
+      },
+      {
+        question: 'How long does it take to launch?',
+        answer: 'Most practices are live in about 20 minutes: add your branding, import patients or connect your PMS, and send your first aftercare plan.',
+      },
+      {
+        question: 'Does it integrate with my practice management software?',
+        answer:
+          'Yes. Retain Dental integrates with Dentrix, Eaglesoft, and Open Dental, and can sync patient records so you are not maintaining two lists.',
+      },
+    ],
+  },
+  {
+    title: 'Security and compliance',
+    faqs: [
+      {
+        question: 'Is Retain Dental HIPAA compliant?',
+        answer:
+          'Retain Dental is HIPAA-aligned. We sign a Business Associate Agreement (BAA) with every practice and protect protected health information with encryption in transit and at rest, role-based access control, and audit logging.',
+      },
+      {
+        question: 'Are you SOC 2 certified?',
+        answer:
+          'SOC 2 Type II is in progress, not yet complete. We are happy to share our current security documentation during a demo and will update this page when the audit is finished.',
+      },
+      {
+        question: 'Who owns the patient data?',
+        answer:
+          'You do. Your practice owns its patient data, and you can export it at any time. There is no lock-in.',
+      },
+    ],
+  },
+  {
+    title: 'Pricing and trial',
+    faqs: [
+      {
+        question: 'How does pricing work?',
+        answer:
+          'Pricing is per location and based on the number of active patients you have, with no setup fees and no per-feature upcharges. Book a demo and we will show you exactly what it looks like for your practice.',
+      },
+      {
+        question: 'Is there a free trial?',
+        answer:
+          'Yes. Every plan starts with a 14-day free trial, no credit card required, so you can run it on your real patients before you pay anything.',
+      },
+      {
+        question: 'Is there a contract?',
+        answer: 'No long-term contract is required. You can cancel at any time.',
+      },
+    ],
+  },
+]
+
+const faqs = groups.flatMap((g) => g.faqs)
+
+---
+<Layout
+  title="Answers | Dental Patient Retention, Aftercare, Loyalty and Referrals"
+  description="Straight answers about Retain Dental: how aftercare works, how loyalty and referrals work, branding, HIPAA, setup time, and pricing."
+  canonical="/answers"
+  breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Answers', url: '/answers' }]}
+  faqs={faqs}
+>
+
+  <section class="relative overflow-hidden bg-cream-100 pt-32 pb-14 sm:pt-40">
+    <div aria-hidden="true" class="pointer-events-none absolute inset-0 -z-10">
+      <div class="absolute -top-24 right-1/4 h-[28rem] w-[28rem] rounded-full bg-teal-200/40 blur-[120px]"></div>
+    </div>
+    <div class="mx-auto max-w-3xl px-5 text-center sm:px-8">
+      <p class="eyebrow text-teal-700">Answers</p>
+      <h1 class="mt-4 font-heading text-[clamp(2.1rem,4.8vw,3.4rem)] font-semibold leading-[1.06] tracking-tight text-ink-900 text-balance">
+        Everything about Retain Dental, answered.
+      </h1>
+      <p class="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-ink-600">
+        Short, direct answers to the questions practices ask before they switch. If yours is not here, ask us directly.
+      </p>
+    </div>
+  </section>
+
+  <section class="bg-cream-100 pb-24">
+    <div class="mx-auto max-w-3xl px-5 sm:px-8">
+      {groups.map((g) => (
+        <div class="mb-14">
+          <h2 class="font-heading text-2xl font-semibold tracking-tight text-ink-900">{g.title}</h2>
+          <div class="mt-5 divide-y divide-cream-200 overflow-hidden rounded-2xl border border-cream-300 bg-cream-50">
+            {g.faqs.map((f) => (
+              <details class="group">
+                <summary class="flex cursor-pointer list-none items-center justify-between gap-6 p-5 sm:p-6">
+                  <span class="font-semibold text-ink-900">{f.question}</span>
+                  <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-cream-300 text-ink-600 transition-transform group-open:rotate-45">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+                  </span>
+                </summary>
+                <p class="-mt-1 px-5 pb-6 text-[15px] leading-relaxed text-ink-600 sm:px-6">{f.answer}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      ))}
+
+      <div class="card flex flex-col items-start gap-4 p-7 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p class="font-heading text-xl font-semibold text-ink-900">Still have a question?</p>
+          <p class="mt-1 text-sm text-ink-600">Email us and a human will reply, usually within a day.</p>
+        </div>
+        <a href="/contact" data-cta="answers-contact" class="btn-primary shrink-0">Ask us</a>
+      </div>
+    </div>
+  </section>
+
+  <CTA />
+</Layout>

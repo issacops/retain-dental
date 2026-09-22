@@ -1,38 +1,25 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-const title = 'Why Your Dental Practice Needs a Branded Patient App in 2026 — RetainOS'
-const description = 'A branded patient app is no longer a "nice to have" — it\'s the difference between a practice patients remember and a practice they forget.'
+import PostLayout from '../../layouts/PostLayout.astro';
+import { posts } from '../../data/posts';
+const post = posts.find((p) => p.slug === 'white-label-app');
+const title = 'Why Your Dental Practice Needs a Branded Patient App in 2026, Retain Dental'
+const description = 'A branded patient app is no longer a "nice to have", it\'s the difference between a practice patients remember and a practice they forget.'
 const pageUrl = 'https://retaindental.com/blog/white-label-app'
 const publishedDate = '2026-06-04'
 const modifiedDate = '2026-06-16'
 ---
 
-<Layout
+<PostLayout
   title={title}
   description={description}
-  pageType="article"
-  articlePublishedTime={publishedDate}
   canonical={pageUrl}
-  breadcrumbs={[
-    { name: 'Home', url: 'https://retaindental.com/' },
-    { name: 'Blog', url: 'https://retaindental.com/blog' },
-    { name: 'Branded Patient App', url: pageUrl },
-  ]}
+  slug={post?.slug ?? 'white-label-app'}
+  author={post?.author}
+  date={post?.date ?? publishedDate}
+  tags={post?.tags ?? []}
+  quickAnswer={post?.quickAnswer}
 >
-  <section class="pt-32 pb-24 px-6 bg-cream-50 min-h-screen">
-    <div class="max-w-3xl mx-auto">
-      <a href="/blog" class="inline-flex items-center gap-1 text-xs font-bold text-violet-600 uppercase tracking-widest mb-6">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate(180deg)"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-        Back to blog
-      </a>
-      <div class="flex items-center gap-2 mb-4">
-        <span class="text-[10px] font-black text-violet-600 bg-violet-600/10 border border-violet-600/20 px-2 py-0.5 rounded uppercase tracking-widest">Strategy</span>
-        <span class="text-[10px] text-text-600 font-bold">6 min read</span>
-        <span class="text-[10px] text-text-600 font-bold">{publishedDate}</span>
-      </div>
-      <h1 class="text-4xl md:text-6xl font-black text-text-900 tracking-tighter leading-[1.05] mb-8">
-        Why Your Dental Practice Needs a Branded Patient App in 2026
-      </h1>
+
 
       <div class="prose prose-lg max-w-none text-text-600 space-y-6">
         <p class="text-xl text-text-600 leading-relaxed font-medium">
@@ -40,35 +27,35 @@ const modifiedDate = '2026-06-16'
           They open Instagram, text messaging, and Zomato. The portal app you paid your last vendor to build? It sits at row 14 in their home screen, never opened.
         </p>
 
-        <h2 class="text-3xl font-black text-text-900 mt-12 mb-4 tracking-tight">The adoption problem</h2>
+        <h2 class="text-3xl font-semibold text-text-900 mt-12 mb-4 tracking-tight">The adoption problem</h2>
         <p>
           The dental industry average patient-portal adoption rate is around 12%. That means 88% of
           patients you paid to acquire never open the thing you built for them. The reason: it's
           not <em>theirs</em>. It's yours, but with their clinic's logo.
         </p>
 
-        <h2 class="text-3xl font-black text-text-900 mt-12 mb-4 tracking-tight">What "branded" actually means</h2>
+        <h2 class="text-3xl font-semibold text-text-900 mt-12 mb-4 tracking-tight">What "branded" actually means</h2>
         <p>
           A branded app isn't just a logo swap. It means:
         </p>
         <ul class="list-disc pl-6 space-y-2 text-text-600">
-          <li><strong>Custom domain</strong> — yourclinic.app, not yourvendor.com/yourclinic</li>
-          <li><strong>Your colors and typography</strong> — not the vendor's house style</li>
-          <li><strong>Your voice</strong> — push notifications in your tone, not theirs</li>
-          <li><strong>Your value prop</strong> — the app is positioned as YOUR patient experience, not "powered by some platform"</li>
+          <li><strong>Custom domain</strong>, yourclinic.app, not yourvendor.com/yourclinic</li>
+          <li><strong>Your colors and typography</strong>, not the vendor's house style</li>
+          <li><strong>Your voice</strong>, push notifications in your tone, not theirs</li>
+          <li><strong>Your value prop</strong>, the app is positioned as YOUR patient experience, not "powered by some platform"</li>
         </ul>
 
-        <h2 class="text-3xl font-black text-text-900 mt-12 mb-4 tracking-tight">The 50% adoption difference</h2>
+        <h2 class="text-3xl font-semibold text-text-900 mt-12 mb-4 tracking-tight">The 50% adoption difference</h2>
         <p>
           Pilot clinics running branded apps (vs unbranded portals) saw install rates jump from
-          ~12% to 50-60% of active patients. The reason isn't the feature set — it's the perceived ownership.
+          ~12% to 50-60% of active patients. The reason isn't the feature set, it's the perceived ownership.
         </p>
         <p>
           Patients are used to installing apps from brands they know. A portal "powered by AcmeCo" feels
           like a third-party tool. A "Smile Studio" app feels like a relationship.
         </p>
 
-        <h2 class="text-3xl font-black text-text-900 mt-12 mb-4 tracking-tight">What to put in it</h2>
+        <h2 class="text-3xl font-semibold text-text-900 mt-12 mb-4 tracking-tight">What to put in it</h2>
         <p>
           Don't try to be everything. The 5 things that drive 80% of app opens in our data:
         </p>
@@ -80,21 +67,21 @@ const modifiedDate = '2026-06-16'
           <li>Re-care reminder + book in two taps</li>
         </ol>
 
-        <h2 class="text-3xl font-black text-text-900 mt-12 mb-4 tracking-tight">How to launch</h2>
+        <h2 class="text-3xl font-semibold text-text-900 mt-12 mb-4 tracking-tight">How to launch</h2>
         <p>
-          A branded app doesn't need to be a 6-month IT project. Modern platforms (RetainOS included)
-          let you launch a PWA in 20 minutes — no App Store, no Play Store, just a URL you text to
+          A branded app doesn't need to be a 6-month IT project. Modern platforms (Retain Dental included)
+          let you launch a PWA in 20 minutes, no App Store, no Play Store, just a URL you text to
           your patient base.
         </p>
 
         <div class="mt-12 p-6 bg-ink-900 rounded-2xl text-white">
-          <h3 class="text-2xl font-black mb-2">Try RetainOS free for 14 days</h3>
+          <h3 class="text-2xl font-semibold mb-2">Try Retain Dental free for 14 days</h3>
           <p class="text-text-onDark-500 text-sm mb-4">Live on your real patients in 20 minutes.</p>
-          <a href="https://app.retaindental.com" class="inline-block px-6 py-3 bg-white text-ink-900 rounded-full font-black transition-transform">
+          <a href="https://app.retaindental.com" class="inline-block px-6 py-3 bg-white text-ink-900 rounded-full font-semibold transition-transform">
             Start free trial →
           </a>
         </div>
       </div>
     </div>
   </section>
-</Layout>
+</PostLayout>

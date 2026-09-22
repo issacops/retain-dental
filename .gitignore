@@ -60,3 +60,6 @@ capture-all.mjs
 
 # Landing build output
 landing/dist/
+
+# /brag render artifacts (large, reproducible)
+brag-output*/

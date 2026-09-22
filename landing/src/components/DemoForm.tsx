@@ -159,7 +159,7 @@ export default function DemoForm() {
               <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#6366F1" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
             </div>
             <div>
-              <h3 className="text-3xl font-sans font-[400] text-onDark-100 mb-3">You're in.</h3>
+              <h3 className="text-3xl font-sans font-normal text-onDark-100 mb-3">You're in.</h3>
               <p className="text-onDark-500 text-lg leading-relaxed max-w-md mx-auto">We'll be in touch within 24 hours to schedule your personalized 30-minute demo.</p>
             </div>
             <div className="p-6 rounded bg-ink-800 border border-ink-border max-w-md mx-auto">
@@ -174,16 +174,16 @@ export default function DemoForm() {
             {/* Left side - info */}
             <div className="p-8 lg:p-10 bg-ink-950 space-y-6">
               <div>
-                <h2 className="text-2xl lg:text-3xl font-sans font-[400] text-onDark-100 tracking-tight mb-3">What to expect from<br/>your RetainOS demo</h2>
-                <p className="text-onDark-500 leading-relaxed text-sm">See how RetainOS replaces your recall, loyalty, and review tools with one branded patient app.</p>
+                <h2 className="text-2xl lg:text-3xl font-sans font-normal text-onDark-100 tracking-tight mb-3">What to expect from<br/>your Retain Dental demo</h2>
+                <p className="text-onDark-500 leading-relaxed text-sm">See how Retain Dental replaces your recall, loyalty, and review tools with one branded patient app.</p>
               </div>
 
               <div className="space-y-4">
                 {[
-                  'In a <strong>30-minute session</strong>, see how RetainOS replaces 6 separate tools',
+                  'In a <strong>30-minute session</strong>, see how Retain Dental replaces 6 separate tools',
                   'Walk through a <strong>live branded patient app</strong> built for your clinic',
                   'Get a <strong>custom migration plan</strong> from your current stack',
-                  'See how <strong>12 pilot clinics</strong> increased retention by 4.2x in 90 days',
+                  'See how practices use aftercare in a branded app to lift retention and referrals',
                 ].map((text, i) => (
                   <div key={i} className="flex items-start gap-3">
                     <div className="w-6 h-6 rounded bg-violet-200/20 flex items-center justify-center shrink-0 mt-0.5">
@@ -197,7 +197,7 @@ export default function DemoForm() {
               <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-ink-border">
                 <span className="flex items-center gap-1.5 text-xs text-onDark-500">
                   <svg className="w-3.5 h-3.5 text-violet-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                  HIPAA-ready
+                  HIPAA-aligned
                 </span>
                 <span className="flex items-center gap-1.5 text-xs text-onDark-500">
                   <svg className="w-3.5 h-3.5 text-violet-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>

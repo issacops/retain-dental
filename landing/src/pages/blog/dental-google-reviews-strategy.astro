@@ -1,55 +1,39 @@
 ---
-import Layout from '../../layouts/Layout.astro';
+import PostLayout from '../../layouts/PostLayout.astro';
+import { posts } from '../../data/posts';
+const post = posts.find((p) => p.slug === 'dental-google-reviews-strategy');
 
 const title = 'How We Built a 4.9-Star Google Reputation for a 5-Clinic DSO (Without Violating HIPAA)'
-const description = 'The complete playbook for earning more Google reviews in dentistry — legally, ethically, and at scale. Our 5-clinic network went from 85 reviews total to 640+ in 8 months.'
+const description = 'The complete playbook for earning more Google reviews in dentistry, legally, ethically, and at scale. Our 5-clinic network went from 85 reviews total to 640+ in 8 months.'
 const pageUrl = 'https://retaindental.com/blog/dental-google-reviews-strategy'
 const publishedDate = '2025-05-18'
 const author = 'Dr. Meera Desai'
 const authorBio = 'Dr. Desai is a cosmetic dentist and practice marketing strategist. She manages brand reputation for a 5-location DSO and has grown their online reviews from under 100 to 640+ in less than a year.'
 ---
 
-<Layout
+<PostLayout
   title={title}
   description={description}
-  pageType="article"
-  articlePublishedTime={publishedDate}
   canonical={pageUrl}
-  breadcrumbs={[
-    { name: 'Home', url: 'https://retaindental.com/' },
-    { name: 'Blog', url: 'https://retaindental.com/blog' },
-    { name: 'Google Reviews Strategy', url: pageUrl },
-  ]}
+  slug={post?.slug ?? 'dental-google-reviews-strategy'}
+  author={post?.author}
+  date={post?.date ?? publishedDate}
+  tags={post?.tags ?? []}
+  quickAnswer={post?.quickAnswer}
 >
-  <article class="pt-32 pb-24 px-6 bg-cream-50 min-h-screen">
-    <div class="max-w-3xl mx-auto">
-      <a href="/blog" class="inline-flex items-center gap-2 text-xs font-bold text-violet-600 uppercase tracking-widest mb-6 hover:text-violet-400 transition-colors">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
-        Back to all posts
-      </a>
 
-      <div class="flex flex-wrap items-center gap-3 mb-6">
-        <span class="text-[10px] font-black text-violet-600 bg-violet-600/10 border border-violet-600/20 px-2.5 py-1 rounded-full uppercase tracking-widest">Marketing</span>
-        <span class="text-sm text-text-600 font-medium">9 min read</span>
-        <span class="text-sm text-text-600 font-medium">·</span>
-        <span class="text-sm text-text-600 font-medium">{new Date(publishedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-      </div>
-
-      <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-text-900 tracking-tighter leading-[1.05] mb-6">
-        How We Built a 4.9-Star Google Reputation <span class="text-violet-600">(Without Violating HIPAA)</span>
-      </h1>
 
       <div class="flex items-center gap-4 mb-12 p-4 bg-cream-100 rounded-2xl border border-gray-200">
-        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-violet-600 to-violet-400 flex items-center justify-center text-white font-black text-lg">MD</div>
+        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-violet-600 to-violet-400 flex items-center justify-center text-white font-semibold text-lg">MD</div>
         <div>
-          <p class="font-bold text-text-900 text-sm">{author}</p>
-          <p class="text-xs text-text-600">Cosmetic dentist · Brand strategist</p>
+          <p class="font-semibold text-text-900 text-sm">{author}</p>
+          <p class="text-xs text-text-600">Cosmetic dentist | Brand strategist</p>
         </div>
       </div>
 
       <div class="prose prose-lg max-w-none text-text-600 leading-relaxed space-y-6">
         <p class="text-xl text-text-600 leading-relaxed font-medium">
-          When I took over marketing for our 5-clinic DSO network in early 2024, we had 85 reviews across all five locations. That is an average of 17 per clinic. Our best location had a 4.2. Our worst had a 3.5 — and it showed in the conversion data. The clinics with higher review counts were booking 2.3x more new-patient calls per thousand ad dollars spent.
+          When I took over marketing for our 5-clinic DSO network in early 2024, we had 85 reviews across all five locations. That is an average of 17 per clinic. Our best location had a 4.2. Our worst had a 3.5, and it showed in the conversion data. The clinics with higher review counts were booking 2.3x more new-patient calls per thousand ad dollars spent.
         </p>
 
         <p>
@@ -63,7 +47,7 @@ const authorBio = 'Dr. Desai is a cosmetic dentist and practice marketing strate
         <ul>
           <li>Practices with 50+ reviews and a 4.5+ rating generated 3.2x more phone calls from Google Business profiles</li>
           <li>Each 0.1-star improvement in rating correlated with a 3-5% increase in click-through rate from local search results</li>
-          <li>The first 10 reviews had the highest marginal impact — going from zero to 10 reviews increased new-patient inquiries by an estimated 270%</li>
+          <li>The first 10 reviews had the highest marginal impact, going from zero to 10 reviews increased new-patient inquiries by an estimated 270%</li>
         </ul>
         <p>
           For our network, the internal data was consistent. Our 4.8-star clinics had a 12% new-patient conversion rate from Google traffic. Our 3.8-star clinic had 5.7%. That gap alone was costing us roughly $29,000 per year in unrealised revenue at the underperforming location.
@@ -71,7 +55,7 @@ const authorBio = 'Dr. Desai is a cosmetic dentist and practice marketing strate
 
         <h2>The compliance-first framework</h2>
         <p>
-          Here is the framework we built. I am sharing it fully because I believe transparent review practices are better for everyone — patients, practices, and the platforms themselves.
+          Here is the framework we built. I am sharing it fully because I believe transparent review practices are better for everyone, patients, practices, and the platforms themselves.
         </p>
 
         <h3>1. Capture the moment of peak satisfaction</h3>
@@ -81,12 +65,12 @@ const authorBio = 'Dr. Desai is a cosmetic dentist and practice marketing strate
 
         <h3>2. The QR code on the checkout counter</h3>
         <p>
-          Every checkout counter, every treatment room, every patient restroom — we put a small acrylic stand with a QR code that opens our Google review page. No pressure. No data collection. Just an invitation. We tracked QR scans using UTM parameters and found that about one in 40 scans resulted in a review.
+          Every checkout counter, every treatment room, every patient restroom, we put a small acrylic stand with a QR code that opens our Google review page. No pressure. No data collection. Just an invitation. We tracked QR scans using UTM parameters and found that about one in 40 scans resulted in a review.
         </p>
 
         <h3>3. The post-care automated nudge</h3>
         <p>
-          This is where the platform matters. When a patient completes a treatment journey — say, a crown seating or a hygiene visit — our patient engagement platform sends a post-care check-in message automatically. At the end of that message: "How was your experience? [Tell Google] [Tell Us Directly]". The patient must opt into clicking the Google link. No assumption of consent.
+          This is where the platform matters. When a patient completes a treatment journey, say, a crown seating or a hygiene visit, our patient engagement platform sends a post-care check-in message automatically. At the end of that message: "How was your experience? [Tell Google] [Tell Us Directly]". The patient must opt into clicking the Google link. No assumption of consent.
         </p>
 
         <blockquote>
@@ -106,32 +90,32 @@ const authorBio = 'Dr. Desai is a cosmetic dentist and practice marketing strate
         <h2>The 8-month outcome</h2>
         <div class="not-prose grid md:grid-cols-3 gap-4 my-8">
           <div class="bg-cream-100 rounded-2xl p-5 border border-gray-200 text-center">
-            <p class="text-3xl font-black text-violet-600 mb-1">85→640+</p>
+            <p class="text-3xl font-semibold text-violet-600 mb-1">85→640+</p>
             <p class="text-xs text-text-600 font-semibold uppercase tracking-widest">Total reviews</p>
           </div>
           <div class="bg-cream-100 rounded-2xl p-5 border border-gray-200 text-center">
-            <p class="text-3xl font-black text-violet-600 mb-1">4.9★</p>
+            <p class="text-3xl font-semibold text-violet-600 mb-1">4.9★</p>
             <p class="text-xs text-text-600 font-semibold uppercase tracking-widest">Network average</p>
           </div>
           <div class="bg-cream-100 rounded-2xl p-5 border border-gray-200 text-center">
-            <p class="text-3xl font-black text-violet-600 mb-1">2.8x</p>
+            <p class="text-3xl font-semibold text-violet-600 mb-1">2.8x</p>
             <p class="text-xs text-text-600 font-semibold uppercase tracking-widest">New-patient call rate</p>
           </div>
         </div>
 
         <p>
-          The most important thing I want other dentists to take from this: you do not need to buy reviews, incentivise them, or use shady third-party reputation farms. A clean, compliance-first review strategy that captures patients at their moment of peak satisfaction — and makes it trivially easy to share — will outperform any shortcut.
+          The most important thing I want other dentists to take from this: you do not need to buy reviews, incentivise them, or use shady third-party reputation farms. A clean, compliance-first review strategy that captures patients at their moment of peak satisfaction, and makes it trivially easy to share, will outperform any shortcut.
         </p>
         <p>
-          — <em>Dr. Meera Desai</em>
+         , <em>Dr. Meera Desai</em>
         </p>
 
         <div class="not-prose mt-12 p-8 rounded-3xl bg-gradient-to-br from-ink-900 via-ink-800 to-ink-800 text-white relative overflow-hidden">
           <div class="relative z-10">
-            <p class="text-2xl font-black mb-3">Automate your review generation</p>
-            <p class="text-text-onDark-500 text-sm mb-6 max-w-lg">RetainOS sends HIPAA-compliant post-care check-ins with review requests at exactly the right moment — no manual follow-up needed.</p>
+            <p class="text-2xl font-semibold mb-3">Automate your review generation</p>
+            <p class="text-text-onDark-500 text-sm mb-6 max-w-lg">Retain Dental sends HIPAA-compliant post-care check-ins with review requests at exactly the right moment, no manual follow-up needed.</p>
             <div class="flex flex-wrap gap-3">
-              <a href="https://app.retaindental.com" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-ink-900 rounded-full text-sm font-black hover:bg-violet-600/10 transition-all">Start free trial →</a>
+              <a href="https://app.retaindental.com" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-ink-900 rounded-full text-sm font-semibold hover:bg-violet-600/10 transition-all">Start free trial →</a>
               <a href="/blog" class="inline-flex items-center gap-2 px-6 py-3 bg-white/10 text-white rounded-full text-sm font-semibold hover:bg-white/20 transition-all border border-white/20">Read more posts</a>
             </div>
           </div>
@@ -139,4 +123,4 @@ const authorBio = 'Dr. Desai is a cosmetic dentist and practice marketing strate
       </div>
     </div>
   </article>
-</Layout>
+</PostLayout>

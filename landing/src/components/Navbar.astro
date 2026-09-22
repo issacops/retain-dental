@@ -1,47 +1,75 @@
-<nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-500" id="navbar">
-  <div class="max-w-7xl mx-auto px-6">
-    <div class="flex items-center justify-between h-20">
-      <a href="/" class="flex items-center gap-2 shrink-0 min-h-[48px] py-2">
-        <div class="w-8 h-8 rounded-lg bg-violet-600 flex items-center justify-center">
-          <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-        </div>
-        <span class="text-lg font-semibold text-white tracking-tight">Retain<span class="text-violet-400">OS</span></span>
+---
+const links = [
+  { href: '/#features', label: 'Platform' },
+  { href: '/#how', label: 'How it works' },
+  { href: '/blog', label: 'Stories' },
+  { href: '/about', label: 'Company' },
+]
+---
+<header id="site-header" class="fixed top-0 inset-x-0 z-50 transition-all duration-300">
+  <div class="mx-auto max-w-8xl px-5 sm:px-8">
+    <div class="flex items-center justify-between h-[72px]">
+      <a href="/" class="flex items-center shrink-0 py-2" aria-label="Retain Dental home">
+        <img src="/brand/lockup-dark.png" alt="Retain Dental" width="760" height="177" class="h-8 w-auto" />
       </a>
 
-      <div class="hidden lg:flex items-center gap-8">
-        <a href="/" class="text-sm font-medium text-white/70 hover:text-white transition-colors duration-200">Home</a>
-        <a href="/pricing" class="text-sm font-medium text-white/70 hover:text-white transition-colors duration-200">Pricing</a>
-        <a href="/blog" class="text-sm font-medium text-white/70 hover:text-white transition-colors duration-200">Blog</a>
-        <a href="/about" class="text-sm font-medium text-white/70 hover:text-white transition-colors duration-200">About</a>
+      <nav class="hidden lg:flex items-center gap-9" aria-label="Primary">
+        {links.map((l) => (
+          <a href={l.href} class="text-[15px] font-medium text-ink-700 hover:text-ink-900 transition-colors">{l.label}</a>
+        ))}
+      </nav>
+
+      <div class="hidden md:flex items-center gap-3">
+        <a href="https://app.retaindental.com" class="text-[15px] font-medium text-ink-700 hover:text-ink-900 transition-colors px-3 py-2">Sign in</a>
+        <a
+          href="/start"
+          data-cta="nav-start"
+          class="inline-flex items-center gap-2 rounded-full bg-teal-600 px-5 py-2.5 text-[15px] font-semibold text-white shadow-soft hover:bg-teal-700 transition-colors min-h-[44px]"
+        >
+          Start free trial
+        </a>
       </div>
 
-      <div class="flex items-center gap-4">
-        <a href="https://app.retaindental.com" class="text-sm font-medium text-white/70 hover:text-white transition-colors duration-200 hidden md:block">
-          Sign In
-        </a>
-        <button onclick="window.dispatchEvent(new Event('open-demo-form'))" class="rounded-[25px] px-6 py-3 bg-violet-600 text-white text-sm font-semibold hover:opacity-90 transition-all duration-200 shadow-layer min-h-[48px]">
-          Book a demo
-        </button>
-      </div>
+      <button
+        id="menu-toggle"
+        class="md:hidden inline-flex items-center justify-center h-11 w-11 rounded-xl border border-cream-300 text-ink-800"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+      >
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
     </div>
   </div>
-</nav>
+
+  <div id="mobile-menu" class="md:hidden hidden border-t border-cream-300 bg-cream-50/95 backdrop-blur-xl">
+    <nav class="mx-auto max-w-8xl px-5 py-4 flex flex-col" aria-label="Mobile">
+      {links.map((l) => (
+        <a href={l.href} class="py-3 text-base font-medium text-ink-800 border-b border-cream-200">{l.label}</a>
+      ))}
+      <a href="https://app.retaindental.com" class="py-3 text-base font-medium text-ink-800 border-b border-cream-200">Sign in</a>
+      <a href="/start" data-cta="nav-start" class="mt-4 inline-flex items-center justify-center rounded-full bg-teal-600 px-5 py-3 text-base font-semibold text-white">Start free trial</a>
+    </nav>
+  </div>
+</header>
 
 <script>
-  const nav = document.querySelector('#navbar');
+  const header = document.getElementById('site-header');
   const onScroll = () => {
-    if (window.scrollY > 64) {
-      nav.style.background = 'rgba(6,34,47,0.9)';
-      nav.style.backdropFilter = 'blur(12px)';
-      nav.style.webkitBackdropFilter = 'blur(12px)';
-      nav.style.borderBottom = '1px solid rgba(26,74,94,0.3)';
+    if (!header) return;
+    if (window.scrollY > 12) {
+      header.classList.add('bg-cream-50/85', 'backdrop-blur-xl', 'border-b', 'border-cream-200');
     } else {
-      nav.style.background = 'transparent';
-      nav.style.backdropFilter = 'none';
-      nav.style.webkitBackdropFilter = 'none';
-      nav.style.borderBottom = 'none';
+      header.classList.remove('bg-cream-50/85', 'backdrop-blur-xl', 'border-b', 'border-cream-200');
     }
   };
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
+
+  const toggle = document.getElementById('menu-toggle');
+  const menu = document.getElementById('mobile-menu');
+  toggle?.addEventListener('click', () => {
+    const open = menu?.classList.toggle('hidden');
+    toggle.setAttribute('aria-expanded', String(!open));
+  });
 </script>
