@@ -174,8 +174,8 @@ const FinancialLedger: React.FC<Props> = ({ clinic, transactions, wallets, allUs
                 ].map((stat, i) => (
                     <div key={i} className="glass-panel p-6 flex items-center justify-between border border-white/60 shadow-lg group">
                         <div>
-                            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">{stat.label}</p>
-                            <h3 className="text-4xl font-black text-slate-800 tracking-tighter">₹{stat.value.toLocaleString()}</h3>
+                            <p className="text-xs font-bold text-ink-400 uppercase tracking-widest mb-1">{stat.label}</p>
+                            <h3 className="text-4xl font-bold text-ink-800 tracking-tighter">₹{stat.value.toLocaleString()}</h3>
                         </div>
                         <div className={`h-16 w-16 rounded-2xl flex items-center justify-center ${stat.color} shadow-sm group-hover:scale-110 transition-transform`}>
                             {stat.icon}
@@ -185,39 +185,39 @@ const FinancialLedger: React.FC<Props> = ({ clinic, transactions, wallets, allUs
             </div>
 
             {/* Main Ledger Panel */}
-            <div className="flex-1 glass-panel bg-white/60 border border-white/60 shadow-xl rounded-[32px] overflow-hidden flex flex-col">
+            <div className="flex-1 glass-panel bg-white/60 border border-white/60 shadow-soft rounded-[22px] overflow-hidden flex flex-col">
                 {/* Toolbar */}
-                <div className="p-8 border-b border-slate-100 flex justify-between items-center bg-white/40 backdrop-blur-md">
+                <div className="p-8 border-b border-ink-950/[0.07] flex justify-between items-center bg-white/40 backdrop-blur-md">
                     <div className="flex items-center gap-4">
-                        <div className="h-12 w-12 bg-slate-900 text-white rounded-xl flex items-center justify-center shadow-lg">
+                        <div className="h-12 w-12 bg-ink-950 text-white rounded-xl flex items-center justify-center shadow-lg">
                             <CreditCard size={24} />
                         </div>
                         <div>
-                            <h2 className="text-xl font-black text-slate-900 tracking-tight">Financial Ledger</h2>
-                            <p className="text-xs text-slate-400 font-bold uppercase tracking-wider">{filteredTransactions.length} Records Found</p>
+                            <h2 className="text-xl font-bold text-ink-900 tracking-tight">Financial Ledger</h2>
+                            <p className="text-xs text-ink-400 font-bold uppercase tracking-wider">{filteredTransactions.length} Records Found</p>
                         </div>
                     </div>
 
                     <div className="flex gap-4">
                         <div className="relative group">
-                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-teal-500 transition-colors" size={18} />
+                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-ink-400 group-focus-within:text-teal-500 transition-colors" size={18} />
                             <input
                                 type="text"
                                 placeholder="Search transactions..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="pl-12 pr-6 py-3 bg-white border border-slate-200 rounded-xl outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10 transition-all w-64 text-sm font-bold text-slate-700"
+                                className="pl-12 pr-6 py-3 bg-white border border-ink-950/10 rounded-xl outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10 transition-all w-64 text-sm font-bold text-ink-700"
                             />
                         </div>
                         <select
-                            className="px-6 py-3 bg-white border border-slate-200 rounded-xl outline-none font-bold text-sm text-slate-600 cursor-pointer hover:border-teal-500 transition-colors uppercase tracking-wide appearance-none"
+                            className="px-6 py-3 bg-white border border-ink-950/10 rounded-xl outline-none font-bold text-sm text-ink-600 cursor-pointer hover:border-teal-500 transition-colors uppercase tracking-wide appearance-none"
                             value={filterCategory}
                             onChange={(e) => setFilterCategory(e.target.value)}
                         >
                             <option value="ALL">All Categories</option>
                             {Object.values(TransactionCategory).map(c => <option key={c} value={c}>{c}</option>)}
                         </select>
-                        <button onClick={handleExportCSV} className="px-6 py-3 bg-slate-900 text-white rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-black transition-all shadow-lg flex items-center gap-2 active:scale-95">
+                        <button onClick={handleExportCSV} className="px-6 py-3 bg-ink-950 text-white rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-black transition-all shadow-lg flex items-center gap-2 active:scale-95">
                             <Download size={16} /> Export
                         </button>
                     </div>
@@ -228,41 +228,41 @@ const FinancialLedger: React.FC<Props> = ({ clinic, transactions, wallets, allUs
                     <table className="w-full text-left border-collapse">
                         <thead className="sticky top-0 bg-white/90 backdrop-blur-xl z-10 shadow-sm">
                             <tr>
-                                <th className="p-6 text-[10px] font-black uppercase text-slate-400 tracking-widest">Transaction ID</th>
-                                <th className="p-6 text-[10px] font-black uppercase text-slate-400 tracking-widest">Details</th>
-                                <th className="p-6 text-[10px] font-black uppercase text-slate-400 tracking-widest text-right">Category</th>
-                                <th className="p-6 text-[10px] font-black uppercase text-slate-400 tracking-widest text-right">Amount</th>
-                                <th className="p-6 text-[10px] font-black uppercase text-slate-400 tracking-widest text-right">Date</th>
-                                <th className="p-6 text-[10px] font-black uppercase text-slate-400 tracking-widest text-center">Receipt</th>
+                                <th className="p-6 text-[10px] font-bold uppercase text-ink-400 tracking-widest">Transaction ID</th>
+                                <th className="p-6 text-[10px] font-bold uppercase text-ink-400 tracking-widest">Details</th>
+                                <th className="p-6 text-[10px] font-bold uppercase text-ink-400 tracking-widest text-right">Category</th>
+                                <th className="p-6 text-[10px] font-bold uppercase text-ink-400 tracking-widest text-right">Amount</th>
+                                <th className="p-6 text-[10px] font-bold uppercase text-ink-400 tracking-widest text-right">Date</th>
+                                <th className="p-6 text-[10px] font-bold uppercase text-ink-400 tracking-widest text-center">Receipt</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
                             {filteredTransactions.map(tx => (
                                 <tr key={tx.id} className="group hover:bg-teal-50/30 transition-colors">
-                                    <td className="p-6 text-xs font-mono font-bold text-slate-400 select-all">#{tx.id.slice(0, 8)}</td>
+                                    <td className="p-6 text-xs font-mono font-bold text-ink-400 select-all">#{tx.id.slice(0, 8)}</td>
                                     <td className="p-6">
                                         <div className="flex items-center gap-3">
                                             <div className={`h-8 w-8 rounded-full flex items-center justify-center ${tx.type === TransactionType.EARN ? 'bg-emerald-100 text-emerald-600' : 'bg-rose-100 text-rose-600'}`}>
                                                 {tx.type === TransactionType.EARN ? <ArrowDownLeft size={16} /> : <ArrowUpRight size={16} />}
                                             </div>
-                                            <span className="font-bold text-sm text-slate-700">{tx.description}</span>
+                                            <span className="font-bold text-sm text-ink-700">{tx.description}</span>
                                         </div>
                                     </td>
                                     <td className="p-6 text-right">
-                                        <span className="px-3 py-1 bg-slate-100 text-slate-500 rounded-lg text-[10px] uppercase font-black tracking-widest border border-slate-200">
+                                        <span className="px-3 py-1 bg-slate-100 text-ink-500 rounded-lg text-[10px] uppercase font-bold tracking-widest border border-ink-950/10">
                                             {tx.category}
                                         </span>
                                     </td>
                                     <td className="p-6 text-right">
-                                        <span className={`text-lg font-black tracking-tight ${tx.type === TransactionType.EARN ? 'text-slate-900' : 'text-rose-500'}`}>
+                                        <span className={`text-lg font-bold tracking-tight ${tx.type === TransactionType.EARN ? 'text-ink-900' : 'text-rose-500'}`}>
                                             {tx.type === TransactionType.REDEEM && '-'}₹{tx.amountPaid.toLocaleString()}
                                         </span>
                                     </td>
-                                    <td className="p-6 text-right text-xs font-bold text-slate-500">
-                                        {new Date(tx.date).toLocaleDateString()} <span className="text-slate-300 mx-1">|</span> {new Date(tx.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                    <td className="p-6 text-right text-xs font-bold text-ink-500">
+                                        {new Date(tx.date).toLocaleDateString()} <span className="text-ink-300 mx-1">|</span> {new Date(tx.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                     </td>
                                     <td className="p-6 text-center">
-                                        <button onClick={() => handlePrintReceipt(tx)} title="Print Receipt" className="p-2 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-slate-900 transition-colors">
+                                        <button onClick={() => handlePrintReceipt(tx)} title="Print Receipt" className="p-2 hover:bg-slate-100 rounded-lg text-ink-400 hover:text-ink-900 transition-colors">
                                             <FileText size={18} />
                                         </button>
                                     </td>
@@ -273,9 +273,9 @@ const FinancialLedger: React.FC<Props> = ({ clinic, transactions, wallets, allUs
                     {filteredTransactions.length === 0 && (
                         <div className="text-center py-20 opacity-50">
                             <div className="inline-flex p-6 bg-slate-100 rounded-full mb-4">
-                                <Search size={48} className="text-slate-300" />
+                                <Search size={48} className="text-ink-300" />
                             </div>
-                            <p className="text-xl font-bold text-slate-300">No transactions match your query</p>
+                            <p className="text-xl font-bold text-ink-300">No transactions match your query</p>
                         </div>
                     )}
                 </div>

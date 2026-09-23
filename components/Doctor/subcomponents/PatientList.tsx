@@ -1,79 +1,79 @@
 import React from 'react';
 import { Search, Plus, ChevronRight } from 'lucide-react';
 import { User, Clinic } from '../../../types';
+import { Avatar, Pill, Empty, cn } from '../ui/primitives';
 
 interface Props {
-    clinic: Clinic;
-    users: User[];
-    searchQuery: string;
-    setSearchQuery: (q: string) => void;
-    selectedPatient: User | null;
-    setSelectedPatient: (u: User) => void;
-    setIsAddPatientModalOpen: (open: boolean) => void;
-    isCollapsed: boolean;
-    onToggleCollapse: () => void;
+  clinic: Clinic;
+  users: User[];
+  searchQuery: string;
+  setSearchQuery: (q: string) => void;
+  selectedPatient: User | null;
+  setSelectedPatient: (u: User) => void;
+  onAddPatient: () => void;
 }
 
-const PatientList: React.FC<Props> = ({
-    clinic, users, searchQuery, setSearchQuery, selectedPatient, setSelectedPatient, setIsAddPatientModalOpen, isCollapsed, onToggleCollapse
-}) => {
-    return (
-        <div className={`bg-white border-r border-slate-100 flex flex-col shrink-0 z-20 shadow-[4px_0_24px_rgba(0,0,0,0.02)] transition-all duration-500 ease-in-out ${isCollapsed ? 'w-[88px]' : 'w-[320px]'}`}>
-            <div className={`p-6 border-b border-slate-50 ${isCollapsed ? 'px-4' : ''}`}>
-                <div className={`flex items-center mb-6 transition-all ${isCollapsed ? 'flex-col gap-4 justify-center' : 'justify-between'}`}>
-                    <h2 className={`text-xl font-black tracking-tight text-slate-800 transition-opacity ${isCollapsed ? 'hidden opacity-0' : 'block opacity-100'}`}>Profiles</h2>
+const TIER_TONE: Record<string, 'leaf' | 'sun' | 'mist'> = { PLATINUM: 'leaf', GOLD: 'sun', MEMBER: 'mist' };
 
-                    <div className="flex items-center gap-2">
-                        {!isCollapsed && (
-                            <button onClick={() => setIsAddPatientModalOpen(true)} className="h-8 w-8 rounded-full bg-slate-900 text-white flex items-center justify-center hover:bg-black transition-all shadow-md active:scale-95 group" title="Add New Patient">
-                                <Plus size={16} className="group-hover:rotate-90 transition-transform" />
-                            </button>
-                        )}
-                        {/* Toggle Button */}
-                        <button onClick={onToggleCollapse} className={`h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 hover:bg-slate-200 transition-all ${isCollapsed ? 'rotate-180' : ''}`}>
-                            <ChevronRight size={14} />
-                        </button>
-                    </div>
-                </div>
+const PatientList: React.FC<Props> = ({ clinic, users, searchQuery, setSearchQuery, selectedPatient, setSelectedPatient, onAddPatient }) => (
+  <div className="flex w-[300px] shrink-0 flex-col border-r border-ink-950/5 bg-white">
+    <div className="flex items-center justify-between p-5">
+      <div>
+        <h2 className="font-display text-lg font-bold tracking-tight text-ink-900">Patients</h2>
+        <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-500">{users.length} records</p>
+      </div>
+      <button
+        onClick={onAddPatient}
+        title="Add patient"
+        className="flex h-9 w-9 items-center justify-center rounded-full bg-ink-950 text-cream-50 transition-colors hover:bg-ink-800"
+      >
+        <Plus size={16} />
+      </button>
+    </div>
 
-                {!isCollapsed ? (
-                    <div className="relative group animate-in fade-in">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-slate-800 transition-colors" size={14} />
-                        <input type="text" placeholder="Identity Search..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-9 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-xl text-xs font-bold placeholder:text-slate-400 focus:bg-white focus:border-slate-300 transition-all outline-none" />
-                    </div>
-                ) : (
-                    <button onClick={() => setIsAddPatientModalOpen(true)} className="w-full h-12 bg-slate-900 text-white rounded-xl flex items-center justify-center transition-all hover:bg-black hover:scale-105 shadow-lg shadow-slate-200/50">
-                        <Plus size={20} />
-                    </button>
-                )}
-            </div>
+    <div className="px-5 pb-4">
+      <div className="relative">
+        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-400" />
+        <input
+          type="text"
+          placeholder="Search patients"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full rounded-full border border-ink-950/10 bg-cream-50 py-2.5 pl-9 pr-4 text-xs font-semibold text-ink-900 outline-none transition-colors placeholder:text-ink-400 focus:border-ink-950/30"
+        />
+      </div>
+    </div>
 
-            <div className="flex-1 overflow-y-auto p-4 space-y-2 custom-scrollbar">
-                {users.map(user => (
-                    <div key={user.id} onClick={() => setSelectedPatient(user)}
-                        className={`rounded-2xl cursor-pointer transition-all border relative overflow-hidden group hover:shadow-lg ${isCollapsed ? 'p-3 aspect-square flex items-center justify-center' : 'p-4'} ${selectedPatient?.id === user.id ? 'bg-slate-900 border-slate-900 text-white shadow-xl scale-[1.02]' : 'bg-white border-transparent hover:bg-slate-50 hover:border-slate-100'}`}>
-
-                        {selectedPatient?.id === user.id && <div className="absolute top-0 right-0 w-full h-full bg-white/5 blur-[20px] rounded-full"></div>}
-
-                        {!isCollapsed ? (
-                            <div className="flex justify-between items-center relative z-10 animate-in fade-in">
-                                <div className="min-w-0 pr-4">
-                                    <h4 className="font-bold text-sm tracking-tight truncate">{user.name}</h4>
-                                    <p className={`text-[10px] uppercase font-bold tracking-widest mt-0.5 ${selectedPatient?.id === user.id ? 'text-slate-400' : 'text-slate-400'}`}>{user.currentTier} Identity</p>
-                                </div>
-                                <ChevronRight size={14} className={`shrink-0 ${selectedPatient?.id === user.id ? 'text-white' : 'text-slate-300'} transition-all group-hover:translate-x-1`} />
-                            </div>
-                        ) : (
-                            <div className="relative z-10 font-black text-lg">
-                                {user.name.charAt(0)}
-                            </div>
-                        )}
-                    </div>
-                ))}
-            </div>
-        </div>
-    );
-};
+    <div className="flex-1 space-y-1 overflow-y-auto px-3 pb-4 custom-scrollbar">
+      {users.length === 0 ? (
+        <Empty title="No patients found" hint="Try another name or add a patient." />
+      ) : (
+        users.map((u) => {
+          const active = selectedPatient?.id === u.id;
+          return (
+            <button
+              key={u.id}
+              onClick={() => setSelectedPatient(u)}
+              className={cn(
+                'flex w-full items-center gap-3 rounded-[16px] px-3 py-2.5 text-left transition-colors',
+                active ? 'bg-ink-950 text-cream-50' : 'hover:bg-cream-100',
+              )}
+            >
+              <Avatar name={u.name} tone={active ? 'dark' : 'neutral'} className={active ? 'border-white/20' : ''} />
+              <div className="min-w-0 flex-1">
+                <p className={cn('truncate text-sm font-semibold', active ? 'text-cream-50' : 'text-ink-900')}>{u.name}</p>
+                <p className={cn('truncate font-mono text-[10px] uppercase tracking-[0.12em]', active ? 'text-cream-50/50' : 'text-ink-500')}>
+                  {u.mobile}
+                </p>
+              </div>
+              {!active && <Pill tone={TIER_TONE[u.currentTier] || 'neutral'}>{u.currentTier.toLowerCase()}</Pill>}
+              <ChevronRight size={14} className={active ? 'text-cream-50/50' : 'text-ink-300'} />
+            </button>
+          );
+        })
+      )}
+    </div>
+  </div>
+);
 
 export default React.memo(PatientList);

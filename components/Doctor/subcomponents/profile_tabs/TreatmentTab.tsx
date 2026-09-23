@@ -33,19 +33,19 @@ const TreatmentTab: React.FC<TreatmentTabProps> = ({ clinic, patient, onAssignPl
     return (
         <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
             {/* PROTOCOL SELECTOR */}
-            <div className="bg-white p-12 rounded-[48px] shadow-sm border border-slate-100 flex flex-col xl:flex-row gap-12 items-start relative overflow-hidden group">
+            <div className="bg-white p-12 rounded-[24px] shadow-sm border border-ink-950/[0.07] flex flex-col xl:flex-row gap-12 items-start relative overflow-hidden group">
                 <div className="absolute top-0 left-0 w-2 h-full" style={{ backgroundColor: clinic.primaryColor }}></div>
 
                 <div className="flex-1 w-full space-y-6">
-                    <div className="flex items-center gap-4 text-slate-400 font-black uppercase tracking-[0.2em] text-[10px] mb-4">
+                    <div className="flex items-center gap-4 text-ink-400 font-bold uppercase tracking-[0.2em] text-[10px] mb-4">
                         <Microscope size={14} /> Step 1: Protocol Selection
                     </div>
-                    <h3 className="text-4xl font-black text-slate-900 tracking-tighter">Clinical Procedure</h3>
-                    <p className="text-slate-500 font-medium">Select the primary treatment to generate the AI-assisted timeline and patient aftercare instructions.</p>
+                    <h3 className="text-4xl font-bold text-ink-900 tracking-tighter">Clinical Procedure</h3>
+                    <p className="text-ink-500 font-medium">Select the primary treatment to generate the AI-assisted timeline and patient aftercare instructions.</p>
 
                     <div className="relative group/select mt-8 w-full xl:w-2/3">
                         <div className="absolute inset-0 bg-gradient-to-br from-teal-500/5 to-purple-500/5 rounded-[28px] opacity-0 group-hover/select:opacity-100 transition-opacity"></div>
-                        <select className="w-full p-8 bg-slate-50 border border-slate-200/60 rounded-[28px] outline-none font-black text-xl appearance-none cursor-pointer hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-slate-800 focus:border-teal-500 shadow-sm"
+                        <select className="w-full p-8 bg-cream-100 border border-ink-950/10/60 rounded-[28px] outline-none font-bold text-xl appearance-none cursor-pointer hover:bg-white hover:shadow-soft hover:-translate-y-1 transition-all duration-300 text-ink-800 focus:border-teal-500 shadow-sm"
                             onChange={(e) => setSelectedTemplateName(e.target.value)}
                             value={selectedTemplateName}>
                             <option value="">-- Choose Procedure --</option>
@@ -53,32 +53,32 @@ const TreatmentTab: React.FC<TreatmentTabProps> = ({ clinic, patient, onAssignPl
                                 <option key={t.name} value={t.name}>{t.name} ({t.category})</option>
                             ))}
                         </select>
-                        <div className="absolute right-8 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">▼</div>
+                        <div className="absolute right-8 top-1/2 -translate-y-1/2 pointer-events-none text-ink-400">▼</div>
                     </div>
                 </div>
 
                 {/* Empty State visual */}
                 {!selectedTemplateName && (
-                    <div className="flex-1 w-full h-full min-h-[250px] bg-slate-50 rounded-[32px] border-2 border-dashed border-slate-200 flex flex-col items-center justify-center text-center p-8">
+                    <div className="flex-1 w-full h-full min-h-[250px] bg-cream-100 rounded-[22px] border-2 border-dashed border-ink-950/10 flex flex-col items-center justify-center text-center p-8">
                         <Microscope size={48} className="text-slate-200 mb-4" />
-                        <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">Awaiting Selection</p>
-                        <p className="text-slate-400 font-medium text-sm mt-2 max-w-xs">The Smart Case Presentation will generate automatically upon selection.</p>
+                        <p className="text-ink-400 font-bold uppercase tracking-widest text-xs">Awaiting Selection</p>
+                        <p className="text-ink-400 font-medium text-sm mt-2 max-w-xs">The Smart Case Presentation will generate automatically upon selection.</p>
                     </div>
                 )}
             </div>
 
             {/* SMART CASE PRESENTATION (Only visible when active) */}
             {selectedTemplateName && (
-                <div className="animate-in fade-in slide-in-from-top-8 duration-700 bg-slate-900 rounded-[48px] p-12 text-white relative overflow-hidden shadow-2xl">
+                <div className="animate-in fade-in slide-in-from-top-8 duration-700 bg-ink-950 rounded-[24px] p-12 text-white relative overflow-hidden shadow-lift">
                     <div className="absolute top-0 right-0 p-12 opacity-5 scale-150"><Sparkles size={200} /></div>
 
                     <div className="flex justify-between items-start mb-12 relative z-10">
                         <div>
                             <div className="flex items-center gap-3 text-emerald-400 mb-4">
                                 <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.8)]"></div>
-                                <h4 className="font-black text-xs uppercase tracking-[0.2em]">Smart Case Engine Active</h4>
+                                <h4 className="font-bold text-xs uppercase tracking-[0.2em]">Smart Case Engine Active</h4>
                             </div>
-                            <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-white">{selectedTemplateName}</h2>
+                            <h2 className="text-4xl md:text-5xl font-bold tracking-tighter text-white">{selectedTemplateName}</h2>
                         </div>
                         <button onClick={() => {
                             const template = TREATMENT_TEMPLATES.find(t => t.name === selectedTemplateName);
@@ -89,7 +89,7 @@ const TreatmentTab: React.FC<TreatmentTabProps> = ({ clinic, patient, onAssignPl
                                 setCustomValues({});
                                 setInstructions([]);
                             }
-                        }} className="px-8 py-5 bg-white text-slate-900 rounded-2xl shadow-xl shadow-white/10 font-black text-xs uppercase tracking-widest hover:bg-slate-100 transition-all hover:scale-105 active:scale-95 flex items-center gap-3">
+                        }} className="px-8 py-5 bg-white text-ink-900 rounded-2xl shadow-soft shadow-white/10 font-bold text-xs uppercase tracking-widest hover:bg-slate-100 transition-all hover:scale-105 active:scale-95 flex items-center gap-3">
                             <Sparkles size={16} className="text-teal-600" /> Dispatch to Patient PWA
                         </button>
                     </div>
@@ -97,11 +97,11 @@ const TreatmentTab: React.FC<TreatmentTabProps> = ({ clinic, patient, onAssignPl
                     <div className="grid grid-cols-1 xl:grid-cols-2 gap-12 relative z-10">
                         {/* LEFT: CLINICAL PARAMS */}
                         <div className="space-y-6">
-                            <h3 className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] border-b border-slate-800 pb-4">Procedure Parameters</h3>
+                            <h3 className="text-[10px] font-bold uppercase text-ink-400 tracking-[0.2em] border-b border-white/10 pb-4">Procedure Parameters</h3>
                             <div className="grid grid-cols-2 gap-4">
                                 {TREATMENT_TEMPLATES.find(t => t.name === selectedTemplateName)?.customFields?.map(field => (
                                     <div key={field.key} className="space-y-2 group/input">
-                                        <label className="text-[9px] font-black text-slate-500 uppercase tracking-wider block ml-2">{field.label}</label>
+                                        <label className="text-[9px] font-bold text-ink-500 uppercase tracking-wider block ml-2">{field.label}</label>
                                         <input
                                             type={field.type}
                                             value={customValues[field.key] || ''}
@@ -112,7 +112,7 @@ const TreatmentTab: React.FC<TreatmentTabProps> = ({ clinic, patient, onAssignPl
                                 ))}
                             </div>
 
-                            <div className="mt-8 bg-teal-500/10 border border-teal-500/30 rounded-3xl p-6">
+                            <div className="mt-8 bg-teal-500/10 border border-teal-500/30 rounded-[20px] p-6">
                                 <h4 className="flex items-center gap-2 text-teal-300 font-bold text-xs uppercase tracking-widest mb-2"><UserIcon size={14} /> Patient Notification</h4>
                                 <p className="text-sm font-medium text-teal-100 leading-relaxed">
                                     Dispatching this plan will instantly push the daily habit tracker to <strong>{patient.name}'s</strong> digital wallet, earning them points for compliance.
@@ -121,12 +121,12 @@ const TreatmentTab: React.FC<TreatmentTabProps> = ({ clinic, patient, onAssignPl
                         </div>
 
                         {/* RIGHT: CUSTOMIZABLE AFTERCARE */}
-                        <div className="bg-black/40 rounded-[32px] p-8 border border-white/5 flex flex-col h-full">
+                        <div className="bg-black/40 rounded-[22px] p-8 border border-white/5 flex flex-col h-full">
                             <div className="flex justify-between items-center border-b border-white/10 pb-4 mb-6">
-                                <h3 className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em]">Daily Aftercare Protocol</h3>
+                                <h3 className="text-[10px] font-bold uppercase text-ink-400 tracking-[0.2em]">Daily Aftercare Protocol</h3>
                                 <button
                                     onClick={() => setInstructions([...instructions, ""])}
-                                    className="bg-white/10 text-white hover:bg-white/20 px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all focus:outline-none flex items-center gap-1">
+                                    className="bg-white/10 text-white hover:bg-white/20 px-3 py-1.5 rounded-lg text-[9px] font-bold uppercase tracking-widest transition-all focus:outline-none flex items-center gap-1">
                                     <Plus size={12} /> Add Rule
                                 </button>
                             </div>
@@ -134,7 +134,7 @@ const TreatmentTab: React.FC<TreatmentTabProps> = ({ clinic, patient, onAssignPl
                             <div className="space-y-3 overflow-y-auto max-h-[300px] custom-scrollbar pr-2 flex-1">
                                 {instructions.map((inst, idx) => (
                                     <div key={idx} className="flex gap-3 group/rule relative">
-                                        <span className="text-slate-600 font-mono text-xs font-bold pt-3 select-none w-4">{idx + 1}.</span>
+                                        <span className="text-ink-600 font-mono text-xs font-bold pt-3 select-none w-4">{idx + 1}.</span>
                                         <input
                                             value={inst}
                                             onChange={e => {
@@ -157,7 +157,7 @@ const TreatmentTab: React.FC<TreatmentTabProps> = ({ clinic, patient, onAssignPl
                                     </div>
                                 ))}
                                 {instructions.length === 0 && (
-                                    <p className="text-slate-500 font-bold italic text-sm text-center py-8">No instructions. Add one to start.</p>
+                                    <p className="text-ink-500 font-bold italic text-sm text-center py-8">No instructions. Add one to start.</p>
                                 )}
                             </div>
                         </div>

@@ -91,14 +91,14 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ patients, onSelectPatie
     };
 
     return (
-        <div className="fixed inset-0 z-[200] flex items-start justify-center pt-32 bg-slate-900/60 backdrop-blur-md p-4 animate-in fade-in duration-200" onClick={() => setIsOpen(false)}>
+        <div className="fixed inset-0 z-[200] flex items-start justify-center pt-32 bg-ink-950/50 backdrop-blur-md p-4 animate-in fade-in duration-200" onClick={() => setIsOpen(false)}>
             <div
-                className="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 border border-slate-100"
+                className="bg-white w-full max-w-2xl rounded-[20px] shadow-lift overflow-hidden animate-in zoom-in-95 duration-200 border border-ink-950/[0.07]"
                 onClick={e => e.stopPropagation()}
             >
                 {/* Search Header */}
-                <div className="flex items-center gap-4 px-6 py-4 border-b border-slate-100 bg-slate-50/50">
-                    <Search className="text-slate-400" size={24} />
+                <div className="flex items-center gap-4 px-6 py-4 border-b border-ink-950/[0.07] bg-cream-100/50">
+                    <Search className="text-ink-400" size={24} />
                     <input
                         ref={inputRef}
                         type="text"
@@ -109,9 +109,9 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ patients, onSelectPatie
                         }}
                         onKeyDown={handleModalKeyDown}
                         placeholder="Search patients, leap to pages, or execute actions..."
-                        className="flex-1 bg-transparent text-xl font-bold text-slate-800 outline-none placeholder:text-slate-300 placeholder:font-medium"
+                        className="flex-1 bg-transparent text-xl font-bold text-ink-800 outline-none placeholder:text-ink-300 placeholder:font-medium"
                     />
-                    <div className="flex items-center gap-1 text-[10px] font-black text-slate-400 uppercase tracking-widest bg-slate-100 px-2 py-1 rounded-md">
+                    <div className="flex items-center gap-1 text-[10px] font-bold text-ink-400 uppercase tracking-widest bg-slate-100 px-2 py-1 rounded-md">
                         <span>ESC</span> to close
                     </div>
                 </div>
@@ -119,14 +119,14 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ patients, onSelectPatie
                 {/* Results List */}
                 <div className="max-h-[400px] overflow-y-auto custom-scrollbar p-2">
                     {allItems.length === 0 ? (
-                        <div className="p-12 text-center text-slate-400 font-bold">
+                        <div className="p-12 text-center text-ink-400 font-bold">
                             No matching items found.
                         </div>
                     ) : (
                         <>
                             {filteredPatients.length > 0 && (
                                 <div className="mb-4">
-                                    <div className="px-4 py-2 text-[10px] font-black uppercase tracking-widest text-slate-400">Patients</div>
+                                    <div className="px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-ink-400">Patients</div>
                                     {filteredPatients.map((p, idx) => {
                                         const globalIdx = idx;
                                         const isSelected = selectedIndex === globalIdx;
@@ -135,16 +135,16 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ patients, onSelectPatie
                                                 key={p.id}
                                                 onMouseEnter={() => setSelectedIndex(globalIdx)}
                                                 onClick={() => executeItem({ ...p, _type: 'PATIENT' })}
-                                                className={`flex items-center gap-4 px-4 py-3 rounded-xl cursor-pointer transition-colors ${isSelected ? 'bg-teal-50 text-teal-900' : 'hover:bg-slate-50 text-slate-700'}`}
+                                                className={`flex items-center gap-4 px-4 py-3 rounded-xl cursor-pointer transition-colors ${isSelected ? 'bg-teal-50 text-teal-900' : 'hover:bg-cream-100 text-ink-700'}`}
                                             >
-                                                <div className={`h-8 w-8 rounded-full flex items-center justify-center font-black text-xs ${isSelected ? 'bg-teal-200' : 'bg-slate-100'}`}>
+                                                <div className={`h-8 w-8 rounded-full flex items-center justify-center font-bold text-xs ${isSelected ? 'bg-teal-200' : 'bg-slate-100'}`}>
                                                     <User size={14} />
                                                 </div>
                                                 <div>
                                                     <p className="font-bold text-sm tracking-tight">{p.name}</p>
                                                     <p className="text-[10px] font-bold opacity-60 font-mono">{p.mobile}</p>
                                                 </div>
-                                                {isSelected && <span className="ml-auto text-[10px] tracking-widest uppercase font-black text-teal-400">Jump</span>}
+                                                {isSelected && <span className="ml-auto text-[10px] tracking-widest uppercase font-bold text-teal-400">Jump</span>}
                                             </div>
                                         )
                                     })}
@@ -153,7 +153,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ patients, onSelectPatie
 
                             {quickActions.length > 0 && (
                                 <div>
-                                    <div className="px-4 py-2 text-[10px] font-black uppercase tracking-widest text-slate-400">Global Actions</div>
+                                    <div className="px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-ink-400">Global Actions</div>
                                     {quickActions.map((a, idx) => {
                                         const globalIdx = filteredPatients.length + idx;
                                         const isSelected = selectedIndex === globalIdx;
@@ -162,13 +162,13 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ patients, onSelectPatie
                                                 key={a.id}
                                                 onMouseEnter={() => setSelectedIndex(globalIdx)}
                                                 onClick={() => executeItem({ ...a, _type: 'GLOBAL' })}
-                                                className={`flex items-center gap-4 px-4 py-3 rounded-xl cursor-pointer transition-colors ${isSelected ? 'bg-emerald-50 text-emerald-900' : 'hover:bg-slate-50 text-slate-700'}`}
+                                                className={`flex items-center gap-4 px-4 py-3 rounded-xl cursor-pointer transition-colors ${isSelected ? 'bg-emerald-50 text-emerald-900' : 'hover:bg-cream-100 text-ink-700'}`}
                                             >
-                                                <div className={`h-8 w-8 rounded-full flex items-center justify-center font-black text-xs ${isSelected ? 'bg-emerald-200' : 'bg-slate-100'}`}>
+                                                <div className={`h-8 w-8 rounded-full flex items-center justify-center font-bold text-xs ${isSelected ? 'bg-emerald-200' : 'bg-slate-100'}`}>
                                                     {a.icon}
                                                 </div>
                                                 <p className="font-bold text-sm tracking-tight flex-1">{a.label}</p>
-                                                {isSelected && <span className="text-[10px] tracking-widest uppercase font-black text-emerald-400">Execute</span>}
+                                                {isSelected && <span className="text-[10px] tracking-widest uppercase font-bold text-emerald-400">Execute</span>}
                                             </div>
                                         )
                                     })}
@@ -179,9 +179,9 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ patients, onSelectPatie
                 </div>
 
                 {/* Footer status */}
-                <div className="bg-slate-50 px-6 py-3 border-t border-slate-100 flex justify-between items-center text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                <div className="bg-cream-100 px-6 py-3 border-t border-ink-950/[0.07] flex justify-between items-center text-[10px] font-bold text-ink-400 uppercase tracking-widest">
                     <span className="flex items-center gap-2"><Zap size={12} className="text-amber-500" /> Premium CMS Command Deck</span>
-                    <span className="flex items-center gap-2">Use <kbd className="bg-slate-200 px-1 py-0.5 rounded text-slate-500">↑</kbd> <kbd className="bg-slate-200 px-1 py-0.5 rounded text-slate-500">↓</kbd> to navigate</span>
+                    <span className="flex items-center gap-2">Use <kbd className="bg-slate-200 px-1 py-0.5 rounded text-ink-500">↑</kbd> <kbd className="bg-slate-200 px-1 py-0.5 rounded text-ink-500">↓</kbd> to navigate</span>
                 </div>
             </div>
         </div>

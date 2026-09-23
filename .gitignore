@@ -63,3 +63,7 @@ landing/dist/
 
 # /brag render artifacts (large, reproducible)
 brag-output*/
+
+# dev-only clinic UI preview (auth bypass)
+preview.html
+preview.tsx

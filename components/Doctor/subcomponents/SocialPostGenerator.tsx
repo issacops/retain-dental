@@ -548,11 +548,11 @@ const SocialPostGenerator: React.FC<SocialPostGeneratorProps> = ({ clinic, onClo
     };
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/80 backdrop-blur-md p-6 animate-in fade-in">
-            <div className="bg-white rounded-[32px] w-full max-w-[1400px] h-[90vh] flex overflow-hidden shadow-2xl">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-ink-950/60 backdrop-blur-md p-6 animate-in fade-in">
+            <div className="bg-white rounded-[22px] w-full max-w-[1400px] h-[90vh] flex overflow-hidden shadow-lift">
                 {/* COL 1: Template Gallery */}
-                <div className="w-[320px] bg-slate-50 border-r border-slate-200 flex flex-col">
-                    <div className="p-6 border-b border-slate-200">
+                <div className="w-[320px] bg-cream-100 border-r border-ink-950/10 flex flex-col">
+                    <div className="p-6 border-b border-ink-950/10">
                         <h2 className="text-xl font-bold flex items-center gap-2">
                             <LayoutTemplate size={20} className="text-teal-600" />
                             Templates
@@ -563,15 +563,15 @@ const SocialPostGenerator: React.FC<SocialPostGeneratorProps> = ({ clinic, onClo
                             <button
                                 key={t.id}
                                 onClick={() => { setSelectedTemplate(t); setFormData({}); }}
-                                className={`w-full p-4 rounded-xl text-left border transition-all ${selectedTemplate.id === t.id ? 'bg-teal-50 border-teal-500 ring-1 ring-teal-500' : 'bg-white border-slate-200 hover:border-teal-300'}`}
+                                className={`w-full p-4 rounded-xl text-left border transition-all ${selectedTemplate.id === t.id ? 'bg-teal-50 border-teal-500 ring-1 ring-teal-500' : 'bg-white border-ink-950/10 hover:border-teal-300'}`}
                             >
                                 <div className="flex items-center gap-3 mb-2">
-                                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${selectedTemplate.id === t.id ? 'bg-teal-100 text-teal-600' : 'bg-slate-100 text-slate-500'}`}>
+                                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${selectedTemplate.id === t.id ? 'bg-teal-100 text-teal-600' : 'bg-slate-100 text-ink-500'}`}>
                                         {t.icon}
                                     </div>
                                     <div>
-                                        <h3 className="font-bold text-slate-700 text-sm">{t.label}</h3>
-                                        <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">{t.category}</span>
+                                        <h3 className="font-bold text-ink-700 text-sm">{t.label}</h3>
+                                        <span className="text-[10px] uppercase font-bold text-ink-400 tracking-wider">{t.category}</span>
                                     </div>
                                 </div>
                             </button>
@@ -580,19 +580,19 @@ const SocialPostGenerator: React.FC<SocialPostGeneratorProps> = ({ clinic, onClo
                 </div>
 
                 {/* COL 2: Editor */}
-                <div className="w-[400px] bg-white border-r border-slate-200 flex flex-col z-10 shadow-lg">
-                    <div className="p-6 border-b border-slate-200 flex justify-between items-center">
+                <div className="w-[400px] bg-white border-r border-ink-950/10 flex flex-col z-10 shadow-lg">
+                    <div className="p-6 border-b border-ink-950/10 flex justify-between items-center">
                         <h2 className="font-bold text-lg">Edit Content</h2>
                     </div>
                     <div className="flex-1 overflow-y-auto p-6 space-y-6">
                         {selectedTemplate.inputs.map(input => (
                             <div key={input.key} className="space-y-2">
-                                <label className="text-xs font-bold uppercase text-slate-400">{input.label}</label>
+                                <label className="text-xs font-bold uppercase text-ink-400">{input.label}</label>
 
                                 {input.type === 'text' && (
                                     <input
                                         type="text"
-                                        className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none"
+                                        className="w-full p-3 bg-cream-100 border border-ink-950/10 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none"
                                         placeholder={input.placeholder}
                                         value={formData[input.key] || ''}
                                         onChange={(e) => handleInputChange(input.key, e.target.value)}
@@ -602,7 +602,7 @@ const SocialPostGenerator: React.FC<SocialPostGeneratorProps> = ({ clinic, onClo
                                 {input.type === 'number' && (
                                     <input
                                         type="number"
-                                        className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none"
+                                        className="w-full p-3 bg-cream-100 border border-ink-950/10 rounded-xl outline-none"
                                         placeholder={input.placeholder}
                                         value={formData[input.key] || ''}
                                         onChange={(e) => handleInputChange(input.key, e.target.value)}
@@ -611,7 +611,7 @@ const SocialPostGenerator: React.FC<SocialPostGeneratorProps> = ({ clinic, onClo
 
                                 {input.type === 'textarea' && (
                                     <textarea
-                                        className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none h-32 resize-none"
+                                        className="w-full p-3 bg-cream-100 border border-ink-950/10 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none h-32 resize-none"
                                         placeholder={input.placeholder}
                                         value={formData[input.key] || ''}
                                         onChange={(e) => handleInputChange(input.key, e.target.value)}
@@ -619,11 +619,11 @@ const SocialPostGenerator: React.FC<SocialPostGeneratorProps> = ({ clinic, onClo
                                 )}
 
                                 {input.type === 'image' && (
-                                    <label className="flex flex-col items-center justify-center h-40 w-full border-2 border-dashed border-slate-200 rounded-xl hover:bg-slate-50 cursor-pointer overflow-hidden relative">
+                                    <label className="flex flex-col items-center justify-center h-40 w-full border-2 border-dashed border-ink-950/10 rounded-xl hover:bg-cream-100 cursor-pointer overflow-hidden relative">
                                         {formData[input.key] ? (
                                             <img src={formData[input.key]} className="absolute inset-0 w-full h-full object-cover" />
                                         ) : (
-                                            <div className="text-slate-400 flex flex-col items-center">
+                                            <div className="text-ink-400 flex flex-col items-center">
                                                 <Upload size={24} className="mb-2" />
                                                 <span className="text-xs font-bold">Upload</span>
                                             </div>
@@ -634,8 +634,8 @@ const SocialPostGenerator: React.FC<SocialPostGeneratorProps> = ({ clinic, onClo
                             </div>
                         ))}
                     </div>
-                    <div className="p-6 border-t border-slate-200 bg-slate-50">
-                        <button onClick={downloadImage} className="w-full py-4 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-xl shadow-teal-200 transition-all active:scale-[0.98]">
+                    <div className="p-6 border-t border-ink-950/10 bg-cream-100">
+                        <button onClick={downloadImage} className="w-full py-4 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-soft shadow-teal-200 transition-all active:scale-[0.98]">
                             <Download size={20} />
                             Download Post
                         </button>
@@ -647,11 +647,11 @@ const SocialPostGenerator: React.FC<SocialPostGeneratorProps> = ({ clinic, onClo
                     <div className="absolute inset-0 grid grid-cols-[20px_20px] opacity-10" style={{ backgroundImage: 'radial-gradient(#64748b 1px, transparent 1px)', backgroundSize: '30px 30px' }}></div>
                     <div className="absolute top-6 right-6 z-20">
                         <button onClick={onClose} className="p-3 bg-white rounded-full shadow-sm hover:shadow-md transition-all">
-                            <X size={20} className="text-slate-400" />
+                            <X size={20} className="text-ink-400" />
                         </button>
                     </div>
 
-                    <div className="h-full aspect-[9/16] bg-white shadow-2xl rounded-[20px] overflow-hidden relative ring-8 ring-white">
+                    <div className="h-full aspect-[9/16] bg-white shadow-lift rounded-[20px] overflow-hidden relative ring-8 ring-white">
                         <canvas ref={canvasRef} width={CANVAS_WIDTH} height={CANVAS_HEIGHT} className="w-full h-full object-contain" />
                     </div>
                 </div>

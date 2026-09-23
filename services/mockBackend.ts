@@ -644,15 +644,39 @@ export class MockBackendService implements IBackendService {
       count: patients.filter(p => p.currentTier === tier).length,
     }));
 
+    // Keep the mock contract aligned with SupabaseService.getRetentionMetrics
+    const walletsWithBalance = clinicWallets.filter(w => (w.balance || 0) > 0).length;
+    const pointsParticipation = totalPatients > 0 ? Math.round((walletsWithBalance / totalPatients) * 100) : 0;
+    const churnRisk = Math.max(0, 100 - retentionRate);
+
+    const familyMap: Record<string, { name: string; spend: number }> = {};
+    this.familyGroups.filter(f => f.clinicId === clinicId).forEach(f => {
+      familyMap[f.id] = { name: f.familyName || ('Family ' + f.id.slice(0, 4)), spend: 0 };
+    });
+    patients.forEach(p => {
+      if (p.familyGroupId && familyMap[p.familyGroupId]) {
+        const wallet = this.wallets.find(w => w.userId === p.id);
+        const spend = this.transactions
+          .filter(t => t.walletId === wallet?.id && t.type === TransactionType.EARN)
+          .reduce((sum, t) => sum + t.amountPaid, 0);
+        familyMap[p.familyGroupId].spend += spend;
+      }
+    });
+    const topFamilies = Object.values(familyMap).sort((a, b) => b.spend - a.spend).slice(0, 5);
+
     return {
       totalPatients,
       activePatients,
       retentionRate,
+      pointsParticipation,
+      redemptionRate,
+      ltv: avgLTV,
+      churnRisk,
+      topFamilies,
       avgLTV,
       totalRevenue,
       totalPointsIssued,
       totalPointsRedeemed,
-      redemptionRate,
       tierBreakdown,
     };
   }
