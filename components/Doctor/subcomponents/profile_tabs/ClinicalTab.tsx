@@ -8,6 +8,7 @@ import {
 import { CarePlan, Clinic, User, TransactionCategory, TransactionType } from '../../../../types';
 import { IBackendService } from '../../../../services/IBackendService';
 import { TREATMENT_TEMPLATES } from '../../../../constants';
+import { Label, IconChip, SegmentBar, cn } from '../../ui/primitives';
 
 // ============================================================
 // TYPES
@@ -107,6 +108,20 @@ interface EMRData {
     imaging: EMRImaging[];
 }
 
+const SECTIONS = [
+    { id: 'patient-demographics', label: 'Demographics' },
+    { id: 'medical-history', label: 'Medical' },
+    { id: 'vitals', label: 'Vitals' },
+    { id: 'clinical-examination', label: 'Exam' },
+    { id: 'dental-charting-odontogram', label: 'Chart' },
+    { id: 'active-treatment-pathway', label: 'Plans' },
+    { id: 'prescriptions', label: 'Rx' },
+    { id: 'imaging-radiographs', label: 'Imaging' },
+    { id: 'consent-records', label: 'Consent' },
+    { id: 'clinical-notes', label: 'Notes' },
+    { id: 'checkout', label: 'Checkout' },
+];
+
 // Standard FDI dental notation
 const UPPER_TEETH = [18, 17, 16, 15, 14, 13, 12, 11, 21, 22, 23, 24, 25, 26, 27, 28];
 const LOWER_TEETH = [48, 47, 46, 45, 44, 43, 42, 41, 31, 32, 33, 34, 35, 36, 37, 38];
@@ -143,10 +158,11 @@ const DEFAULT_EMR: EMRData = {
 // ============================================================
 
 /** Collapsible section wrapper */
-const Section: React.FC<{ title: string; icon: React.ReactNode; children: React.ReactNode; defaultOpen?: boolean; accentColor?: string; badge?: string }> = ({ title, icon, children, defaultOpen = false, badge }) => {
+const Section: React.FC<{ title: string; icon: React.ReactNode; children: React.ReactNode; defaultOpen?: boolean; accentColor?: string; badge?: string; id?: string }> = ({ title, icon, children, defaultOpen = false, badge, id }) => {
     const [open, setOpen] = useState(defaultOpen);
+    const slug = id || title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     return (
-        <div className="overflow-hidden rounded-[22px] border border-ink-950/[0.08] bg-white">
+        <div id={slug} className="scroll-mt-24 overflow-hidden rounded-[22px] border border-ink-950/[0.08] bg-white">
             <button onClick={() => setOpen(!open)} className="flex w-full items-center justify-between gap-4 p-5 text-left transition-colors hover:bg-cream-50">
                 <div className="flex items-center gap-3">
                     <span className="flex h-9 w-9 items-center justify-center rounded-[12px] bg-cream-100 text-ink-600">{icon}</span>
@@ -248,6 +264,16 @@ const ClinicalTab: React.FC<ClinicalTabProps> = ({
     const [notes, setNotes] = useState<ClinicalNote[]>(() => patient.metadata?.clinicalNotes || []);
     const [dentalChart, setDentalChart] = useState<Record<number, string>>(() => patient.metadata?.dentalChart || {});
     const medicalAlerts = emr.medicalHistory.allergies.length > 0 ? emr.medicalHistory.allergies : (patient.metadata?.medicalAlerts || []);
+
+    const completenessChecks = [
+        !!emr.demographics.dateOfBirth, !!emr.demographics.gender, !!emr.demographics.bloodGroup,
+        (emr.medicalHistory?.conditions?.length || 0) > 0, (emr.medicalHistory?.allergies?.length || 0) > 0,
+        !!emr.vitals?.bloodPressure, !!emr.vitals?.weight,
+        !!emr.examination?.chiefComplaint,
+        Object.keys(dentalChart).length > 0,
+        (emr.prescriptions?.length || 0) > 0, (emr.consents?.length || 0) > 0, (emr.imaging?.length || 0) > 0,
+    ];
+    const completeness = Math.round((completenessChecks.filter(Boolean).length / completenessChecks.length) * 100);
 
     // UI state
     const [showNoteModal, setShowNoteModal] = useState(false);
@@ -492,9 +518,16 @@ const ClinicalTab: React.FC<ClinicalTabProps> = ({
                 {/* ========================== LEFT COLUMN ========================== */}
                 <div className="col-span-12 xl:col-span-8 space-y-6">
 
+                    {/* SECTION JUMP NAV */}
+                    <div className="sticky top-0 z-30 flex gap-1 overflow-x-auto rounded-full border border-ink-950/10 bg-white/95 p-1.5 backdrop-blur">
+                        {SECTIONS.map(sec => (
+                            <a key={sec.id} href={`#${sec.id}`} className="shrink-0 rounded-full px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-ink-500 transition-colors hover:bg-cream-100 hover:text-ink-900">{sec.label}</a>
+                        ))}
+                    </div>
+
                     {/* 1. DEMOGRAPHICS */}
                     <Section title="Patient Demographics" icon={<UserIcon size={20} />} defaultOpen={true} accentColor="#14b8a6" badge={emr.demographics.dateOfBirth ? 'Complete' : undefined}>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3 gap-4">
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
                             <Field label="Date of Birth" value={emr.demographics.dateOfBirth} onChange={v => updateEMR('demographics', { dateOfBirth: v })} type="date" />
                             <Field label="Age" value={emr.demographics.age} onChange={v => updateEMR('demographics', { age: v })} placeholder="e.g. 32" half />
                             <div className="flex-1 min-w-[140px]">
@@ -718,8 +751,36 @@ const ClinicalTab: React.FC<ClinicalTabProps> = ({
                 {/* ========================== RIGHT COLUMN ========================== */}
                 <div className="col-span-12 xl:col-span-4 space-y-6">
 
+                    {/* QUICK ACTIONS */}
+                    <div className="rounded-[22px] border border-ink-950/[0.08] bg-white p-5">
+                        <Label>Quick actions</Label>
+                        <div className="mt-3 grid grid-cols-2 gap-2">
+                            {[
+                                { label: 'Add note', icon: <FileText size={15} />, onClick: () => setShowNoteModal(true) },
+                                { label: 'Prescribe', icon: <Pill size={15} />, onClick: () => setShowRxModal(true) },
+                                { label: 'Log imaging', icon: <FileImage size={15} />, onClick: () => setShowImagingModal(true) },
+                                { label: 'Consent', icon: <FileSignature size={15} />, onClick: () => setShowConsentModal(true) },
+                            ].map(a => (
+                                <button key={a.label} onClick={a.onClick} className="flex flex-col items-start gap-2 rounded-[14px] border border-ink-950/10 bg-cream-50 p-3 text-left transition-colors hover:border-ink-950/20 hover:bg-white">
+                                    <span className="text-ink-600">{a.icon}</span>
+                                    <span className="text-xs font-semibold text-ink-800">{a.label}</span>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* RECORD COMPLETENESS */}
+                    <div className="rounded-[22px] border border-ink-950/[0.08] bg-white p-5">
+                        <Label>Record completeness</Label>
+                        <div className="mt-2 flex items-end justify-between">
+                            <span className="font-display text-2xl font-bold text-ink-900">{completeness}%</span>
+                            <span className="text-[11px] text-ink-500">{completenessChecks.filter(Boolean).length} of {completenessChecks.length} fields</span>
+                        </div>
+                        <div className="mt-3"><SegmentBar value={completeness / 100} tone="brand" /></div>
+                    </div>
+
                     {/* CLINICAL NOTES */}
-                    <div className="relative overflow-hidden rounded-[22px] border border-ink-950/[0.08] bg-white p-6 min-h-[320px]">
+                    <div id="clinical-notes" className="scroll-mt-24 relative overflow-hidden rounded-[22px] border border-ink-950/[0.08] bg-white p-6 min-h-[320px]">
                         <div className="pointer-events-none absolute right-3 top-3 text-ink-950/[0.04]"><Activity size={72} /></div>
 
                         <div className="relative z-10 flex items-center justify-between">
@@ -768,134 +829,113 @@ const ClinicalTab: React.FC<ClinicalTabProps> = ({
                 </div>
             </div>
 
-            {/* ========================================================= */}
-            {/* 5. CHECKOUT & DISPATCH (The New Unified Bottom Fold) */}
-            {/* ========================================================= */}
-            <div className="mt-8 mb-20 bg-ink-950 rounded-[24px] shadow-lift overflow-hidden relative border border-white/10 p-8 sm:p-12">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 blur-[80px] rounded-full pointer-events-none"></div>
-                <div className="absolute bottom-0 left-0 w-64 h-64 bg-teal-500/10 blur-[80px] rounded-full pointer-events-none"></div>
-
-                <div className="flex flex-col xl:flex-row justify-between items-start gap-12 relative z-10">
-                    <div className="flex-1 w-full space-y-8">
+            {/* COMPLETE VISIT */}
+            <div id="checkout" className="scroll-mt-24 overflow-hidden rounded-[22px] border border-ink-950/[0.08] bg-white">
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-ink-950/5 p-5">
+                    <div className="flex items-center gap-3">
+                        <IconChip tone="sun"><Sparkles size={16} /></IconChip>
                         <div>
-                            <div className="flex items-center gap-3 mb-4">
-                                <div className="p-3 bg-emerald-500/20 text-emerald-400 rounded-2xl"><Sparkles size={24} /></div>
-                                <div>
-                                    <h3 className="text-3xl font-bold text-white tracking-tighter">Unified Checkout</h3>
-                                    <p className="text-ink-400 font-bold mt-1">Select Procedure & Assign Care Plan</p>
-                                </div>
-                            </div>
+                            <h3 className="font-display text-base font-bold tracking-tight text-ink-900">Complete visit</h3>
+                            <p className="text-xs text-ink-500">Charge the treatment and send aftercare to the patient app</p>
                         </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        {['Treatment', 'Aftercare', 'Payment'].map((s, i) => (
+                            <span key={s} className="flex items-center gap-2">
+                                <span className={cn('flex h-6 w-6 items-center justify-center rounded-full font-mono text-[10px] font-bold',
+                                    (i === 0 && selectedTemplateName) || (i === 1 && selectedTemplateName && aftercareInstructions.length) || (i === 2 && txAmount)
+                                        ? 'bg-leaf-deep text-white' : 'bg-ink-950/10 text-ink-500')}>{i + 1}</span>
+                                <span className="hidden font-mono text-[10px] uppercase tracking-[0.1em] text-ink-500 sm:inline">{s}</span>
+                                {i < 2 && <span className="h-px w-3 bg-ink-950/15" />}
+                            </span>
+                        ))}
+                    </div>
+                </div>
 
-                        {/* Smart Procedure Selector */}
-                        <div>
-                            <label className="text-[10px] font-bold uppercase text-ink-500 tracking-[0.2em] mb-4 block">1. Select Treatment Pathway</label>
-                            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 max-h-[220px] overflow-y-auto pr-2 custom-scrollbar">
-                                {TREATMENT_TEMPLATES.map(t => (
-                                    <button key={t.name} onClick={() => setSelectedTemplateName(t.name)}
-                                        className={`p-4 rounded-[20px] border-2 text-left transition-all ${selectedTemplateName === t.name ? 'border-emerald-500 bg-emerald-500/10 shadow-[0_0_20px_rgba(16,185,129,0.2)]' : 'border-white/10 bg-slate-800/50 hover:border-slate-700'}`}>
-                                        <p className={`font-bold tracking-tight leading-tight ${selectedTemplateName === t.name ? 'text-white' : 'text-ink-300'}`}>{t.name}</p>
-                                        <span className="text-[9px] uppercase font-bold text-ink-500 tracking-wider mt-2 block">{t.category}</span>
-                                    </button>
-                                ))}
-                            </div>
+                <div className="grid gap-6 p-5 lg:grid-cols-2">
+                    <div>
+                        <Label>1. Treatment performed</Label>
+                        <div className="mt-3 grid max-h-[260px] grid-cols-2 gap-2 overflow-y-auto pr-1 custom-scrollbar">
+                            {TREATMENT_TEMPLATES.map(t => (
+                                <button key={t.name} onClick={() => setSelectedTemplateName(t.name)}
+                                    className={`rounded-[14px] border p-3 text-left transition-colors ${selectedTemplateName === t.name ? 'border-primary bg-primary/5' : 'border-ink-950/10 bg-cream-50 hover:border-ink-950/20'}`}>
+                                    <p className="text-xs font-bold leading-tight text-ink-900">{t.name}</p>
+                                    <span className="mt-1 block font-mono text-[9px] uppercase tracking-[0.12em] text-ink-500">{t.category}</span>
+                                </button>
+                            ))}
                         </div>
                     </div>
 
-                    <div className="flex-1 w-full xl:max-w-md space-y-8 bg-black/20 p-8 rounded-[22px] border border-white/5">
-                        <label className="text-[10px] font-bold uppercase text-ink-500 tracking-[0.2em] block">2. Personalize & Dispatch</label>
-
+                    <div className="space-y-5">
                         {!selectedTemplateName ? (
-                            <div className="py-16 text-center border-2 border-dashed border-white/10 rounded-[24px]">
-                                <Sparkles size={32} className="mx-auto text-ink-700 mb-3" />
-                                <p className="font-bold text-ink-400">Select a procedure to configure dispatch.</p>
+                            <div className="flex h-full flex-col items-center justify-center rounded-[16px] border border-dashed border-ink-950/15 bg-cream-50 p-8 text-center">
+                                <Sparkles size={24} className="text-ink-300" />
+                                <p className="mt-3 text-sm font-semibold text-ink-600">Pick a treatment to configure aftercare and payment</p>
                             </div>
                         ) : (
-                            <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-500">
-                                {/* Aftercare Instructions Tweak UI */}
+                            <>
                                 <div>
-                                    <div className="flex justify-between items-end mb-3">
-                                        <label className="text-[10px] font-bold uppercase text-teal-400 tracking-[0.2em]">Doctor's Custom Instructions</label>
-                                        <span className="text-[9px] text-ink-500 font-bold bg-white/5 px-2 py-0.5 rounded">Sent to Mobile App</span>
+                                    <div className="flex items-center justify-between">
+                                        <Label>2. Aftercare sent to patient</Label>
+                                        <button onClick={() => setAftercareInstructions([...aftercareInstructions, ''])} className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-teal-700">+ Add step</button>
                                     </div>
-                                    <div className="space-y-2 max-h-[200px] overflow-y-auto custom-scrollbar pr-2">
+                                    <div className="mt-3 max-h-[170px] space-y-2 overflow-y-auto pr-1 custom-scrollbar">
                                         {aftercareInstructions.map((inst, i) => (
-                                            <div key={i} className="flex gap-2 group">
-                                                <div className="w-6 h-6 rounded-lg bg-teal-500/20 text-teal-400 flex items-center justify-center text-[9px] font-bold shrink-0">{i + 1}</div>
-                                                <textarea value={inst} onChange={e => { const newInst = [...aftercareInstructions]; newInst[i] = e.target.value; setAftercareInstructions(newInst); }}
-                                                    className="flex-1 bg-transparent border-none text-sm font-medium text-ink-300 resize-none outline-none focus:text-white transition-colors" rows={2} />
+                                            <div key={i} className="flex gap-2">
+                                                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[9px] bg-cream-100 font-mono text-[10px] font-bold text-ink-600">{i + 1}</span>
+                                                <textarea rows={1} value={inst}
+                                                    onChange={e => { const n = [...aftercareInstructions]; n[i] = e.target.value; setAftercareInstructions(n); }}
+                                                    className="flex-1 resize-none rounded-[10px] border border-ink-950/10 bg-cream-50 px-3 py-2 text-sm text-ink-800 outline-none focus:border-ink-950/30" />
                                             </div>
                                         ))}
-                                        <button onClick={() => setAftercareInstructions([...aftercareInstructions, ''])} className="text-[10px] font-bold uppercase text-emerald-400 tracking-widest hover:text-emerald-300 transition-colors">+ Add Custom Rule</button>
+                                        {aftercareInstructions.length === 0 && <p className="text-xs text-ink-500">No steps yet.</p>}
                                     </div>
                                 </div>
 
-                                {/* Payment Input */}
-                                <div className="pt-4 border-t border-white/10">
-                                    <div className="flex gap-4 items-end">
-                                        <div className="flex-1">
-                                            <label className="text-[10px] font-bold uppercase text-ink-500 tracking-[0.2em] mb-2 block">Total Cost</label>
-                                            <div className="relative">
-                                                <span className="absolute left-6 top-1/2 -translate-y-1/2 text-ink-400 text-3xl font-bold">₹</span>
-                                                <input type="number" min="0" placeholder="0.00" value={txAmount} onChange={(e) => setTxAmount(e.target.value)}
-                                                    className="w-full text-4xl font-bold outline-none bg-white/5 border border-white/10 rounded-[20px] py-4 pl-14 pr-4 focus:border-emerald-500 transition-all text-white" />
-                                            </div>
+                                <div>
+                                    <Label>3. Payment</Label>
+                                    <div className="mt-3 flex gap-3">
+                                        <div className="relative flex-1">
+                                            <span className="absolute left-4 top-1/2 -translate-y-1/2 font-display text-lg font-bold text-ink-400">₹</span>
+                                            <input type="number" min="0" placeholder="0" value={txAmount} onChange={e => setTxAmount(e.target.value)}
+                                                className="w-full rounded-[14px] border border-ink-950/10 bg-cream-50 py-3 pl-9 pr-3 font-display text-xl font-bold text-ink-900 outline-none placeholder:text-ink-300 focus:border-ink-950/30" />
                                         </div>
-                                        <div className="w-1/3">
-                                            <label className="text-[10px] font-bold uppercase text-ink-500 tracking-[0.2em] mb-2 block">Category</label>
-                                            <select className="w-full p-5 bg-white/5 border border-white/10 rounded-[20px] outline-none font-bold text-[10px] text-white appearance-none"
-                                                onChange={(e) => setTxCategory(e.target.value as TransactionCategory)} value={txCategory}>
-                                                {Object.values(TransactionCategory).map(c => <option key={c} value={c} className="text-ink-900">{c}</option>)}
-                                            </select>
-                                        </div>
+                                        <select value={txCategory} onChange={e => setTxCategory(e.target.value as TransactionCategory)}
+                                            className="w-36 rounded-[14px] border border-ink-950/10 bg-cream-50 px-3 text-xs font-bold text-ink-800 outline-none focus:border-ink-950/30">
+                                            {Object.values(TransactionCategory).map(c => <option key={c} value={c}>{c}</option>)}
+                                        </select>
                                     </div>
-
                                     <button
                                         disabled={!txAmount || parseFloat(txAmount) <= 0 || isDispatching}
                                         onClick={async () => {
                                             if (!txAmount || !onProcessTransaction || !onAssignPlan) return;
-
                                             const template = TREATMENT_TEMPLATES.find(t => t.name === selectedTemplateName);
-                                            if (template) {
-                                                setIsDispatching(true);
-                                                try {
-                                                    // 1. Dispatch Payment & Points
-                                                    await onProcessTransaction(patient.id, parseFloat(txAmount), txCategory, TransactionType.EARN);
-                                                    // 2. Dispatch customized Aftercare regimen to PWA
-                                                    await onAssignPlan(clinic.id, patient.id, { ...template, customValues, instructions: aftercareInstructions });
-
-                                                    // Clear on success
-                                                    setTxAmount('');
-                                                    setSelectedTemplateName('');
-                                                    if (onRefreshData) onRefreshData();
-                                                } catch (err: any) {
-                                                    console.error("Dispatch Error:", err);
-                                                    alert("Failed to complete dispatch: " + err.message);
-                                                } finally {
-                                                    setIsDispatching(false);
-                                                }
+                                            if (!template) return;
+                                            setIsDispatching(true);
+                                            try {
+                                                await onProcessTransaction(patient.id, parseFloat(txAmount), txCategory, TransactionType.EARN);
+                                                await onAssignPlan(clinic.id, patient.id, { ...template, customValues, instructions: aftercareInstructions });
+                                                setTxAmount('');
+                                                setSelectedTemplateName('');
+                                                if (onRefreshData) onRefreshData();
+                                            } catch (err: any) {
+                                                console.error('Dispatch error:', err);
+                                                alert('Failed to complete dispatch: ' + err.message);
+                                            } finally {
+                                                setIsDispatching(false);
                                             }
                                         }}
-                                        className="mt-6 w-full py-6 bg-emerald-500 hover:bg-emerald-400 text-ink-900 rounded-[20px] font-bold text-xs uppercase tracking-[0.2em] shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2 relative overflow-hidden group border-none outline-none">
-
-                                        {isDispatching ? (
-                                            <>
-                                                <div className="h-4 w-4 rounded-full border-2 border-slate-900 border-t-transparent animate-spin"></div>
-                                                Dispatching to PWA...
-                                            </>
-                                        ) : (
-                                            <>
-                                                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></div>
-                                                <Sparkles size={16} className="relative z-10" /> <span className="relative z-10">Complete Visit & Dispatch</span>
-                                            </>
-                                        )}
+                                        className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-ink-950 py-3.5 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-cream-50 transition-colors hover:bg-ink-800 disabled:cursor-not-allowed disabled:opacity-40">
+                                        {isDispatching ? 'Dispatching...' : (<><Sparkles size={14} /> Complete visit &amp; dispatch</>)}
                                     </button>
+                                    <p className="mt-2 text-center text-[11px] text-ink-500">Charges the treatment, awards points, and pushes aftercare to the patient app.</p>
                                 </div>
-                            </div>
+                            </>
                         )}
                     </div>
                 </div>
             </div>
+
 
             {/* ========================== MODALS ========================== */}
 
