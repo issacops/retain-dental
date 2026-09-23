@@ -10,7 +10,7 @@ import {
 } from '../../types';
 import TodayView from './subcomponents/TodayView';
 import RetentionView from './subcomponents/RetentionView';
-import PatientList from './subcomponents/PatientList';
+import PatientDirectory from './subcomponents/PatientDirectory';
 import PatientProfile from './subcomponents/PatientProfile';
 import AppointmentScheduler from './subcomponents/AppointmentScheduler';
 import FinancialLedger from './subcomponents/FinancialLedger';
@@ -208,45 +208,40 @@ const DesktopDoctorView: React.FC<Props> = ({
 
           <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
             {activeSection === 'Patients' ? (
-              <div className="flex min-h-0 flex-1 overflow-hidden">
-                <PatientList
-                  clinic={clinic}
-                  users={filteredPatients}
-                  searchQuery={searchQuery}
-                  setSearchQuery={setSearchQuery}
-                  selectedPatient={selectedPatient}
-                  setSelectedPatient={setSelectedPatient}
-                  onAddPatient={() => setIsAddPatientModalOpen(true)}
-                />
-                <div className="min-w-0 flex-1 overflow-y-auto p-6 sm:p-8 custom-scrollbar">
-                  {selectedPatient ? (
-                    <PatientProfile
-                      selectedPatient={selectedPatient}
-                      clinic={clinic}
-                      wallets={wallets}
-                      carePlans={carePlans}
-                      transactions={transactions}
-                      allUsers={allUsers}
-                      familyGroups={familyGroups}
-                      appointments={appointments}
-                      backendService={backendService}
-                      onProcessTransaction={onProcessTransaction}
-                      onAssignPlan={onAssignPlan}
-                      onToggleChecklistItem={onToggleChecklistItem}
-                      onUpdateCarePlan={onUpdateCarePlan}
-                      onDeletePatient={onDeletePatient}
-                      onRefreshData={onRefreshData}
-                    />
-                  ) : (
-                    <div className="flex h-full flex-col items-center justify-center text-center">
-                      <span className="flex h-16 w-16 items-center justify-center rounded-[20px] border border-ink-950/10 bg-white text-ink-300">
-                        <Users size={28} />
-                      </span>
-                      <h2 className="mt-5 font-display text-xl font-bold tracking-tight text-ink-900">Select a patient</h2>
-                      <p className="mt-2 max-w-xs text-sm text-ink-500">Choose someone from the list to see their aftercare, balance, and history.</p>
-                    </div>
-                  )}
-                </div>
+              <div className="flex-1 overflow-y-auto p-5 sm:p-7 custom-scrollbar">
+                {selectedPatient ? (
+                  <PatientProfile
+                    selectedPatient={selectedPatient}
+                    clinic={clinic}
+                    wallets={wallets}
+                    carePlans={carePlans}
+                    transactions={transactions}
+                    allUsers={allUsers}
+                    familyGroups={familyGroups}
+                    appointments={appointments}
+                    backendService={backendService}
+                    onBack={() => setSelectedPatient(null)}
+                    onProcessTransaction={onProcessTransaction}
+                    onAssignPlan={onAssignPlan}
+                    onToggleChecklistItem={onToggleChecklistItem}
+                    onUpdateCarePlan={onUpdateCarePlan}
+                    onDeletePatient={onDeletePatient}
+                    onRefreshData={onRefreshData}
+                    onBookReview={() => setActiveSection('Schedule')}
+                  />
+                ) : (
+                  <PatientDirectory
+                    clinic={clinic}
+                    users={filteredPatients}
+                    wallets={wallets}
+                    transactions={transactions}
+                    appointments={appointments}
+                    searchQuery={searchQuery}
+                    setSearchQuery={setSearchQuery}
+                    onSelectPatient={setSelectedPatient}
+                    onAddPatient={() => setIsAddPatientModalOpen(true)}
+                  />
+                )}
               </div>
             ) : (
               <div className="flex-1 overflow-y-auto p-5 sm:p-7 custom-scrollbar">
