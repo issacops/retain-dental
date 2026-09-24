@@ -132,7 +132,7 @@ const PatientProfile: React.FC<Props> = ({
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
               <h1 className="truncate font-display text-[clamp(1.4rem,2.2vw,1.9rem)] font-bold tracking-tight text-ink-900">{selectedPatient.name}</h1>
-              {activeCarePlan && <Pill tone="leaf">Active protocol</Pill>}
+              {activeCarePlan && <Pill tone="leaf">Active treatment plan</Pill>}
               {medicalAlerts.length > 0 && <Pill tone="blush"><AlertTriangle size={11} /> {medicalAlerts.length} alert{medicalAlerts.length === 1 ? '' : 's'}</Pill>}
             </div>
             <div className="mt-1.5 flex flex-wrap items-center gap-2">
@@ -236,11 +236,11 @@ const PatientProfile: React.FC<Props> = ({
                   ))}
                 </div>
                 <div className="border-t border-ink-950/5 p-4">
-                  <button onClick={() => setViewingPlan(activeCarePlan)} className="w-full rounded-full bg-ink-950 py-2.5 text-xs font-bold uppercase tracking-[0.08em] text-cream-50 transition-colors hover:bg-ink-800">Open full protocol</button>
+                  <button onClick={() => setViewingPlan(activeCarePlan)} className="w-full rounded-full bg-ink-950 py-2.5 text-xs font-bold uppercase tracking-[0.08em] text-cream-50 transition-colors hover:bg-ink-800">Open treatment plan</button>
                 </div>
               </Card>
             ) : (
-              <Card tone="white"><Empty title="No active aftercare" hint="Assign a protocol from the Records tab." icon={<ClipboardCheck size={22} />} /></Card>
+              <Card tone="white"><Empty title="No active aftercare" hint="Assign a treatment plan from the Records tab." icon={<ClipboardCheck size={22} />} /></Card>
             )}
 
             {/* Notes + chart */}
