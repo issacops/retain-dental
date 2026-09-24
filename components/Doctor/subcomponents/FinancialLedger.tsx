@@ -153,7 +153,7 @@ const FinancialLedger: React.FC<Props> = ({ clinic, transactions, wallets, allUs
 
                     <div class="footer">
                         <p>Thank you for choosing ${clinic.name}.</p>
-                        <p>Generated via Retain OS • ${new Date().toLocaleString()}</p>
+                        <p>Generated via Retain Dental • ${new Date().toLocaleString()}</p>
                     </div>
                     <script>window.print();</script>
                 </body>

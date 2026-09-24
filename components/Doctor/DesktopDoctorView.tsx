@@ -9,12 +9,13 @@ import {
   Appointment, AppointmentStatus, AppointmentType,
 } from '../../types';
 import TodayView from './subcomponents/TodayView';
-import RetentionView from './subcomponents/RetentionView';
+import CommandPalette from './subcomponents/CommandPalette';
+const RetentionView = React.lazy(() => import('./subcomponents/RetentionView'));
 import PatientDirectory from './subcomponents/PatientDirectory';
 import PatientProfile from './subcomponents/PatientProfile';
-import AppointmentScheduler from './subcomponents/AppointmentScheduler';
-import FinancialLedger from './subcomponents/FinancialLedger';
-import SocialPostGenerator from './subcomponents/SocialPostGenerator';
+const AppointmentScheduler = React.lazy(() => import('./subcomponents/AppointmentScheduler'));
+const FinancialLedger = React.lazy(() => import('./subcomponents/FinancialLedger'));
+const SocialPostGenerator = React.lazy(() => import('./subcomponents/SocialPostGenerator'));
 import { Card, Label, SectionHeader, cn } from './ui/primitives';
 
 interface Props {
@@ -39,6 +40,12 @@ interface Props {
   onUpdateClinic: (clinicId: string, updates: Partial<Clinic>) => Promise<any>;
   onRefreshData?: () => void;
 }
+
+const SectionFallback = () => (
+  <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    {[0, 1, 2, 3].map((i) => <div key={i} className="h-28 animate-pulse rounded-[22px] border border-ink-950/[0.07] bg-white" />)}
+  </div>
+);
 
 const NAV: { group: string; items: { id: string; icon: React.ElementType }[] }[] = [
   { group: 'Practice', items: [
@@ -265,6 +272,7 @@ const DesktopDoctorView: React.FC<Props> = ({
                   />
                 )}
                 {activeSection === 'Schedule' && (
+                  <React.Suspense fallback={<SectionFallback />}>
                   <AppointmentScheduler
                     clinic={clinic}
                     appointments={appointments}
@@ -273,12 +281,17 @@ const DesktopDoctorView: React.FC<Props> = ({
                     onUpdateStatus={onUpdateAppointmentStatus}
                     onViewProfile={openPatient}
                   />
+                  </React.Suspense>
                 )}
                 {activeSection === 'Retention' && (
-                  <RetentionView clinic={clinic} backendService={backendService} allUsers={allUsers} wallets={wallets} transactions={transactions} />
+                  <React.Suspense fallback={<SectionFallback />}>
+                    <RetentionView clinic={clinic} backendService={backendService} allUsers={allUsers} wallets={wallets} transactions={transactions} />
+                  </React.Suspense>
                 )}
                 {activeSection === 'Payments' && (
-                  <FinancialLedger clinic={clinic} transactions={transactions} wallets={wallets} allUsers={allUsers} />
+                  <React.Suspense fallback={<SectionFallback />}>
+                    <FinancialLedger clinic={clinic} transactions={transactions} wallets={wallets} allUsers={allUsers} />
+                  </React.Suspense>
                 )}
                 {activeSection === 'Settings' && (
                   <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
@@ -435,7 +448,22 @@ const DesktopDoctorView: React.FC<Props> = ({
         </div>
       )}
 
-      {isSocialModalOpen && <SocialPostGenerator clinic={clinic} onClose={() => setIsSocialModalOpen(false)} />}
+      {isSocialModalOpen && (
+        <React.Suspense fallback={null}>
+          <SocialPostGenerator clinic={clinic} onClose={() => setIsSocialModalOpen(false)} />
+        </React.Suspense>
+      )}
+
+      <CommandPalette
+        patients={allUsers.filter((u) => u.clinicId === clinic.id && u.role === 'PATIENT')}
+        onSelectPatient={openPatient}
+        onNavigate={setActiveSection}
+        onQuickAction={(a) => {
+          if (a === 'add-patient') setIsAddPatientModalOpen(true);
+          else if (a === 'qr') setIsQRModalOpen(true);
+          else if (a === 'social') setIsSocialModalOpen(true);
+        }}
+      />
     </div>
   );
 };

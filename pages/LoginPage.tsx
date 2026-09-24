@@ -34,8 +34,8 @@ export const LoginPage: React.FC<LoginPageProps> = ({ clinics = [], activeClinic
     const targetClinic = slugClinic || activeClinic;
     const isBranded = !!targetClinic && targetClinic.id !== 'platform';
     const brandColor = targetClinic?.primaryColor || '#0d9488';
-    const brandName = targetClinic?.name || 'Retain.OS';
-    const brandSubtitle = isBranded ? 'Patient Portal & Staff Login' : 'Dental Operating System';
+    const brandName = targetClinic?.name || 'Retain Dental';
+    const brandSubtitle = isBranded ? 'Patient Portal & Staff Login' : "The Dentist's Loyalty Operating System";
 
     const handlePatientLogin = async () => {
         if (!mobile || !pin) return;
