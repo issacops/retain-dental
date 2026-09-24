@@ -26,6 +26,12 @@ export interface TreatmentTemplate {
   name: string;
   category: TransactionCategory;
   instructions: string[];
+  /** Daily habits shown as a tappable checklist in the patient app. */
+  checklist?: string[];
+  /** Pre-fills the checkout amount so the front desk doesn't retype it. */
+  defaultCost?: number;
+  /** Recommended recall interval for this procedure (months). */
+  recallMonths?: number;
   customFields?: { key: string; label: string; type: 'number' | 'text' | 'date'; defaultValue: any }[];
 }
 
@@ -35,6 +41,9 @@ export const TREATMENT_TEMPLATES: TreatmentTemplate[] = [
   {
     name: 'Invisalign / Clear Aligners',
     category: TransactionCategory.COSMETIC,
+    defaultCost: 150000,
+    recallMonths: 2,
+    checklist: ['Wear aligners 22+ hours', 'Clean trays each morning', 'Use chewies twice daily', 'Switch tray on schedule'],
     instructions: [
       'Wear trays for 22+ hours daily. Only remove for eating and brushing.',
       'Use "Chewies" for 5 minutes twice daily to ensure trays are fully seated.',
@@ -52,6 +61,8 @@ export const TREATMENT_TEMPLATES: TreatmentTemplate[] = [
   {
     name: 'Teeth Whitening (Home Kit)',
     category: TransactionCategory.COSMETIC,
+    defaultCost: 15000,
+    checklist: ['Apply gel as directed', 'Avoid staining food for 48h', 'Use sensitivity toothpaste'],
     instructions: [
       'Apply a small drop of gel into each tooth compartment of the tray.',
       'Wear for the prescribed time (usually 2-4 hours or overnight).',
@@ -98,6 +109,9 @@ export const TREATMENT_TEMPLATES: TreatmentTemplate[] = [
   {
     name: 'Dental Implant',
     category: TransactionCategory.GENERAL,
+    defaultCost: 45000,
+    recallMonths: 3,
+    checklist: ['Ice pack 10 min on / 10 off', 'Salt-water rinses from day 2', 'Soft diet for 7 days', 'No smoking'],
     instructions: [
       'Apply ice pack to face: 10 mins on, 10 mins off for first 24 hours.',
       'Do not disturb the surgical site with tongue or fingers.',
@@ -114,6 +128,9 @@ export const TREATMENT_TEMPLATES: TreatmentTemplate[] = [
   {
     name: 'Root Canal Treatment',
     category: TransactionCategory.GENERAL,
+    defaultCost: 8000,
+    recallMonths: 6,
+    checklist: ['Avoid chewing on the tooth', 'Take medication as advised', 'Salt-water rinses', 'Report swelling or fever'],
     instructions: [
       'Avoid chewing on the treated tooth until the permanent crown is placed.',
       'The tooth may feel tender for 3-5 days; taking ibuprofen helps.',
@@ -172,6 +189,8 @@ export const TREATMENT_TEMPLATES: TreatmentTemplate[] = [
   {
     name: 'Simple Tooth Extraction',
     category: TransactionCategory.GENERAL,
+    defaultCost: 3000,
+    checklist: ['Bite on gauze for 30 min', 'Ice pack 10 min on / 10 off', 'No straws or smoking for 24h', 'Soft diet today'],
     instructions: [
       'Keep the gauze pack in place with pressure for 20 minutes.',
       'Avoid hot drinks and alcohol for 24 hours.',
@@ -188,6 +207,9 @@ export const TREATMENT_TEMPLATES: TreatmentTemplate[] = [
   {
     name: 'Scale & Polish (Cleaning)',
     category: TransactionCategory.HYGIENE,
+    defaultCost: 2000,
+    recallMonths: 6,
+    checklist: ['Brush twice daily', 'Floss every night', 'Use mouthwash'],
     instructions: [
       'Gums may feel slightly tender or bleed slightly today.',
       'Use warm salt water rinses if gums are sore.',
@@ -202,6 +224,9 @@ export const TREATMENT_TEMPLATES: TreatmentTemplate[] = [
   {
     name: 'Deep Cleaning (Perio)',
     category: TransactionCategory.HYGIENE,
+    defaultCost: 6000,
+    recallMonths: 3,
+    checklist: ['Brush gently twice daily', 'Use the prescribed rinse', 'Soft foods for 3 days', 'Floss as shown'],
     instructions: [
       'Numbness may last for a few hours; chew carefully.',
       'Sensitivity to cold is common as roots heal.',
@@ -226,6 +251,92 @@ export const TREATMENT_TEMPLATES: TreatmentTemplate[] = [
       { key: 'type', label: 'Design', type: 'text', defaultValue: 'Michigan' },
       { key: 'material', label: 'Material', type: 'text', defaultValue: 'Hard/Soft' }
     ]
+  },
+  {
+    name: 'Fluoride Application',
+    category: TransactionCategory.HYGIENE,
+    defaultCost: 1500,
+    recallMonths: 6,
+    checklist: ['Avoid eating or drinking for 30 min', 'Brush gently tonight'],
+    instructions: [
+      'Do not eat or drink for 30 minutes after the application.',
+      'Avoid hot drinks and brushing for the rest of the day.',
+      'This strengthens enamel and helps prevent cavities.'
+    ],
+    customFields: [{ key: 'agent', label: 'Agent', type: 'text', defaultValue: '5% NaF Varnish' }]
+  },
+  {
+    name: 'Dental Sealants',
+    category: TransactionCategory.GENERAL,
+    defaultCost: 1200,
+    recallMonths: 12,
+    checklist: ['Brush twice daily', 'Avoid very hard foods for 24h'],
+    instructions: [
+      'Avoid chewing very hard or sticky foods for 24 hours.',
+      'Sealants protect the grooves of back teeth from decay.',
+      'Sealants are checked at every routine visit.'
+    ],
+    customFields: [{ key: 'teeth', label: 'Teeth Sealed', type: 'text', defaultValue: '36, 46' }]
+  },
+  {
+    name: 'Denture (Complete / Partial)',
+    category: TransactionCategory.GENERAL,
+    defaultCost: 35000,
+    recallMonths: 12,
+    checklist: ['Clean denture daily', 'Remove at night', 'Rinse after meals'],
+    instructions: [
+      'Clean the denture daily with a soft brush and denture cleaner.',
+      'Remove it at night to let your gums rest.',
+      'Expect a short adjustment period; report any sore spots.',
+      'Do not use hot water, which can warp the denture.'
+    ],
+    customFields: [
+      { key: 'type', label: 'Type', type: 'text', defaultValue: 'Complete Upper' },
+      { key: 'material', label: 'Material', type: 'text', defaultValue: 'Acrylic' }
+    ]
+  },
+  {
+    name: 'Orthodontic Braces',
+    category: TransactionCategory.COSMETIC,
+    defaultCost: 120000,
+    recallMonths: 1,
+    checklist: ['Brush after every meal', 'Avoid hard and sticky foods', 'Wear elastics as instructed', 'Use interdental brush'],
+    instructions: [
+      'Avoid hard, sticky, and chewy foods that can break brackets.',
+      'Brush after every meal and use an interdental brush.',
+      'Wear elastics exactly as instructed to stay on schedule.',
+      'A little soreness after adjustments is normal for a few days.'
+    ],
+    customFields: [
+      { key: 'system', label: 'System', type: 'text', defaultValue: 'Metal' },
+      { key: 'estimatedMonths', label: 'Est. Duration (Mos)', type: 'number', defaultValue: 18 }
+    ]
+  },
+  {
+    name: 'Emergency Pain Relief',
+    category: TransactionCategory.GENERAL,
+    defaultCost: 1500,
+    checklist: ['Take medication as advised', 'Avoid very hot or cold foods', 'Call us if pain worsens'],
+    instructions: [
+      'Take the prescribed medication exactly as advised.',
+      'Avoid very hot, cold, or sweet foods until reviewed.',
+      'If pain or swelling gets worse, contact the clinic immediately.',
+      'This is a temporary measure; definitive treatment will be planned.'
+    ],
+    customFields: [{ key: 'tooth', label: 'Tooth / Area', type: 'text', defaultValue: '' }]
+  },
+  {
+    name: 'Periodontal Maintenance',
+    category: TransactionCategory.HYGIENE,
+    defaultCost: 3500,
+    recallMonths: 3,
+    checklist: ['Brush twice daily', 'Floss every night', 'Use interdental brushes'],
+    instructions: [
+      'Keep up excellent daily hygiene between visits.',
+      'Use the interdental brushes shown to you at the clinic.',
+      'Report any bleeding, swelling, or loose teeth promptly.'
+    ],
+    customFields: [{ key: 'pockets', label: 'Deepest Pocket (mm)', type: 'number', defaultValue: 4 }]
   }
 ];
 

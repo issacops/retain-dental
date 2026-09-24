@@ -249,6 +249,7 @@ const ClinicalTab: React.FC<ClinicalTabProps> = ({
                 setCustomValues(defaults);
                 setAftercareInstructions([...template.instructions]);
                 setTxCategory(template.category);
+                if (template.defaultCost) setTxAmount(String(template.defaultCost));
             }
         } else {
             setCustomValues({});

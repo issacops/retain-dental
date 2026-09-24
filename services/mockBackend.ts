@@ -636,7 +636,10 @@ export class MockBackendService implements IBackendService {
       treatmentName: template.name,
       category: template.category,
       instructions: template.instructions || [],
-      checklist: (template.checklist || []).map((i: any) => ({ ...i, completed: !!i.completed })),
+      checklist: ((template.checklist && template.checklist.length ? template.checklist : (template.instructions || [])) as any[])
+        .map((i: any) => (typeof i === 'string'
+          ? { id: `task-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`, task: i, completed: false }
+          : { ...i, completed: !!i.completed })),
       assignedAt: new Date().toISOString(),
       isActive: true,
       status: 'ACTIVE', // Init as Active
