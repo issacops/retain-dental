@@ -156,12 +156,16 @@ export const SectionHeader: React.FC<{
   title: string;
   eyebrow?: string;
   action?: React.ReactNode;
+  icon?: React.ReactNode;
   className?: string;
-}> = ({ title, eyebrow, action, className }) => (
+}> = ({ title, eyebrow, action, icon, className }) => (
   <div className={cn('flex items-end justify-between gap-4', className)}>
     <div>
       {eyebrow && <Label>{eyebrow}</Label>}
-      <h2 className="font-display text-xl font-bold tracking-tight text-ink-900 mt-1">{title}</h2>
+      <h2 className="mt-1 flex items-center gap-2 font-display text-xl font-bold tracking-tight text-ink-900">
+        {icon && <span className="text-ink-400">{icon}</span>}
+        {title}
+      </h2>
     </div>
     {action}
   </div>

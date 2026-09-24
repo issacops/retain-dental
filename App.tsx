@@ -332,6 +332,23 @@ const App = () => {
     return result;
   };
 
+  const handleUpdatePatient = async (
+    clinicId: string,
+    patientId: string,
+    updates: { name?: string; email?: string; mobile?: string; status?: string; metadata?: Record<string, any> },
+  ) => {
+    const result = await backendService.updatePatient(clinicId, patientId, updates);
+    if (result.success && result.updatedData) {
+      setData(prev => ({ ...prev, ...result.updatedData }));
+      addToast("Patient record updated", "success");
+    } else {
+      addToast(`Update failed: ${result.message}`, "error");
+    }
+    return result;
+  };
+
+  const handleGetAuditLog = (clinicId: string, limit?: number) => backendService.getAuditLog(clinicId, limit);
+
   const handleOnboardClinic = async (name: string, color: string, texture: ThemeTexture, ownerName: string, logoUrl: string, slug: string, adminEmail: string) => {
     const result = await backendService.createClinic(name, color, texture, ownerName, logoUrl, slug, adminEmail);
     if (result.success && result.updatedData) {
@@ -529,6 +546,8 @@ const App = () => {
     onTerminateCarePlan: handleTerminateCarePlan,
     onLinkFamily: handleLinkFamily,
     onAddPatient: handleAddPatient,
+    onUpdatePatient: handleUpdatePatient,
+    onGetAuditLog: handleGetAuditLog,
     onOnboardClinic: handleOnboardClinic,
     onEnterClinic: handleEnterClinic,
     onDeleteClinic: handleDeleteClinic,

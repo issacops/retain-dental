@@ -55,6 +55,20 @@ export enum TransactionType {
 
 export type ThemeTexture = 'minimal' | 'grain' | 'aurora' | 'glass';
 
+export interface NotificationConfig {
+  recallMonths: number;      // Recall interval (months) before a patient is overdue
+  reminderLeadDays: number;  // How many days ahead to remind about an appointment
+  smsEnabled: boolean;
+  whatsappEnabled: boolean;
+  emailEnabled: boolean;
+}
+
+export interface ClinicSettings {
+  address?: string;
+  openingHours?: string;     // Free text, e.g. "Mon-Sat 10:00-19:00"
+  notificationConfig?: NotificationConfig;
+}
+
 export interface Clinic {
   id: string;
   name: string;
@@ -69,6 +83,7 @@ export interface Clinic {
   adminUserId: string;
   emergencyPhone?: string; // For SOS button
   loyaltyConfig?: LoyaltyConfig;
+  settings?: ClinicSettings;
 }
 
 export interface LoyaltyConfig {
@@ -119,6 +134,20 @@ export interface Transaction {
   date: string;
   description: string;
   carePlanId?: string; // Linked clinical protocol
+  invoiceNo?: string; // Human-readable receipt number (EARN transactions)
+}
+
+export type AuditType = 'INFO' | 'SUCCESS' | 'SECURITY' | 'CLINICAL' | 'FINANCE';
+
+export interface AuditLog {
+  id: string;
+  clinicId: string;
+  actorId?: string;
+  actorName: string;
+  action: string;
+  detail?: string;
+  type: AuditType;
+  timestamp: string;
 }
 
 export interface FamilyGroup {

@@ -4,7 +4,7 @@ import {
     User, Wallet, Transaction, Clinic, CarePlan, Appointment,
     AppointmentType, AppointmentStatus, ThemeTexture,
     TransactionCategory, TransactionType, FamilyGroup,
-    DatabaseState, SystemConfig, Tier, TIER_THRESHOLDS
+    DatabaseState, SystemConfig, Tier, TIER_THRESHOLDS, AuditLog, AuditType
 } from '../types';
 import { IBackendService, ServiceResponse } from './IBackendService';
 
@@ -46,7 +46,8 @@ export class SupabaseService implements IBackendService {
             subscriptionTier: c.subscription_tier || 'STARTER',
             adminUserId: c.admin_user_id || c.owner_id, // fallback logic
             createdAt: c.created_at,
-            loyaltyConfig: c.loyalty_config || { defaultRate: 10, categoryRates: {}, redemptionRate: 1 }
+            loyaltyConfig: c.loyalty_config || { defaultRate: 10, categoryRates: {}, redemptionRate: 1 },
+            settings: c.settings || {}
         };
     }
 
@@ -79,7 +80,8 @@ export class SupabaseService implements IBackendService {
             amountPaid: Number(t.amount_paid || 0),
             pointsEarned: Number(t.points_earned || 0),
             date: t.created_at,
-            carePlanId: t.care_plan_id
+            carePlanId: t.care_plan_id,
+            invoiceNo: t.invoice_no || undefined
         };
     }
 
@@ -475,8 +477,10 @@ export class SupabaseService implements IBackendService {
     }
 
     async updateAppointmentStatus(appointmentId: string, status: AppointmentStatus): Promise<ServiceResponse> {
+        const { data: appt } = await this.supabase.from('appointments').select('clinic_id').eq('id', appointmentId).single();
         const { error } = await this.supabase.from('appointments').update({ status }).eq('id', appointmentId);
         if (error) return { success: false, message: error.message };
+        if (appt?.clinic_id) await this.recordAudit(appt.clinic_id, 'Clinic staff', `Appointment marked ${status}`, undefined, 'CLINICAL');
         return { success: true, message: 'Updated', updatedData: await this.getData() };
     }
 
@@ -502,6 +506,7 @@ export class SupabaseService implements IBackendService {
                 throw new Error(data.message || 'Failed to create patient identity');
             }
 
+            await this.recordAudit(clinicId, 'Front desk', `Added patient ${name}`, cleanMobile, 'CLINICAL');
             return { success: true, message: 'Patient Identity & CRM Linked', updatedData: await this.getData() };
         } catch (e: any) {
             return { success: false, message: e.message, error: 'API_ERR' };
@@ -557,6 +562,82 @@ export class SupabaseService implements IBackendService {
             console.error("Update Patient Metadata Error", e);
             return { success: false, message: e.message || 'Failed to update', error: 'DB_ERR' };
         }
+    }
+
+    async updatePatient(
+        clinicId: string,
+        patientId: string,
+        updates: { name?: string; email?: string; mobile?: string; status?: string; metadata?: Record<string, any> },
+    ): Promise<ServiceResponse<DatabaseState>> {
+        try {
+            const patch: Record<string, any> = {};
+            if (updates.name !== undefined) patch.full_name = updates.name;
+            if (updates.email !== undefined) patch.email = updates.email;
+            if (updates.status !== undefined) patch.status = updates.status;
+            if (updates.mobile !== undefined) patch.mobile = updates.mobile.replace(/\D/g, '');
+            if (updates.metadata) {
+                const { data: profile } = await this.supabase.from('profiles').select('metadata').eq('id', patientId).single();
+                patch.metadata = { ...(profile?.metadata || {}), ...updates.metadata };
+            }
+
+            const { error } = await this.supabase
+                .from('profiles')
+                .update(patch)
+                .eq('id', patientId)
+                .eq('clinic_id', clinicId);
+
+            if (error) throw error;
+
+            await this.recordAudit(clinicId, 'Clinic staff', `Updated record`, Object.keys(updates).join(', '), 'CLINICAL');
+            return { success: true, message: 'Patient updated', updatedData: await this.getData() };
+        } catch (e: any) {
+            console.error('Update Patient Error', e);
+            return { success: false, message: e.message || 'Failed to update patient', error: 'DB_ERR' };
+        }
+    }
+
+    async getAuditLog(clinicId: string, limit = 100): Promise<ServiceResponse<AuditLog[]>> {
+        try {
+            const { data, error } = await this.supabase
+                .from('audit_logs')
+                .select('*')
+                .eq('clinic_id', clinicId)
+                .order('created_at', { ascending: false })
+                .limit(limit);
+
+            if (error) throw error;
+
+            const rows: AuditLog[] = (data || []).map((r: any) => ({
+                id: r.id,
+                clinicId: r.clinic_id,
+                actorId: r.actor_id,
+                actorName: r.actor_name || 'System',
+                action: r.action,
+                detail: r.detail,
+                type: r.type || 'INFO',
+                timestamp: r.created_at,
+            }));
+            return { success: true, message: 'Audit log fetched', updatedData: rows };
+        } catch (e: any) {
+            // Table may not exist yet on an older install — degrade gracefully.
+            console.warn('Audit log unavailable:', e?.message);
+            return { success: true, message: 'Audit log unavailable', updatedData: [] };
+        }
+    }
+
+    // Best-effort compliance write. Never blocks the user action.
+    private async recordAudit(clinicId: string, actorName: string, action: string, detail: string | undefined, type: AuditType) {
+        try {
+            const { data: { user } } = await this.supabase.auth.getUser();
+            await this.supabase.from('audit_logs').insert({
+                clinic_id: clinicId,
+                actor_id: user?.id ?? null,
+                actor_name: actorName,
+                action,
+                detail,
+                type,
+            });
+        } catch { /* audit is best-effort */ }
     }
 
     async addFamilyMember(headUserId: string, name: string, relation: string, age: string): Promise<ServiceResponse> {

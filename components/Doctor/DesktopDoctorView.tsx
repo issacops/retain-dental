@@ -16,7 +16,9 @@ import PatientProfile from './subcomponents/PatientProfile';
 const AppointmentScheduler = React.lazy(() => import('./subcomponents/AppointmentScheduler'));
 const FinancialLedger = React.lazy(() => import('./subcomponents/FinancialLedger'));
 const SocialPostGenerator = React.lazy(() => import('./subcomponents/SocialPostGenerator'));
+const SettingsView = React.lazy(() => import('./subcomponents/SettingsView'));
 import { Card, Label, SectionHeader, cn } from './ui/primitives';
+import { useToast } from '../../context/ToastContext';
 
 interface Props {
   currentUser: User;
@@ -38,6 +40,8 @@ interface Props {
   onToggleChecklistItem: (carePlanId: string, itemId: string) => Promise<any>;
   onDeletePatient: (patientId: string) => Promise<any>;
   onUpdateClinic: (clinicId: string, updates: Partial<Clinic>) => Promise<any>;
+  onUpdatePatient: (clinicId: string, patientId: string, updates: { name?: string; email?: string; mobile?: string; status?: string; metadata?: Record<string, any> }) => Promise<any>;
+  onGetAuditLog: (clinicId: string, limit?: number) => Promise<{ success: boolean; updatedData?: any[] }>;
   onRefreshData?: () => void;
 }
 
@@ -66,7 +70,7 @@ const DesktopDoctorView: React.FC<Props> = ({
   currentUser, allUsers, wallets, transactions, familyGroups, carePlans, clinic,
   onProcessTransaction, onUpdateCarePlan, onLinkFamily, onAddPatient, backendService,
   appointments, onSchedule, onUpdateAppointmentStatus, onAssignPlan, onToggleChecklistItem, onDeletePatient,
-  onUpdateClinic, onRefreshData,
+  onUpdateClinic, onUpdatePatient, onGetAuditLog, onRefreshData,
 }) => {
   const [activeSection, setActiveSection] = useState('Today');
   const [selectedPatient, setSelectedPatient] = useState<User | null>(null);
@@ -77,7 +81,31 @@ const DesktopDoctorView: React.FC<Props> = ({
   const [newPatientName, setNewPatientName] = useState('');
   const [newPatientMobile, setNewPatientMobile] = useState('');
   const [newPatientPin, setNewPatientPin] = useState('');
+  const [addPatientError, setAddPatientError] = useState<string | null>(null);
+  const [isAddingPatient, setIsAddingPatient] = useState(false);
   const [stats, setStats] = useState<any>({ totalRevenue: 0 });
+  const { addToast } = useToast();
+
+  const mobileDigits = newPatientMobile.replace(/\D/g, '');
+  const canSubmitPatient = newPatientName.trim().length >= 2 && mobileDigits.length >= 6;
+
+  const submitNewPatient = async () => {
+    if (!canSubmitPatient) {
+      setAddPatientError('Enter a name and a valid mobile number.');
+      return;
+    }
+    setIsAddingPatient(true);
+    setAddPatientError(null);
+    const res = await onAddPatient(newPatientName.trim(), mobileDigits, newPatientPin || '123456');
+    setIsAddingPatient(false);
+    if (res.success) {
+      addToast(`${newPatientName.trim()} added`, 'success');
+      setIsAddPatientModalOpen(false);
+      setNewPatientName(''); setNewPatientMobile(''); setNewPatientPin(''); setAddPatientError(null);
+    } else {
+      setAddPatientError(res.message || 'Could not add patient.');
+    }
+  };
 
   React.useEffect(() => {
     let mounted = true;
@@ -294,84 +322,19 @@ const DesktopDoctorView: React.FC<Props> = ({
                   </React.Suspense>
                 )}
                 {activeSection === 'Settings' && (
-                  <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
-                    <div className="space-y-6">
-                      <Card tone="white">
-                        <SectionHeader eyebrow="Loyalty" title="Point economics" />
-                        <div className="mt-6 grid gap-5 sm:grid-cols-2">
-                          <div>
-                            <Label>Default earn rate (%)</Label>
-                            <input type="number" defaultValue={clinic.loyaltyConfig?.defaultRate || 10}
-                              onBlur={(e) => onUpdateClinic(clinic.id, { loyaltyConfig: { ...clinic.loyaltyConfig, defaultRate: Number(e.target.value) } as any })}
-                              className="mt-2 w-full rounded-[14px] border border-ink-950/10 bg-cream-50 p-4 font-display text-2xl font-bold outline-none focus:border-ink-950/30" />
-                          </div>
-                          <div>
-                            <Label>Redemption value (per point)</Label>
-                            <input type="number" defaultValue={clinic.loyaltyConfig?.redemptionRate || 1}
-                              onBlur={(e) => onUpdateClinic(clinic.id, { loyaltyConfig: { ...clinic.loyaltyConfig, redemptionRate: Number(e.target.value) } as any })}
-                              className="mt-2 w-full rounded-[14px] border border-ink-950/10 bg-cream-50 p-4 font-display text-2xl font-bold outline-none focus:border-ink-950/30" />
-                          </div>
-                        </div>
-                        <div className="mt-6 border-t border-ink-950/5 pt-6">
-                          <Label>Category multipliers</Label>
-                          <div className="mt-3 grid gap-3 sm:grid-cols-3">
-                            {Object.values(TransactionCategory).map((cat) => (
-                              <div key={cat} className="rounded-[14px] border border-ink-950/10 bg-cream-50 p-4">
-                                <Label>{cat}</Label>
-                                <div className="mt-2 flex items-center gap-2">
-                                  <input type="number" placeholder="Default"
-                                    defaultValue={clinic.loyaltyConfig?.categoryRates?.[cat] || ''}
-                                    onBlur={(e) => {
-                                      const val = e.target.value ? Number(e.target.value) : undefined;
-                                      const next = { ...clinic.loyaltyConfig?.categoryRates, [cat]: val };
-                                      if (!val) delete (next as any)[cat];
-                                      onUpdateClinic(clinic.id, { loyaltyConfig: { ...clinic.loyaltyConfig, categoryRates: next } as any });
-                                    }}
-                                    className="w-full bg-transparent font-display text-lg font-bold outline-none" />
-                                  <span className="text-xs font-bold text-ink-400">%</span>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      </Card>
-
-                      <Card tone="white">
-                        <SectionHeader eyebrow="Brand" title="Clinic identity" />
-                        <div className="mt-6 grid gap-5 sm:grid-cols-2">
-                          <div>
-                            <Label>Primary colour</Label>
-                            <div className="mt-2 flex items-center gap-3 rounded-[14px] border border-ink-950/10 bg-cream-50 p-2.5">
-                              <span className="h-9 w-9 rounded-[10px]" style={{ backgroundColor: clinic.primaryColor }} />
-                              <input type="text" defaultValue={clinic.primaryColor}
-                                onBlur={(e) => onUpdateClinic(clinic.id, { primaryColor: e.target.value })}
-                                className="w-full bg-transparent font-mono text-sm font-bold outline-none" />
-                            </div>
-                          </div>
-                          <div>
-                            <Label>Theme</Label>
-                            <select value={clinic.themeTexture}
-                              onChange={(e) => onUpdateClinic(clinic.id, { themeTexture: e.target.value as any })}
-                              className="mt-2 w-full appearance-none rounded-[14px] border border-ink-950/10 bg-cream-50 p-4 text-sm font-semibold outline-none focus:border-ink-950/30">
-                              <option value="minimal">Minimal</option>
-                              <option value="glass">Glass</option>
-                              <option value="aurora">Aurora</option>
-                              <option value="grain">Grain</option>
-                            </select>
-                          </div>
-                        </div>
-                      </Card>
-                    </div>
-
-                    <Card tone="dark" className="h-fit">
-                      <Label onDark>Pro</Label>
-                      <h3 className="mt-3 font-display text-2xl font-bold tracking-tight text-cream-50">Multi-location & API</h3>
-                      <p className="mt-2 text-sm text-cream-50/60">Advanced configuration for groups, SSO, and integrations.</p>
-                      <button className="mt-5 w-full rounded-full bg-cream-50 px-5 py-2.5 text-xs font-bold uppercase tracking-[0.08em] text-ink-950 hover:bg-white transition-colors">
-                        Contact support
-                      </button>
-                    </Card>
-                  </div>
+                  <React.Suspense fallback={<SectionFallback />}>
+                    <SettingsView
+                      clinic={clinic}
+                      currentUser={currentUser}
+                      allUsers={allUsers}
+                      wallets={wallets}
+                      transactions={transactions}
+                      carePlans={carePlans}
+                      appointments={appointments}
+                      onUpdateClinic={onUpdateClinic}
+                      onGetAuditLog={onGetAuditLog}
+                    />
+                  </React.Suspense>
                 )}
               </div>
             )}
@@ -395,30 +358,56 @@ const DesktopDoctorView: React.FC<Props> = ({
             <div className="mt-7 space-y-5">
               <div>
                 <Label>Full name</Label>
-                <input type="text" placeholder="e.g. Riya Sharma" value={newPatientName} onChange={(e) => setNewPatientName(e.target.value)}
-                  className="mt-2 w-full rounded-[14px] border border-ink-950/10 bg-white p-4 text-base font-semibold outline-none focus:border-ink-950/30" />
+                <input
+                  type="text"
+                  autoFocus
+                  placeholder="e.g. Riya Sharma"
+                  value={newPatientName}
+                  onChange={(e) => { setNewPatientName(e.target.value); setAddPatientError(null); }}
+                  onKeyDown={(e) => e.key === 'Enter' && canSubmitPatient && submitNewPatient()}
+                  className="mt-2 w-full rounded-[14px] border border-ink-950/10 bg-white p-4 text-base font-semibold outline-none transition-colors focus:border-ink-950/30"
+                />
               </div>
               <div>
                 <Label>Mobile number</Label>
-                <input type="tel" placeholder="+91 00000 00000" value={newPatientMobile} onChange={(e) => setNewPatientMobile(e.target.value)}
-                  className="mt-2 w-full rounded-[14px] border border-ink-950/10 bg-white p-4 text-base font-semibold outline-none focus:border-ink-950/30" />
+                <input
+                  type="tel"
+                  placeholder="+91 00000 00000"
+                  value={newPatientMobile}
+                  onChange={(e) => { setNewPatientMobile(e.target.value); setAddPatientError(null); }}
+                  onKeyDown={(e) => e.key === 'Enter' && canSubmitPatient && submitNewPatient()}
+                  className="mt-2 w-full rounded-[14px] border border-ink-950/10 bg-white p-4 text-base font-semibold outline-none transition-colors focus:border-ink-950/30"
+                />
+                <p className="mt-1.5 text-xs text-ink-400">Used as the patient's login for the app. Must be unique in this clinic.</p>
               </div>
               <div>
                 <Label>Access PIN (optional)</Label>
-                <input type="text" placeholder="Default 123456" value={newPatientPin} onChange={(e) => setNewPatientPin(e.target.value)} maxLength={6}
-                  className="mt-2 w-full rounded-[14px] border border-ink-950/10 bg-white p-4 text-base font-semibold outline-none focus:border-ink-950/30" />
+                <input
+                  type="text"
+                  placeholder="Default 123456"
+                  value={newPatientPin}
+                  onChange={(e) => setNewPatientPin(e.target.value.replace(/\D/g, ''))}
+                  maxLength={6}
+                  inputMode="numeric"
+                  className="mt-2 w-full rounded-[14px] border border-ink-950/10 bg-white p-4 text-base font-semibold outline-none transition-colors focus:border-ink-950/30"
+                />
               </div>
+
+              {addPatientError && (
+                <p className="rounded-[14px] bg-blush-soft px-4 py-3 text-xs font-semibold text-blush-deep">{addPatientError}</p>
+              )}
+
               <button
-                onClick={async () => {
-                  if (!newPatientName || !newPatientMobile) { alert('Please enter a name and mobile number.'); return; }
-                  const res = await onAddPatient(newPatientName, newPatientMobile, newPatientPin || '123456');
-                  if (res.success) { setIsAddPatientModalOpen(false); setNewPatientName(''); setNewPatientMobile(''); setNewPatientPin(''); }
-                  else alert('Could not add patient: ' + res.message);
-                }}
-                className="w-full rounded-full bg-ink-950 py-4 text-sm font-bold uppercase tracking-[0.08em] text-cream-50 transition-colors hover:bg-ink-800"
+                onClick={submitNewPatient}
+                disabled={!canSubmitPatient || isAddingPatient}
+                className={cn(
+                  'w-full rounded-full py-4 text-sm font-bold uppercase tracking-[0.08em] transition-colors',
+                  canSubmitPatient && !isAddingPatient ? 'bg-ink-950 text-cream-50 hover:bg-ink-800' : 'cursor-not-allowed bg-ink-950/10 text-ink-400',
+                )}
               >
-                Create patient
+                {isAddingPatient ? 'Adding…' : 'Add patient'}
               </button>
+              <p className="text-center text-xs text-ink-400">You can complete the clinical chart from the patient's record.</p>
             </div>
           </div>
         </div>

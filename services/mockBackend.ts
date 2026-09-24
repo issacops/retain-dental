@@ -5,7 +5,9 @@ import {
   FamilyGroup, Clinic, CarePlan, ThemeTexture,
   Appointment, AppointmentStatus, AppointmentType,
   DatabaseState,
-  SystemConfig
+  SystemConfig,
+  AuditLog,
+  AuditType
 } from '../types';
 import { TIER_THRESHOLDS, TIER_REWARDS, REWARD_MULTIPLIERS, INITIAL_CLINICS, INITIAL_USERS, INITIAL_WALLETS, INITIAL_TRANSACTIONS, INITIAL_FAMILIES } from '../constants';
 import { IBackendService, ServiceResponse } from './IBackendService';
@@ -30,6 +32,7 @@ export class MockBackendService implements IBackendService {
   private carePlans: CarePlan[];
   private appointments: Appointment[];
   private activityLogs: GlobalActivityLog[] = [];
+  private auditLogs: AuditLog[] = [];
   private systemConfig: SystemConfig;
 
   private constructor() {
@@ -86,6 +89,7 @@ export class MockBackendService implements IBackendService {
         referralBonusPoints: 500
       };
       this.activityLogs = parsed.activityLogs || [];
+      this.auditLogs = parsed.auditLogs || [];
     } else {
       // Load from constants if no persistence
       this.clinics = [...INITIAL_CLINICS];
@@ -102,6 +106,7 @@ export class MockBackendService implements IBackendService {
         maintenanceMode: false,
         referralBonusPoints: 500
       };
+      this.auditLogs = [];
       this.generateInitialLogs();
     }
   }
@@ -125,7 +130,8 @@ export class MockBackendService implements IBackendService {
       carePlans: this.carePlans,
       appointments: this.appointments,
       systemConfig: this.systemConfig,
-      activityLogs: this.activityLogs
+      activityLogs: this.activityLogs,
+      auditLogs: this.auditLogs
     };
     localStorage.setItem('dentalOS_db_v2', JSON.stringify(state));
   }
@@ -150,6 +156,26 @@ export class MockBackendService implements IBackendService {
     });
     if (this.activityLogs.length > 100) this.activityLogs.pop();
     this.persist();
+  }
+
+  // Clinic-scoped compliance trail (immutable-ish, newest first)
+  private audit(clinicId: string, actorName: string, action: string, detail: string | undefined, type: AuditType) {
+    this.auditLogs.unshift({
+      id: `audit-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      clinicId,
+      actorName,
+      action,
+      detail,
+      type,
+      timestamp: new Date().toISOString(),
+    });
+    if (this.auditLogs.length > 500) this.auditLogs.pop();
+    this.persist();
+  }
+
+  public async getAuditLog(clinicId: string, limit = 100): Promise<ServiceResponse<AuditLog[]>> {
+    const rows = this.auditLogs.filter((l) => l.clinicId === clinicId).slice(0, limit);
+    return { success: true, message: 'Audit log fetched', updatedData: rows };
   }
 
   // --- ASYNC WRAPPERS ---
@@ -239,6 +265,8 @@ export class MockBackendService implements IBackendService {
       this.logActivity(clinic.name, user.name, `Redeemed ${actualRedeem} points for ${category === TransactionCategory.REWARD ? 'Reward' : 'Discount'}`, 'SUCCESS');
     }
 
+    const seq = this.transactions.filter(t => t.clinicId === clinicId && t.invoiceNo).length + 1;
+    const stamp = new Date().toISOString().slice(2, 10).replace(/-/g, '');
     this.transactions.unshift({
       id: `tx-${Date.now()}`,
       walletId: wallet.id,
@@ -249,8 +277,12 @@ export class MockBackendService implements IBackendService {
       type,
       date: new Date().toISOString(),
       description: carePlanTemplate ? carePlanTemplate.name : `${category} Visit`,
-      carePlanId: newCarePlanId
+      carePlanId: newCarePlanId,
+      invoiceNo: type === TransactionType.EARN ? `INV-${stamp}-${String(seq).padStart(4, '0')}` : undefined,
     });
+    if (type === TransactionType.EARN) {
+      this.audit(clinicId, 'Clinic staff', `Recorded payment ₹${amount.toLocaleString()}`, `${user.name} · ${category}`, 'FINANCE');
+    }
 
     this.persist();
     return { success: true, message: 'Ledger updated', updatedData: await this.getData() };
@@ -314,6 +346,7 @@ export class MockBackendService implements IBackendService {
 
     this.clinics[index] = { ...this.clinics[index], ...updates };
     this.logActivity(this.clinics[index].name, 'Super Admin', 'Updated Node Configuration', 'INFO');
+    this.audit(clinicId, 'Clinic admin', 'Updated clinic settings', Object.keys(updates).join(', '), 'INFO');
     this.persist();
 
     return { success: true, message: 'Node Updated', updatedData: await this.getData() };
@@ -404,11 +437,12 @@ export class MockBackendService implements IBackendService {
   }
 
   public async scheduleAppointment(clinicId: string, patientId: string, doctorId: string | undefined, startTime: string, endTime: string, type: AppointmentType, notes?: string): Promise<ServiceResponse> {
+    // Standard half-open interval overlap: [start, end) vs [a.start, a.end)
     const overlap = this.appointments.find(a =>
       a.clinicId === clinicId &&
       a.status !== AppointmentStatus.CANCELLED &&
-      ((new Date(startTime) >= new Date(a.startTime) && new Date(startTime) < new Date(a.endTime)) ||
-        (new Date(endTime) > new Date(a.startTime) && new Date(endTime) <= new Date(a.endTime)))
+      new Date(startTime) < new Date(a.endTime) &&
+      new Date(endTime) > new Date(a.startTime)
     );
 
     if (overlap) return { success: false, message: 'Time slot unavailable', error: 'CONFLICT_ERR' };
@@ -429,6 +463,7 @@ export class MockBackendService implements IBackendService {
     this.appointments.push(newAppt);
     const patientName = this.users.find(u => u.id === patientId)?.name || 'Unknown';
     this.logActivity(this.clinics.find(c => c.id === clinicId)?.name || 'Clinic', patientName, `Scheduled ${type} appointment`, 'INFO');
+    this.audit(clinicId, 'Front desk', `Booked ${type} appointment`, `${patientName} · ${new Date(startTime).toLocaleString()}`, 'CLINICAL');
 
     this.persist();
     return { success: true, message: 'Appointment locked', updatedData: await this.getData() };
@@ -439,6 +474,7 @@ export class MockBackendService implements IBackendService {
     if (!appt) return { success: false, message: 'Appointment not found', error: 'NOT_FOUND' };
 
     appt.status = status;
+    this.audit(appt.clinicId, 'Clinic staff', `Appointment marked ${status}`, this.users.find(u => u.id === appt.patientId)?.name, 'CLINICAL');
     this.persist();
     return { success: true, message: `Status updated to ${status}`, updatedData: await this.getData() };
   }
@@ -503,6 +539,7 @@ export class MockBackendService implements IBackendService {
       metadata: template.metadata || {}
     };
     this.carePlans.unshift(newPlan);
+    this.audit(clinicId, 'Clinic staff', `Started ${template.name}`, this.users.find(u => u.id === patientId)?.name, 'CLINICAL');
     this.persist();
     return { success: true, message: 'Plan Assigned', updatedData: await this.getData() };
   }
@@ -512,32 +549,78 @@ export class MockBackendService implements IBackendService {
     if (plan) {
       plan.isActive = false;
       plan.status = 'CANCELLED';
+      this.audit(plan.clinicId, 'Clinic staff', `Ended ${plan.treatmentName}`, this.users.find(u => u.id === plan.userId)?.name, 'CLINICAL');
       this.persist();
       return { success: true, message: 'Plan Terminated', updatedData: await this.getData() };
     }
     return { success: false, message: 'Plan not found' };
   }
 
-  public async addPatient(clinicId: string, name: string, mobile: string): Promise<ServiceResponse> {
-    if (this.users.find(u => u.mobile === mobile && u.clinicId === clinicId)) return { success: false, message: 'Identity exists', error: 'CONFLICT_ERR' };
+  public async addPatient(clinicId: string, name: string, mobile: string, pin?: string): Promise<ServiceResponse> {
+    const cleanName = (name || '').trim();
+    const cleanMobile = (mobile || '').replace(/\D/g, '');
+    if (!cleanName) return { success: false, message: 'A patient name is required', error: 'VALIDATION_ERR' };
+    if (cleanMobile.length < 6) return { success: false, message: 'Enter a valid mobile number', error: 'VALIDATION_ERR' };
+    if (this.users.find(u => u.mobile === cleanMobile && u.clinicId === clinicId)) {
+      return { success: false, message: 'A patient with this mobile already exists', error: 'CONFLICT_ERR' };
+    }
     const newUserId = `user-${Date.now()}`;
     const newUser: User = {
-      id: newUserId, clinicId, name, mobile, role: Role.PATIENT,
-      lifetimeSpend: 0, currentTier: Tier.MEMBER, joinedAt: new Date().toISOString()
+      id: newUserId, clinicId, name: cleanName, mobile: cleanMobile, role: Role.PATIENT,
+      status: 'ACTIVE',
+      lifetimeSpend: 0, currentTier: Tier.MEMBER, joinedAt: new Date().toISOString(),
+      metadata: pin ? { pin } : {},
     };
     this.users.push(newUser);
     this.wallets.push({ id: `w-${Date.now()}`, userId: newUserId, balance: 0, lastTransactionAt: new Date().toISOString() });
+    this.audit(clinicId, 'Front desk', `Added patient ${cleanName}`, cleanMobile, 'CLINICAL');
     this.persist();
-    return { success: true, message: 'Patient onboarded', updatedData: await this.getData() };
+    return { success: true, message: 'Patient added', updatedData: await this.getData() };
+  }
+
+  public async updatePatient(
+    clinicId: string,
+    patientId: string,
+    updates: { name?: string; email?: string; mobile?: string; status?: string; metadata?: Record<string, any> },
+  ): Promise<ServiceResponse<DatabaseState>> {
+    const user = this.users.find(u => u.id === patientId && u.clinicId === clinicId);
+    if (!user) return { success: false, message: 'Patient not found', error: 'NOT_FOUND' };
+
+    if (updates.mobile) {
+      const cleanMobile = updates.mobile.replace(/\D/g, '');
+      const clash = this.users.find(u => u.clinicId === clinicId && u.id !== patientId && u.mobile === cleanMobile);
+      if (clash) return { success: false, message: 'Another patient already uses this mobile', error: 'CONFLICT_ERR' };
+      user.mobile = cleanMobile;
+    }
+    if (updates.name !== undefined) user.name = updates.name.trim() || user.name;
+    if (updates.email !== undefined) user.email = updates.email.trim();
+    if (updates.status !== undefined) user.status = updates.status as User['status'];
+    if (updates.metadata) user.metadata = { ...(user.metadata || {}), ...updates.metadata };
+
+    this.audit(clinicId, 'Clinic staff', `Updated record for ${user.name}`, Object.keys(updates).join(', '), 'CLINICAL');
+    this.persist();
+    return { success: true, message: 'Patient updated', updatedData: await this.getData() };
   }
 
   public async deletePatient(clinicId: string, patientId: string): Promise<ServiceResponse> {
+    const user = this.users.find(u => u.id === patientId);
+    const walletIds = this.wallets.filter(w => w.userId === patientId).map(w => w.id);
+
     this.users = this.users.filter(u => u.id !== patientId);
     this.wallets = this.wallets.filter(w => w.userId !== patientId);
-    // Cleanup related data
+    // Cascade: clinical + financial records must not outlive the patient
     this.carePlans = this.carePlans.filter(cp => cp.userId !== patientId);
     this.appointments = this.appointments.filter(a => a.patientId !== patientId);
+    this.transactions = this.transactions.filter(t => !walletIds.includes(t.walletId));
 
+    // Remove from any family group they belonged to
+    this.familyGroups.forEach(fg => {
+      if (fg.headUserId === patientId) {
+        this.users = this.users.map(u => u.familyGroupId === fg.id ? { ...u, familyGroupId: undefined } : u);
+      }
+    });
+
+    this.audit(clinicId, 'Clinic staff', `Deleted patient record`, user?.name || patientId, 'SECURITY');
     this.persist();
     return { success: true, message: 'Patient Removed' };
   }
@@ -546,6 +629,7 @@ export class MockBackendService implements IBackendService {
     const user = this.users.find(u => u.id === patientId);
     if (!user) return { success: false, message: 'Patient not found', error: 'NOT_FOUND' };
     user.metadata = { ...(user.metadata || {}), ...metadata };
+    this.audit(user.clinicId, 'Clinic staff', `Updated ${user.name}'s clinical record`, Object.keys(metadata).join(', '), 'CLINICAL');
     this.persist();
     return { success: true, message: 'Metadata updated', updatedData: await this.getData() };
   }
@@ -579,6 +663,7 @@ export class MockBackendService implements IBackendService {
       headUser.familyGroupId = familyGroup.id;
     }
     memberUser.familyGroupId = familyGroup.id;
+    this.audit(headUser.clinicId, 'Front desk', 'Linked household', `${memberUser.name} → ${headUser.name}`, 'CLINICAL');
     this.persist();
     return { success: true, message: 'Household linked', updatedData: await this.getData() };
   }

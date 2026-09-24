@@ -8,7 +8,8 @@ import {
     TransactionCategory,
     AppointmentStatus,
     SystemConfig,
-    DatabaseState
+    DatabaseState,
+    AuditLog
 } from '../types';
 
 export interface ServiceResponse<T = any> {
@@ -69,6 +70,12 @@ export interface IBackendService {
     // --- MEMBER & LOYALTY ---
 
     addPatient(clinicId: string, name: string, mobile: string, pin?: string): Promise<ServiceResponse>;
+
+    updatePatient(
+        clinicId: string,
+        patientId: string,
+        updates: { name?: string; email?: string; mobile?: string; status?: string; metadata?: Record<string, any> }
+    ): Promise<ServiceResponse<DatabaseState>>;
 
     deletePatient(clinicId: string, patientId: string): Promise<ServiceResponse>;
 
@@ -131,4 +138,9 @@ export interface IBackendService {
     hardDeleteUser(userId: string): Promise<ServiceResponse>;
 
     getRetentionMetrics(clinicId: string): Promise<any>;
+
+    /**
+     * Clinic-scoped compliance trail (newest first).
+     */
+    getAuditLog(clinicId: string, limit?: number): Promise<ServiceResponse<AuditLog[]>>;
 }
