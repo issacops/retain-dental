@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { User, Wallet, Transaction, Tier, TransactionType, Clinic, CarePlan, TransactionCategory, FamilyGroup, AppointmentType, Appointment, TIER_THRESHOLDS, TIER_BENEFITS } from '../../types';
 import { Home, User as UserIcon, ShieldCheck, History, Calendar, Sparkles, HeartPulse, ChevronRight, PhoneCall, AlertTriangle, Zap, CircleCheck, ClipboardList, Trophy, Activity as ActivityIcon, Globe, Users, Lock, X, CheckCircle, Gift, ArrowUpRight, ArrowDownLeft } from 'lucide-react';
+import NotificationCenter from './subcomponents/NotificationCenter';
 import confetti from 'canvas-confetti';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -25,6 +26,10 @@ interface MobilePatientViewProps {
   onSwitchProfile: (userId: string) => void;
   onRedeem: (patientId: string, amount: number, category: TransactionCategory, type: TransactionType, template?: any) => Promise<any>;
   onLinkFamily: (headUserId: string, memberMobile: string) => Promise<any>;
+  onGetNotifications?: (clinicId: string, patientId?: string) => Promise<{ success: boolean; updatedData?: any[] }>;
+  onMarkNotificationRead?: (id: string) => Promise<{ success: boolean }>;
+  onSavePushSubscription?: (userId: string, clinicId: string, sub: any) => Promise<{ success: boolean }>;
+  onDeletePushSubscription?: (endpoint: string) => Promise<{ success: boolean }>;
   defaultTab?: 'HOME' | 'WALLET' | 'CARE' | 'PROFILE';
 }
 
@@ -146,6 +151,10 @@ export default function MobilePatientView({
   onRedeem,
   onLinkFamily,
   onUpdateCarePlan,
+  onGetNotifications,
+  onMarkNotificationRead,
+  onSavePushSubscription,
+  onDeletePushSubscription,
   defaultTab = 'HOME' as const
 }: MobilePatientViewProps) {
   const [activeTab, setActiveTab] = useState<'HOME' | 'WALLET' | 'CARE' | 'PROFILE'>(defaultTab);
@@ -533,6 +542,17 @@ export default function MobilePatientView({
                     <p className="text-3xl font-black text-emerald-500 tracking-tighter">84%</p>
                   </div>
                 </div>
+
+                {onGetNotifications && onMarkNotificationRead && onSavePushSubscription && onDeletePushSubscription && (
+                  <NotificationCenter
+                    currentUser={currentUser}
+                    clinic={clinic}
+                    onGetNotifications={onGetNotifications}
+                    onMarkNotificationRead={onMarkNotificationRead}
+                    onSavePushSubscription={onSavePushSubscription}
+                    onDeletePushSubscription={onDeletePushSubscription}
+                  />
+                )}
 
                 <div className="space-y-6 pt-6 border-t border-slate-100">
                   <div className="flex justify-between items-center">

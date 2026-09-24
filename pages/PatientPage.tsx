@@ -70,6 +70,11 @@ export const PatientPage: React.FC<Props> = (props) => {
                 onRedeem={props.onRedeem || (async () => {})}
                 onLinkFamily={props.onLinkFamily || (async () => {})}
                 onUpdateCarePlan={props.onUpdateCarePlan}
+                defaultTab={props.defaultTab}
+                onGetNotifications={props.onGetNotifications}
+                onMarkNotificationRead={props.onMarkNotificationRead}
+                onSavePushSubscription={props.onSavePushSubscription}
+                onDeletePushSubscription={props.onDeletePushSubscription}
             />
         </div>
     );

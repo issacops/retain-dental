@@ -67,3 +67,5 @@ brag-output*/
 # dev-only clinic UI preview (auth bypass)
 preview.html
 preview.tsx
+preview-patient.html
+preview-patient.tsx

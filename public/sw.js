@@ -59,13 +59,13 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-// Listen for Push Notifications
+// Listen for Push Notifications (Web Push from the clinic dashboard)
 self.addEventListener('push', function (event) {
-  let data = { title: "Retain OS", content: "You have a new update in your Care Plan." };
+  let data = { title: 'Retain Dental', content: 'You have a new message from your clinic.', url: '/patient' };
 
   if (event.data) {
     try {
-      data = event.data.json();
+      data = Object.assign(data, event.data.json());
     } catch (e) {
       data.content = event.data.text();
     }
@@ -75,10 +75,13 @@ self.addEventListener('push', function (event) {
     body: data.content,
     icon: '/icon-192.png',
     badge: '/icon-192.png',
-    vibrate: [200, 100, 200, 100, 200, 100, 200],
+    tag: 'retain-' + (data.category || 'general'),
+    renotify: true,
+    vibrate: [200, 100, 200],
     data: {
-      dateOfArrival: Date.now(),
-      primaryKey: '2'
+      url: data.url || '/patient',
+      category: data.category || 'general',
+      dateOfArrival: Date.now()
     }
   };
 
@@ -93,18 +96,21 @@ self.addEventListener('notificationclick', function (event) {
 
   event.notification.close();
 
+  const target = (event.notification.data && event.notification.data.url) || '/patient';
+
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (clientList) {
-      if (clientList.length > 0) {
-        let client = clientList[0];
-        for (let i = 0; i < clientList.length; i++) {
-          if (clientList[i].focused) {
-            client = clientList[i];
-          }
+      for (let i = 0; i < clientList.length; i++) {
+        if (clientList[i].focused) {
+          clientList[i].navigate(target);
+          return clientList[i].focus();
         }
-        return client.focus();
       }
-      return clients.openWindow('/');
+      if (clientList.length > 0) {
+        clientList[0].navigate(target);
+        return clientList[0].focus();
+      }
+      return clients.openWindow(target);
     })
   );
 });

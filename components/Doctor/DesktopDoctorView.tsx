@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import {
   LayoutGrid, CalendarDays, Users, TrendingUp, CreditCard, Settings as SettingsIcon,
-  Search, Bell, Plus, X, QrCode, Activity, LogOut, Zap,
+  Search, Bell, Plus, X, QrCode, Activity, LogOut, Zap, MessageSquare,
 } from 'lucide-react';
 import { IBackendService } from '../../services/IBackendService';
 import {
@@ -17,6 +17,7 @@ const AppointmentScheduler = React.lazy(() => import('./subcomponents/Appointmen
 const FinancialLedger = React.lazy(() => import('./subcomponents/FinancialLedger'));
 const SocialPostGenerator = React.lazy(() => import('./subcomponents/SocialPostGenerator'));
 const SettingsView = React.lazy(() => import('./subcomponents/SettingsView'));
+const MessagesView = React.lazy(() => import('./subcomponents/MessagesView'));
 import { Card, Label, SectionHeader, cn } from './ui/primitives';
 import { useToast } from '../../context/ToastContext';
 
@@ -42,6 +43,12 @@ interface Props {
   onUpdateClinic: (clinicId: string, updates: Partial<Clinic>) => Promise<any>;
   onUpdatePatient: (clinicId: string, patientId: string, updates: { name?: string; email?: string; mobile?: string; status?: string; metadata?: Record<string, any> }) => Promise<any>;
   onGetAuditLog: (clinicId: string, limit?: number) => Promise<{ success: boolean; updatedData?: any[] }>;
+  onGetNotificationTemplates: (clinicId: string) => Promise<{ success: boolean; updatedData?: any[] }>;
+  onSaveNotificationTemplate: (clinicId: string, t: any) => Promise<{ success: boolean; updatedData?: any[]; message?: string }>;
+  onDeleteNotificationTemplate: (id: string) => Promise<{ success: boolean; updatedData?: any[] }>;
+  onSendNotifications: (clinicId: string, patientIds: string[], payload: any, actorName: string) => Promise<{ success: boolean; message?: string }>;
+  onGetNotifications: (clinicId: string) => Promise<{ success: boolean; updatedData?: any[] }>;
+  onGetPushSubscriptionCount: (clinicId: string) => Promise<{ success: boolean; updatedData?: number }>;
   onRefreshData?: () => void;
 }
 
@@ -56,6 +63,7 @@ const NAV: { group: string; items: { id: string; icon: React.ElementType }[] }[]
     { id: 'Today', icon: LayoutGrid },
     { id: 'Schedule', icon: CalendarDays },
     { id: 'Patients', icon: Users },
+    { id: 'Messages', icon: MessageSquare },
   ] },
   { group: 'Growth', items: [
     { id: 'Retention', icon: TrendingUp },
@@ -71,6 +79,8 @@ const DesktopDoctorView: React.FC<Props> = ({
   onProcessTransaction, onUpdateCarePlan, onLinkFamily, onAddPatient, backendService,
   appointments, onSchedule, onUpdateAppointmentStatus, onAssignPlan, onToggleChecklistItem, onDeletePatient,
   onUpdateClinic, onUpdatePatient, onGetAuditLog, onRefreshData,
+  onGetNotificationTemplates, onSaveNotificationTemplate, onDeleteNotificationTemplate,
+  onSendNotifications, onGetNotifications, onGetPushSubscriptionCount,
 }) => {
   const [activeSection, setActiveSection] = useState('Today');
   const [selectedPatient, setSelectedPatient] = useState<User | null>(null);
@@ -310,6 +320,25 @@ const DesktopDoctorView: React.FC<Props> = ({
                     onUpdateStatus={onUpdateAppointmentStatus}
                     onViewProfile={openPatient}
                   />
+                  </React.Suspense>
+                )}
+                {activeSection === 'Messages' && (
+                  <React.Suspense fallback={<SectionFallback />}>
+                    <MessagesView
+                      clinic={clinic}
+                      currentUser={currentUser}
+                      allUsers={allUsers}
+                      wallets={wallets}
+                      transactions={transactions}
+                      appointments={appointments}
+                      carePlans={carePlans}
+                      onGetNotificationTemplates={onGetNotificationTemplates}
+                      onSaveNotificationTemplate={onSaveNotificationTemplate}
+                      onDeleteNotificationTemplate={onDeleteNotificationTemplate}
+                      onSendNotifications={onSendNotifications}
+                      onGetNotifications={onGetNotifications}
+                      onGetPushSubscriptionCount={onGetPushSubscriptionCount}
+                    />
                   </React.Suspense>
                 )}
                 {activeSection === 'Retention' && (

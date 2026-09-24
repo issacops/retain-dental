@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, User, CreditCard, Calendar, LayoutGrid, TrendingUp, Users, Settings, Sparkles, QrCode, UserPlus } from 'lucide-react';
+import { Search, User, CreditCard, Calendar, LayoutGrid, TrendingUp, Users, Settings, Sparkles, QrCode, UserPlus, MessageSquare } from 'lucide-react';
 import { User as UserModel } from '../../../types';
 
 interface CommandPaletteProps {
@@ -16,6 +16,7 @@ const NAV_ITEMS: NavItem[] = [
     { id: 'Today', label: 'Go to Today', icon: <LayoutGrid size={15} />, section: 'Today' },
     { id: 'Schedule', label: 'Go to Schedule', icon: <Calendar size={15} />, section: 'Schedule' },
     { id: 'Patients', label: 'Go to Patients', icon: <Users size={15} />, section: 'Patients' },
+    { id: 'Messages', label: 'Go to Messages', icon: <MessageSquare size={15} />, section: 'Messages' },
     { id: 'Retention', label: 'Go to Retention', icon: <TrendingUp size={15} />, section: 'Retention' },
     { id: 'Payments', label: 'Go to Payments', icon: <CreditCard size={15} />, section: 'Payments' },
     { id: 'Settings', label: 'Go to Settings', icon: <Settings size={15} />, section: 'Settings' },

@@ -7,10 +7,15 @@ import {
   DatabaseState,
   SystemConfig,
   AuditLog,
-  AuditType
+  AuditType,
+  NotificationTemplate,
+  NotificationCategory,
+  PatientNotification,
+  PushSubscriptionRecord
 } from '../types';
 import { TIER_THRESHOLDS, TIER_REWARDS, REWARD_MULTIPLIERS, INITIAL_CLINICS, INITIAL_USERS, INITIAL_WALLETS, INITIAL_TRANSACTIONS, INITIAL_FAMILIES } from '../constants';
 import { IBackendService, ServiceResponse } from './IBackendService';
+import { BUILT_IN_TEMPLATES, OPT_OUT_CATEGORIES, OPT_OUT_LINE } from '../constants/notificationTemplates';
 
 export interface GlobalActivityLog {
   id: string;
@@ -33,6 +38,9 @@ export class MockBackendService implements IBackendService {
   private appointments: Appointment[];
   private activityLogs: GlobalActivityLog[] = [];
   private auditLogs: AuditLog[] = [];
+  private notificationTemplates: NotificationTemplate[] = [];
+  private notifications: PatientNotification[] = [];
+  private pushSubscriptions: PushSubscriptionRecord[] = [];
   private systemConfig: SystemConfig;
 
   private constructor() {
@@ -90,6 +98,9 @@ export class MockBackendService implements IBackendService {
       };
       this.activityLogs = parsed.activityLogs || [];
       this.auditLogs = parsed.auditLogs || [];
+      this.notificationTemplates = parsed.notificationTemplates || [];
+      this.notifications = parsed.notifications || [];
+      this.pushSubscriptions = parsed.pushSubscriptions || [];
     } else {
       // Load from constants if no persistence
       this.clinics = [...INITIAL_CLINICS];
@@ -107,6 +118,9 @@ export class MockBackendService implements IBackendService {
         referralBonusPoints: 500
       };
       this.auditLogs = [];
+      this.notificationTemplates = [];
+      this.notifications = [];
+      this.pushSubscriptions = [];
       this.generateInitialLogs();
     }
   }
@@ -131,7 +145,10 @@ export class MockBackendService implements IBackendService {
       appointments: this.appointments,
       systemConfig: this.systemConfig,
       activityLogs: this.activityLogs,
-      auditLogs: this.auditLogs
+      auditLogs: this.auditLogs,
+      notificationTemplates: this.notificationTemplates,
+      notifications: this.notifications,
+      pushSubscriptions: this.pushSubscriptions
     };
     localStorage.setItem('dentalOS_db_v2', JSON.stringify(state));
   }
@@ -176,6 +193,93 @@ export class MockBackendService implements IBackendService {
   public async getAuditLog(clinicId: string, limit = 100): Promise<ServiceResponse<AuditLog[]>> {
     const rows = this.auditLogs.filter((l) => l.clinicId === clinicId).slice(0, limit);
     return { success: true, message: 'Audit log fetched', updatedData: rows };
+  }
+
+  // --- PATIENT MESSAGING & NOTIFICATIONS ---
+
+  public async getNotificationTemplates(clinicId: string): Promise<ServiceResponse<NotificationTemplate[]>> {
+    const custom = this.notificationTemplates.filter((t) => t.clinicId === clinicId);
+    return { success: true, message: 'Templates fetched', updatedData: [...custom, ...BUILT_IN_TEMPLATES] };
+  }
+
+  public async saveNotificationTemplate(
+    clinicId: string,
+    template: { id?: string; name: string; category: NotificationCategory; title: string; body: string },
+  ): Promise<ServiceResponse<NotificationTemplate[]>> {
+    if (template.id) {
+      const idx = this.notificationTemplates.findIndex((t) => t.id === template.id && t.clinicId === clinicId);
+      if (idx === -1) return { success: false, message: 'Template not found', error: 'NOT_FOUND' };
+      this.notificationTemplates[idx] = { ...this.notificationTemplates[idx], ...template, clinicId };
+    } else {
+      this.notificationTemplates.unshift({
+        id: `tpl-${Date.now()}`, clinicId, builtIn: false,
+        name: template.name, category: template.category, title: template.title, body: template.body,
+      });
+    }
+    this.audit(clinicId, 'Clinic staff', 'Saved a notification template', template.name, 'INFO');
+    this.persist();
+    return this.getNotificationTemplates(clinicId);
+  }
+
+  public async deleteNotificationTemplate(templateId: string): Promise<ServiceResponse<NotificationTemplate[]>> {
+    const found = this.notificationTemplates.find((t) => t.id === templateId);
+    this.notificationTemplates = this.notificationTemplates.filter((t) => t.id !== templateId);
+    this.persist();
+    return this.getNotificationTemplates(found?.clinicId || '');
+  }
+
+  public async sendNotifications(
+    clinicId: string,
+    patientIds: string[],
+    payload: { title: string; body: string; category: NotificationCategory },
+    actorName: string,
+  ): Promise<ServiceResponse<PatientNotification[]>> {
+    if (!patientIds.length) return { success: false, message: 'No recipients selected', error: 'VALIDATION_ERR' };
+    const now = new Date().toISOString();
+    const body = OPT_OUT_CATEGORIES.includes(payload.category) ? `${payload.body}\n\n${OPT_OUT_LINE}` : payload.body;
+    const created: PatientNotification[] = patientIds.map((pid) => ({
+      id: `notif-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+      clinicId, patientId: pid, title: payload.title, body,
+      category: payload.category, status: 'SENT', createdAt: now, sentAt: now, sentBy: actorName,
+    }));
+    this.notifications = [...created, ...this.notifications];
+    this.audit(clinicId, actorName, `Sent a notification to ${patientIds.length} patient${patientIds.length === 1 ? '' : 's'}`, payload.title, 'INFO');
+    this.persist();
+    return { success: true, message: `Sent to ${patientIds.length} patient${patientIds.length === 1 ? '' : 's'}`, updatedData: created };
+  }
+
+  public async getNotifications(clinicId: string, patientId?: string): Promise<ServiceResponse<PatientNotification[]>> {
+    const rows = this.notifications.filter((n) => n.clinicId === clinicId && (!patientId || n.patientId === patientId));
+    return { success: true, message: 'Notifications fetched', updatedData: rows };
+  }
+
+  public async markNotificationRead(notificationId: string): Promise<ServiceResponse> {
+    const n = this.notifications.find((x) => x.id === notificationId);
+    if (n) { n.status = 'READ'; n.readAt = new Date().toISOString(); this.persist(); }
+    return { success: true, message: 'Marked as read' };
+  }
+
+  public async savePushSubscription(
+    userId: string,
+    clinicId: string,
+    sub: { endpoint: string; keys: { p256dh: string; auth: string } },
+  ): Promise<ServiceResponse> {
+    this.pushSubscriptions = this.pushSubscriptions.filter((s) => s.endpoint !== sub.endpoint);
+    this.pushSubscriptions.push({
+      id: `push-${Date.now()}`, userId, clinicId, endpoint: sub.endpoint, keys: sub.keys, createdAt: new Date().toISOString(),
+    });
+    this.persist();
+    return { success: true, message: 'Push subscription saved' };
+  }
+
+  public async deletePushSubscription(endpoint: string): Promise<ServiceResponse> {
+    this.pushSubscriptions = this.pushSubscriptions.filter((s) => s.endpoint !== endpoint);
+    this.persist();
+    return { success: true, message: 'Push subscription removed' };
+  }
+
+  public async getPushSubscriptionCount(clinicId: string): Promise<ServiceResponse<number>> {
+    return { success: true, message: 'ok', updatedData: this.pushSubscriptions.filter((s) => s.clinicId === clinicId).length };
   }
 
   // --- ASYNC WRAPPERS ---

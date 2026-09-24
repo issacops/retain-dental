@@ -202,6 +202,10 @@ export const AppRouter: React.FC<RouterProps> = ({ appState, handlers, backendSe
                             onSwitchProfile={handlers.onSwitchProfile}
                             onRedeem={handlers.onProcessTransaction}
                             onLinkFamily={handlers.onLinkFamily}
+                            onGetNotifications={handlers.onGetNotifications}
+                            onMarkNotificationRead={handlers.onMarkNotificationRead}
+                            onSavePushSubscription={handlers.onSavePushSubscription}
+                            onDeletePushSubscription={handlers.onDeletePushSubscription}
                         />
                     </PatientGuard>
                 } />

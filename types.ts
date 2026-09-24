@@ -150,6 +150,45 @@ export interface AuditLog {
   timestamp: string;
 }
 
+// --- Patient messaging & notifications -----------------------------------
+
+export type NotificationCategory = 'Appointment' | 'Recall' | 'Clinical' | 'Financial' | 'Loyalty' | 'Retention';
+
+export interface NotificationTemplate {
+  id: string;
+  clinicId?: string; // undefined = built-in library template
+  name: string;
+  category: NotificationCategory;
+  title: string;
+  body: string;
+  builtIn?: boolean;
+}
+
+export type NotificationStatus = 'QUEUED' | 'SENT' | 'READ' | 'FAILED';
+
+export interface PatientNotification {
+  id: string;
+  clinicId: string;
+  patientId: string;
+  title: string;
+  body: string;
+  category: NotificationCategory;
+  status: NotificationStatus;
+  createdAt: string;
+  sentAt?: string;
+  readAt?: string;
+  sentBy?: string;
+}
+
+export interface PushSubscriptionRecord {
+  id: string;
+  userId: string;
+  clinicId: string;
+  endpoint: string;
+  keys: { p256dh: string; auth: string };
+  createdAt: string;
+}
+
 export interface FamilyGroup {
   id: string;
   clinicId: string;

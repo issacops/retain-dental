@@ -4,9 +4,11 @@ import {
     User, Wallet, Transaction, Clinic, CarePlan, Appointment,
     AppointmentType, AppointmentStatus, ThemeTexture,
     TransactionCategory, TransactionType, FamilyGroup,
-    DatabaseState, SystemConfig, Tier, TIER_THRESHOLDS, AuditLog, AuditType
+    DatabaseState, SystemConfig, Tier, TIER_THRESHOLDS, AuditLog, AuditType,
+    NotificationTemplate, NotificationCategory, PatientNotification
 } from '../types';
 import { IBackendService, ServiceResponse } from './IBackendService';
+import { BUILT_IN_TEMPLATES, OPT_OUT_CATEGORIES, OPT_OUT_LINE } from '../constants/notificationTemplates';
 
 // Environment variables should be used here
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || '';
@@ -622,6 +624,158 @@ export class SupabaseService implements IBackendService {
             // Table may not exist yet on an older install — degrade gracefully.
             console.warn('Audit log unavailable:', e?.message);
             return { success: true, message: 'Audit log unavailable', updatedData: [] };
+        }
+    }
+
+    // --- PATIENT MESSAGING & NOTIFICATIONS ---
+
+    async getNotificationTemplates(clinicId: string): Promise<ServiceResponse<NotificationTemplate[]>> {
+        try {
+            const { data, error } = await this.supabase
+                .from('notification_templates')
+                .select('*')
+                .eq('clinic_id', clinicId)
+                .order('created_at', { ascending: false });
+            if (error) throw error;
+            const custom: NotificationTemplate[] = (data || []).map((t: any) => ({
+                id: t.id, clinicId: t.clinic_id, name: t.name, category: t.category,
+                title: t.title, body: t.body, builtIn: false,
+            }));
+            return { success: true, message: 'Templates fetched', updatedData: [...custom, ...BUILT_IN_TEMPLATES] };
+        } catch (e: any) {
+            console.warn('Templates unavailable:', e?.message);
+            return { success: true, message: 'Built-in templates only', updatedData: [...BUILT_IN_TEMPLATES] };
+        }
+    }
+
+    async saveNotificationTemplate(
+        clinicId: string,
+        template: { id?: string; name: string; category: NotificationCategory; title: string; body: string },
+    ): Promise<ServiceResponse<NotificationTemplate[]>> {
+        try {
+            if (template.id) {
+                const { error } = await this.supabase.from('notification_templates')
+                    .update({ name: template.name, category: template.category, title: template.title, body: template.body })
+                    .eq('id', template.id).eq('clinic_id', clinicId);
+                if (error) throw error;
+            } else {
+                const { error } = await this.supabase.from('notification_templates')
+                    .insert({ clinic_id: clinicId, name: template.name, category: template.category, title: template.title, body: template.body });
+                if (error) throw error;
+            }
+            await this.recordAudit(clinicId, 'Clinic staff', 'Saved a notification template', template.name, 'INFO');
+            return this.getNotificationTemplates(clinicId);
+        } catch (e: any) {
+            return { success: false, message: e.message || 'Failed to save template', error: 'DB_ERR' };
+        }
+    }
+
+    async deleteNotificationTemplate(templateId: string): Promise<ServiceResponse<NotificationTemplate[]>> {
+        try {
+            const { data } = await this.supabase.from('notification_templates').select('clinic_id').eq('id', templateId).single();
+            const { error } = await this.supabase.from('notification_templates').delete().eq('id', templateId);
+            if (error) throw error;
+            return this.getNotificationTemplates(data?.clinic_id || '');
+        } catch (e: any) {
+            return { success: false, message: e.message || 'Failed to delete template', error: 'DB_ERR' };
+        }
+    }
+
+    async sendNotifications(
+        clinicId: string,
+        patientIds: string[],
+        payload: { title: string; body: string; category: NotificationCategory },
+        actorName: string,
+    ): Promise<ServiceResponse<PatientNotification[]>> {
+        if (!patientIds.length) return { success: false, message: 'No recipients selected', error: 'VALIDATION_ERR' };
+        const body = OPT_OUT_CATEGORIES.includes(payload.category) ? `${payload.body}\n\n${OPT_OUT_LINE}` : payload.body;
+        const now = new Date().toISOString();
+        try {
+            const rows = patientIds.map((pid) => ({
+                clinic_id: clinicId, patient_id: pid, title: payload.title, body,
+                category: payload.category, status: 'SENT', sent_at: now, sent_by: actorName,
+            }));
+            const { data, error } = await this.supabase.from('patient_notifications').insert(rows).select();
+            if (error) throw error;
+
+            // Fire-and-forget: hand off to the push sender (no-op if unconfigured).
+            const ids = (data || []).map((r: any) => r.id);
+            try {
+                await fetch('/api/send-push', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ clinicId, notificationIds: ids }),
+                });
+            } catch { /* push is best-effort; in-app feed still delivers */ }
+
+            await this.recordAudit(clinicId, actorName, `Sent a notification to ${patientIds.length} patient${patientIds.length === 1 ? '' : 's'}`, payload.title, 'INFO');
+            const created: PatientNotification[] = (data || []).map((r: any) => ({
+                id: r.id, clinicId: r.clinic_id, patientId: r.patient_id, title: r.title, body: r.body,
+                category: r.category, status: r.status, createdAt: r.created_at, sentAt: r.sent_at, readAt: r.read_at, sentBy: r.sent_by,
+            }));
+            return { success: true, message: `Sent to ${patientIds.length} patient${patientIds.length === 1 ? '' : 's'}`, updatedData: created };
+        } catch (e: any) {
+            return { success: false, message: e.message || 'Failed to send', error: 'DB_ERR' };
+        }
+    }
+
+    async getNotifications(clinicId: string, patientId?: string): Promise<ServiceResponse<PatientNotification[]>> {
+        try {
+            let query = this.supabase.from('patient_notifications').select('*').eq('clinic_id', clinicId);
+            if (patientId) query = query.eq('patient_id', patientId);
+            const { data, error } = await query.order('created_at', { ascending: false }).limit(200);
+            if (error) throw error;
+            const rows: PatientNotification[] = (data || []).map((r: any) => ({
+                id: r.id, clinicId: r.clinic_id, patientId: r.patient_id, title: r.title, body: r.body,
+                category: r.category, status: r.status, createdAt: r.created_at, sentAt: r.sent_at, readAt: r.read_at, sentBy: r.sent_by,
+            }));
+            return { success: true, message: 'Notifications fetched', updatedData: rows };
+        } catch (e: any) {
+            console.warn('Notifications unavailable:', e?.message);
+            return { success: true, message: 'Notifications unavailable', updatedData: [] };
+        }
+    }
+
+    async markNotificationRead(notificationId: string): Promise<ServiceResponse> {
+        const { error } = await this.supabase.from('patient_notifications')
+            .update({ status: 'READ', read_at: new Date().toISOString() }).eq('id', notificationId);
+        if (error) return { success: false, message: error.message };
+        return { success: true, message: 'Marked as read' };
+    }
+
+    // --- WEB PUSH (PWA) ---
+
+    async savePushSubscription(
+        userId: string,
+        clinicId: string,
+        sub: { endpoint: string; keys: { p256dh: string; auth: string } },
+    ): Promise<ServiceResponse> {
+        try {
+            const { error } = await this.supabase.from('push_subscriptions').upsert(
+                { user_id: userId, clinic_id: clinicId, endpoint: sub.endpoint, keys: sub.keys },
+                { onConflict: 'endpoint' },
+            );
+            if (error) throw error;
+            return { success: true, message: 'Push subscription saved' };
+        } catch (e: any) {
+            return { success: false, message: e.message || 'Failed to save subscription', error: 'DB_ERR' };
+        }
+    }
+
+    async deletePushSubscription(endpoint: string): Promise<ServiceResponse> {
+        const { error } = await this.supabase.from('push_subscriptions').delete().eq('endpoint', endpoint);
+        if (error) return { success: false, message: error.message };
+        return { success: true, message: 'Push subscription removed' };
+    }
+
+    async getPushSubscriptionCount(clinicId: string): Promise<ServiceResponse<number>> {
+        try {
+            const { count, error } = await this.supabase.from('push_subscriptions')
+                .select('id', { count: 'exact', head: true }).eq('clinic_id', clinicId);
+            if (error) throw error;
+            return { success: true, message: 'ok', updatedData: count || 0 };
+        } catch {
+            return { success: true, message: 'ok', updatedData: 0 };
         }
     }
 

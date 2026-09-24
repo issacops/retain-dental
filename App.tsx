@@ -349,6 +349,19 @@ const App = () => {
 
   const handleGetAuditLog = (clinicId: string, limit?: number) => backendService.getAuditLog(clinicId, limit);
 
+  // --- Messaging & push (thin pass-throughs; views own their local state) ---
+  const handleGetNotificationTemplates = (clinicId: string) => backendService.getNotificationTemplates(clinicId);
+  const handleSaveNotificationTemplate = (clinicId: string, template: any) => backendService.saveNotificationTemplate(clinicId, template);
+  const handleDeleteNotificationTemplate = (templateId: string) => backendService.deleteNotificationTemplate(templateId);
+  const handleSendNotifications = (clinicId: string, patientIds: string[], payload: any, actorName: string) =>
+    backendService.sendNotifications(clinicId, patientIds, payload, actorName);
+  const handleGetNotifications = (clinicId: string, patientId?: string) => backendService.getNotifications(clinicId, patientId);
+  const handleMarkNotificationRead = (id: string) => backendService.markNotificationRead(id);
+  const handleSavePushSubscription = (userId: string, clinicId: string, sub: any) =>
+    backendService.savePushSubscription(userId, clinicId, sub);
+  const handleDeletePushSubscription = (endpoint: string) => backendService.deletePushSubscription(endpoint);
+  const handleGetPushSubscriptionCount = (clinicId: string) => backendService.getPushSubscriptionCount(clinicId);
+
   const handleOnboardClinic = async (name: string, color: string, texture: ThemeTexture, ownerName: string, logoUrl: string, slug: string, adminEmail: string) => {
     const result = await backendService.createClinic(name, color, texture, ownerName, logoUrl, slug, adminEmail);
     if (result.success && result.updatedData) {
@@ -548,6 +561,15 @@ const App = () => {
     onAddPatient: handleAddPatient,
     onUpdatePatient: handleUpdatePatient,
     onGetAuditLog: handleGetAuditLog,
+    onGetNotificationTemplates: handleGetNotificationTemplates,
+    onSaveNotificationTemplate: handleSaveNotificationTemplate,
+    onDeleteNotificationTemplate: handleDeleteNotificationTemplate,
+    onSendNotifications: handleSendNotifications,
+    onGetNotifications: handleGetNotifications,
+    onMarkNotificationRead: handleMarkNotificationRead,
+    onSavePushSubscription: handleSavePushSubscription,
+    onDeletePushSubscription: handleDeletePushSubscription,
+    onGetPushSubscriptionCount: handleGetPushSubscriptionCount,
     onOnboardClinic: handleOnboardClinic,
     onEnterClinic: handleEnterClinic,
     onDeleteClinic: handleDeleteClinic,

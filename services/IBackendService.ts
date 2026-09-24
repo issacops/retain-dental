@@ -9,7 +9,10 @@ import {
     AppointmentStatus,
     SystemConfig,
     DatabaseState,
-    AuditLog
+    AuditLog,
+    NotificationTemplate,
+    NotificationCategory,
+    PatientNotification
 } from '../types';
 
 export interface ServiceResponse<T = any> {
@@ -143,4 +146,42 @@ export interface IBackendService {
      * Clinic-scoped compliance trail (newest first).
      */
     getAuditLog(clinicId: string, limit?: number): Promise<ServiceResponse<AuditLog[]>>;
+
+    // --- PATIENT MESSAGING & NOTIFICATIONS ---
+
+    /** Built-in library templates plus any custom templates for the clinic. */
+    getNotificationTemplates(clinicId: string): Promise<ServiceResponse<NotificationTemplate[]>>;
+
+    /** Create or update a custom template (omit id to create). */
+    saveNotificationTemplate(
+        clinicId: string,
+        template: { id?: string; name: string; category: NotificationCategory; title: string; body: string }
+    ): Promise<ServiceResponse<NotificationTemplate[]>>;
+
+    deleteNotificationTemplate(templateId: string): Promise<ServiceResponse<NotificationTemplate[]>>;
+
+    /** Queue + deliver a notification to one or more patients. */
+    sendNotifications(
+        clinicId: string,
+        patientIds: string[],
+        payload: { title: string; body: string; category: NotificationCategory },
+        actorName: string
+    ): Promise<ServiceResponse<PatientNotification[]>>;
+
+    getNotifications(clinicId: string, patientId?: string): Promise<ServiceResponse<PatientNotification[]>>;
+
+    markNotificationRead(notificationId: string): Promise<ServiceResponse>;
+
+    // --- WEB PUSH (PWA) ---
+
+    savePushSubscription(
+        userId: string,
+        clinicId: string,
+        sub: { endpoint: string; keys: { p256dh: string; auth: string } }
+    ): Promise<ServiceResponse>;
+
+    deletePushSubscription(endpoint: string): Promise<ServiceResponse>;
+
+    /** How many devices are reachable by push for this clinic. */
+    getPushSubscriptionCount(clinicId: string): Promise<ServiceResponse<number>>;
 }
