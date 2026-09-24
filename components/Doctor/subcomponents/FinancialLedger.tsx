@@ -92,9 +92,9 @@ const FinancialLedger: React.FC<Props> = ({ clinic, transactions, wallets, allUs
             receiptWindow.document.write(`
                 <html>
                 <head>
-                    <title>Receipt #${escapeHtml(transaction.id.slice(0, 8))}</title>
+                    <title>Receipt ${escapeHtml(transaction.invoiceNo || ('#' + transaction.id.slice(0, 8)))}</title>
                     <style>
-                        body { font-family: 'Inter', sans-serif; padding: 40px; color: #1e293b; max-width: 800px; mx-auto; }
+                        body { font-family: -apple-system, 'Segoe UI', 'Plus Jakarta Sans', sans-serif; padding: 40px; color: #1e293b; max-width: 800px; mx-auto; }
                         .header { text-align: center; margin-bottom: 40px; border-bottom: 2px solid #f1f5f9; padding-bottom: 20px; }
                         .logo { height: 60px; margin-bottom: 10px; }
                         .clinic-name { font-size: 24px; font-weight: 900; color: #0f172a; text-transform: uppercase; letter-spacing: 1px; }
@@ -123,7 +123,7 @@ const FinancialLedger: React.FC<Props> = ({ clinic, transactions, wallets, allUs
                         </div>
                         <div style="text-align: right;">
                             <div class="label">Receipt Number</div>
-                            <div class="value">#${escapeHtml(transaction.id.slice(0, 8).toUpperCase())}</div>
+                            <div class="value">${escapeHtml(transaction.invoiceNo || ('#' + transaction.id.slice(0, 8).toUpperCase()))}</div>
                             <br/>
                             <div class="label">Date Issued</div>
                             <div class="value">${new Date(transaction.date).toLocaleDateString()}</div>
@@ -239,7 +239,7 @@ const FinancialLedger: React.FC<Props> = ({ clinic, transactions, wallets, allUs
                         <tbody className="divide-y divide-slate-100">
                             {filteredTransactions.map(tx => (
                                 <tr key={tx.id} className="group hover:bg-teal-50/30 transition-colors">
-                                    <td className="p-6 text-xs font-mono font-bold text-ink-400 select-all">#{tx.id.slice(0, 8)}</td>
+                                    <td className="p-6 text-xs font-mono font-bold text-ink-400 select-all">{tx.invoiceNo || `#${tx.id.slice(0, 8)}`}</td>
                                     <td className="p-6">
                                         <div className="flex items-center gap-3">
                                             <div className={`h-8 w-8 rounded-full flex items-center justify-center ${tx.type === TransactionType.EARN ? 'bg-emerald-100 text-emerald-600' : 'bg-rose-100 text-rose-600'}`}>
