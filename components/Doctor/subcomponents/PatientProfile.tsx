@@ -125,7 +125,7 @@ const PatientProfile: React.FC<Props> = ({
       {/* Identity header band */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex min-w-0 items-center gap-3">
-          <button onClick={onBack} title="Back to patients" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-ink-950/10 bg-white text-ink-600 transition-colors hover:text-ink-900">
+          <button onClick={onBack} title="Back to patients" aria-label="Back to patients" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-ink-950/10 bg-white text-ink-600 transition-colors hover:text-ink-900">
             <ArrowLeft size={16} />
           </button>
           <Avatar name={selectedPatient.name} tone="dark" className="h-12 w-12 text-sm" />
@@ -156,8 +156,8 @@ const PatientProfile: React.FC<Props> = ({
               <CalendarPlus size={14} /> Book review
             </button>
           )}
-          <button onClick={() => window.print()} title="Print record" className="flex h-10 w-10 items-center justify-center rounded-full border border-ink-950/10 bg-white text-ink-600 transition-colors hover:text-ink-900"><Printer size={16} /></button>
-          <button onClick={() => { if (confirm('Delete this patient record permanently?')) onDeletePatient(selectedPatient.id); }} title="Delete patient" className="flex h-10 w-10 items-center justify-center rounded-full border border-ink-950/10 bg-white text-ink-400 transition-colors hover:border-blush hover:text-blush-deep"><Trash2 size={16} /></button>
+          <button onClick={() => window.print()} title="Print record" aria-label="Print record" className="flex h-10 w-10 items-center justify-center rounded-full border border-ink-950/10 bg-white text-ink-600 transition-colors hover:text-ink-900"><Printer size={16} /></button>
+          <button onClick={() => { if (confirm('Delete this patient record permanently?')) onDeletePatient(selectedPatient.id); }} title="Delete patient" aria-label="Delete patient" className="flex h-10 w-10 items-center justify-center rounded-full border border-ink-950/10 bg-white text-ink-400 transition-colors hover:border-blush hover:text-blush-deep"><Trash2 size={16} /></button>
         </div>
       </div>
 

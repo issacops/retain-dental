@@ -205,6 +205,7 @@ const DesktopDoctorView: React.FC<Props> = ({
                 value={searchQuery}
                 onChange={(e) => onSearch(e.target.value)}
                 placeholder="Search patients"
+                aria-label="Search patients"
                 className="w-full rounded-full border border-ink-950/10 bg-white py-2.5 pl-10 pr-4 text-sm font-semibold text-ink-900 outline-none transition-colors placeholder:text-ink-400 focus:border-ink-950/30"
               />
             </div>
@@ -215,7 +216,7 @@ const DesktopDoctorView: React.FC<Props> = ({
               >
                 <Plus size={14} /> Add patient
               </button>
-              <button className="relative flex h-10 w-10 items-center justify-center rounded-full border border-ink-950/10 bg-white text-ink-600 transition-colors hover:text-ink-900">
+              <button aria-label="Notifications" className="relative flex h-10 w-10 items-center justify-center rounded-full border border-ink-950/10 bg-white text-ink-600 transition-colors hover:text-ink-900">
                 <Bell size={17} />
                 <span className="absolute right-2.5 top-2.5 h-1.5 w-1.5 rounded-full bg-blush-deep" />
               </button>
@@ -351,7 +352,7 @@ const DesktopDoctorView: React.FC<Props> = ({
                 <Label>New record</Label>
                 <h3 className="mt-1 font-display text-2xl font-bold tracking-tight text-ink-900">Add a patient</h3>
               </div>
-              <button onClick={() => setIsAddPatientModalOpen(false)} className="flex h-9 w-9 items-center justify-center rounded-full border border-ink-950/10 text-ink-500 hover:text-ink-900">
+              <button onClick={() => setIsAddPatientModalOpen(false)} aria-label="Close" className="flex h-9 w-9 items-center justify-center rounded-full border border-ink-950/10 text-ink-500 hover:text-ink-900">
                 <X size={18} />
               </button>
             </div>
@@ -418,7 +419,7 @@ const DesktopDoctorView: React.FC<Props> = ({
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-ink-950/60 p-4 backdrop-blur-sm">
           <div className="w-full max-w-md rounded-[28px] border border-ink-950/10 bg-cream-50 p-8 text-center shadow-lift">
             <div className="flex justify-end">
-              <button onClick={() => setIsQRModalOpen(false)} className="flex h-9 w-9 items-center justify-center rounded-full border border-ink-950/10 text-ink-500 hover:text-ink-900"><X size={18} /></button>
+              <button onClick={() => setIsQRModalOpen(false)} aria-label="Close" className="flex h-9 w-9 items-center justify-center rounded-full border border-ink-950/10 text-ink-500 hover:text-ink-900"><X size={18} /></button>
             </div>
             <span className="mx-auto mt-2 flex h-14 w-14 items-center justify-center rounded-[18px] bg-ink-950 text-cream-50"><QrCode size={26} /></span>
             <h3 className="mt-5 font-display text-xl font-bold tracking-tight text-ink-900">Patient app</h3>
