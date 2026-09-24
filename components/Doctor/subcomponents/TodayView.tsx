@@ -50,6 +50,11 @@ const TodayView: React.FC<Props> = ({
     [allUsers, clinic.id],
   );
 
+  const patientById = useMemo(
+    () => new Map<string, User>(patients.map((p) => [p.id, p] as const)),
+    [patients],
+  );
+
   const today = new Date();
   const todaysAppts = useMemo(
     () =>
@@ -65,13 +70,25 @@ const TodayView: React.FC<Props> = ({
   const attention = useMemo(() => {
     const items: { id: string; tone: 'blush' | 'sun' | 'mist' | 'leaf'; icon: React.ReactNode; title: string; who: string; detail: string; cta: string; patient?: User; go?: string }[] = [];
 
+    // Precompute wallet owner + last visit per patient (avoids O(patients x transactions x wallets))
+    const walletOwner = new Map<string, string>(wallets.map((w) => [w.id, w.userId] as const));
+    const lastVisitByPatient = new Map<string, number>();
+    for (const t of transactions || []) {
+      if (t.clinicId !== clinic.id) continue;
+      const uid = walletOwner.get(t.walletId);
+      if (!uid) continue;
+      const at = +new Date(t.date);
+      const prev = lastVisitByPatient.get(uid);
+      if (prev === undefined || at > prev) lastVisitByPatient.set(uid, at);
+    }
+
     // Aftercare falling behind
     (carePlans || [])
       .filter((cp) => cp.clinicId === clinic.id && cp.isActive && (cp.checklist?.length || 0) > 0)
       .forEach((cp) => {
         const done = cp.checklist!.filter((i) => i.completed).length;
         const pct = Math.round((done / cp.checklist!.length) * 100);
-        const patient = patients.find((p) => p.id === cp.userId);
+        const patient = patientById.get(cp.userId);
         if (pct < 60 && patient) {
           items.push({
             id: `care-${cp.id}`, tone: 'blush', icon: <HeartPulse size={16} />,
@@ -84,8 +101,7 @@ const TodayView: React.FC<Props> = ({
     // Recall overdue (no visit in 6+ months)
     const SIX_MONTHS = 1000 * 60 * 60 * 24 * 182;
     patients.forEach((p) => {
-      const txs = (transactions || []).filter((t) => t.clinicId === clinic.id && wallets.find((w) => w.id === t.walletId && w.userId === p.id));
-      const last = txs.reduce((max, t) => Math.max(max, +new Date(t.date)), 0);
+      const last = lastVisitByPatient.get(p.id) ?? 0;
       if (last && now - last > SIX_MONTHS) {
         items.push({
           id: `recall-${p.id}`, tone: 'sun', icon: <BellRing size={16} />,
@@ -100,7 +116,7 @@ const TodayView: React.FC<Props> = ({
     (appointments || [])
       .filter((a) => a.clinicId === clinic.id && a.status !== 'CONFIRMED' && +new Date(a.startTime) > now && +new Date(a.startTime) < week)
       .forEach((a) => {
-        const p = patients.find((x) => x.id === a.patientId);
+        const p = patientById.get(a.patientId);
         items.push({
           id: `appt-${a.id}`, tone: 'mist', icon: <CalendarDays size={16} />,
           title: 'Appointment unconfirmed', who: p?.name || 'Patient',
@@ -122,7 +138,7 @@ const TodayView: React.FC<Props> = ({
     });
 
     return items.slice(0, 6);
-  }, [carePlans, patients, transactions, wallets, appointments, clinic.id, now]);
+  }, [carePlans, patients, patientById, transactions, wallets, appointments, clinic.id, now]);
 
   /* ---------------- Practice pulse ---------------- */
   const tierBars = useMemo(() => {
@@ -132,7 +148,12 @@ const TodayView: React.FC<Props> = ({
       { key: 'MEMBER', label: 'Member', tone: 'mist' },
     ];
     const total = patients.length || 1;
-    return tiers.map((t) => ({ ...t, count: patients.filter((p) => p.currentTier === t.key).length, pct: patients.filter((p) => p.currentTier === t.key).length / total }));
+    const counts = new Map<string, number>();
+    for (const p of patients) counts.set(p.currentTier, (counts.get(p.currentTier) || 0) + 1);
+    return tiers.map((t) => {
+      const count = counts.get(t.key) || 0;
+      return { ...t, count, pct: count / total };
+    });
   }, [patients]);
 
   const revenueToday = useMemo(() => {
@@ -269,7 +290,7 @@ const TodayView: React.FC<Props> = ({
                 <Empty title="No appointments today" hint="Book a visit or add a walk-in patient." icon={<CalendarDays size={22} />} />
               ) : (
                 todaysAppts.map((a) => {
-                  const p = patients.find((x) => x.id === a.patientId);
+                  const p = patientById.get(a.patientId);
                   const inChair = now >= +new Date(a.startTime) && now <= +new Date(a.endTime);
                   const done = a.status === 'COMPLETED';
                   return (
@@ -369,7 +390,7 @@ const TodayView: React.FC<Props> = ({
                 <ol className="relative p-5">
                   <span className="absolute left-[26px] top-6 bottom-6 w-px bg-ink-950/10" />
                   {todaysAppts.map((a) => {
-                    const p = patients.find((x) => x.id === a.patientId);
+                    const p = patientById.get(a.patientId);
                     const inChair = now >= +new Date(a.startTime) && now <= +new Date(a.endTime);
                     return (
                       <li key={a.id} className="relative flex gap-3 py-2.5 pl-1">

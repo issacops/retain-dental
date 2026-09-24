@@ -25,12 +25,29 @@ const PatientDirectory: React.FC<Props> = ({
   const [filter, setFilter] = useState<Filter>('all');
 
   const rows = useMemo(() => {
+    const now = Date.now();
+
+    const walletByUser = new Map<string, Wallet>(wallets.map((w) => [w.userId, w] as const));
+
+    const lastEarnByWallet = new Map<string, number>();
+    for (const t of transactions) {
+      if (t.clinicId !== clinic.id || t.type !== 'EARN') continue;
+      const at = +new Date(t.date);
+      const prev = lastEarnByWallet.get(t.walletId);
+      if (prev === undefined || at > prev) lastEarnByWallet.set(t.walletId, at);
+    }
+
+    const nextApptByPatient = new Map<string, Appointment>();
+    for (const a of appointments) {
+      if (a.clinicId !== clinic.id || +new Date(a.startTime) <= now) continue;
+      const prev = nextApptByPatient.get(a.patientId);
+      if (!prev || +new Date(a.startTime) < +new Date(prev.startTime)) nextApptByPatient.set(a.patientId, a);
+    }
+
     return users.map((u) => {
-      const wallet = wallets.find((w) => w.userId === u.id);
-      const txs = transactions.filter((t) => t.walletId === wallet?.id && t.clinicId === clinic.id && t.type === 'EARN');
-      const lastVisit = txs.reduce((m, t) => Math.max(m, +new Date(t.date)), 0);
-      const days = lastVisit ? Math.round((Date.now() - lastVisit) / day) : null;
-      const upcoming = appointments.find((a) => a.clinicId === clinic.id && a.patientId === u.id && +new Date(a.startTime) > Date.now());
+      const wallet = walletByUser.get(u.id);
+      const lastVisit = wallet ? (lastEarnByWallet.get(wallet.id) ?? 0) : 0;
+      const days = lastVisit ? Math.round((now - lastVisit) / day) : null;
       const overdue = days === null || days > 182;
       return {
         user: u,
@@ -38,7 +55,7 @@ const PatientDirectory: React.FC<Props> = ({
         lastVisit,
         days,
         overdue,
-        upcoming,
+        upcoming: nextApptByPatient.get(u.id),
         alerts: (u.metadata?.medicalAlerts || []).length,
       };
     }).sort((a, b) => a.user.name.localeCompare(b.user.name));

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, User, Grid, Zap, X, CreditCard, Calendar } from 'lucide-react';
+import { Search, User, CreditCard, Calendar, LayoutGrid, TrendingUp, Users, Settings, Sparkles, QrCode, UserPlus } from 'lucide-react';
 import { User as UserModel } from '../../../types';
 
 interface CommandPaletteProps {
@@ -9,168 +9,182 @@ interface CommandPaletteProps {
     onQuickAction: (action: string) => void;
 }
 
+interface NavItem { id: string; label: string; icon: React.ReactNode; section: string; }
+interface ActionItem { id: string; label: string; icon: React.ReactNode; }
+
+const NAV_ITEMS: NavItem[] = [
+    { id: 'Today', label: 'Go to Today', icon: <LayoutGrid size={15} />, section: 'Today' },
+    { id: 'Schedule', label: 'Go to Schedule', icon: <Calendar size={15} />, section: 'Schedule' },
+    { id: 'Patients', label: 'Go to Patients', icon: <Users size={15} />, section: 'Patients' },
+    { id: 'Retention', label: 'Go to Retention', icon: <TrendingUp size={15} />, section: 'Retention' },
+    { id: 'Payments', label: 'Go to Payments', icon: <CreditCard size={15} />, section: 'Payments' },
+    { id: 'Settings', label: 'Go to Settings', icon: <Settings size={15} />, section: 'Settings' },
+];
+
+const ACTIONS: ActionItem[] = [
+    { id: 'add-patient', label: 'Add a patient', icon: <UserPlus size={15} /> },
+    { id: 'social', label: 'Open Social Studio', icon: <Sparkles size={15} /> },
+    { id: 'qr', label: 'Show check-in QR', icon: <QrCode size={15} /> },
+];
+
 const CommandPalette: React.FC<CommandPaletteProps> = ({ patients, onSelectPatient, onNavigate, onQuickAction }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [query, setQuery] = useState('');
     const [selectedIndex, setSelectedIndex] = useState(0);
     const inputRef = useRef<HTMLInputElement>(null);
 
-    // Global keyboard listener for Cmd+K / Ctrl+K
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
-            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+            if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
                 e.preventDefault();
-                setIsOpen(view => !view);
+                setIsOpen((view) => !view);
                 setQuery('');
+                setSelectedIndex(0);
             }
-            if (e.key === 'Escape') {
-                setIsOpen(false);
-            }
+            if (e.key === 'Escape') setIsOpen(false);
         };
-
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, []);
 
-    // Focus input when modal opens
     useEffect(() => {
-        if (isOpen && inputRef.current) {
-            setTimeout(() => inputRef.current?.focus(), 50);
-        }
+        if (isOpen && inputRef.current) setTimeout(() => inputRef.current?.focus(), 50);
     }, [isOpen]);
 
     if (!isOpen) return null;
 
-    // Filter logic
-    const filteredPatients = patients.filter(p => p.name.toLowerCase().includes(query.toLowerCase()) || p.mobile.includes(query));
+    const q = query.trim().toLowerCase();
+    const filteredPatients = q
+        ? patients.filter((p) => p.name.toLowerCase().includes(q) || (p.mobile || '').includes(q)).slice(0, 6)
+        : patients.slice(0, 5);
+    const filteredNav = NAV_ITEMS.filter((n) => !q || n.label.toLowerCase().includes(q) || n.section.toLowerCase().includes(q));
+    const filteredActions = ACTIONS.filter((a) => !q || a.label.toLowerCase().includes(q));
 
-    // Quick Actions
-    const quickActions = [
-        { id: 'ADD_PATIENT', label: 'Add New Patient', icon: <User size={14} />, type: 'ACTION' },
-        { id: 'NEW_APPT', label: 'Schedule Appointment', icon: <Calendar size={14} />, type: 'ACTION' },
-        { id: 'NAV_HUB', label: 'Go to Operational Hub', icon: <Grid size={14} />, type: 'NAV', section: 'Operational Hub' },
-        { id: 'NAV_FINANCE', label: 'Go to Financial Ledger', icon: <CreditCard size={14} />, type: 'NAV', section: 'Financial Ledger' },
-        { id: 'NAV_SETTINGS', label: 'Go to Settings', icon: <Zap size={14} />, type: 'NAV', section: 'Settings' },
-    ].filter(a => a.label.toLowerCase().includes(query.toLowerCase()));
+    type Row =
+        | { kind: 'patient'; key: string; patient: UserModel }
+        | { kind: 'nav'; key: string; nav: NavItem }
+        | { kind: 'action'; key: string; action: ActionItem };
 
-    // Total items for arrow navigation
-    const allItems = [
-        ...filteredPatients.map(p => ({ ...p, _type: 'PATIENT' })),
-        ...quickActions.map(a => ({ ...a, _type: 'GLOBAL' }))
+    const rows: Row[] = [
+        ...filteredPatients.map((p) => ({ kind: 'patient' as const, key: `p-${p.id}`, patient: p })),
+        ...filteredNav.map((n) => ({ kind: 'nav' as const, key: `n-${n.id}`, nav: n })),
+        ...filteredActions.map((a) => ({ kind: 'action' as const, key: `a-${a.id}`, action: a })),
     ];
 
-    // Handle keyboard navigation inside the modal
-    const handleModalKeyDown = (e: React.KeyboardEvent) => {
-        if (e.key === 'ArrowDown') {
-            e.preventDefault();
-            setSelectedIndex(prev => (prev + 1) % allItems.length);
-        } else if (e.key === 'ArrowUp') {
-            e.preventDefault();
-            setSelectedIndex(prev => (prev - 1 + allItems.length) % allItems.length);
-        } else if (e.key === 'Enter') {
-            e.preventDefault();
-            if (allItems.length > 0) {
-                const item = allItems[selectedIndex];
-                executeItem(item);
-            }
-        }
+    const safeIndex = rows.length ? Math.min(selectedIndex, rows.length - 1) : 0;
+
+    const run = (row: Row) => {
+        if (row.kind === 'patient') onSelectPatient(row.patient);
+        else if (row.kind === 'nav') onNavigate(row.nav.section);
+        else onQuickAction(row.action.id);
+        setIsOpen(false);
+        setQuery('');
     };
 
-    const executeItem = (item: any) => {
-        if (item._type === 'PATIENT') {
-            onSelectPatient(item as UserModel);
-            onNavigate('Patient Records');
-        } else if (item._type === 'GLOBAL') {
-            if (item.type === 'NAV') {
-                onNavigate(item.section);
-            } else if (item.type === 'ACTION') {
-                onQuickAction(item.id);
-            }
-        }
-        setIsOpen(false);
+    const handleModalKeyDown = (e: React.KeyboardEvent) => {
+        if (!rows.length) return;
+        if (e.key === 'ArrowDown') { e.preventDefault(); setSelectedIndex((prev) => (prev + 1) % rows.length); }
+        else if (e.key === 'ArrowUp') { e.preventDefault(); setSelectedIndex((prev) => (prev - 1 + rows.length) % rows.length); }
+        else if (e.key === 'Enter') { e.preventDefault(); run(rows[safeIndex]); }
     };
+
+    const RowShell: React.FC<{ active: boolean; onHover: () => void; onClick: () => void; icon: React.ReactNode; title: string; sub?: string; tag: string }> = ({ active, onHover, onClick, icon, title, sub, tag }) => (
+        <div
+            onMouseEnter={onHover}
+            onClick={onClick}
+            className={`flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 transition-colors ${active ? 'bg-primary/10 text-ink-900' : 'text-ink-600 hover:bg-cream-100'}`}
+        >
+            <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${active ? 'bg-primary/20 text-primary' : 'bg-ink-950/5 text-ink-400'}`}>{icon}</span>
+            <span className="min-w-0 flex-1">
+                <span className="block truncate text-sm font-bold tracking-tight text-ink-800">{title}</span>
+                {sub && <span className="block truncate font-mono text-[10px] text-ink-400">{sub}</span>}
+            </span>
+            {active && <span className="shrink-0 font-mono text-[10px] font-bold uppercase tracking-widest text-primary">{tag}</span>}
+        </div>
+    );
 
     return (
-        <div className="fixed inset-0 z-[200] flex items-start justify-center pt-32 bg-ink-950/50 backdrop-blur-md p-4 animate-in fade-in duration-200" onClick={() => setIsOpen(false)}>
+        <div className="fixed inset-0 z-[200] flex items-start justify-center bg-ink-950/50 p-4 pt-28 backdrop-blur-md" onClick={() => setIsOpen(false)}>
             <div
-                className="bg-white w-full max-w-2xl rounded-[20px] shadow-lift overflow-hidden animate-in zoom-in-95 duration-200 border border-ink-950/[0.07]"
-                onClick={e => e.stopPropagation()}
+                className="w-full max-w-xl overflow-hidden rounded-[20px] border border-ink-950/[0.07] bg-white shadow-lift"
+                onClick={(e) => e.stopPropagation()}
             >
-                {/* Search Header */}
-                <div className="flex items-center gap-4 px-6 py-4 border-b border-ink-950/[0.07] bg-cream-100/50">
-                    <Search className="text-ink-400" size={24} />
+                <div className="flex items-center gap-3 border-b border-ink-950/[0.07] bg-cream-100/60 px-5 py-4">
+                    <Search className="text-ink-400" size={20} />
                     <input
                         ref={inputRef}
                         type="text"
                         value={query}
-                        onChange={(e) => {
-                            setQuery(e.target.value);
-                            setSelectedIndex(0); // Reset selection
-                        }}
+                        onChange={(e) => { setQuery(e.target.value); setSelectedIndex(0); }}
                         onKeyDown={handleModalKeyDown}
-                        placeholder="Search patients, leap to pages, or execute actions..."
-                        className="flex-1 bg-transparent text-xl font-bold text-ink-800 outline-none placeholder:text-ink-300 placeholder:font-medium"
+                        placeholder="Search patients, jump to a page, or run an action"
+                        className="flex-1 bg-transparent text-base font-bold text-ink-800 outline-none placeholder:font-medium placeholder:text-ink-300"
                     />
-                    <div className="flex items-center gap-1 text-[10px] font-bold text-ink-400 uppercase tracking-widest bg-slate-100 px-2 py-1 rounded-md">
-                        <span>ESC</span> to close
-                    </div>
+                    <kbd className="rounded-md bg-white px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-widest text-ink-400 ring-1 ring-ink-950/10">Esc</kbd>
                 </div>
 
-                {/* Results List */}
-                <div className="max-h-[400px] overflow-y-auto custom-scrollbar p-2">
-                    {allItems.length === 0 ? (
-                        <div className="p-12 text-center text-ink-400 font-bold">
-                            No matching items found.
-                        </div>
+                <div className="custom-scrollbar max-h-[380px] overflow-y-auto p-2">
+                    {rows.length === 0 ? (
+                        <div className="p-10 text-center text-sm font-bold text-ink-400">No matching items found.</div>
                     ) : (
                         <>
                             {filteredPatients.length > 0 && (
-                                <div className="mb-4">
-                                    <div className="px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-ink-400">Patients</div>
-                                    {filteredPatients.map((p, idx) => {
-                                        const globalIdx = idx;
-                                        const isSelected = selectedIndex === globalIdx;
+                                <div className="mb-2">
+                                    <div className="px-3 py-2 font-mono text-[10px] font-bold uppercase tracking-widest text-ink-400">Patients</div>
+                                    {filteredPatients.map((p) => {
+                                        const idx = rows.findIndex((r) => r.kind === 'patient' && r.patient.id === p.id);
                                         return (
-                                            <div
+                                            <RowShell
                                                 key={p.id}
-                                                onMouseEnter={() => setSelectedIndex(globalIdx)}
-                                                onClick={() => executeItem({ ...p, _type: 'PATIENT' })}
-                                                className={`flex items-center gap-4 px-4 py-3 rounded-xl cursor-pointer transition-colors ${isSelected ? 'bg-teal-50 text-teal-900' : 'hover:bg-cream-100 text-ink-700'}`}
-                                            >
-                                                <div className={`h-8 w-8 rounded-full flex items-center justify-center font-bold text-xs ${isSelected ? 'bg-teal-200' : 'bg-slate-100'}`}>
-                                                    <User size={14} />
-                                                </div>
-                                                <div>
-                                                    <p className="font-bold text-sm tracking-tight">{p.name}</p>
-                                                    <p className="text-[10px] font-bold opacity-60 font-mono">{p.mobile}</p>
-                                                </div>
-                                                {isSelected && <span className="ml-auto text-[10px] tracking-widest uppercase font-bold text-teal-400">Jump</span>}
-                                            </div>
-                                        )
+                                                active={safeIndex === idx}
+                                                onHover={() => setSelectedIndex(idx)}
+                                                onClick={() => run({ kind: 'patient', key: `p-${p.id}`, patient: p })}
+                                                icon={<User size={14} />}
+                                                title={p.name}
+                                                sub={p.mobile}
+                                                tag="Open"
+                                            />
+                                        );
                                     })}
                                 </div>
                             )}
 
-                            {quickActions.length > 0 && (
-                                <div>
-                                    <div className="px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-ink-400">Global Actions</div>
-                                    {quickActions.map((a, idx) => {
-                                        const globalIdx = filteredPatients.length + idx;
-                                        const isSelected = selectedIndex === globalIdx;
+                            {filteredNav.length > 0 && (
+                                <div className="mb-2">
+                                    <div className="px-3 py-2 font-mono text-[10px] font-bold uppercase tracking-widest text-ink-400">Go to</div>
+                                    {filteredNav.map((n) => {
+                                        const idx = rows.findIndex((r) => r.kind === 'nav' && r.nav.id === n.id);
                                         return (
-                                            <div
+                                            <RowShell
+                                                key={n.id}
+                                                active={safeIndex === idx}
+                                                onHover={() => setSelectedIndex(idx)}
+                                                onClick={() => run({ kind: 'nav', key: `n-${n.id}`, nav: n })}
+                                                icon={n.icon}
+                                                title={n.label}
+                                                tag="Go"
+                                            />
+                                        );
+                                    })}
+                                </div>
+                            )}
+
+                            {filteredActions.length > 0 && (
+                                <div>
+                                    <div className="px-3 py-2 font-mono text-[10px] font-bold uppercase tracking-widest text-ink-400">Actions</div>
+                                    {filteredActions.map((a) => {
+                                        const idx = rows.findIndex((r) => r.kind === 'action' && r.action.id === a.id);
+                                        return (
+                                            <RowShell
                                                 key={a.id}
-                                                onMouseEnter={() => setSelectedIndex(globalIdx)}
-                                                onClick={() => executeItem({ ...a, _type: 'GLOBAL' })}
-                                                className={`flex items-center gap-4 px-4 py-3 rounded-xl cursor-pointer transition-colors ${isSelected ? 'bg-emerald-50 text-emerald-900' : 'hover:bg-cream-100 text-ink-700'}`}
-                                            >
-                                                <div className={`h-8 w-8 rounded-full flex items-center justify-center font-bold text-xs ${isSelected ? 'bg-emerald-200' : 'bg-slate-100'}`}>
-                                                    {a.icon}
-                                                </div>
-                                                <p className="font-bold text-sm tracking-tight flex-1">{a.label}</p>
-                                                {isSelected && <span className="text-[10px] tracking-widest uppercase font-bold text-emerald-400">Execute</span>}
-                                            </div>
-                                        )
+                                                active={safeIndex === idx}
+                                                onHover={() => setSelectedIndex(idx)}
+                                                onClick={() => run({ kind: 'action', key: `a-${a.id}`, action: a })}
+                                                icon={a.icon}
+                                                title={a.label}
+                                                tag="Run"
+                                            />
+                                        );
                                     })}
                                 </div>
                             )}
@@ -178,10 +192,13 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ patients, onSelectPatie
                     )}
                 </div>
 
-                {/* Footer status */}
-                <div className="bg-cream-100 px-6 py-3 border-t border-ink-950/[0.07] flex justify-between items-center text-[10px] font-bold text-ink-400 uppercase tracking-widest">
-                    <span className="flex items-center gap-2"><Zap size={12} className="text-amber-500" /> Premium CMS Command Deck</span>
-                    <span className="flex items-center gap-2">Use <kbd className="bg-slate-200 px-1 py-0.5 rounded text-ink-500">↑</kbd> <kbd className="bg-slate-200 px-1 py-0.5 rounded text-ink-500">↓</kbd> to navigate</span>
+                <div className="flex items-center justify-between border-t border-ink-950/[0.07] bg-cream-100 px-5 py-2.5 font-mono text-[10px] font-bold uppercase tracking-widest text-ink-400">
+                    <span className="flex items-center gap-2"><Sparkles size={12} className="text-primary" /> Quick actions &amp; navigation</span>
+                    <span className="flex items-center gap-1.5">
+                        <kbd className="rounded bg-white px-1.5 py-0.5 ring-1 ring-ink-950/10">↑</kbd>
+                        <kbd className="rounded bg-white px-1.5 py-0.5 ring-1 ring-ink-950/10">↓</kbd>
+                        <span>to navigate</span>
+                    </span>
                 </div>
             </div>
         </div>
