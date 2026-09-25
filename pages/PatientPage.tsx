@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import MobilePatientView from '../components/Patient/MobilePatientView';
-import UnboxingFlow from '../components/Patient/subcomponents/UnboxingFlow';
+import React from 'react';
+import PatientApp, { PatientTab } from '../components/PatientApp/PatientApp';
 import { User, Clinic, Tier } from '../types';
 
 interface Props {
@@ -33,28 +32,25 @@ const MOCK_CLINIC: Clinic = {
     loyaltyConfig: { defaultRate: 10, categoryRates: {}, redemptionRate: 1 }
 };
 
+// Legacy tab names → the new four-tab model
+const LEGACY_TAB: Record<string, PatientTab> = {
+    HOME: 'TODAY',
+    WALLET: 'REWARDS',
+    CARE: 'CARE',
+    PROFILE: 'YOU',
+    TODAY: 'TODAY',
+    REWARDS: 'REWARDS',
+    YOU: 'YOU',
+};
+
 export const PatientPage: React.FC<Props> = (props) => {
-    const [showOnboarding, setShowOnboarding] = useState(false);
     const effectiveUser = props.currentUser || MOCK_PATIENT;
     const effectiveClinic = props.clinic || MOCK_CLINIC;
-
-    useEffect(() => {
-        const hasOnboarded = localStorage.getItem(`retend_onboarded_${effectiveUser.id}`);
-        if (!hasOnboarded) {
-            setShowOnboarding(true);
-        }
-    }, [effectiveUser.id]);
+    const defaultTab: PatientTab = LEGACY_TAB[props.defaultTab] || 'TODAY';
 
     return (
-        <div className="h-[100dvh] w-full bg-[#fdf8f0] overflow-y-auto overflow-x-hidden relative">
-            {showOnboarding && (
-                <UnboxingFlow
-                    clinic={effectiveClinic}
-                    user={effectiveUser}
-                    onComplete={() => setShowOnboarding(false)}
-                />
-            )}
-            <MobilePatientView
+        <div className="min-h-[100dvh] w-full bg-cream-200">
+            <PatientApp
                 currentUser={effectiveUser}
                 clinic={effectiveClinic}
                 users={props.users || [effectiveUser]}
@@ -63,14 +59,14 @@ export const PatientPage: React.FC<Props> = (props) => {
                 carePlans={props.carePlans || []}
                 familyGroups={props.familyGroups || []}
                 appointments={props.appointments || []}
+                defaultTab={defaultTab}
                 onToggleChecklistItem={props.onToggleChecklistItem || (() => {})}
-                onSchedule={props.onSchedule || (async () => ({ success: true }))}
-                onAddFamilyMember={props.onAddFamilyMember || (async () => {})}
-                onSwitchProfile={props.onSwitchProfile || (() => {})}
-                onRedeem={props.onRedeem || (async () => {})}
-                onLinkFamily={props.onLinkFamily || (async () => {})}
                 onUpdateCarePlan={props.onUpdateCarePlan}
-                defaultTab={props.defaultTab}
+                onSchedule={props.onSchedule || (async () => ({ success: true }))}
+                onAddFamilyMember={props.onAddFamilyMember || (async () => ({}))}
+                onSwitchProfile={props.onSwitchProfile || (() => {})}
+                onRedeem={props.onRedeem || (async () => ({}))}
+                onLinkFamily={props.onLinkFamily || (async () => ({}))}
                 onGetNotifications={props.onGetNotifications}
                 onMarkNotificationRead={props.onMarkNotificationRead}
                 onSavePushSubscription={props.onSavePushSubscription}

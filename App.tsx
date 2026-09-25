@@ -494,16 +494,21 @@ const App = () => {
     return result;
   };
 
-  const handleAddFamilyMember = async (name: string, relation: string, age: string) => {
-    if (!data.currentUser) return;
-    const result = await backendService.addFamilyMember(data.currentUser.id, name, relation, age);
+  const handleAddFamilyMember = async (mainUserId: string, name: string, relationship: string, age: string) => {
+    const headId = mainUserId || data.currentUser?.id;
+    if (!headId) return { success: false, message: 'No active patient' };
+    const result = await backendService.addFamilyMember(headId, name, relationship, age);
     if (result.success && result.updatedData) {
       setData(prev => {
         // Refresh current user from existing ID to ensure familyGroupId is up to date
         const updatedCurrentUser = result.updatedData.users ? result.updatedData.users.find((u: User) => u.id === prev.currentUser?.id) : prev.currentUser;
         return { ...prev, ...result.updatedData, currentUser: updatedCurrentUser || prev.currentUser };
       });
+      addToast(`${name} added to your family`, 'success');
+    } else {
+      addToast(result.message || 'Could not add family member', 'error');
     }
+    return result;
   };
 
   const handleSwitchProfile = (userId: string) => {
