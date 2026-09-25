@@ -224,6 +224,8 @@ const PatientApp: React.FC<PatientAppProps> = (props) => {
                   onGoRewards={() => setTab('REWARDS')}
                   comfort={comfort}
                   onSetComfort={setComfortAndSave}
+                  household={household}
+                  onOpenFamily={() => setSheet('family')}
                 />
               )}
               {tab === 'CARE' && (

@@ -1,6 +1,6 @@
 import React, { useEffect, useId, useRef, useState } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { X } from 'lucide-react';
+import { X, CalendarDays } from 'lucide-react';
 import { cn } from '../Doctor/ui/primitives';
 
 /* ------------------------------------------------------------------ *
@@ -37,35 +37,12 @@ export const Noise: React.FC<{ opacity?: number; className?: string }> = ({ opac
 );
 
 /* --- ambient background --- */
-export const Aurora: React.FC<{ accent: string }> = ({ accent }) => {
-  const reduce = useReducedMotion();
-  const blob = (color: string, style: React.CSSProperties, dur: number) => (
-    <motion.div
-      className="absolute rounded-full blur-[90px]"
-      style={{ background: `radial-gradient(circle at 30% 30%, ${color}, transparent 70%)`, opacity: 0.5, ...style }}
-      animate={reduce ? undefined : { x: [0, 26, -14, 0], y: [0, -20, 16, 0], scale: [1, 1.06, 0.97, 1] }}
-      transition={{ duration: dur, repeat: Infinity, ease: 'easeInOut' }}
-    />
-  );
-  return (
-    <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" style={{ background: 'linear-gradient(180deg,#FCFAF5 0%,#F6F2EA 55%,#F1EDE4 100%)' }}>
-      <motion.div
-        className="absolute -inset-[30%] opacity-[0.22]"
-        style={{ background: `conic-gradient(from 0deg, ${accent}, #F6C9DC, #F5E27B, #BBD7EE, #B7CE86, ${accent})` }}
-        animate={reduce ? undefined : { rotate: 360 }}
-        transition={{ duration: 120, repeat: Infinity, ease: 'linear' }}
-      />
-      {blob(accent, { width: 380, height: 380, left: -90, top: -100 }, 17)}
-      {blob('#F6C9DC', { width: 320, height: 320, right: -80, top: 20 }, 20)}
-      {blob('#BBD7EE', { width: 360, height: 360, left: -70, bottom: -90 }, 23)}
-      {blob('#F5E27B', { width: 260, height: 260, right: -50, bottom: 40 }, 19)}
-      {blob('#B7CE86', { width: 240, height: 240, left: '35%', top: '45%' }, 26)}
-      <div className="absolute inset-0 opacity-[0.5]" style={{ backgroundImage: 'radial-gradient(rgba(10,10,10,0.06) 1px, transparent 1px)', backgroundSize: '22px 22px' }} />
-      <Noise opacity={0.05} />
-      <div className="absolute inset-0" style={{ background: 'radial-gradient(120% 80% at 50% -10%, transparent 55%, rgba(10,10,10,0.06) 100%)' }} />
-    </div>
-  );
-};
+export const Aurora: React.FC<{ accent: string }> = ({ accent }) => (
+  <div aria-hidden className="pointer-events-none fixed inset-0 -z-10" style={{ background: '#F2F2F7' }}>
+    <div className="absolute inset-x-0 top-0 h-80" style={{ background: `radial-gradient(130% 100% at 50% 0%, ${alpha(accent, 0.16)}, transparent 72%)` }} />
+    <div className="absolute inset-0 opacity-[0.4]" style={{ backgroundImage: 'radial-gradient(rgba(60,60,67,0.05) 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
+  </div>
+);
 
 /* --- surfaces --- */
 const GLOW = (hex: string, a = 0.5) => `0 18px 40px -18px ${alpha(hex, a)}`;
@@ -74,8 +51,8 @@ export const Glass: React.FC<React.HTMLAttributes<HTMLDivElement> & { interactiv
   <div
     {...rest}
     className={cn(
-      'relative overflow-hidden rounded-[30px] border border-white/70 bg-white/55 backdrop-blur-xl',
-      'shadow-[0_16px_40px_-22px_rgba(16,24,40,0.35)]',
+      'relative overflow-hidden rounded-[28px] border border-ink-950/[0.05] bg-white/85 backdrop-blur-xl',
+      'shadow-[0_14px_34px_-26px_rgba(16,24,40,0.5)]',
       interactive && 'transition-transform duration-200 active:scale-[0.98]',
       className,
     )}
@@ -124,8 +101,8 @@ export const Surface: React.FC<React.HTMLAttributes<HTMLDivElement> & { tone?: '
   <div
     {...rest}
     className={cn(
-      'relative overflow-hidden rounded-[30px] border',
-      tone === 'white' && 'border-white/70 bg-white/80 backdrop-blur-md',
+      'relative overflow-hidden rounded-[28px] border',
+      tone === 'white' && 'border-ink-950/[0.05] bg-white shadow-[0_12px_30px_-24px_rgba(16,24,40,0.5)]',
       tone === 'cream' && 'border-ink-950/[0.06] bg-cream-100',
       tone === 'dark' && 'border-white/10 bg-ink-950 text-cream-50',
       interactive && 'transition-transform duration-200 active:scale-[0.98]',
@@ -460,6 +437,118 @@ export const FeatureCard: React.FC<{ gradient: string; icon: React.ReactNode; la
     <span className="relative flex h-10 w-10 items-center justify-center rounded-2xl bg-white/20 ring-1 ring-inset ring-white/25">{icon}</span>
     <span className="relative mt-6 block font-display text-lg font-bold tracking-tight text-white">{label}</span>
     {sub && <span className="relative mt-0.5 block text-xs font-medium text-white/80">{sub}</span>}
+  </button>
+);
+
+/* --- iOS bento pieces (light) --- */
+
+/** Inset "well" used inside white cards (reference: the budget slider well). */
+export const Well: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ className, children, ...rest }) => (
+  <div {...rest} className={cn('rounded-[22px] bg-ink-950/[0.045] p-4', className)}>{children}</div>
+);
+
+export const StatCard: React.FC<{ icon?: React.ReactNode; value: React.ReactNode; unit?: string; label: string; accent?: string; onClick?: () => void; className?: string }> = ({ icon, value, unit, label, accent = '#0F766E', onClick, className }) => {
+  const Comp: any = onClick ? 'button' : 'div';
+  return (
+    <Comp onClick={onClick} className={cn('relative overflow-hidden rounded-[28px] border border-ink-950/[0.05] bg-white p-4 text-left shadow-[0_10px_30px_-22px_rgba(16,24,40,0.4)]', onClick && 'transition-transform active:scale-[0.98]', className)}>
+      {icon && (
+        <span className="flex h-9 w-9 items-center justify-center rounded-2xl text-white" style={{ backgroundImage: `linear-gradient(140deg, ${accent}, ${mix(accent, '#000', 0.28)})` }}>{icon}</span>
+      )}
+      <p className="mt-3 flex items-end gap-1 font-display font-bold tracking-tight text-ink-900">
+        <span className="text-3xl leading-none">{value}</span>
+        {unit && <span className="mb-0.5 text-sm font-semibold text-ink-400">{unit}</span>}
+      </p>
+      <p className="mt-1 text-xs font-semibold text-ink-500">{label}</p>
+    </Comp>
+  );
+};
+
+/** Gradient slider whose knob is a white pill showing the current value. */
+export const PillSlider: React.FC<{ value: number; min?: number; max?: number; step?: number; onChange: (v: number) => void; label: (v: number) => string; className?: string }> = ({ value, min = 0, max = 10, step = 1, onChange, label, className }) => {
+  const pct = ((value - min) / (max - min)) * 100;
+  return (
+    <div className={cn('relative h-9', className)}>
+      <div className="absolute inset-0 rounded-full" style={{ background: 'linear-gradient(90deg,#F6A5C0 0%,#F5E27B 50%,#B7CE86 100%)', boxShadow: 'inset 0 1px 3px rgba(16,24,40,0.18)' }} />
+      <div className="absolute top-1/2 flex h-7 -translate-x-1/2 -translate-y-1/2 items-center rounded-full bg-white px-3 text-[11px] font-bold text-ink-800 shadow-[0_6px_16px_-6px_rgba(16,24,40,0.5)]" style={{ left: `calc(${pct}% + ${(50 - pct) * 0.28}px)` }}>
+        {label(value)}
+      </div>
+      <input type="range" min={min} max={max} step={step} value={value} onChange={(e) => onChange(Number(e.target.value))}
+        className="absolute inset-0 h-full w-full cursor-pointer opacity-0" aria-label="Value" />
+    </div>
+  );
+};
+
+/** Week calendar: big selected day + Mon–Sun strip (reference calendar card). */
+export const WeekCalendar: React.FC<{ accent: string; markedDays?: Set<number>; onPick?: (d: Date) => void }> = ({ accent, markedDays, onPick }) => {
+  const [selected, setSelected] = useState(() => new Date());
+  const monday = new Date(selected);
+  const dow = (monday.getDay() + 6) % 7;
+  monday.setDate(monday.getDate() - dow);
+  const days = Array.from({ length: 7 }, (_, i) => { const d = new Date(monday); d.setDate(monday.getDate() + i); return d; });
+  const same = (a: Date, b: Date) => a.toDateString() === b.toDateString();
+  const today = new Date();
+  return (
+    <div>
+      <div className="flex items-center justify-between">
+        <div className="flex items-baseline gap-3">
+          <span className="font-display text-4xl font-bold leading-none tracking-tighter text-ink-900">{selected.getDate()}</span>
+          <div>
+            <p className="font-display text-base font-bold text-ink-900">{selected.toLocaleDateString('en-US', { weekday: 'long' })}</p>
+            <p className="text-xs font-semibold text-ink-400">{selected.toLocaleDateString('en-US', { month: 'long' })}</p>
+          </div>
+        </div>
+        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-ink-950 text-cream-50"><CalendarDays size={16} /></span>
+      </div>
+      <div className="mt-4 flex items-center justify-between">
+        {days.map((d, i) => {
+          const active = same(d, selected);
+          const isToday = same(d, today);
+          const marked = markedDays?.has(d.getDate());
+          return (
+            <button key={i} onClick={() => { setSelected(d); onPick?.(d); }} className="flex flex-1 flex-col items-center gap-1.5">
+              <span className="font-mono text-[9px] font-bold uppercase tracking-wider text-ink-400">{d.toLocaleDateString('en-US', { weekday: 'narrow' })}</span>
+              <span className="relative flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold"
+                style={active ? { backgroundImage: `linear-gradient(140deg, ${accent}, ${mix(accent, '#000', 0.3)})`, color: '#fff' } : isToday ? { backgroundColor: alpha(accent, 0.14), color: accent } : { color: '#3A3A3C' }}>
+                {d.getDate()}
+              </span>
+              <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: marked ? accent : 'transparent' }} />
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+export const AvatarStack: React.FC<{ names: string[]; accent: string; max?: number; size?: number }> = ({ names, accent, max = 4, size = 34 }) => {
+  const shown = names.slice(0, max);
+  const extra = names.length - shown.length;
+  return (
+    <div className="flex items-center">
+      {shown.map((n, i) => (
+        <span key={i} style={{ marginLeft: i === 0 ? 0 : -10, zIndex: shown.length - i }}>
+          <Avatar name={n} accent={i === 0 ? accent : mix(accent, '#7A7A7A', 0.4)} size={size} />
+        </span>
+      ))}
+      {extra > 0 && (
+        <span className="flex items-center justify-center rounded-full bg-ink-950 text-[11px] font-bold text-cream-50 ring-2 ring-white" style={{ width: size, height: size, marginLeft: -10 }}>
+          +{extra}
+        </span>
+      )}
+    </div>
+  );
+};
+
+/** Vivid event block (the reference's violet timeline event). */
+export const EventCard: React.FC<{ accent: string; eyebrow: string; title: string; meta?: string; people?: string[]; onClick?: () => void }> = ({ accent, eyebrow, title, meta, people, onClick }) => (
+  <button onClick={onClick} className="relative w-full overflow-hidden rounded-[26px] p-4 text-left text-white"
+    style={{ backgroundImage: `linear-gradient(150deg, ${accent} 0%, ${mix(accent, '#000', 0.4)} 100%)`, boxShadow: `0 22px 44px -22px ${alpha(accent, 0.9)}` }}>
+    <div aria-hidden className="pointer-events-none absolute inset-0 rounded-[26px] ring-1 ring-inset ring-white/20" />
+    <Noise opacity={0.07} />
+    <p className="relative font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-white/75">{eyebrow}</p>
+    <p className="relative mt-1 font-display text-lg font-bold tracking-tight">{title}</p>
+    {meta && <p className="relative mt-0.5 text-xs font-medium text-white/75">{meta}</p>}
+    {people && people.length > 0 && <div className="relative mt-3"><AvatarStack names={people} accent={mix(accent, '#FFFFFF', 0.2)} size={28} max={3} /></div>}
   </button>
 );
 
