@@ -70,7 +70,7 @@ const SpecialtyCareModule: React.FC<{ plan: CarePlan; primaryColor: string; onTo
         <div className="flex justify-between items-start mb-6 relative z-10">
           <div>
             <span className="px-3 py-1 bg-slate-50 text-slate-500 rounded-full text-[9px] font-black uppercase tracking-widest border border-slate-100 mb-2 inline-block shadow-sm">
-              {plan.category} Protocol
+              {plan.category} plan
             </span>
             <h4 className="text-3xl font-black text-slate-900 tracking-tighter leading-none mt-1">{plan.treatmentName}</h4>
           </div>
@@ -112,11 +112,11 @@ const SpecialtyCareModule: React.FC<{ plan: CarePlan; primaryColor: string; onTo
           <div className="relative z-10">
             <div className="flex items-center gap-3 mb-2">
               <div className="p-2 bg-white/10 rounded-xl backdrop-blur-sm shadow-inner"><ShieldCheck size={20} className="text-emerald-400" /></div>
-              <h4 className="text-xl font-black tracking-tight">Care Protocol</h4>
+              <h4 className="text-xl font-black tracking-tight">Your care plan</h4>
             </div>
 
             <p className="text-[10px] font-black uppercase tracking-widest text-emerald-400 mb-8 border border-emerald-500/30 bg-emerald-500/10 inline-block px-3 py-1.5 rounded-lg shadow-sm">
-              Customized for you
+              Made for you
             </p>
 
             <ul className="space-y-6">
@@ -413,7 +413,7 @@ export default function MobilePatientView({
                     <div className="relative z-10">
                       <div className="flex items-center gap-2 mb-4">
                         <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
-                        <p className="text-[10px] font-black uppercase tracking-[0.25em] text-gray-400">Live Protocol</p>
+                        <p className="text-[10px] font-black uppercase tracking-[0.25em] text-gray-400">Active plan</p>
                       </div>
                       <h4 className="text-3xl font-black tracking-tighter mb-8 leading-tight text-gray-900">{activeCarePlan.treatmentName}</h4>
 
@@ -527,19 +527,19 @@ export default function MobilePatientView({
                   </div>
                   <div>
                     <h2 className="text-4xl font-black text-slate-900 tracking-tighter">{currentUser.name}</h2>
-                    <p className="text-slate-400 font-black uppercase tracking-[0.4em] text-[10px] mt-2">{currentUser.currentTier} Identity Verified</p>
+                    <p className="text-slate-400 font-black uppercase tracking-[0.4em] text-[10px] mt-2">{currentUser.currentTier}</p>
                   </div>
                 </div>
 
                 <div className="bg-white rounded-[56px] p-10 border border-slate-100 flex justify-between shadow-sm">
                   <div className="flex-1 text-center">
-                    <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">Global Spend</p>
+                    <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">Lifetime spend</p>
                     <p className="text-3xl font-black text-slate-800 tracking-tighter">₹{currentUser.lifetimeSpend.toLocaleString()}</p>
                   </div>
                   <div className="w-px h-12 bg-slate-50 my-auto"></div>
                   <div className="flex-1 text-center">
-                    <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">Status Shift</p>
-                    <p className="text-3xl font-black text-emerald-500 tracking-tighter">84%</p>
+                    <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">Smile Points</p>
+                    <p className="text-3xl font-black tracking-tighter" style={{ color: clinic.primaryColor }}>{(wallet?.balance || 0).toLocaleString()}</p>
                   </div>
                 </div>
 
@@ -583,9 +583,9 @@ export default function MobilePatientView({
 
                 <div className="space-y-3">
                   {[
-                    { label: 'Security & Biometrics', icon: <ShieldCheck size={18} /> },
-                    { label: 'Family Link Manager', icon: <Users size={18} /> },
-                    { label: 'Global Privacy Node', icon: <Lock size={18} /> },
+                    { label: 'Security', icon: <ShieldCheck size={18} /> },
+                    { label: 'Family', icon: <Users size={18} /> },
+                    { label: 'Privacy', icon: <Lock size={18} /> },
                   ].map((item, i) => (
                     <div key={i} className="bg-white p-7 rounded-[32px] border border-slate-50 flex justify-between items-center group active:scale-[0.98] transition-all">
                       <div className="flex items-center gap-4">
