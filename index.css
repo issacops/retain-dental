@@ -157,3 +157,32 @@
     page-break-before: always;
   }
 }
+/* Patient "comfort" gradient slider (Low ↔ High) */
+.retain-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 38px;
+  border-radius: 999px;
+  outline: none;
+  background: linear-gradient(90deg, #F6A5C0 0%, #F5E27B 50%, #B7CE86 100%);
+  box-shadow: inset 0 1px 3px rgba(16, 24, 40, 0.18);
+}
+.retain-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 30px;
+  width: 30px;
+  border-radius: 999px;
+  background: #fff;
+  border: none;
+  cursor: grab;
+  box-shadow: 0 6px 16px -4px rgba(16, 24, 40, 0.45), inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+}
+.retain-slider::-moz-range-thumb {
+  height: 30px;
+  width: 30px;
+  border-radius: 999px;
+  background: #fff;
+  border: none;
+  cursor: grab;
+  box-shadow: 0 6px 16px -4px rgba(16, 24, 40, 0.45);
+}

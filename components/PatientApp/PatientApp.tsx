@@ -40,6 +40,7 @@ export interface PatientAppProps {
   onMarkNotificationRead?: (id: string) => Promise<{ success: boolean }>;
   onSavePushSubscription?: (userId: string, clinicId: string, sub: any) => Promise<{ success: boolean }>;
   onDeletePushSubscription?: (endpoint: string) => Promise<{ success: boolean }>;
+  onUpdateMetadata?: (patientId: string, metadata: Record<string, any>) => Promise<any>;
   defaultTab?: PatientTab;
 }
 
@@ -57,6 +58,7 @@ const PatientApp: React.FC<PatientAppProps> = (props) => {
     currentUser, users, wallets, transactions, carePlans, familyGroups, clinic, appointments,
     onToggleChecklistItem, onSchedule, onAddFamilyMember, onSwitchProfile, onRedeem, onLinkFamily,
     onGetNotifications, onMarkNotificationRead, onSavePushSubscription, onDeletePushSubscription,
+    onUpdateMetadata,
     defaultTab = 'TODAY',
   } = props;
 
@@ -114,6 +116,15 @@ const PatientApp: React.FC<PatientAppProps> = (props) => {
   }, [transactions, wallet]);
 
   const unreadCount = useMemo(() => (notifications || []).filter((n) => n.status !== 'READ').length, [notifications]);
+
+  const todayKey = new Date().toISOString().slice(0, 10);
+  const comfortRecord = ((currentUser.metadata as any)?.dailyComfort || {}) as Record<string, number>;
+  const [comfort, setComfort] = useState<number | undefined>(comfortRecord[todayKey]);
+  const setComfortAndSave = (v: number) => {
+    haptic('selection');
+    setComfort(v);
+    onUpdateMetadata?.(currentUser.id, { dailyComfort: { ...comfortRecord, [todayKey]: v } });
+  };
 
   const toggleTask = async (itemId: string) => {
     if (!activePlan) return;
@@ -211,6 +222,8 @@ const PatientApp: React.FC<PatientAppProps> = (props) => {
                   onOpenBooking={() => setSheet('booking')}
                   onGoCare={() => setTab('CARE')}
                   onGoRewards={() => setTab('REWARDS')}
+                  comfort={comfort}
+                  onSetComfort={setComfortAndSave}
                 />
               )}
               {tab === 'CARE' && (

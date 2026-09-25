@@ -349,6 +349,12 @@ const App = () => {
 
   const handleGetAuditLog = (clinicId: string, limit?: number) => backendService.getAuditLog(clinicId, limit);
 
+  const handleUpdatePatientMetadata = async (patientId: string, metadata: Record<string, any>) => {
+    const result = await backendService.updatePatientMetadata(patientId, metadata);
+    if (result.success && result.updatedData) setData(prev => ({ ...prev, ...result.updatedData }));
+    return result;
+  };
+
   // --- Messaging & push (thin pass-throughs; views own their local state) ---
   const handleGetNotificationTemplates = (clinicId: string) => backendService.getNotificationTemplates(clinicId);
   const handleSaveNotificationTemplate = (clinicId: string, template: any) => backendService.saveNotificationTemplate(clinicId, template);
@@ -566,6 +572,7 @@ const App = () => {
     onAddPatient: handleAddPatient,
     onUpdatePatient: handleUpdatePatient,
     onGetAuditLog: handleGetAuditLog,
+    onUpdateMetadata: handleUpdatePatientMetadata,
     onGetNotificationTemplates: handleGetNotificationTemplates,
     onSaveNotificationTemplate: handleSaveNotificationTemplate,
     onDeleteNotificationTemplate: handleDeleteNotificationTemplate,

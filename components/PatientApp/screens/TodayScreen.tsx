@@ -1,15 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import {
-  CalendarDays, MapPin, Phone, MessageCircle, ChevronRight, Check,
-  Sparkles, Flame, HeartPulse, ArrowRight, Clock,
+  CalendarDays, MapPin, Phone, MessageCircle, Check, Sparkles, HeartPulse,
+  ArrowRight, Clock, Plus,
 } from 'lucide-react';
 import { Clinic, User, CarePlan, Appointment, PatientNotification } from '../../../types';
 import { cn } from '../../Doctor/ui/primitives';
-import {
-  GradientCard, Glass, Surface, SectionLabel, Display, Button, Chip, ProgressRing,
-  BigNumber, CountUp, DayStrip, stagger, rise, countdown, daysUntil, dayGreeting, relTime,
-} from '../ui';
+import { Glass, SectionLabel, ProgressRing, CountUp, DayStrip, stagger, rise, daysUntil, dayGreeting, relTime, Noise, Segmented, WeekStrip, GradientSlider } from '../ui';
+import CardStack, { StackItem } from '../CardStack';
 
 interface Props {
   currentUser: User;
@@ -25,6 +23,8 @@ interface Props {
   onOpenBooking: () => void;
   onGoCare: () => void;
   onGoRewards: () => void;
+  comfort?: number;
+  onSetComfort?: (v: number) => void;
 }
 
 const streakFrom = (record?: Record<string, number>) => {
@@ -43,179 +43,227 @@ const streakFrom = (record?: Record<string, number>) => {
 const TodayScreen: React.FC<Props> = ({
   currentUser, clinic, appointments, nextAppt, activePlan, points, unreadCount, notifications,
   onToggleTask, onOpenMessages, onOpenBooking, onGoCare, onGoRewards,
+  comfort, onSetComfort,
 }) => {
   const reduce = !!useReducedMotion();
+  const [weekView, setWeekView] = useState<'WEEK' | 'MONTH'>('WEEK');
+  const comfortValue = typeof comfort === 'number' ? comfort : 7;
+  const comfortLabel = comfortValue >= 8 ? 'Great' : comfortValue >= 5 ? 'Okay' : 'Sore';
   const firstName = (currentUser.name || 'there').split(' ')[0];
 
   const tasks = activePlan?.checklist || [];
   const done = tasks.filter((t) => t.completed).length;
   const pct = tasks.length ? done / tasks.length : 0;
   const streak = streakFrom(activePlan?.adherenceRecord);
+  const latest = (notifications || [])[0];
 
   const markedDays = new Set(
     appointments.filter((a) => +new Date(a.startTime) >= Date.now() && +new Date(a.startTime) < Date.now() + 7 * 86400000)
       .map((a) => new Date(a.startTime).getDate()),
   );
-
   const dLeft = nextAppt ? daysUntil(nextAppt.startTime) : null;
   const heroValue = dLeft === null ? '—' : dLeft === 0 ? 'Today' : dLeft === 1 ? 'Tomorrow' : dLeft;
   const heroUnit = dLeft !== null && dLeft >= 2 ? 'days' : '';
-  const latest = (notifications || [])[0];
   const mapsUrl = clinic.settings?.address ? `https://maps.google.com/?q=${encodeURIComponent(clinic.settings.address)}` : null;
 
-  const anim = (i: number) => (reduce ? {} : { variants: rise });
+  const items: StackItem[] = [
+    {
+      id: 'visit',
+      label: 'Next visit',
+      sub: nextAppt ? `${new Date(nextAppt.startTime).toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })} · ${new Date(nextAppt.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : 'Nothing booked yet',
+      icon: <CalendarDays size={17} />,
+      gradient: 'linear-gradient(155deg, #3B82F6 0%, #0B2447 100%)',
+      content: nextAppt ? (
+        <div>
+          <div className="flex items-end gap-2">
+            <span className="font-display text-5xl font-bold leading-none tracking-tighter text-white">{heroValue}</span>
+            {heroUnit && <span className="mb-2 text-sm font-semibold text-white/70">{heroUnit} to go</span>}
+          </div>
+          <div className="mt-4 rounded-2xl bg-white/12 p-3 ring-1 ring-inset ring-white/15 backdrop-blur-sm">
+            <DayStrip accent="#3B82F6" markedDays={markedDays} />
+          </div>
+          <div className="mt-3 flex gap-2">
+            {mapsUrl && (
+              <a href={mapsUrl} target="_blank" rel="noreferrer" className="flex flex-1 items-center justify-center gap-2 rounded-full bg-white/15 py-2.5 text-xs font-bold text-white ring-1 ring-inset ring-white/20">
+                <MapPin size={14} /> Directions
+              </a>
+            )}
+            <button onClick={onOpenBooking} className="flex flex-1 items-center justify-center gap-2 rounded-full bg-white/15 py-2.5 text-xs font-bold text-white ring-1 ring-inset ring-white/20">
+              <CalendarDays size={14} /> Reschedule
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div>
+          <p className="text-sm text-white/75">Regular visits keep your treatment on track.</p>
+          <button onClick={onOpenBooking} className="mt-3 flex w-full items-center justify-center gap-2 rounded-full bg-white py-3 text-sm font-bold text-[#0B2447]">
+            <Plus size={16} /> Book a visit
+          </button>
+        </div>
+      ),
+    },
+    {
+      id: 'care',
+      label: "Today's care",
+      sub: activePlan ? `${done} of ${tasks.length} done${streak > 1 ? ` · ${streak}-day streak` : ''}` : 'No active treatment',
+      icon: <HeartPulse size={17} />,
+      gradient: 'linear-gradient(155deg, #22C55E 0%, #052E16 100%)',
+      content: activePlan ? (
+        <div>
+          <div className="flex items-center gap-5">
+            <ProgressRing value={pct} size={92} stroke={9} accent="#FFFFFF" track="rgba(255,255,255,0.25)" glow>
+              <span className="font-display text-lg font-bold tracking-tight text-white">{Math.round(pct * 100)}%</span>
+            </ProgressRing>
+            <div className="min-w-0 flex-1 space-y-1.5">
+              {tasks.slice(0, 3).map((t) => (
+                <button key={t.id} onClick={() => onToggleTask(t.id)}
+                  className={cn('flex w-full items-center gap-2.5 rounded-2xl px-3 py-2 text-left transition-transform active:scale-[0.98]',
+                    t.completed ? 'bg-white/12' : 'bg-white/20')}>
+                  <span className={cn('flex h-5 w-5 shrink-0 items-center justify-center rounded-md border', t.completed ? 'border-transparent bg-white text-[#052E16]' : 'border-white/40')}>
+                    {t.completed && <Check size={12} />}
+                  </span>
+                  <span className={cn('truncate text-xs font-semibold text-white', t.completed && 'opacity-60 line-through')}>{t.task}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+          <button onClick={onGoCare} className="mt-3 flex w-full items-center justify-center gap-1.5 text-xs font-bold uppercase tracking-wider text-white/70">
+            Full plan <ArrowRight size={13} />
+          </button>
+        </div>
+      ) : (
+        <button onClick={onOpenBooking} className="flex w-full items-center gap-3 rounded-2xl bg-white/12 p-3.5 text-left">
+          <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/20 text-white"><HeartPulse size={18} /></span>
+          <span className="flex-1 text-sm font-semibold text-white/85">Your aftercare appears here after a visit.</span>
+        </button>
+      ),
+    },
+    {
+      id: 'rewards',
+      label: 'Rewards',
+      sub: `${points.toLocaleString('en-IN')} Smile Points`,
+      icon: <Sparkles size={17} />,
+      gradient: 'linear-gradient(155deg, #F5A524 0%, #4A2200 100%)',
+      content: (
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <span className="font-display text-4xl font-bold leading-none tracking-tighter text-white"><CountUp value={points} /></span>
+            <p className="mt-1 text-xs font-medium text-white/70">Available to redeem</p>
+          </div>
+          <button onClick={onGoRewards} className="rounded-full bg-white px-4 py-2.5 text-xs font-bold text-[#4A2200]">Redeem</button>
+        </div>
+      ),
+    },
+    {
+      id: 'messages',
+      label: 'Messages',
+      sub: unreadCount > 0 ? `${unreadCount} unread` : 'All caught up',
+      icon: <MessageCircle size={17} />,
+      gradient: 'linear-gradient(155deg, #EC4899 0%, #4A0E2E 100%)',
+      content: latest ? (
+        <button onClick={onOpenMessages} className="w-full text-left">
+          <p className="font-display text-base font-bold text-white">{latest.title}</p>
+          <p className="mt-1 line-clamp-3 text-sm text-white/75">{latest.body}</p>
+          <p className="mt-2 font-mono text-[10px] uppercase tracking-wider text-white/50">{latest.category} · {relTime(latest.createdAt)}</p>
+        </button>
+      ) : (
+        <p className="text-sm text-white/75">No messages yet. Reminders and greetings from your clinic will appear here.</p>
+      ),
+    },
+  ];
 
   return (
-    <motion.div variants={stagger(0.07)} initial={reduce ? false : 'hidden'} animate="show" className="space-y-5">
-      {/* Greeting */}
-      <motion.div {...anim(0)} className="px-1">
-        <SectionLabel>{new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</SectionLabel>
-        <Display as="h1" className="mt-1 text-3xl">{dayGreeting()}, {firstName}</Display>
-      </motion.div>
+    <div className="space-y-5">
+      {/* Dark dotted deck */}
+      <motion.div variants={stagger(0.08)} initial={reduce ? false : 'hidden'} animate="show"
+        className="relative overflow-hidden rounded-[40px] px-3 pb-4 pt-6"
+        style={{ background: '#0A0A0F' }}>
+        {/* dot grid + glows + grain */}
+        <div aria-hidden className="pointer-events-none absolute inset-0 opacity-70"
+          style={{ backgroundImage: 'radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
+        <div aria-hidden className="pointer-events-none absolute -left-16 -top-10 h-48 w-48 rounded-full bg-[#3B82F6] opacity-25 blur-[70px]" />
+        <div aria-hidden className="pointer-events-none absolute -right-12 top-24 h-40 w-40 rounded-full bg-[#EC4899] opacity-20 blur-[70px]" />
+        <Noise opacity={0.06} />
 
-      {/* Hero — next visit */}
-      {nextAppt ? (
-        <motion.div {...anim(1)}>
-          <GradientCard accent={clinic.primaryColor} className="p-5">
-            <div className="flex items-center justify-between">
-              <Chip tone="glass">Next visit</Chip>
-              <Clock size={18} className="text-white/70" />
-            </div>
-            <div className="mt-5 flex items-end justify-between">
-              <BigNumber value={heroValue} unit={heroUnit} label="until your visit" onDark />
-              <div className="pb-1 text-right">
-                <p className="font-display text-lg font-bold text-white">
-                  {new Date(nextAppt.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                </p>
-                <p className="text-xs text-white/70">{(nextAppt.type || 'visit').toString()}</p>
-              </div>
-            </div>
-            <div className="mt-5"><DayStrip accent={clinic.primaryColor} markedDays={markedDays} /></div>
-            <div className="mt-5 flex gap-2">
-              {mapsUrl && (
-                <a href={mapsUrl} target="_blank" rel="noreferrer" className="flex flex-1 items-center justify-center gap-2 rounded-full bg-white/20 py-2.5 text-xs font-bold text-white backdrop-blur-md ring-1 ring-inset ring-white/25">
-                  <MapPin size={14} /> Directions
-                </a>
-              )}
-              {clinic.emergencyPhone && (
-                <a href={`tel:${clinic.emergencyPhone}`} className="flex flex-1 items-center justify-center gap-2 rounded-full bg-white/20 py-2.5 text-xs font-bold text-white backdrop-blur-md ring-1 ring-inset ring-white/25">
-                  <Phone size={14} /> Call clinic
-                </a>
-              )}
-            </div>
-          </GradientCard>
-        </motion.div>
-      ) : (
-        <motion.div {...anim(1)}>
-          <GradientCard accent={clinic.primaryColor} className="p-6">
-            <SectionLabel onDark>No upcoming visit</SectionLabel>
-            <p className="mt-2 font-display text-2xl font-bold tracking-tight text-white">Ready when you are</p>
-            <p className="mt-1 text-sm text-white/75">Regular visits keep your treatment on track.</p>
-            <div className="mt-5"><DayStrip accent={clinic.primaryColor} markedDays={markedDays} /></div>
-            <button onClick={onOpenBooking} className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-white py-3 text-sm font-bold" style={{ color: clinic.primaryColor }}>
-              <CalendarDays size={16} /> Book a visit
-            </button>
-          </GradientCard>
-        </motion.div>
-      )}
-
-      {/* Bento */}
-      <div className="grid grid-cols-2 gap-3">
-        {/* Care */}
-        <motion.div {...anim(2)} className="col-span-2">
-          <Glass tint={clinic.primaryColor} className="p-5">
-            <div className="flex items-center justify-between">
-              <div className="min-w-0">
-                <SectionLabel>Today's care</SectionLabel>
-                <p className="mt-1 truncate font-display text-base font-bold text-ink-900">
-                  {activePlan ? activePlan.treatmentName : 'No active plan'}
-                </p>
-              </div>
-              {streak > 1 && <Chip tone="sun"><Flame size={11} /> {streak}</Chip>}
-            </div>
-
-            {activePlan ? (
-              <div className="mt-4 flex items-center gap-5">
-                <ProgressRing value={pct} size={96} stroke={9} accent={clinic.primaryColor} track="rgba(10,10,10,0.08)" glow>
-                  <span className="font-display text-lg font-bold tracking-tight text-ink-900">{done}<span className="text-ink-300">/{tasks.length}</span></span>
-                </ProgressRing>
-                <div className="min-w-0 flex-1 space-y-1.5">
-                  {tasks.slice(0, 3).map((t) => (
-                    <button key={t.id} onClick={() => onToggleTask(t.id)}
-                      className={cn('flex w-full items-center gap-2.5 rounded-2xl border border-white/60 px-3 py-2 text-left transition-transform active:scale-[0.98]',
-                        t.completed ? 'bg-leaf-soft/70' : 'bg-white/60')}>
-                      <span className={cn('flex h-5 w-5 shrink-0 items-center justify-center rounded-md border', t.completed ? 'border-transparent text-white' : 'border-ink-950/20')}
-                        style={t.completed ? { backgroundImage: `linear-gradient(135deg, ${clinic.primaryColor}, ${clinic.primaryColor}cc)` } : undefined}>
-                        {t.completed && <Check size={12} />}
-                      </span>
-                      <span className={cn('truncate text-xs font-semibold', t.completed ? 'text-ink-400 line-through' : 'text-ink-700')}>{t.task}</span>
-                    </button>
-                  ))}
-                  {tasks.length === 0 && <p className="text-xs text-ink-400">No daily tasks today.</p>}
-                </div>
-              </div>
-            ) : (
-              <button onClick={onOpenBooking} className="mt-4 flex w-full items-center gap-3 rounded-2xl border border-white/60 bg-white/60 p-4 text-left">
-                <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-mist-soft text-mist-deep"><HeartPulse size={18} /></span>
-                <span className="flex-1 text-sm font-semibold text-ink-600">Your aftercare appears here after a visit.</span>
-              </button>
-            )}
-
-            {activePlan && (
-              <button onClick={onGoCare} className="mt-4 flex w-full items-center justify-center gap-1.5 text-xs font-bold uppercase tracking-wider text-ink-400">
-                Full plan <ArrowRight size={13} />
-              </button>
-            )}
-          </Glass>
-        </motion.div>
-
-        {/* Points */}
-        <motion.button {...anim(3)} onClick={onGoRewards} className="col-span-1 text-left">
-          <GradientCard accent="#EAB308" className="h-full p-4" sheen={false}>
-            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/25 text-white ring-1 ring-inset ring-white/30"><Sparkles size={18} /></span>
-            <p className="mt-3 font-display text-2xl font-bold tracking-tight text-white"><CountUp value={points} /></p>
-            <SectionLabel onDark className="mt-0.5 block">Smile Points</SectionLabel>
-          </GradientCard>
-        </motion.button>
-
-        {/* Messages */}
-        <motion.button {...anim(4)} onClick={onOpenMessages} className="col-span-1 text-left">
-          <GradientCard accent="#E8749E" className="h-full p-4" sheen={false}>
-            <span className="relative flex h-10 w-10 items-center justify-center rounded-2xl bg-white/25 text-white ring-1 ring-inset ring-white/30">
-              <MessageCircle size={18} />
-              {unreadCount > 0 && <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-white px-1 text-[9px] font-bold" style={{ color: '#E8749E' }}>{unreadCount}</span>}
+        {/* Title */}
+        <motion.div variants={rise} className="relative px-3 pb-5">
+          <div className="flex items-center gap-2">
+            <span className="flex h-7 w-7 items-center justify-center rounded-full text-[10px] font-bold text-white ring-1 ring-inset ring-white/25" style={{ backgroundImage: `linear-gradient(140deg, ${clinic.primaryColor}, ${clinic.primaryColor}99)` }}>
+              {(clinic.name || 'C').slice(0, 1)}
             </span>
-            <p className="mt-3 font-display text-2xl font-bold tracking-tight text-white">{unreadCount > 0 ? unreadCount : '—'}</p>
-            <SectionLabel onDark className="mt-0.5 block">{unreadCount > 0 ? 'New messages' : 'All caught up'}</SectionLabel>
-          </GradientCard>
-        </motion.button>
-      </div>
-
-      {/* Latest message */}
-      {latest && (
-        <motion.div {...anim(5)}>
-          <Glass interactive tint="#BBD7EE" className="p-4" onClick={onOpenMessages}>
-            <div className="flex items-start gap-3">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white/70 text-ink-500"><MessageCircle size={18} /></span>
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-bold text-ink-800">{latest.title}</p>
-                <p className="mt-0.5 line-clamp-2 text-xs text-ink-500">{latest.body}</p>
-                <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-ink-300">{relTime(latest.createdAt)}</p>
-              </div>
-              <ChevronRight size={16} className="mt-1 shrink-0 text-ink-300" />
-            </div>
-          </Glass>
+            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white/55">{clinic.name}</span>
+          </div>
+          <h1 className="mt-3 font-display text-3xl font-bold tracking-tight text-white">
+            {dayGreeting()}, {firstName}
+          </h1>
+          <p className="mt-1 text-xs font-medium text-white/50">
+            {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+          </p>
         </motion.div>
-      )}
 
-      {/* Quick actions */}
-      <motion.div {...anim(6)} className="grid grid-cols-2 gap-3">
-        <Button variant="glass" block onClick={onOpenBooking} className="!py-3.5"><CalendarDays size={16} /> Book visit</Button>
-        <a href={clinic.emergencyPhone ? `tel:${clinic.emergencyPhone}` : undefined} className="contents">
-          <Button variant="glass" block className="!py-3.5"><Phone size={16} /> Call clinic</Button>
-        </a>
+        <motion.div variants={rise}>
+          <CardStack items={items} initial="visit" />
+        </motion.div>
+
+        {/* Neon action */}
+        <motion.button variants={rise} onClick={onOpenBooking}
+          whileTap={{ scale: 0.97 }}
+          className="relative mt-4 flex w-full items-center justify-center gap-2 rounded-full py-3.5 text-sm font-bold text-[#1A1A00]"
+          style={{ background: 'linear-gradient(135deg, #EAFB4B, #C8E31F)', boxShadow: '0 14px 34px -10px rgba(200,227,31,0.65)' }}>
+          <Plus size={16} /> Book a visit
+        </motion.button>
       </motion.div>
-    </motion.div>
+
+      {/* Schedule + check-in (iOS bento) */}
+      <motion.div variants={rise} className="space-y-3">
+        <Glass className="p-5">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <SectionLabel>Schedule</SectionLabel>
+              <p className="mt-0.5 font-display text-base font-bold text-ink-900">Your week</p>
+            </div>
+            <Segmented
+              className="w-[10.5rem]"
+              value={weekView}
+              onChange={setWeekView}
+              options={[{ key: 'WEEK', label: 'Week' }, { key: 'MONTH', label: 'Month' }]}
+            />
+          </div>
+          {weekView === 'WEEK' ? (
+            <WeekStrip accent={clinic.primaryColor} markedDays={markedDays} className="mt-4" />
+          ) : (
+            <p className="mt-4 text-sm text-ink-500">
+              {appointments.filter((a) => +new Date(a.startTime) >= Date.now()).length} upcoming visit(s) in the weeks ahead.
+            </p>
+          )}
+        </Glass>
+
+        <Glass tint="#F6C9DC" className="p-5">
+          <div className="flex items-center justify-between">
+            <SectionLabel>Daily check-in</SectionLabel>
+            <span className="rounded-full px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-wider text-white"
+              style={{ backgroundImage: `linear-gradient(135deg, ${clinic.primaryColor}, ${clinic.primaryColor}bb)` }}>{comfortLabel}</span>
+          </div>
+          <p className="mt-2 font-display text-base font-bold text-ink-900">How does your smile feel today?</p>
+          <GradientSlider value={comfortValue} onChange={(v) => onSetComfort?.(v)} className="mt-4" />
+          <div className="mt-1 flex justify-between font-mono text-[10px] font-bold uppercase tracking-wider text-ink-400">
+            <span>Sore</span><span>Great</span>
+          </div>
+        </Glass>
+      </motion.div>
+
+      {/* Quick contact */}
+      <div className="grid grid-cols-2 gap-3">
+        <button onClick={onOpenMessages} className="flex items-center justify-center gap-2 rounded-full border border-white/70 bg-white/60 py-3.5 text-sm font-bold text-ink-700 backdrop-blur-md">
+          <MessageCircle size={16} /> Messages
+        </button>
+        <a href={clinic.emergencyPhone ? `tel:${clinic.emergencyPhone}` : undefined} className="contents">
+          <button className="flex w-full items-center justify-center gap-2 rounded-full border border-white/70 bg-white/60 py-3.5 text-sm font-bold text-ink-700 backdrop-blur-md">
+            <Phone size={16} /> Call clinic
+          </button>
+        </a>
+      </div>
+    </div>
   );
 };
 

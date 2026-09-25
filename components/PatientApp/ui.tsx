@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useId, useRef, useState } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { X } from 'lucide-react';
 import { cn } from '../Doctor/ui/primitives';
@@ -395,6 +395,73 @@ export const rise = {
   hidden: { opacity: 0, y: 14 },
   show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] as const } },
 };
+
+/* --- iOS-style bento pieces --- */
+
+export const Segmented = <T extends string>({ options, value, onChange, className }: { options: { key: T; label: string }[]; value: T; onChange: (v: T) => void; className?: string }) => {
+  const id = useId();
+  return (
+    <div className={cn('flex rounded-full bg-ink-950/[0.07] p-1', className)}>
+      {options.map((o) => {
+        const active = o.key === value;
+        return (
+          <button key={o.key} onClick={() => onChange(o.key)} className="relative flex-1 rounded-full px-3 py-1.5 text-xs font-bold">
+            {active && (
+              <motion.span layoutId={`seg-${id}`} className="absolute inset-0 rounded-full bg-white shadow-[0_2px_10px_-2px_rgba(16,24,40,0.28)]"
+                transition={{ type: 'spring', stiffness: 420, damping: 32 }} />
+            )}
+            <span className={cn('relative', active ? 'text-ink-900' : 'text-ink-500')}>{o.label}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+};
+
+export const WeekStrip: React.FC<{ accent: string; markedDays?: Set<number>; className?: string }> = ({ accent, markedDays, className }) => {
+  const today = new Date();
+  const days = Array.from({ length: 7 }, (_, i) => { const d = new Date(today); d.setDate(today.getDate() + i); return d; });
+  return (
+    <div className={cn('flex items-center justify-between', className)}>
+      {days.map((d, i) => {
+        const active = i === 0;
+        const marked = markedDays?.has(d.getDate());
+        return (
+          <div key={i} className="flex flex-1 flex-col items-center gap-1.5">
+            <span className="font-mono text-[9px] font-bold uppercase tracking-wider text-ink-400">{d.toLocaleDateString('en-US', { weekday: 'narrow' })}</span>
+            <span className="relative flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold"
+              style={active ? { backgroundImage: `linear-gradient(140deg, ${accent}, ${mix(accent, '#000', 0.3)})`, color: '#fff', boxShadow: GLOW(accent, 0.5) } : { color: '#333' }}>
+              {d.getDate()}
+            </span>
+            <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: marked ? accent : 'transparent' }} />
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+/** Soft gradient slider (Low ↔ High) — e.g. a daily comfort check-in. */
+export const GradientSlider: React.FC<{ value: number; min?: number; max?: number; step?: number; onChange: (v: number) => void; className?: string }> = ({ value, min = 0, max = 10, step = 1, onChange, className }) => (
+  <input
+    type="range" min={min} max={max} step={step} value={value}
+    onChange={(e) => onChange(Number(e.target.value))}
+    className={cn('retain-slider w-full', className)}
+    aria-label="Comfort level"
+  />
+);
+
+/** Colour tile with a big icon + label (bento category card). */
+export const FeatureCard: React.FC<{ gradient: string; icon: React.ReactNode; label: string; sub?: string; onClick?: () => void; className?: string }> = ({ gradient, icon, label, sub, onClick, className }) => (
+  <button onClick={onClick} className={cn('relative overflow-hidden rounded-[28px] p-4 text-left text-white', className)}
+    style={{ backgroundImage: gradient, boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.35), 0 18px 36px -20px rgba(16,24,40,0.6)' }}>
+    <div aria-hidden className="pointer-events-none absolute inset-0 rounded-[28px] ring-1 ring-inset ring-white/20" />
+    <Noise opacity={0.08} />
+    <span className="relative flex h-10 w-10 items-center justify-center rounded-2xl bg-white/20 ring-1 ring-inset ring-white/25">{icon}</span>
+    <span className="relative mt-6 block font-display text-lg font-bold tracking-tight text-white">{label}</span>
+    {sub && <span className="relative mt-0.5 block text-xs font-medium text-white/80">{sub}</span>}
+  </button>
+);
 
 /* --- helpers --- */
 export const money = (n: number) => `₹${Math.round(n || 0).toLocaleString('en-IN')}`;

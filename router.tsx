@@ -206,6 +206,7 @@ export const AppRouter: React.FC<RouterProps> = ({ appState, handlers, backendSe
                             onMarkNotificationRead={handlers.onMarkNotificationRead}
                             onSavePushSubscription={handlers.onSavePushSubscription}
                             onDeletePushSubscription={handlers.onDeletePushSubscription}
+                            onUpdateMetadata={handlers.onUpdateMetadata}
                         />
                     </PatientGuard>
                 } />

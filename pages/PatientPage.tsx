@@ -71,6 +71,7 @@ export const PatientPage: React.FC<Props> = (props) => {
                 onMarkNotificationRead={props.onMarkNotificationRead}
                 onSavePushSubscription={props.onSavePushSubscription}
                 onDeletePushSubscription={props.onDeletePushSubscription}
+                onUpdateMetadata={props.onUpdateMetadata}
             />
         </div>
     );
