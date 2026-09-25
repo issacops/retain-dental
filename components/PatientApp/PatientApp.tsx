@@ -1,12 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { Home, HeartPulse, Gift, User as UserIcon, Bell } from 'lucide-react';
+import { Home, HeartPulse, Gift, User as UserIcon, Bell, Plus } from 'lucide-react';
 import {
   Clinic, User, Wallet, Transaction, CarePlan, FamilyGroup, Appointment,
   AppointmentType, TransactionCategory, TransactionType, PatientNotification,
 } from '../../types';
 import { cn } from '../Doctor/ui/primitives';
-import { Avatar, SectionLabel, Sheet } from './ui';
+import { Aurora, Avatar, SectionLabel } from './ui';
 import TodayScreen from './screens/TodayScreen';
 import CareScreen from './screens/CareScreen';
 import RewardsScreen from './screens/RewardsScreen';
@@ -31,7 +31,7 @@ export interface PatientAppProps {
   onToggleChecklistItem: (planId: string, itemId: string) => void | Promise<any>;
   onUpdateCarePlan?: (planId: string, updates: Partial<CarePlan>) => void;
   onSchedule: (patientId: string, date: Date, type: AppointmentType, notes?: string) => Promise<{ success: boolean; error?: string }>;
-  onAddFamilyMember: (mainUserId: string, name: string, relationship: string, mobile: string) => Promise<any>;
+  onAddFamilyMember: (mainUserId: string, name: string, relationship: string, age: string) => Promise<any>;
   onSwitchProfile: (userId: string) => void;
   onRedeem: (patientId: string, amount: number, category: TransactionCategory, type: TransactionType, template?: any) => Promise<any>;
   onLinkFamily: (headUserId: string, memberMobile: string) => Promise<any>;
@@ -42,9 +42,11 @@ export interface PatientAppProps {
   defaultTab?: PatientTab;
 }
 
-const NAV: { id: PatientTab; label: string; icon: React.ElementType }[] = [
+const LEFT: { id: PatientTab; label: string; icon: React.ElementType }[] = [
   { id: 'TODAY', label: 'Today', icon: Home },
   { id: 'CARE', label: 'Care', icon: HeartPulse },
+];
+const RIGHT: { id: PatientTab; label: string; icon: React.ElementType }[] = [
   { id: 'REWARDS', label: 'Rewards', icon: Gift },
   { id: 'YOU', label: 'You', icon: UserIcon },
 ];
@@ -74,7 +76,6 @@ const PatientApp: React.FC<PatientAppProps> = (props) => {
     return () => { mounted = false; };
   }, [clinic.id, currentUser.id, onGetNotifications]);
 
-  // --- household-aware wallet ---
   const wallet = useMemo(() => {
     const own = wallets.find((w) => w.userId === currentUser.id);
     if (own) return own;
@@ -127,13 +128,32 @@ const PatientApp: React.FC<PatientAppProps> = (props) => {
     setShowOnboarding(false);
   };
 
+  const NavButton: React.FC<{ item: { id: PatientTab; label: string; icon: React.ElementType } }> = ({ item }) => {
+    const Icon = item.icon;
+    const active = tab === item.id;
+    return (
+      <button
+        onClick={() => setTab(item.id)}
+        aria-label={item.label}
+        aria-current={active ? 'page' : undefined}
+        className="relative flex flex-1 flex-col items-center justify-center gap-1 rounded-full py-2.5 text-[10px] font-bold text-ink-400 transition-colors"
+        style={active ? { color: clinic.primaryColor } : undefined}
+      >
+        <Icon size={19} />
+        {item.label}
+        {active && <span className="absolute -bottom-0.5 h-1 w-1 rounded-full" style={{ backgroundColor: clinic.primaryColor }} />}
+      </button>
+    );
+  };
+
   return (
     <>
+      <Aurora accent={clinic.primaryColor} />
       {showOnboarding && <Onboarding clinicName={clinic.name} accent={clinic.primaryColor} onDone={completeOnboarding} />}
 
-      <div className="min-h-[100dvh] bg-cream-200 font-sans text-ink-900">
+      <div className="min-h-[100dvh] font-sans text-ink-900">
         {/* Header */}
-        <header className="sticky top-0 z-30 border-b border-ink-950/[0.06] bg-cream-200/85 backdrop-blur-md">
+        <header className="sticky top-0 z-30 border-b border-white/40 bg-cream-50/70 backdrop-blur-xl">
           <div className="mx-auto flex max-w-md items-center gap-3 px-5 py-3">
             <Avatar name={clinic.name} accent={clinic.primaryColor} size={36} />
             <div className="min-w-0 flex-1">
@@ -143,7 +163,7 @@ const PatientApp: React.FC<PatientAppProps> = (props) => {
             <button
               onClick={() => setSheet('messages')}
               aria-label={`Messages${unreadCount ? `, ${unreadCount} unread` : ''}`}
-              className="relative flex h-10 w-10 items-center justify-center rounded-full border border-ink-950/10 bg-white text-ink-600"
+              className="relative flex h-10 w-10 items-center justify-center rounded-full border border-white/60 bg-white/60 text-ink-600 backdrop-blur-md"
             >
               <Bell size={17} />
               {unreadCount > 0 && (
@@ -169,6 +189,7 @@ const PatientApp: React.FC<PatientAppProps> = (props) => {
                 <TodayScreen
                   currentUser={currentUser}
                   clinic={clinic}
+                  appointments={myAppointments}
                   nextAppt={nextAppt}
                   activePlan={activePlan}
                   points={points}
@@ -182,22 +203,10 @@ const PatientApp: React.FC<PatientAppProps> = (props) => {
                 />
               )}
               {tab === 'CARE' && (
-                <CareScreen
-                  clinic={clinic}
-                  activePlan={activePlan}
-                  pastPlans={pastPlans}
-                  onToggleTask={toggleTask}
-                  onBooking={() => setSheet('booking')}
-                />
+                <CareScreen clinic={clinic} activePlan={activePlan} pastPlans={pastPlans} onToggleTask={toggleTask} onBooking={() => setSheet('booking')} />
               )}
               {tab === 'REWARDS' && (
-                <RewardsScreen
-                  clinic={clinic}
-                  currentUser={currentUser}
-                  points={points}
-                  ledger={ledger}
-                  onRedeem={() => setSheet('redeem')}
-                />
+                <RewardsScreen clinic={clinic} currentUser={currentUser} points={points} ledger={ledger} onRedeem={() => setSheet('redeem')} />
               )}
               {tab === 'YOU' && (
                 <YouScreen
@@ -218,61 +227,28 @@ const PatientApp: React.FC<PatientAppProps> = (props) => {
           </AnimatePresence>
         </main>
 
-        {/* Bottom nav */}
+        {/* Floating nav */}
         <nav className="fixed inset-x-0 bottom-0 z-40 px-5 pb-5">
-          <div className="mx-auto flex max-w-md items-center justify-between rounded-full border border-ink-950/[0.06] bg-white/95 px-2 py-2 shadow-[0_12px_32px_-12px_rgba(16,24,40,0.28)] backdrop-blur-md">
-            {NAV.map((item) => {
-              const Icon = item.icon;
-              const active = tab === item.id;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => setTab(item.id)}
-                  aria-label={item.label}
-                  aria-current={active ? 'page' : undefined}
-                  className={cn('relative flex flex-1 flex-col items-center justify-center gap-1 rounded-full py-2.5 text-[10px] font-bold transition-colors', active ? 'text-white' : 'text-ink-400')}
-                  style={active ? { backgroundColor: clinic.primaryColor } : undefined}
-                >
-                  <Icon size={19} />
-                  {item.label}
-                </button>
-              );
-            })}
+          <div className="relative mx-auto flex max-w-md items-center justify-between rounded-full border border-white/60 bg-white/75 px-2 py-2 shadow-[0_16px_40px_-16px_rgba(16,24,40,0.35)] backdrop-blur-2xl">
+            {LEFT.map((i) => <NavButton key={i.id} item={i} />)}
+            <div className="w-14" />
+            {RIGHT.map((i) => <NavButton key={i.id} item={i} />)}
+            <button
+              onClick={() => setSheet('booking')}
+              aria-label="Book a visit"
+              className="absolute left-1/2 top-1/2 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-white shadow-[0_12px_26px_-10px_rgba(16,24,40,0.7)] transition-transform active:scale-95"
+              style={{ backgroundColor: clinic.primaryColor }}
+            >
+              <Plus size={24} />
+            </button>
           </div>
         </nav>
       </div>
 
-      {/* Sheets */}
-      <MessagesSheet
-        open={sheet === 'messages'}
-        onClose={() => setSheet(null)}
-        notifications={notifications}
-        onRead={markRead}
-      />
-      <BookingSheet
-        open={sheet === 'booking'}
-        onClose={() => setSheet(null)}
-        clinic={clinic}
-        patientId={currentUser.id}
-        onSchedule={onSchedule}
-      />
-      <RedeemSheet
-        open={sheet === 'redeem'}
-        onClose={() => setSheet(null)}
-        clinic={clinic}
-        patientId={currentUser.id}
-        points={points}
-        onRedeem={onRedeem}
-      />
-      <AddFamilySheet
-        open={sheet === 'family'}
-        onClose={() => setSheet(null)}
-        clinic={clinic}
-        currentUser={currentUser}
-        household={household}
-        onAddFamilyMember={onAddFamilyMember}
-        onLinkFamily={onLinkFamily}
-      />
+      <MessagesSheet open={sheet === 'messages'} onClose={() => setSheet(null)} notifications={notifications} onRead={markRead} />
+      <BookingSheet open={sheet === 'booking'} onClose={() => setSheet(null)} clinic={clinic} patientId={currentUser.id} onSchedule={onSchedule} />
+      <RedeemSheet open={sheet === 'redeem'} onClose={() => setSheet(null)} clinic={clinic} patientId={currentUser.id} points={points} onRedeem={onRedeem} />
+      <AddFamilySheet open={sheet === 'family'} onClose={() => setSheet(null)} clinic={clinic} currentUser={currentUser} household={household} onAddFamilyMember={onAddFamilyMember} onLinkFamily={onLinkFamily} />
     </>
   );
 };

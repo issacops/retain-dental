@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { CalendarHeart, ListChecks, Sparkles, Share, ArrowRight } from 'lucide-react';
-import { Avatar, Button, Display, SectionLabel } from './ui';
+import { Aurora, Avatar, Button, Display, SectionLabel } from './ui';
 import { isIOS, isStandalone } from '../../lib/push';
 
 interface Props {
@@ -21,7 +21,8 @@ const Onboarding: React.FC<Props> = ({ clinicName, accent, onDone }) => {
   const iosNeedsInstall = isIOS() && !isStandalone();
 
   return (
-    <div className="fixed inset-0 z-[120] flex flex-col bg-cream-50 font-sans">
+    <div className="fixed inset-0 z-[120] flex flex-col font-sans">
+      <Aurora accent={accent} />
       <div className="mx-auto flex w-full max-w-md flex-1 flex-col px-6 pb-8 pt-16">
         <motion.div initial={reduce ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
           <Avatar name={clinicName} accent={accent} size={56} />
@@ -54,7 +55,7 @@ const Onboarding: React.FC<Props> = ({ clinicName, accent, onDone }) => {
         </div>
 
         {iosNeedsInstall && (
-          <div className="mt-8 flex items-start gap-3 rounded-[24px] border border-ink-950/[0.07] bg-white p-4">
+          <div className="mt-8 flex items-start gap-3 rounded-[24px] border border-white/60 bg-white/55 p-4 backdrop-blur-xl">
             <Share size={16} className="mt-0.5 shrink-0 text-ink-400" />
             <p className="text-xs leading-relaxed text-ink-500">
               To get reminders on your phone, add this app to your Home Screen: tap <span className="font-bold text-ink-700">Share</span> then <span className="font-bold text-ink-700">Add to Home Screen</span>.
