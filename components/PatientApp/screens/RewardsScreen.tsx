@@ -3,7 +3,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { Sparkles, Gift, ArrowDownLeft, ArrowUpRight, TrendingUp, Star } from 'lucide-react';
 import { Clinic, User, Transaction, TransactionType, TIER_THRESHOLDS, TIER_BENEFITS, Tier } from '../../../types';
 import { cn } from '../../Doctor/ui/primitives';
-import { GradientCard, Glass, SectionLabel, Display, Button, Chip, ProgressRing, EmptyState, BigNumber, relTime } from '../ui';
+import { GradientCard, Glass, SectionLabel, Display, Button, Chip, ProgressRing, EmptyState, BigNumber, CountUp, relTime } from '../ui';
 
 interface Props {
   clinic: Clinic;
@@ -45,7 +45,7 @@ const RewardsScreen: React.FC<Props> = ({ clinic, currentUser, points, ledger, o
             <Chip tone="glass">Smile Points</Chip>
             <Sparkles size={18} className="text-white/70" />
           </div>
-          <div className="mt-5"><BigNumber value={points.toLocaleString('en-IN')} label="available to redeem" onDark /></div>
+          <div className="mt-5"><BigNumber value={<CountUp value={points} />} label="available to redeem" onDark /></div>
           <button onClick={onRedeem} className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-white py-3 text-sm font-bold" style={{ color: clinic.primaryColor }}>
             <Gift size={16} /> Redeem points
           </button>
@@ -54,9 +54,9 @@ const RewardsScreen: React.FC<Props> = ({ clinic, currentUser, points, ledger, o
 
       {/* Tier */}
       <motion.div {...fade(2, reduce)}>
-        <Glass className="p-5">
+        <Glass tint={clinic.primaryColor} className="p-5">
           <div className="flex items-center gap-4">
-            <ProgressRing value={tierProgress} size={92} stroke={9} accent={clinic.primaryColor} track="rgba(10,10,10,0.08)">
+            <ProgressRing value={tierProgress} size={92} stroke={9} accent={clinic.primaryColor} track="rgba(10,10,10,0.08)" glow>
               <Star size={18} style={{ color: clinic.primaryColor }} />
             </ProgressRing>
             <div className="min-w-0 flex-1">

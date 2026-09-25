@@ -58,7 +58,7 @@ const CareScreen: React.FC<Props> = ({ clinic, activePlan, pastPlans, onToggleTa
                     Started {new Date(activePlan.assignedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}
                   </p>
                 </div>
-                <ProgressRing value={pct} size={104} stroke={9} accent="#FFFFFF" track="rgba(255,255,255,0.25)">
+                <ProgressRing value={pct} size={104} stroke={9} accent="#FFFFFF" track="rgba(255,255,255,0.25)" glow>
                   <span className="font-display text-xl font-bold tracking-tight text-white">{Math.round(pct * 100)}%</span>
                   <span className="font-mono text-[9px] uppercase tracking-widest text-white/70">today</span>
                 </ProgressRing>
@@ -71,7 +71,7 @@ const CareScreen: React.FC<Props> = ({ clinic, activePlan, pastPlans, onToggleTa
           </motion.div>
 
           <motion.div {...fade(2, reduce)}>
-            <Glass className="p-5">
+            <Glass tint={clinic.primaryColor} className="p-5">
               <div className="flex items-center gap-2"><ClipboardList size={16} className="text-ink-400" /><SectionLabel>Daily routine</SectionLabel></div>
               <div className="mt-3 space-y-2">
                 {tasks.length === 0 && <p className="text-sm text-ink-400">No daily tasks — follow the steps below.</p>}

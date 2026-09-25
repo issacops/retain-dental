@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { X } from 'lucide-react';
 import { cn } from '../Doctor/ui/primitives';
 
 /* ------------------------------------------------------------------ *
- * Patient PWA design system — "Aurora".
- * Soft aurora gradients, frosted glass, bento cards, big display
- * numerals. Warm and calm on purpose: dental visits are anxious.
+ * Patient PWA design system — "Aurora" v2.
+ * Mesh gradients, frosted glass with specular highlights, grain
+ * texture, gradient buttons with shine, springy motion.
  * ------------------------------------------------------------------ */
 
 /* --- colour helpers --- */
@@ -28,57 +28,95 @@ export const alpha = (hex: string, a: number) => {
   return `#${h}${Math.round(clamp(a * 255)).toString(16).padStart(2, '0')}`;
 };
 
+/** Soft grain, as a tiny inline SVG turbulence. */
+export const NOISE_URL =
+  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E\")";
+
+export const Noise: React.FC<{ opacity?: number; className?: string }> = ({ opacity = 0.035, className }) => (
+  <div aria-hidden className={cn('pointer-events-none absolute inset-0 mix-blend-soft-light', className)} style={{ backgroundImage: NOISE_URL, opacity }} />
+);
+
 /* --- ambient background --- */
 export const Aurora: React.FC<{ accent: string }> = ({ accent }) => {
   const reduce = useReducedMotion();
   const blob = (color: string, style: React.CSSProperties, dur: number) => (
     <motion.div
-      className="absolute rounded-full blur-[80px]"
-      style={{ background: color, opacity: 0.22, ...style }}
-      animate={reduce ? undefined : { x: [0, 22, -12, 0], y: [0, -18, 14, 0] }}
+      className="absolute rounded-full blur-[90px]"
+      style={{ background: `radial-gradient(circle at 30% 30%, ${color}, transparent 70%)`, opacity: 0.5, ...style }}
+      animate={reduce ? undefined : { x: [0, 26, -14, 0], y: [0, -20, 16, 0], scale: [1, 1.06, 0.97, 1] }}
       transition={{ duration: dur, repeat: Infinity, ease: 'easeInOut' }}
     />
   );
   return (
-    <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-cream-50">
-      {blob(accent, { width: 360, height: 360, left: -80, top: -90 }, 16)}
-      {blob('#F6C9DC', { width: 300, height: 300, right: -70, top: 40 }, 19)}
-      {blob('#BBD7EE', { width: 340, height: 340, left: -60, bottom: -80 }, 22)}
-      {blob('#F5E27B', { width: 250, height: 250, right: -40, bottom: 60 }, 18)}
-      <div
-        className="absolute inset-0 opacity-[0.5]"
-        style={{ backgroundImage: 'radial-gradient(rgba(10,10,10,0.055) 1px, transparent 1px)', backgroundSize: '22px 22px' }}
+    <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" style={{ background: 'linear-gradient(180deg,#FCFAF5 0%,#F6F2EA 55%,#F1EDE4 100%)' }}>
+      <motion.div
+        className="absolute -inset-[30%] opacity-[0.22]"
+        style={{ background: `conic-gradient(from 0deg, ${accent}, #F6C9DC, #F5E27B, #BBD7EE, #B7CE86, ${accent})` }}
+        animate={reduce ? undefined : { rotate: 360 }}
+        transition={{ duration: 120, repeat: Infinity, ease: 'linear' }}
       />
+      {blob(accent, { width: 380, height: 380, left: -90, top: -100 }, 17)}
+      {blob('#F6C9DC', { width: 320, height: 320, right: -80, top: 20 }, 20)}
+      {blob('#BBD7EE', { width: 360, height: 360, left: -70, bottom: -90 }, 23)}
+      {blob('#F5E27B', { width: 260, height: 260, right: -50, bottom: 40 }, 19)}
+      {blob('#B7CE86', { width: 240, height: 240, left: '35%', top: '45%' }, 26)}
+      <div className="absolute inset-0 opacity-[0.5]" style={{ backgroundImage: 'radial-gradient(rgba(10,10,10,0.06) 1px, transparent 1px)', backgroundSize: '22px 22px' }} />
+      <Noise opacity={0.05} />
+      <div className="absolute inset-0" style={{ background: 'radial-gradient(120% 80% at 50% -10%, transparent 55%, rgba(10,10,10,0.06) 100%)' }} />
     </div>
   );
 };
 
 /* --- surfaces --- */
-export const Glass: React.FC<React.HTMLAttributes<HTMLDivElement> & { interactive?: boolean }> = ({ interactive, className, children, ...rest }) => (
+const GLOW = (hex: string, a = 0.5) => `0 18px 40px -18px ${alpha(hex, a)}`;
+
+export const Glass: React.FC<React.HTMLAttributes<HTMLDivElement> & { interactive?: boolean; tint?: string }> = ({ interactive, tint, className, children, ...rest }) => (
   <div
     {...rest}
     className={cn(
-      'rounded-[30px] border border-white/60 bg-white/55 backdrop-blur-xl',
-      'shadow-[0_10px_34px_-16px_rgba(16,24,40,0.28)]',
-      interactive && 'transition-transform duration-200 active:scale-[0.985]',
+      'relative overflow-hidden rounded-[30px] border border-white/70 bg-white/55 backdrop-blur-xl',
+      'shadow-[0_16px_40px_-22px_rgba(16,24,40,0.35)]',
+      interactive && 'transition-transform duration-200 active:scale-[0.98]',
       className,
     )}
   >
-    {children}
-  </div>
-);
-
-export const GradientCard: React.FC<React.HTMLAttributes<HTMLDivElement> & { accent: string; deep?: boolean }> = ({ accent, deep = true, className, children, ...rest }) => (
-  <div
-    {...rest}
-    className={cn('relative overflow-hidden rounded-[30px] text-white shadow-[0_18px_44px_-20px_rgba(16,24,40,0.55)]', className)}
-    style={{ backgroundImage: `linear-gradient(145deg, ${accent} 0%, ${mix(accent, deep ? '#0A0A0A' : '#FFFFFF', deep ? 0.32 : 0.12)} 100%)` }}
-  >
-    <div className="pointer-events-none absolute -right-12 -top-16 h-48 w-48 rounded-full bg-white/25 blur-2xl" />
-    <div className="pointer-events-none absolute -left-10 bottom-0 h-32 w-32 rounded-full bg-white/10 blur-2xl" />
+    {tint && <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: `linear-gradient(150deg, ${alpha(tint, 0.16)}, transparent 60%)` }} />}
+    <div aria-hidden className="pointer-events-none absolute inset-0 rounded-[30px] ring-1 ring-inset ring-white/60" />
+    <Noise opacity={0.04} />
     <div className="relative">{children}</div>
   </div>
 );
+
+export const GradientCard: React.FC<React.HTMLAttributes<HTMLDivElement> & { accent: string; sheen?: boolean }> = ({ accent, sheen = true, className, children, ...rest }) => {
+  const reduce = useReducedMotion();
+  return (
+    <div
+      {...rest}
+      className={cn('relative overflow-hidden rounded-[30px] text-white', className)}
+      style={{
+        backgroundImage: [
+          `radial-gradient(120% 120% at 12% 8%, ${alpha('#FFFFFF', 0.28)}, transparent 45%)`,
+          `radial-gradient(90% 90% at 90% 100%, ${mix(accent, '#000000', 0.42)}, transparent 55%)`,
+          `linear-gradient(145deg, ${accent} 0%, ${mix(accent, '#0A0A0A', 0.3)} 60%, ${mix(accent, '#000000', 0.45)} 100%)`,
+        ].join(','),
+        boxShadow: `${GLOW(accent, 0.55)}, inset 0 1px 0 rgba(255,255,255,0.35)`,
+      }}
+    >
+      <Noise opacity={0.07} />
+      <div aria-hidden className="pointer-events-none absolute inset-0 rounded-[30px] ring-1 ring-inset ring-white/25" />
+      {sheen && (
+        <motion.div
+          aria-hidden
+          className="pointer-events-none absolute -inset-y-10 -left-1/3 w-1/3 rotate-12 bg-gradient-to-r from-transparent via-white/25 to-transparent"
+          initial={reduce ? false : { x: '-140%', opacity: 0 }}
+          animate={reduce ? undefined : { x: ['-140%', '420%'], opacity: [0, 0.9, 0] }}
+          transition={{ duration: 3.4, repeat: Infinity, repeatDelay: 4.5, ease: 'easeInOut' }}
+        />
+      )}
+      <div className="relative">{children}</div>
+    </div>
+  );
+};
 
 export const Surface: React.FC<React.HTMLAttributes<HTMLDivElement> & { tone?: 'white' | 'cream' | 'dark'; interactive?: boolean }> = ({
   tone = 'white', interactive, className, children, ...rest
@@ -86,11 +124,11 @@ export const Surface: React.FC<React.HTMLAttributes<HTMLDivElement> & { tone?: '
   <div
     {...rest}
     className={cn(
-      'rounded-[30px] border',
-      tone === 'white' && 'border-ink-950/[0.06] bg-white/80 backdrop-blur-sm',
+      'relative overflow-hidden rounded-[30px] border',
+      tone === 'white' && 'border-white/70 bg-white/80 backdrop-blur-md',
       tone === 'cream' && 'border-ink-950/[0.06] bg-cream-100',
       tone === 'dark' && 'border-white/10 bg-ink-950 text-cream-50',
-      interactive && 'transition-transform duration-200 active:scale-[0.985]',
+      interactive && 'transition-transform duration-200 active:scale-[0.98]',
       className,
     )}
   >
@@ -126,44 +164,86 @@ export const BigNumber: React.FC<{ value: React.ReactNode; unit?: string; label?
   </div>
 );
 
+/** Animated numeral that counts up when the value changes. */
+export const CountUp: React.FC<{ value: number; className?: string; duration?: number }> = ({ value, className, duration = 0.9 }) => {
+  const reduce = useReducedMotion();
+  const [display, setDisplay] = useState(reduce ? value : 0);
+  const fromRef = useRef(0);
+  useEffect(() => {
+    if (reduce) { setDisplay(value); return; }
+    let raf = 0;
+    const from = fromRef.current;
+    const start = performance.now();
+    const step = (t: number) => {
+      const p = Math.min(1, (t - start) / (duration * 1000));
+      const eased = 1 - Math.pow(1 - p, 3);
+      setDisplay(Math.round(from + (value - from) * eased));
+      if (p < 1) raf = requestAnimationFrame(step); else fromRef.current = value;
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [value, duration, reduce]);
+  return <span className={className}>{display.toLocaleString('en-IN')}</span>;
+};
+
 /* --- controls --- */
 type ButtonVariant = 'primary' | 'glass' | 'ghost' | 'dark';
 export const Button: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement> & { variant?: ButtonVariant; accent?: string; block?: boolean; loading?: boolean }> = ({
   variant = 'primary', accent, block, loading, className, children, disabled, style, ...rest
 }) => {
-  const base = 'inline-flex items-center justify-center gap-2 rounded-full text-sm font-bold transition-all active:scale-[0.98] disabled:opacity-50 disabled:active:scale-100';
-  const pad = 'px-5 py-3';
+  const primary = variant === 'primary';
+  const isDisabled = disabled || loading;
   const variants: Record<ButtonVariant, string> = {
-    primary: 'text-white shadow-[0_10px_24px_-12px_rgba(16,24,40,0.6)]',
-    glass: 'border border-white/60 bg-white/60 text-ink-800 backdrop-blur-md',
+    primary: 'text-white',
+    glass: 'border border-white/70 bg-white/60 text-ink-800 backdrop-blur-md',
     ghost: 'border border-ink-950/10 bg-white/70 text-ink-700',
     dark: 'bg-ink-950 text-cream-50',
   };
   return (
-    <button
-      {...rest}
-      disabled={disabled || loading}
-      style={variant === 'primary' ? { backgroundColor: accent || '#0F766E', ...style } : style}
-      className={cn(base, pad, variants[variant], block && 'w-full', className)}
+    <motion.button
+      whileTap={isDisabled ? undefined : { scale: 0.96 }}
+      whileHover={isDisabled ? undefined : { y: -1.5 }}
+      transition={{ type: 'spring', stiffness: 480, damping: 26 }}
+      disabled={isDisabled}
+      style={primary ? {
+        backgroundImage: `linear-gradient(135deg, ${accent || '#0F766E'} 0%, ${mix(accent || '#0F766E', '#000', 0.32)} 100%)`,
+        boxShadow: GLOW(accent || '#0F766E', 0.6),
+        ...style,
+      } : style}
+      className={cn(
+        'relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full px-5 py-3 text-sm font-bold transition-opacity disabled:opacity-50',
+        variants[variant], block && 'w-full', className,
+      )}
+      {...(rest as any)}
     >
-      {loading && <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/40 border-t-white" />}
-      {children}
-    </button>
+      {primary && <span aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/30 to-transparent" />}
+      <span className="relative flex items-center gap-2">
+        {loading && <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/40 border-t-white" />}
+        {children}
+      </span>
+    </motion.button>
   );
 };
 
 export const PillTabs = <T extends string>({ tabs, value, onChange, accent }: { tabs: { key: T; label: string }[]; value: T; onChange: (v: T) => void; accent: string }) => (
-  <div className="flex gap-1 rounded-full border border-white/60 bg-white/50 p-1 backdrop-blur-md">
-    {tabs.map((t) => (
-      <button
-        key={t.key}
-        onClick={() => onChange(t.key)}
-        className={cn('flex-1 rounded-full px-3 py-2 text-xs font-bold transition-colors', value === t.key ? 'text-white shadow-sm' : 'text-ink-500')}
-        style={value === t.key ? { backgroundColor: accent } : undefined}
-      >
-        {t.label}
-      </button>
-    ))}
+  <div className="relative flex gap-1 overflow-hidden rounded-full border border-white/70 bg-white/55 p-1 backdrop-blur-md">
+    <Noise opacity={0.05} />
+    {tabs.map((t) => {
+      const active = value === t.key;
+      return (
+        <button key={t.key} onClick={() => onChange(t.key)} className="relative flex-1 rounded-full px-3 py-2 text-xs font-bold transition-colors" style={{ color: active ? '#fff' : undefined }}>
+          {active && (
+            <motion.span
+              layoutId="pilltabs-active"
+              className="absolute inset-0 rounded-full"
+              style={{ backgroundImage: `linear-gradient(135deg, ${accent}, ${mix(accent, '#000', 0.28)})`, boxShadow: GLOW(accent, 0.5) }}
+              transition={{ type: 'spring', stiffness: 420, damping: 32 }}
+            />
+          )}
+          <span className={cn('relative', !active && 'text-ink-500')}>{t.label}</span>
+        </button>
+      );
+    })}
   </div>
 );
 
@@ -182,8 +262,8 @@ export const Chip: React.FC<{ tone?: ChipTone; className?: string; children: Rea
 );
 
 /* --- progress --- */
-export const ProgressRing: React.FC<{ value: number; size?: number; stroke?: number; accent?: string; track?: string; children?: React.ReactNode }> = ({
-  value, size = 120, stroke = 10, accent = '#0F766E', track = 'rgba(255,255,255,0.35)', children,
+export const ProgressRing: React.FC<{ value: number; size?: number; stroke?: number; accent?: string; track?: string; glow?: boolean; children?: React.ReactNode }> = ({
+  value, size = 120, stroke = 10, accent = '#0F766E', track = 'rgba(255,255,255,0.35)', glow, children,
 }) => {
   const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;
@@ -196,6 +276,7 @@ export const ProgressRing: React.FC<{ value: number; size?: number; stroke?: num
         <motion.circle
           cx={size / 2} cy={size / 2} r={r} fill="none" stroke={accent} strokeWidth={stroke} strokeLinecap="round"
           strokeDasharray={c}
+          style={glow ? { filter: `drop-shadow(0 0 5px ${alpha(accent, 0.6)})` } : undefined}
           initial={reduce ? false : { strokeDashoffset: c }}
           animate={{ strokeDashoffset: c * (1 - pct) }}
           transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
@@ -206,14 +287,10 @@ export const ProgressRing: React.FC<{ value: number; size?: number; stroke?: num
   );
 };
 
-/* --- day strip (reference: horizontal week picker with dots) --- */
+/* --- day strip --- */
 export const DayStrip: React.FC<{ accent: string; markedDays?: Set<number> }> = ({ accent, markedDays }) => {
   const today = new Date();
-  const days = Array.from({ length: 7 }, (_, i) => {
-    const d = new Date(today);
-    d.setDate(today.getDate() + i);
-    return d;
-  });
+  const days = Array.from({ length: 7 }, (_, i) => { const d = new Date(today); d.setDate(today.getDate() + i); return d; });
   return (
     <div className="flex items-center justify-between gap-1">
       {days.map((d, i) => {
@@ -224,10 +301,8 @@ export const DayStrip: React.FC<{ accent: string; markedDays?: Set<number> }> = 
             <span className={cn('font-mono text-[9px] font-bold uppercase tracking-wider', active ? 'text-white/80' : 'text-white/50')}>
               {d.toLocaleDateString('en-US', { weekday: 'narrow' })}
             </span>
-            <span
-              className={cn('flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold', active && 'ring-2 ring-white/40')}
-              style={active ? { backgroundColor: 'rgba(255,255,255,0.22)', color: '#fff' } : { color: 'rgba(255,255,255,0.85)' }}
-            >
+            <span className={cn('flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold', active && 'ring-2 ring-white/40')}
+              style={active ? { backgroundColor: 'rgba(255,255,255,0.22)', color: '#fff' } : { color: 'rgba(255,255,255,0.85)' }}>
               {d.getDate()}
             </span>
             <span className={cn('h-1.5 w-1.5 rounded-full', marked ? 'bg-white' : 'bg-white/0')} />
@@ -243,7 +318,7 @@ export const ListRow: React.FC<{ icon?: React.ReactNode; title: string; sub?: st
   const Comp: any = onClick ? 'button' : 'div';
   return (
     <Comp onClick={onClick} className={cn('flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-left', onClick && 'transition-colors hover:bg-white/50')}>
-      {icon && <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white/60 text-ink-500">{icon}</span>}
+      {icon && <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white/70 text-ink-500 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">{icon}</span>}
       <span className="min-w-0 flex-1">
         <span className="block truncate text-sm font-bold text-ink-800">{title}</span>
         {sub && <span className="block truncate text-xs text-ink-400">{sub}</span>}
@@ -254,7 +329,10 @@ export const ListRow: React.FC<{ icon?: React.ReactNode; title: string; sub?: st
 };
 
 export const Avatar: React.FC<{ name: string; accent?: string; size?: number }> = ({ name, accent = '#0F766E', size = 40 }) => (
-  <span className="flex shrink-0 items-center justify-center rounded-full font-display font-bold text-white" style={{ width: size, height: size, backgroundColor: accent, fontSize: size * 0.36 }}>
+  <span
+    className="flex shrink-0 items-center justify-center rounded-full font-display font-bold text-white ring-1 ring-inset ring-white/40"
+    style={{ width: size, height: size, fontSize: size * 0.36, backgroundImage: `linear-gradient(140deg, ${accent}, ${mix(accent, '#000', 0.32)})`, boxShadow: GLOW(accent, 0.5) }}
+  >
     {(name || '?').split(' ').map((w) => w[0]).filter(Boolean).slice(0, 2).join('').toUpperCase()}
   </span>
 );
@@ -278,31 +356,44 @@ export const Sheet: React.FC<{ open: boolean; onClose: () => void; title?: strin
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed inset-0 z-[80] flex items-end justify-center bg-ink-950/50 backdrop-blur-[2px]"
+          className="fixed inset-0 z-[80] flex items-end justify-center bg-ink-950/50 backdrop-blur-[3px]"
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
           onClick={onClose}
         >
           <motion.div
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-md rounded-t-[34px] border-t border-white/50 bg-white/85 p-5 pb-8 backdrop-blur-2xl"
+            className="relative w-full max-w-md overflow-hidden rounded-t-[34px] border-t border-white/60 bg-white/85 p-5 pb-8 backdrop-blur-2xl"
             initial={reduce ? { opacity: 0 } : { y: '100%' }}
             animate={reduce ? { opacity: 1 } : { y: 0 }}
             exit={reduce ? { opacity: 0 } : { y: '100%' }}
             transition={{ type: 'spring', damping: 30, stiffness: 320 }}
           >
-            <div className="mx-auto mb-4 h-1.5 w-10 rounded-full bg-ink-950/15" />
-            <div className="mb-4 flex items-center justify-between">
-              {title ? <Display as="h2">{title}</Display> : <span />}
-              <button onClick={onClose} aria-label="Close" className="flex h-9 w-9 items-center justify-center rounded-full border border-ink-950/10 bg-white/70 text-ink-500">
-                <X size={16} />
-              </button>
+            <Noise opacity={0.03} />
+            <div className="relative">
+              <div className="mx-auto mb-4 h-1.5 w-10 rounded-full bg-ink-950/15" />
+              <div className="mb-4 flex items-center justify-between">
+                {title ? <Display as="h2">{title}</Display> : <span />}
+                <button onClick={onClose} aria-label="Close" className="flex h-9 w-9 items-center justify-center rounded-full border border-white/60 bg-white/70 text-ink-500">
+                  <X size={16} />
+                </button>
+              </div>
+              {children}
             </div>
-            {children}
           </motion.div>
         </motion.div>
       )}
     </AnimatePresence>
   );
+};
+
+/* --- motion helpers --- */
+export const stagger = (delay = 0.06) => ({
+  hidden: {},
+  show: { transition: { staggerChildren: delay, delayChildren: 0.05 } },
+});
+export const rise = {
+  hidden: { opacity: 0, y: 14 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] as const } },
 };
 
 /* --- helpers --- */

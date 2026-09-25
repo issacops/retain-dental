@@ -84,7 +84,7 @@ const YouScreen: React.FC<Props> = ({
       {/* Notifications */}
       {canPush && (
         <motion.div {...fade(1, reduce)}>
-          <Glass className="p-5">
+          <Glass tint={clinic.primaryColor} className="p-5">
             <div className="flex items-center gap-4">
               <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/60" style={{ color: clinic.primaryColor }}>
                 {pushState === 'granted' ? <BellRing size={19} /> : <Bell size={19} />}
@@ -114,7 +114,7 @@ const YouScreen: React.FC<Props> = ({
       {/* Haptics */}
       {hapticsSupported() && (
         <motion.div {...fade(2, reduce)}>
-          <Glass className="p-5">
+          <Glass tint="#BBD7EE" className="p-5">
             <div className="flex items-center gap-4">
               <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/60" style={{ color: clinic.primaryColor }}>
                 <Vibrate size={19} />

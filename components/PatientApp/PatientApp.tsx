@@ -240,15 +240,15 @@ const PatientApp: React.FC<PatientAppProps> = (props) => {
 
         {/* Floating nav */}
         <nav className="fixed inset-x-0 bottom-0 z-40 px-5 pb-5">
-          <div className="relative mx-auto flex max-w-md items-center justify-between rounded-full border border-white/60 bg-white/75 px-2 py-2 shadow-[0_16px_40px_-16px_rgba(16,24,40,0.35)] backdrop-blur-2xl">
+          <div className="relative mx-auto flex max-w-md items-center justify-between rounded-full border border-white/70 bg-white/60 px-2 py-2 shadow-[0_20px_50px_-18px_rgba(16,24,40,0.45)] backdrop-blur-2xl">
             {LEFT.map((i) => <NavButton key={i.id} item={i} />)}
             <div className="w-14" />
             {RIGHT.map((i) => <NavButton key={i.id} item={i} />)}
             <button
               onClick={() => { haptic('medium'); setSheet('booking'); }}
               aria-label="Book a visit"
-              className="absolute left-1/2 top-1/2 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-white shadow-[0_12px_26px_-10px_rgba(16,24,40,0.7)] transition-transform active:scale-95"
-              style={{ backgroundColor: clinic.primaryColor }}
+              className="absolute left-1/2 top-1/2 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-white ring-1 ring-inset ring-white/30 transition-transform active:scale-95"
+              style={{ backgroundImage: `linear-gradient(135deg, ${clinic.primaryColor}, ${clinic.primaryColor}bb)`, boxShadow: `0 14px 30px -10px ${clinic.primaryColor}cc` }}
             >
               <Plus size={24} />
             </button>
