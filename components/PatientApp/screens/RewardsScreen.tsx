@@ -10,7 +10,7 @@ interface Props {
   currentUser: User;
   points: number;
   ledger: Transaction[];
-  onRedeem: () => void;
+  onRedeem: (rewardId?: string) => void;
 }
 
 const TIER_ORDER: Tier[] = [Tier.MEMBER, Tier.GOLD, Tier.PLATINUM];
@@ -50,7 +50,7 @@ const RewardsScreen: React.FC<Props> = ({ clinic, currentUser, points, ledger, o
               <p className="font-display text-5xl font-bold leading-none tracking-tighter text-white"><CountUp value={points} /></p>
               <p className="mt-1 text-xs font-medium text-white/75">available to redeem</p>
             </div>
-            <button onClick={onRedeem} className="rounded-full bg-white px-5 py-3 text-sm font-bold text-[#4A2200]">Redeem</button>
+            <button onClick={() => onRedeem()} className="rounded-full bg-white px-5 py-3 text-sm font-bold text-[#4A2200]">Redeem</button>
           </div>
         </GradientCard>
       </motion.div>
@@ -99,11 +99,11 @@ const RewardsScreen: React.FC<Props> = ({ clinic, currentUser, points, ledger, o
       <motion.div variants={rise}>
         <div className="mb-2 flex items-center justify-between px-1">
           <SectionLabel>Redeem</SectionLabel>
-          <button onClick={onRedeem} className="text-xs font-bold text-ink-500">See all</button>
+          <button onClick={() => onRedeem()} className="text-xs font-bold text-ink-500">See all</button>
         </div>
         <div className="grid grid-cols-2 gap-3">
           {REWARD_TILES.map((r) => (
-            <FeatureCard key={r.id} gradient={r.gradient} icon={r.icon} label={r.label} sub={r.sub} onClick={onRedeem} />
+            <FeatureCard key={r.id} gradient={r.gradient} icon={r.icon} label={r.label} sub={r.sub} onClick={() => onRedeem(r.id)} />
           ))}
         </div>
       </motion.div>

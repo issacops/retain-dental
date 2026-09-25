@@ -67,6 +67,7 @@ const PatientApp: React.FC<PatientAppProps> = (props) => {
   const [tab, setTab] = useState<PatientTab>(defaultTab);
   const [sheet, setSheet] = useState<null | 'booking' | 'redeem' | 'family'>(null);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [redeemPreset, setRedeemPreset] = useState<string | undefined>(undefined);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [notifications, setNotifications] = useState<PatientNotification[] | null>(null);
 
@@ -235,7 +236,7 @@ const PatientApp: React.FC<PatientAppProps> = (props) => {
                 <CareScreen clinic={clinic} activePlan={activePlan} pastPlans={pastPlans} onToggleTask={toggleTask} onBooking={() => setSheet('booking')} />
               )}
               {tab === 'REWARDS' && (
-                <RewardsScreen clinic={clinic} currentUser={currentUser} points={points} ledger={ledger} onRedeem={() => setSheet('redeem')} />
+                <RewardsScreen clinic={clinic} currentUser={currentUser} points={points} ledger={ledger} onRedeem={(id?: string) => { setRedeemPreset(id); setSheet('redeem'); }} />
               )}
               {tab === 'YOU' && (
                 <YouScreen
@@ -276,7 +277,7 @@ const PatientApp: React.FC<PatientAppProps> = (props) => {
 
       <NotificationsScreen open={showNotifications} onClose={() => setShowNotifications(false)} accent={clinic.primaryColor} notifications={notifications} onRead={markRead} onReadAll={readAll} />
       <BookingSheet open={sheet === 'booking'} onClose={() => setSheet(null)} clinic={clinic} patientId={currentUser.id} onSchedule={onSchedule} />
-      <RedeemSheet open={sheet === 'redeem'} onClose={() => setSheet(null)} clinic={clinic} patientId={currentUser.id} points={points} onRedeem={onRedeem} />
+      <RedeemSheet open={sheet === 'redeem'} onClose={() => { setSheet(null); setRedeemPreset(undefined); }} clinic={clinic} patientId={currentUser.id} points={points} initialRewardId={redeemPreset} onRedeem={onRedeem} />
       <AddFamilySheet open={sheet === 'family'} onClose={() => setSheet(null)} clinic={clinic} currentUser={currentUser} household={household} onAddFamilyMember={onAddFamilyMember} onLinkFamily={onLinkFamily} />
     </>
   );
