@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import {
-  Users, Bell, BellRing, BellOff, Phone, MapPin, Clock, Mail, ShieldCheck, Plus,
-  CalendarDays, Share, History, Vibrate,
+  Users, Bell, BellOff, Phone, MapPin, Clock, Mail, ShieldCheck, Plus, CalendarDays,
+  Share, History, Pencil, Vibrate, ChevronRight,
 } from 'lucide-react';
 import { Clinic, User, Appointment, PatientNotification } from '../../../types';
 import { cn } from '../../Doctor/ui/primitives';
-import { GradientCard, Glass, Surface, SectionLabel, Display, Button, Chip, Avatar, ListRow, EmptyState } from '../ui';
+import { Surface, Well, GradientCard, SectionLabel, Display, Button, Chip, Avatar, AvatarStack, EmptyState, stagger, rise } from '../ui';
 import { getPushState, enablePush, disablePush, isIOS, isStandalone, PushState } from '../../../lib/push';
 import { haptic, hapticsEnabled, setHapticsEnabled, hapticsSupported } from '../../../lib/haptics';
 
@@ -24,11 +24,11 @@ interface Props {
   onDeletePushSubscription?: (endpoint: string) => Promise<{ success: boolean }>;
 }
 
-const fade = (i: number, reduce: boolean) => ({
-  initial: reduce ? false : { opacity: 0, y: 10 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.35, delay: reduce ? 0 : i * 0.06, ease: [0.22, 1, 0.36, 1] as const },
-});
+const Toggle: React.FC<{ on: boolean; onClick: () => void }> = ({ on, onClick }) => (
+  <button onClick={onClick} aria-pressed={on} className={cn('relative h-7 w-12 shrink-0 rounded-full transition-colors', on ? 'bg-primary' : 'bg-ink-950/15')}>
+    <span className={cn('absolute top-0.5 h-6 w-6 rounded-full bg-white shadow transition-all', on ? 'left-[1.375rem]' : 'left-0.5')} />
+  </button>
+);
 
 const YouScreen: React.FC<Props> = ({
   currentUser, clinic, household, pastAppointments, nextAppt, notifications,
@@ -41,32 +41,29 @@ const YouScreen: React.FC<Props> = ({
   const [hapticsOn, setHapticsOn] = useState<boolean>(() => hapticsEnabled());
 
   const canPush = !!onSavePushSubscription && !!onDeletePushSubscription;
+  const iosNeedsInstall = isIOS() && !isStandalone();
 
   const togglePush = async () => {
-    setBusy(true);
-    setError(null);
+    setBusy(true); setError(null);
     try {
-      if (pushState === 'granted') {
-        const endpoint = await disablePush();
-        if (endpoint) await onDeletePushSubscription?.(endpoint);
-      } else {
-        const sub = await enablePush();
-        await onSavePushSubscription?.(currentUser.id, clinic.id, sub);
-      }
+      if (pushState === 'granted') { const endpoint = await disablePush(); if (endpoint) await onDeletePushSubscription?.(endpoint); }
+      else { const sub = await enablePush(); await onSavePushSubscription?.(currentUser.id, clinic.id, sub); }
       setPushState(getPushState());
     } catch (e: any) {
       setError(e?.message || 'Could not update notifications.');
       setPushState(getPushState());
-    } finally {
-      setBusy(false);
-    }
+    } finally { setBusy(false); }
   };
 
-  const iosNeedsInstall = isIOS() && !isStandalone();
-
   return (
-    <div className="space-y-5">
-      <motion.div {...fade(0, reduce)}>
+    <motion.div variants={stagger(0.06)} initial={reduce ? false : 'hidden'} animate="show" className="space-y-4">
+      <motion.div variants={rise} className="px-1 pb-1">
+        <Display as="h1" className="text-[1.75rem] leading-tight">You</Display>
+        <p className="mt-1 text-sm font-medium text-ink-500">Your profile, family and preferences.</p>
+      </motion.div>
+
+      {/* Profile */}
+      <motion.div variants={rise}>
         <GradientCard accent={clinic.primaryColor} className="p-5">
           <div className="flex items-center gap-4">
             <Avatar name={currentUser.name} accent="rgba(255,255,255,0.28)" size={56} />
@@ -81,138 +78,131 @@ const YouScreen: React.FC<Props> = ({
         </GradientCard>
       </motion.div>
 
-      {/* Notifications */}
-      {canPush && (
-        <motion.div {...fade(1, reduce)}>
-          <Glass tint={clinic.primaryColor} className="p-5">
-            <div className="flex items-center gap-4">
-              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/60" style={{ color: clinic.primaryColor }}>
-                {pushState === 'granted' ? <BellRing size={19} /> : <Bell size={19} />}
+      {/* Preferences */}
+      <motion.div variants={rise}>
+        <Surface tone="white" className="overflow-hidden">
+          <div className="px-5 pb-1 pt-5"><SectionLabel>Preferences</SectionLabel></div>
+          {canPush && (
+            <div className="flex items-center gap-4 px-5 py-4">
+              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-ink-950/[0.05]" style={{ color: clinic.primaryColor }}>
+                {pushState === 'granted' ? <Bell size={18} /> : <BellOff size={18} />}
               </span>
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-bold text-ink-800">App notifications</p>
+                <p className="text-sm font-bold text-ink-800">Notifications</p>
                 <p className="text-xs text-ink-400">{pushState === 'granted' ? 'On for this device' : 'Reminders on your phone'}</p>
               </div>
-              <Button variant={pushState === 'granted' ? 'glass' : 'primary'} accent={clinic.primaryColor} loading={busy}
-                disabled={pushState === 'unsupported' || pushState === 'unconfigured'} onClick={togglePush} className="!px-4 !py-2.5 !text-xs">
-                {pushState === 'granted' ? <><BellOff size={13} /> Off</> : 'Turn on'}
-              </Button>
+              <Toggle on={pushState === 'granted'} onClick={togglePush} />
             </div>
-            {iosNeedsInstall && pushState !== 'granted' && (
-              <p className="mt-3 flex items-start gap-2 rounded-2xl bg-white/50 p-3 text-[11px] text-ink-500">
-                <Share size={13} className="mt-0.5 shrink-0" />
-                On iPhone, add this app to your Home Screen first (Share → Add to Home Screen), then turn notifications on.
-              </p>
-            )}
-            {pushState === 'denied' && <p className="mt-3 rounded-2xl bg-blush-soft p-3 text-[11px] font-medium text-blush-deep">Notifications are blocked for this app. Enable them in your device settings.</p>}
-            {pushState === 'unconfigured' && <p className="mt-3 rounded-2xl bg-white/50 p-3 text-[11px] text-ink-500">Notifications aren't set up for this clinic yet. Messages still appear in the app.</p>}
-            {error && <p className="mt-3 text-[11px] font-semibold text-blush-deep">{error}</p>}
-          </Glass>
-        </motion.div>
-      )}
-
-      {/* Haptics */}
-      {hapticsSupported() && (
-        <motion.div {...fade(2, reduce)}>
-          <Glass tint="#BBD7EE" className="p-5">
-            <div className="flex items-center gap-4">
-              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/60" style={{ color: clinic.primaryColor }}>
-                <Vibrate size={19} />
-              </span>
+          )}
+          {hapticsSupported() && (
+            <div className="flex items-center gap-4 border-t border-ink-950/[0.05] px-5 py-4">
+              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-ink-950/[0.05]" style={{ color: clinic.primaryColor }}><Vibrate size={18} /></span>
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-bold text-ink-800">Haptics</p>
                 <p className="text-xs text-ink-400">A light tap as you use the app</p>
               </div>
-              <button
-                onClick={() => { const next = !hapticsOn; setHapticsEnabled(next); setHapticsOn(next); if (next) haptic('medium'); }}
-                aria-pressed={hapticsOn}
-                className={cn('relative h-6 w-11 shrink-0 rounded-full transition-colors', hapticsOn ? 'bg-primary' : 'bg-ink-950/15')}
-              >
-                <span className={cn('absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-all', hapticsOn ? 'left-[1.375rem]' : 'left-0.5')} />
-              </button>
+              <Toggle on={hapticsOn} onClick={() => { const next = !hapticsOn; setHapticsEnabled(next); setHapticsOn(next); if (next) haptic('medium'); }} />
             </div>
-          </Glass>
-        </motion.div>
-      )}
+          )}
+        </Surface>
+        {iosNeedsInstall && pushState !== 'granted' && (
+          <div className="mt-2 flex items-start gap-2 rounded-2xl bg-white/70 px-4 py-3 text-[11px] text-ink-500 ring-1 ring-ink-950/[0.05]">
+            <Share size={13} className="mt-0.5 shrink-0" />
+            On iPhone, add this app to your Home Screen first (Share → Add to Home Screen), then turn notifications on.
+          </div>
+        )}
+        {pushState === 'denied' && <p className="mt-2 rounded-2xl bg-blush-soft px-4 py-3 text-[11px] font-medium text-blush-deep">Notifications are blocked for this app. Enable them in your device settings.</p>}
+        {error && <p className="mt-2 text-[11px] font-semibold text-blush-deep">{error}</p>}
+      </motion.div>
 
       {/* Family */}
-      <motion.div {...fade(2, reduce)}>
-        <Glass className="p-5">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2"><Users size={16} className="text-ink-400" /><SectionLabel>Family</SectionLabel></div>
-            <button onClick={onOpenFamily} className="flex items-center gap-1 text-xs font-bold text-ink-600"><Plus size={13} /> Add</button>
+      <motion.div variants={rise}>
+        <Surface tone="white" className="flex items-center gap-4 p-5">
+          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-ink-950/[0.05] text-ink-500"><Users size={18} /></span>
+          <div className="min-w-0 flex-1">
+            <SectionLabel>Family</SectionLabel>
+            <div className="mt-2"><AvatarStack names={[currentUser.name, ...household.filter((h) => h.id !== currentUser.id).map((h) => h.name)]} accent={clinic.primaryColor} /></div>
           </div>
-          <div className="mt-3 grid grid-cols-2 gap-3">
-            <div className="rounded-2xl border border-white/50 bg-white/50 p-3.5">
-              <Avatar name={currentUser.name} accent={clinic.primaryColor} size={34} />
-              <p className="mt-2 truncate text-sm font-bold text-ink-800">{currentUser.name}</p>
-              <p className="font-mono text-[10px] uppercase tracking-wider text-ink-400">Primary</p>
-            </div>
+          <button onClick={onOpenFamily} aria-label="Manage family" className="flex h-10 w-10 items-center justify-center rounded-full bg-ink-950 text-cream-50"><Pencil size={15} /></button>
+        </Surface>
+        {household.filter((h) => h.id !== currentUser.id).length > 0 && (
+          <div className="mt-2 flex flex-wrap gap-2">
             {household.filter((h) => h.id !== currentUser.id).map((m) => (
-              <button key={m.id} onClick={() => onSwitchProfile(m.id)} className="rounded-2xl border border-white/50 bg-white/50 p-3.5 text-left transition-transform active:scale-[0.98]">
-                <Avatar name={m.name} accent="#A3A3A3" size={34} />
-                <p className="mt-2 truncate text-sm font-bold text-ink-800">{m.name}</p>
-                <p className="font-mono text-[10px] uppercase tracking-wider text-ink-400">{(m.metadata as any)?.relation || 'Family'}</p>
+              <button key={m.id} onClick={() => onSwitchProfile(m.id)} className="flex items-center gap-2 rounded-full border border-ink-950/[0.06] bg-white py-1.5 pl-1.5 pr-3.5 shadow-[0_8px_20px_-18px_rgba(16,24,40,0.5)]">
+                <Avatar name={m.name} accent="#A3A3A3" size={26} />
+                <span className="text-xs font-semibold text-ink-700">{m.name}</span>
               </button>
             ))}
           </div>
-        </Glass>
+        )}
       </motion.div>
 
       {/* Visits */}
-      <motion.div {...fade(3, reduce)}>
-        <Glass className="p-5">
+      <motion.div variants={rise}>
+        <Surface tone="white" className="p-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2"><History size={16} className="text-ink-400" /><SectionLabel>Visits</SectionLabel></div>
             <button onClick={onOpenBooking} className="flex items-center gap-1 text-xs font-bold text-ink-600"><CalendarDays size={13} /> Book</button>
           </div>
           {nextAppt && (
-            <div className="mt-3 rounded-2xl p-4" style={{ backgroundColor: `${clinic.primaryColor}14` }}>
+            <Well className="mt-3 !py-3.5" style={{ backgroundColor: `${clinic.primaryColor}12` }}>
               <SectionLabel>Next visit</SectionLabel>
               <p className="mt-1 text-sm font-bold text-ink-800">
                 {new Date(nextAppt.startTime).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })} · {new Date(nextAppt.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </p>
-            </div>
+            </Well>
           )}
-          <div className="mt-3 divide-y divide-ink-950/[0.06]">
+          <Well className="mt-3 !p-2">
             {pastAppointments.length === 0 ? (
               <EmptyState title="No past visits" hint="Your visit history will appear here." />
-            ) : pastAppointments.slice(0, 6).map((a) => (
-              <div key={a.id} className="flex items-center justify-between py-3">
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-semibold text-ink-800">{(a.type || 'Visit').toString()}</p>
-                  <p className="text-xs text-ink-400">{new Date(a.startTime).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
-                </div>
-                <Chip tone={a.status === 'COMPLETED' ? 'leaf' : 'neutral'}>{a.status}</Chip>
+            ) : (
+              <div className="divide-y divide-ink-950/[0.06]">
+                {pastAppointments.slice(0, 6).map((a) => (
+                  <div key={a.id} className="flex items-center justify-between px-2.5 py-3">
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-semibold text-ink-800">{(a.type || 'Visit').toString()}</p>
+                      <p className="text-xs text-ink-400">{new Date(a.startTime).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                    </div>
+                    <Chip tone={a.status === 'COMPLETED' ? 'leaf' : 'neutral'}>{a.status}</Chip>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </Glass>
+            )}
+          </Well>
+        </Surface>
       </motion.div>
 
       {/* Clinic */}
-      <motion.div {...fade(4, reduce)}>
-        <Glass className="p-5">
+      <motion.div variants={rise}>
+        <Surface tone="white" className="p-5">
           <SectionLabel>Your clinic</SectionLabel>
           <p className="mt-1 font-display text-base font-bold text-ink-900">{clinic.name}</p>
-          <div className="mt-3 space-y-1.5">
-            {clinic.settings?.address && <ListRow icon={<MapPin size={16} />} title={clinic.settings.address} />}
-            {clinic.settings?.openingHours && <ListRow icon={<Clock size={16} />} title={clinic.settings.openingHours} />}
-            {clinic.adminEmail && <ListRow icon={<Mail size={16} />} title={clinic.adminEmail} />}
+          <div className="mt-3 space-y-2">
+            {clinic.settings?.address && (
+              <div className="flex items-center gap-3"><span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-ink-950/[0.05] text-ink-500"><MapPin size={16} /></span><span className="text-sm font-semibold text-ink-700">{clinic.settings.address}</span></div>
+            )}
+            {clinic.settings?.openingHours && (
+              <div className="flex items-center gap-3"><span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-ink-950/[0.05] text-ink-500"><Clock size={16} /></span><span className="text-sm font-semibold text-ink-700">{clinic.settings.openingHours}</span></div>
+            )}
+            {clinic.adminEmail && (
+              <div className="flex items-center gap-3"><span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-ink-950/[0.05] text-ink-500"><Mail size={16} /></span><span className="text-sm font-semibold text-ink-700">{clinic.adminEmail}</span></div>
+            )}
           </div>
           {clinic.emergencyPhone && (
-            <a href={`tel:${clinic.emergencyPhone}`} className="mt-3 flex items-center justify-center gap-2 rounded-full bg-ink-950 py-3 text-sm font-bold text-cream-50">
+            <a href={`tel:${clinic.emergencyPhone}`}
+              className="mt-4 flex w-full items-center justify-center gap-2 rounded-full py-3 text-sm font-bold text-white"
+              style={{ backgroundImage: `linear-gradient(135deg, ${clinic.primaryColor}, ${clinic.primaryColor}bb)` }}>
               <Phone size={16} /> Emergency: {clinic.emergencyPhone}
             </a>
           )}
-        </Glass>
+        </Surface>
       </motion.div>
 
       <div className="flex items-center justify-center gap-2 pb-2 pt-1 text-ink-300">
         <ShieldCheck size={13} />
         <span className="font-mono text-[10px] uppercase tracking-wider">Your data stays private to your clinic</span>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

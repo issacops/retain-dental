@@ -3,7 +3,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { Sparkles, Gift, ArrowDownLeft, ArrowUpRight, TrendingUp, Star } from 'lucide-react';
 import { Clinic, User, Transaction, TransactionType, TIER_THRESHOLDS, TIER_BENEFITS, Tier } from '../../../types';
 import { cn } from '../../Doctor/ui/primitives';
-import { GradientCard, Glass, SectionLabel, Display, Button, Chip, ProgressRing, EmptyState, BigNumber, CountUp, relTime } from '../ui';
+import { Surface, Well, GradientCard, SectionLabel, Display, Button, Chip, ProgressRing, StatCard, FeatureCard, EmptyState, CountUp, stagger, rise, relTime } from '../ui';
 
 interface Props {
   clinic: Clinic;
@@ -15,11 +15,12 @@ interface Props {
 
 const TIER_ORDER: Tier[] = [Tier.MEMBER, Tier.GOLD, Tier.PLATINUM];
 
-const fade = (i: number, reduce: boolean) => ({
-  initial: reduce ? false : { opacity: 0, y: 10 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.35, delay: reduce ? 0 : i * 0.06, ease: [0.22, 1, 0.36, 1] as const },
-});
+const REWARD_TILES = [
+  { id: 'r500', label: '₹500 off', sub: '500 pts', gradient: 'linear-gradient(150deg,#3B82F6,#0B2447)', icon: <Gift size={18} /> },
+  { id: 'r1000', label: '₹1,000 cosmetic', sub: '1,000 pts', gradient: 'linear-gradient(150deg,#8B5CF6,#3B0764)', icon: <Sparkles size={18} /> },
+  { id: 'rclean', label: 'Free polish', sub: '1,200 pts', gradient: 'linear-gradient(150deg,#22C55E,#052E16)', icon: <Sparkles size={18} /> },
+  { id: 'rwhite', label: 'Free whitening', sub: '5,000 pts', gradient: 'linear-gradient(150deg,#F5A524,#4A2200)', icon: <Star size={18} /> },
+];
 
 const RewardsScreen: React.FC<Props> = ({ clinic, currentUser, points, ledger, onRedeem }) => {
   const reduce = !!useReducedMotion();
@@ -28,46 +29,54 @@ const RewardsScreen: React.FC<Props> = ({ clinic, currentUser, points, ledger, o
   const nextThreshold = nextTier ? TIER_THRESHOLDS[nextTier === Tier.GOLD ? 'GOLD' : 'PLATINUM'] : 0;
   const prevThreshold = currentUser.currentTier === Tier.PLATINUM ? TIER_THRESHOLDS.PLATINUM : currentUser.currentTier === Tier.GOLD ? TIER_THRESHOLDS.GOLD : 0;
   const tierProgress = nextTier ? Math.max(0, Math.min(1, (spend - prevThreshold) / (nextThreshold - prevThreshold))) : 1;
-  const earns = ledger.filter((t) => t.type === TransactionType.EARN);
-  const earnedTotal = earns.reduce((s, t) => s + t.pointsEarned, 0);
+  const earnedTotal = ledger.filter((t) => t.type === TransactionType.EARN).reduce((s, t) => s + t.pointsEarned, 0);
 
   return (
-    <div className="space-y-5">
-      <motion.div {...fade(0, reduce)} className="px-1">
-        <SectionLabel>Loyalty</SectionLabel>
-        <Display as="h1" className="mt-1 text-3xl">Rewards</Display>
+    <motion.div variants={stagger(0.06)} initial={reduce ? false : 'hidden'} animate="show" className="space-y-4">
+      <motion.div variants={rise} className="px-1 pb-1">
+        <Display as="h1" className="text-[1.75rem] leading-tight">Rewards</Display>
+        <p className="mt-1 text-sm font-medium text-ink-500">Earn Smile Points on every visit and put them toward your care.</p>
       </motion.div>
 
-      {/* Balance hero */}
-      <motion.div {...fade(1, reduce)}>
-        <GradientCard accent={clinic.primaryColor} className="p-6">
+      {/* Balance */}
+      <motion.div variants={rise}>
+        <GradientCard accent="#EAB308" className="p-5">
           <div className="flex items-center justify-between">
             <Chip tone="glass">Smile Points</Chip>
-            <Sparkles size={18} className="text-white/70" />
+            <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-white/20 text-white ring-1 ring-inset ring-white/25"><Sparkles size={16} /></span>
           </div>
-          <div className="mt-5"><BigNumber value={<CountUp value={points} />} label="available to redeem" onDark /></div>
-          <button onClick={onRedeem} className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-white py-3 text-sm font-bold" style={{ color: clinic.primaryColor }}>
-            <Gift size={16} /> Redeem points
-          </button>
+          <div className="mt-4 flex items-end justify-between">
+            <div>
+              <p className="font-display text-5xl font-bold leading-none tracking-tighter text-white"><CountUp value={points} /></p>
+              <p className="mt-1 text-xs font-medium text-white/75">available to redeem</p>
+            </div>
+            <button onClick={onRedeem} className="rounded-full bg-white px-5 py-3 text-sm font-bold text-[#4A2200]">Redeem</button>
+          </div>
         </GradientCard>
       </motion.div>
 
-      {/* Tier */}
-      <motion.div {...fade(2, reduce)}>
-        <Glass tint={clinic.primaryColor} className="p-5">
+      {/* Tiles */}
+      <motion.div variants={rise} className="grid grid-cols-2 gap-3">
+        <StatCard icon={<TrendingUp size={16} />} value={<CountUp value={earnedTotal} />} label="Points earned" accent={clinic.primaryColor} />
+        <StatCard icon={<Star size={16} />} value={currentUser.currentTier} label="Current tier" accent="#8B5CF6" />
+      </motion.div>
+
+      {/* Tier progress */}
+      <motion.div variants={rise}>
+        <Surface tone="white" className="p-5">
           <div className="flex items-center gap-4">
-            <ProgressRing value={tierProgress} size={92} stroke={9} accent={clinic.primaryColor} track="rgba(10,10,10,0.08)" glow>
+            <ProgressRing value={tierProgress} size={88} stroke={9} accent={clinic.primaryColor} track="rgba(10,10,10,0.08)" glow>
               <Star size={18} style={{ color: clinic.primaryColor }} />
             </ProgressRing>
             <div className="min-w-0 flex-1">
-              <SectionLabel>Current tier</SectionLabel>
-              <p className="font-display text-lg font-bold text-ink-900">{currentUser.currentTier}</p>
+              <SectionLabel>Next tier</SectionLabel>
               {nextTier ? (
-                <p className="mt-1 text-xs text-ink-500">
-                  Spend <span className="font-bold text-ink-700">₹{(nextThreshold - spend).toLocaleString('en-IN')}</span> more to reach {nextTier}.
-                </p>
+                <>
+                  <p className="font-display text-lg font-bold text-ink-900">{nextTier}</p>
+                  <p className="mt-0.5 text-xs text-ink-500">Spend <span className="font-bold text-ink-700">₹{(nextThreshold - spend).toLocaleString('en-IN')}</span> more</p>
+                </>
               ) : (
-                <p className="mt-1 text-xs text-ink-500">You are on our highest tier.</p>
+                <p className="font-display text-lg font-bold text-ink-900">Top tier reached</p>
               )}
             </div>
           </div>
@@ -75,7 +84,7 @@ const RewardsScreen: React.FC<Props> = ({ clinic, currentUser, points, ledger, o
             {TIER_ORDER.map((tier) => {
               const passed = TIER_ORDER.indexOf(tier) <= TIER_ORDER.indexOf(currentUser.currentTier);
               return (
-                <div key={tier} className={cn('flex-1 rounded-2xl border px-3 py-2', passed ? 'border-transparent' : 'border-ink-950/[0.07] bg-white/50')}
+                <div key={tier} className={cn('flex-1 rounded-2xl border px-3 py-2', passed ? 'border-transparent' : 'border-ink-950/[0.06] bg-ink-950/[0.03]')}
                   style={passed ? { backgroundColor: `${clinic.primaryColor}16` } : undefined}>
                   <p className="font-mono text-[10px] font-bold uppercase tracking-wider" style={{ color: passed ? clinic.primaryColor : undefined }}>{tier}</p>
                   <p className="mt-0.5 text-[11px] text-ink-400">{TIER_BENEFITS[tier].earnMultiplier}× points</p>
@@ -83,32 +92,27 @@ const RewardsScreen: React.FC<Props> = ({ clinic, currentUser, points, ledger, o
               );
             })}
           </div>
-        </Glass>
+        </Surface>
       </motion.div>
 
-      {/* How you earn */}
-      <motion.div {...fade(3, reduce)}>
-        <Glass className="p-5">
-          <div className="flex items-center gap-2"><TrendingUp size={16} className="text-ink-400" /><SectionLabel>How you earn</SectionLabel></div>
-          <div className="mt-3 space-y-2">
-            {TIER_BENEFITS[currentUser.currentTier].perks.map((perk) => (
-              <div key={perk} className="flex items-center gap-2.5 rounded-2xl bg-white/55 px-3.5 py-2.5">
-                <Sparkles size={14} style={{ color: clinic.primaryColor }} />
-                <span className="text-sm text-ink-700">{perk}</span>
-              </div>
-            ))}
-            <div className="rounded-2xl bg-white/55 px-3.5 py-2.5 text-sm text-ink-500">
-              You have earned <span className="font-bold text-ink-800">{earnedTotal.toLocaleString('en-IN')}</span> points in total.
-            </div>
-          </div>
-        </Glass>
+      {/* Redeem */}
+      <motion.div variants={rise}>
+        <div className="mb-2 flex items-center justify-between px-1">
+          <SectionLabel>Redeem</SectionLabel>
+          <button onClick={onRedeem} className="text-xs font-bold text-ink-500">See all</button>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          {REWARD_TILES.map((r) => (
+            <FeatureCard key={r.id} gradient={r.gradient} icon={r.icon} label={r.label} sub={r.sub} onClick={onRedeem} />
+          ))}
+        </div>
       </motion.div>
 
       {/* History */}
-      <motion.div {...fade(4, reduce)}>
-        <Glass className="p-5">
+      <motion.div variants={rise}>
+        <Surface tone="white" className="p-5">
           <SectionLabel>Points history</SectionLabel>
-          <div className="mt-3">
+          <Well className="mt-3 !p-2">
             {ledger.length === 0 ? (
               <EmptyState title="No activity yet" hint="Your points activity will appear here after your first visit." />
             ) : (
@@ -116,7 +120,7 @@ const RewardsScreen: React.FC<Props> = ({ clinic, currentUser, points, ledger, o
                 {ledger.slice(0, 20).map((t) => {
                   const earn = t.type === TransactionType.EARN;
                   return (
-                    <div key={t.id} className="flex items-center gap-3 py-3">
+                    <div key={t.id} className="flex items-center gap-3 px-2.5 py-3">
                       <span className={cn('flex h-9 w-9 shrink-0 items-center justify-center rounded-full', earn ? 'bg-leaf-soft text-leaf-deep' : 'bg-blush-soft text-blush-deep')}>
                         {earn ? <ArrowDownLeft size={15} /> : <ArrowUpRight size={15} />}
                       </span>
@@ -132,10 +136,10 @@ const RewardsScreen: React.FC<Props> = ({ clinic, currentUser, points, ledger, o
                 })}
               </div>
             )}
-          </div>
-        </Glass>
+          </Well>
+        </Surface>
       </motion.div>
-    </div>
+    </motion.div>
   );
 };
 

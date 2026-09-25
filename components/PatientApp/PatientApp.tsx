@@ -7,6 +7,7 @@ import {
 } from '../../types';
 import { cn } from '../Doctor/ui/primitives';
 import { haptic } from '../../lib/haptics';
+import { celebrate } from '../../lib/celebrate';
 import { Aurora, Avatar, SectionLabel } from './ui';
 import TodayScreen from './screens/TodayScreen';
 import CareScreen from './screens/CareScreen';
@@ -128,8 +129,10 @@ const PatientApp: React.FC<PatientAppProps> = (props) => {
 
   const toggleTask = async (itemId: string) => {
     if (!activePlan) return;
-    const completesAll = (activePlan.checklist || []).every((t) => t.completed || t.id === itemId);
+    const completesAll = (activePlan.checklist || []).some((t) => t.id === itemId && !t.completed)
+      && (activePlan.checklist || []).every((t) => t.completed || t.id === itemId);
     haptic(completesAll ? 'success' : 'light');
+    if (completesAll) celebrate(clinic.primaryColor);
     await onToggleChecklistItem(activePlan.id, itemId);
   };
 

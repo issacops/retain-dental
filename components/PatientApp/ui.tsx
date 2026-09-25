@@ -51,7 +51,7 @@ export const Glass: React.FC<React.HTMLAttributes<HTMLDivElement> & { interactiv
   <div
     {...rest}
     className={cn(
-      'relative overflow-hidden rounded-[28px] border border-ink-950/[0.05] bg-white/85 backdrop-blur-xl',
+      'relative overflow-hidden rounded-[28px] border border-ink-950/[0.05] bg-white/90 backdrop-blur-xl',
       'shadow-[0_14px_34px_-26px_rgba(16,24,40,0.5)]',
       interactive && 'transition-transform duration-200 active:scale-[0.98]',
       className,
@@ -59,7 +59,7 @@ export const Glass: React.FC<React.HTMLAttributes<HTMLDivElement> & { interactiv
   >
     {tint && <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: `linear-gradient(150deg, ${alpha(tint, 0.16)}, transparent 60%)` }} />}
     <div aria-hidden className="pointer-events-none absolute inset-0 rounded-[30px] ring-1 ring-inset ring-white/60" />
-    <Noise opacity={0.04} />
+    <Noise opacity={0.035} />
     <div className="relative">{children}</div>
   </div>
 );
@@ -450,7 +450,8 @@ export const Well: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ className
 export const StatCard: React.FC<{ icon?: React.ReactNode; value: React.ReactNode; unit?: string; label: string; accent?: string; onClick?: () => void; className?: string }> = ({ icon, value, unit, label, accent = '#0F766E', onClick, className }) => {
   const Comp: any = onClick ? 'button' : 'div';
   return (
-    <Comp onClick={onClick} className={cn('relative overflow-hidden rounded-[28px] border border-ink-950/[0.05] bg-white p-4 text-left shadow-[0_10px_30px_-22px_rgba(16,24,40,0.4)]', onClick && 'transition-transform active:scale-[0.98]', className)}>
+    <Comp onClick={onClick} className={cn('relative h-full overflow-hidden rounded-[28px] border border-ink-950/[0.05] bg-white p-4 text-left shadow-[0_10px_30px_-22px_rgba(16,24,40,0.4)]', onClick && 'transition-transform duration-200 active:scale-[0.97]', className)}>
+      <Noise opacity={0.02} />
       {icon && (
         <span className="flex h-9 w-9 items-center justify-center rounded-2xl text-white" style={{ backgroundImage: `linear-gradient(140deg, ${accent}, ${mix(accent, '#000', 0.28)})` }}>{icon}</span>
       )}
