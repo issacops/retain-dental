@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { CalendarDays, Check, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Clinic, AppointmentType } from '../../../types';
 import { cn } from '../../Doctor/ui/primitives';
+import { haptic } from '../../../lib/haptics';
 import { Sheet, SectionLabel, Button } from '../ui';
 
 interface Props {
@@ -55,8 +56,8 @@ const BookingSheet: React.FC<Props> = ({ open, onClose, clinic, patientId, onSch
     setError(null);
     const res = await onSchedule(patientId, start, type, notes);
     setBooking(false);
-    if (res.success) setDone(true);
-    else setError(res.error || 'That time is not available. Please pick another.');
+    if (res.success) { haptic('success'); setDone(true); }
+    else { haptic('error'); setError(res.error || 'That time is not available. Please pick another.'); }
   };
 
   return (

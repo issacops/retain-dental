@@ -26,10 +26,11 @@ export const NOTIFICATION_CATEGORIES: { key: NotificationCategory; label: string
   { key: 'Financial', label: 'Billing', tone: 'leaf' },
   { key: 'Loyalty', label: 'Rewards', tone: 'leaf' },
   { key: 'Retention', label: 'Retention', tone: 'neutral' },
+  { key: 'Greeting', label: 'Greetings', tone: 'blush' },
 ];
 
 /** Categories that count as marketing and therefore carry an opt-out line. */
-export const OPT_OUT_CATEGORIES: NotificationCategory[] = ['Recall', 'Loyalty', 'Retention'];
+export const OPT_OUT_CATEGORIES: NotificationCategory[] = ['Recall', 'Loyalty', 'Retention', 'Greeting'];
 export const OPT_OUT_LINE = 'You can turn these off any time in the app.';
 
 /**
@@ -148,5 +149,56 @@ export const BUILT_IN_TEMPLATES: NotificationTemplate[] = [
     id: 'tpl-ret-referral', name: 'Referral invite', category: 'Retention', builtIn: true,
     title: 'Share {clinic} with a friend',
     body: 'Hi {first_name}, thank you for trusting us with your smile. If you refer a friend, you both earn bonus Smile Points. Just have them mention your name.',
+  },
+  // --- Greetings (festive + seasonal engagement) ---
+  {
+    id: 'tpl-greet-diwali', name: 'Diwali wishes', category: 'Greeting', builtIn: true,
+    title: 'Happy Diwali, {first_name}!',
+    body: 'Wishing you and your family a bright and happy Diwali from all of us at {clinic}. Enjoy the celebrations — and if your smile needs a little care afterwards, we are here.',
+  },
+  {
+    id: 'tpl-greet-christmas', name: 'Christmas wishes', category: 'Greeting', builtIn: true,
+    title: 'Merry Christmas, {first_name}!',
+    body: 'Warm wishes from everyone at {clinic}. Have a lovely Christmas, enjoy the treats, and we will help with the aftercare.',
+  },
+  {
+    id: 'tpl-greet-newyear', name: 'New Year wishes', category: 'Greeting', builtIn: true,
+    title: 'Happy New Year, {first_name}!',
+    body: 'From all of us at {clinic}, wishing you a healthy and happy new year. If a fresh smile is on your list this year, we would love to help.',
+  },
+  {
+    id: 'tpl-greet-holi', name: 'Holi wishes', category: 'Greeting', builtIn: true,
+    title: 'Happy Holi, {first_name}!',
+    body: 'Have a joyful and colourful Holi from all of us at {clinic}. Take care of your smile, and see you soon.',
+  },
+  {
+    id: 'tpl-greet-eid', name: 'Eid wishes', category: 'Greeting', builtIn: true,
+    title: 'Eid Mubarak, {first_name}!',
+    body: 'Eid Mubarak from everyone at {clinic}. Wishing you and your family a joyful celebration.',
+  },
+  {
+    id: 'tpl-greet-thanksgiving', name: 'Thanksgiving', category: 'Greeting', builtIn: true,
+    title: 'Happy Thanksgiving, {first_name}',
+    body: 'We are grateful you trust us with your smile. Warm wishes from all of us at {clinic}.',
+  },
+  {
+    id: 'tpl-greet-easter', name: 'Easter wishes', category: 'Greeting', builtIn: true,
+    title: 'Happy Easter, {first_name}!',
+    body: 'Wishing you a happy Easter from {clinic}. Enjoy the day — and the chocolate in moderation.',
+  },
+  {
+    id: 'tpl-greet-anniversary', name: 'Patient anniversary', category: 'Greeting', builtIn: true,
+    title: 'A year of smiles, {first_name}',
+    body: 'It has been a year since you joined {clinic}. Thank you for trusting us with your smile — here is to many more healthy years.',
+  },
+  {
+    id: 'tpl-greet-monsoon', name: 'Seasonal care tip', category: 'Greeting', builtIn: true,
+    title: 'A small tip for the season',
+    body: 'Hi {first_name}, a quick seasonal tip from {clinic}: rinse after street food and keep your brush dry to protect your enamel. Stay well!',
+  },
+  {
+    id: 'tpl-greet-treat', name: 'Treat yourself nudge', category: 'Greeting', builtIn: true,
+    title: 'Time to treat yourself, {first_name}',
+    body: 'Hi {first_name}, it has been a busy season. If your smile could use a little care, we have openings this week. Call {phone} and we will find a time that suits you.',
   },
 ];

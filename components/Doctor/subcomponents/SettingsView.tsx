@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
   Building2, Percent, BellRing, ShieldCheck, Download, Save, Users2,
-  Clock, MapPin, Phone, Mail, Check, ScrollText, AlertTriangle, Receipt,
+  Clock, MapPin, Phone, Mail, Check, ScrollText, AlertTriangle, Receipt, Zap, Cake, PartyPopper, RotateCcw,
 } from 'lucide-react';
 import { Clinic, User, Wallet, Transaction, CarePlan, Appointment, AuditLog, TransactionCategory, TIER_THRESHOLDS } from '../../../types';
 import { Card, Label, SectionHeader, Pill, cn } from '../ui/primitives';
@@ -124,6 +124,36 @@ const SettingsView: React.FC<Props> = ({
       emailEnabled: c?.emailEnabled ?? true,
     });
   }, [clinic.id, clinic.settings?.notificationConfig]);
+
+  // --- Automations ---
+  const ac = clinic.settings?.automations;
+  const [auto, setAuto] = useState({
+    appointmentReminder: { enabled: ac?.appointmentReminder?.enabled ?? true, leadDays: String(ac?.appointmentReminder?.leadDays ?? 1) },
+    recallNudge: { enabled: ac?.recallNudge?.enabled ?? true, intervalMonths: String(ac?.recallNudge?.intervalMonths ?? 6) },
+    birthday: { enabled: ac?.birthday?.enabled ?? true },
+    festive: { enabled: ac?.festive?.enabled ?? false },
+  });
+  useEffect(() => {
+    const a = clinic.settings?.automations;
+    setAuto({
+      appointmentReminder: { enabled: a?.appointmentReminder?.enabled ?? true, leadDays: String(a?.appointmentReminder?.leadDays ?? 1) },
+      recallNudge: { enabled: a?.recallNudge?.enabled ?? true, intervalMonths: String(a?.recallNudge?.intervalMonths ?? 6) },
+      birthday: { enabled: a?.birthday?.enabled ?? true },
+      festive: { enabled: a?.festive?.enabled ?? false },
+    });
+  }, [clinic.id, clinic.settings?.automations]);
+
+  const saveAutomations = () => onUpdateClinic(clinic.id, {
+    settings: {
+      ...clinic.settings,
+      automations: {
+        appointmentReminder: { enabled: auto.appointmentReminder.enabled, leadDays: Number(auto.appointmentReminder.leadDays) || 1 },
+        recallNudge: { enabled: auto.recallNudge.enabled, intervalMonths: Number(auto.recallNudge.intervalMonths) || 6 },
+        birthday: { enabled: auto.birthday.enabled },
+        festive: { enabled: auto.festive.enabled },
+      },
+    },
+  });
 
   // --- Billing & tax ---
   const tc = clinic.settings?.tax;
@@ -310,6 +340,63 @@ const SettingsView: React.FC<Props> = ({
             </div>
           </Card>
 
+          {/* Automations */}
+          <Card tone="white">
+            <div className="flex items-start justify-between gap-4">
+              <SectionHeader eyebrow="Automation" title="Scheduled reminders" icon={<Zap size={16} />} />
+              <button onClick={saveAutomations} className="inline-flex shrink-0 items-center gap-2 rounded-full bg-ink-950 px-4 py-2 text-xs font-bold uppercase tracking-[0.08em] text-cream-50 transition-colors hover:bg-ink-800">
+                <Save size={14} /> Save
+              </button>
+            </div>
+            <p className="mt-4 text-xs text-ink-500">Sent automatically to the patient app and their phone (when notifications are on).</p>
+
+            <div className="mt-4 space-y-3">
+              <div className={cn('flex flex-wrap items-center gap-3 rounded-[16px] border p-3.5', auto.appointmentReminder.enabled ? 'border-primary/25 bg-primary/5' : 'border-ink-950/10 bg-cream-50')}>
+                <Toggle on={auto.appointmentReminder.enabled} onClick={() => setAuto((p) => ({ ...p, appointmentReminder: { ...p.appointmentReminder, enabled: !p.appointmentReminder.enabled } }))} />
+                <div className="flex-1">
+                  <p className="text-sm font-bold text-ink-800">Appointment reminders</p>
+                  <p className="text-xs text-ink-500">Remind patients before an upcoming visit.</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <input type="number" value={auto.appointmentReminder.leadDays} onChange={(e) => setAuto((p) => ({ ...p, appointmentReminder: { ...p.appointmentReminder, leadDays: e.target.value } }))}
+                    className="w-16 rounded-xl border border-ink-950/10 bg-white px-2.5 py-1.5 text-sm font-bold outline-none" />
+                  <span className="text-xs font-bold text-ink-400">days before</span>
+                </div>
+              </div>
+
+              <div className={cn('flex flex-wrap items-center gap-3 rounded-[16px] border p-3.5', auto.recallNudge.enabled ? 'border-primary/25 bg-primary/5' : 'border-ink-950/10 bg-cream-50')}>
+                <Toggle on={auto.recallNudge.enabled} onClick={() => setAuto((p) => ({ ...p, recallNudge: { ...p.recallNudge, enabled: !p.recallNudge.enabled } }))} />
+                <div className="flex-1">
+                  <p className="text-sm font-bold text-ink-800">Recall nudges</p>
+                  <p className="text-xs text-ink-500">Reach patients who are overdue for a visit.</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <input type="number" value={auto.recallNudge.intervalMonths} onChange={(e) => setAuto((p) => ({ ...p, recallNudge: { ...p.recallNudge, intervalMonths: e.target.value } }))}
+                    className="w-16 rounded-xl border border-ink-950/10 bg-white px-2.5 py-1.5 text-sm font-bold outline-none" />
+                  <span className="text-xs font-bold text-ink-400">months</span>
+                </div>
+              </div>
+
+              <div className={cn('flex items-center gap-3 rounded-[16px] border p-3.5', auto.birthday.enabled ? 'border-primary/25 bg-primary/5' : 'border-ink-950/10 bg-cream-50')}>
+                <Toggle on={auto.birthday.enabled} onClick={() => setAuto((p) => ({ ...p, birthday: { enabled: !p.birthday.enabled } }))} />
+                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/70 text-blush-deep"><Cake size={16} /></span>
+                <div className="flex-1">
+                  <p className="text-sm font-bold text-ink-800">Birthday wishes</p>
+                  <p className="text-xs text-ink-500">A warm note on the patient's birthday.</p>
+                </div>
+              </div>
+
+              <div className={cn('flex items-center gap-3 rounded-[16px] border p-3.5', auto.festive.enabled ? 'border-primary/25 bg-primary/5' : 'border-ink-950/10 bg-cream-50')}>
+                <Toggle on={auto.festive.enabled} onClick={() => setAuto((p) => ({ ...p, festive: { enabled: !p.festive.enabled } }))} />
+                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/70 text-sun-deep"><PartyPopper size={16} /></span>
+                <div className="flex-1">
+                  <p className="text-sm font-bold text-ink-800">Festive greetings</p>
+                  <p className="text-xs text-ink-500">Diwali, Christmas, New Year and more, sent on the day.</p>
+                </div>
+              </div>
+            </div>
+          </Card>
+
           {/* Billing & tax */}
           <Card tone="white">
             <div className="flex items-start justify-between gap-4">
@@ -481,5 +568,11 @@ const SettingsView: React.FC<Props> = ({
     </div>
   );
 };
+
+const Toggle: React.FC<{ on: boolean; onClick: () => void }> = ({ on, onClick }) => (
+  <button onClick={onClick} aria-pressed={on} className={cn('relative h-6 w-11 shrink-0 rounded-full transition-colors', on ? 'bg-primary' : 'bg-ink-950/15')}>
+    <span className={cn('absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-all', on ? 'left-[1.375rem]' : 'left-0.5')} />
+  </button>
+);
 
 export default SettingsView;

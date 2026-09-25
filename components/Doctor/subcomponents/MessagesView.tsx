@@ -28,7 +28,7 @@ interface Props {
 }
 
 const CAT_TONE: Record<NotificationCategory, 'leaf' | 'sun' | 'mist' | 'blush' | 'neutral'> = {
-  Appointment: 'sun', Recall: 'blush', Clinical: 'mist', Financial: 'leaf', Loyalty: 'leaf', Retention: 'neutral',
+  Appointment: 'sun', Recall: 'blush', Clinical: 'mist', Financial: 'leaf', Loyalty: 'leaf', Retention: 'neutral', Greeting: 'blush',
 };
 
 const isSameDay = (a: Date, b: Date) =>
@@ -195,14 +195,30 @@ const MessagesView: React.FC<Props> = ({
     if (!ids.length) { addToast('Choose at least one patient', 'warning'); return; }
     if (!title.trim() || !body.trim()) { addToast('Add a title and a message', 'warning'); return; }
     setSending(true);
-    const res = await onSendNotifications(clinic.id, ids, { title: title.trim(), body: body.trim(), category }, currentUser.name);
+
+    // Resolve merge tokens per recipient so each patient gets a personal message.
+    let sent = 0;
+    let lastError: string | null = null;
+    for (const pid of ids) {
+      const patient = patients.find((p) => p.id === pid);
+      const ctx = patient ? buildContext(patient) : {};
+      const res = await onSendNotifications(
+        clinic.id,
+        [pid],
+        { title: resolve(title.trim(), ctx), body: resolve(body.trim(), ctx), category },
+        currentUser.name,
+      );
+      if (res.success) sent += 1;
+      else lastError = res.message || 'Could not send';
+    }
+
     setSending(false);
-    if (res.success) {
-      addToast(`Sent to ${ids.length} patient${ids.length === 1 ? '' : 's'}`, 'success');
+    if (sent > 0) {
+      addToast(`Sent to ${sent} patient${sent === 1 ? '' : 's'}`, 'success');
       setRecipientIds(new Set());
       refreshHistory();
     } else {
-      addToast(res.message || 'Could not send', 'error');
+      addToast(lastError || 'Could not send', 'error');
     }
   };
 

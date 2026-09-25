@@ -71,11 +71,19 @@ export interface TaxConfig {
   invoicePrefix?: string;
 }
 
+export interface AutomationConfig {
+  appointmentReminder: { enabled: boolean; leadDays: number };
+  recallNudge: { enabled: boolean; intervalMonths: number };
+  birthday: { enabled: boolean };
+  festive: { enabled: boolean };
+}
+
 export interface ClinicSettings {
   address?: string;
   openingHours?: string;     // Free text, e.g. "Mon-Sat 10:00-19:00"
   notificationConfig?: NotificationConfig;
   tax?: TaxConfig;
+  automations?: AutomationConfig;
 }
 
 export interface Clinic {
@@ -161,7 +169,7 @@ export interface AuditLog {
 
 // --- Patient messaging & notifications -----------------------------------
 
-export type NotificationCategory = 'Appointment' | 'Recall' | 'Clinical' | 'Financial' | 'Loyalty' | 'Retention';
+export type NotificationCategory = 'Appointment' | 'Recall' | 'Clinical' | 'Financial' | 'Loyalty' | 'Retention' | 'Greeting';
 
 export interface NotificationTemplate {
   id: string;

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Gift, Check, Sparkles } from 'lucide-react';
 import { Clinic, TransactionCategory, TransactionType } from '../../../types';
 import { cn } from '../../Doctor/ui/primitives';
+import { haptic } from '../../../lib/haptics';
 import { Sheet, SectionLabel, Button, Chip } from '../ui';
 
 interface Props {
@@ -30,8 +31,8 @@ const RedeemSheet: React.FC<Props> = ({ open, onClose, clinic, patientId, points
     setError(null);
     const res = await onRedeem(patientId, item.cost, item.category, TransactionType.REDEEM, { name: item.name });
     setBusy(null);
-    if (res?.success === false) setError(res.message || 'Could not redeem. Please try again.');
-    else setDone(item.name);
+    if (res?.success === false) { haptic('error'); setError(res.message || 'Could not redeem. Please try again.'); }
+    else { haptic('success'); setDone(item.name); }
   };
 
   return (

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Users, Check, Link2, UserPlus } from 'lucide-react';
 import { Clinic, User } from '../../../types';
 import { cn } from '../../Doctor/ui/primitives';
+import { haptic } from '../../../lib/haptics';
 import { Sheet, SectionLabel, Button, Avatar } from '../ui';
 
 interface Props {
@@ -36,8 +37,10 @@ const AddFamilySheet: React.FC<Props> = ({ open, onClose, clinic, currentUser, h
         ? await onAddFamilyMember(currentUser.id, name.trim(), relation, age.trim())
         : await onLinkFamily(currentUser.id, mobile.trim());
       if (res && res.success === false) {
+        haptic('error');
         setError(res.message || 'Could not add this person.');
       } else {
+        haptic('success');
         setDone(mode === 'NEW' ? name.trim() : mobile.trim());
       }
     } catch (e: any) {

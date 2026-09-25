@@ -40,6 +40,11 @@ create index if not exists patient_notifications_clinic_idx
 create index if not exists patient_notifications_patient_idx
   on public.patient_notifications (patient_id, created_at desc);
 
+-- Automated sends use a deterministic key so a reminder never fires twice.
+alter table public.patient_notifications add column if not exists dedupe_key text;
+create unique index if not exists patient_notifications_dedupe_idx
+  on public.patient_notifications (dedupe_key) where dedupe_key is not null;
+
 -- 3. Push subscriptions (Web Push / PWA) -------------------------------------
 create table if not exists public.push_subscriptions (
   id          uuid primary key default gen_random_uuid(),

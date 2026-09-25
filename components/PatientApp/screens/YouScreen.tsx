@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import {
   Users, Bell, BellRing, BellOff, Phone, MapPin, Clock, Mail, ShieldCheck, Plus,
-  CalendarDays, Share, History,
+  CalendarDays, Share, History, Vibrate,
 } from 'lucide-react';
 import { Clinic, User, Appointment, PatientNotification } from '../../../types';
 import { cn } from '../../Doctor/ui/primitives';
 import { GradientCard, Glass, Surface, SectionLabel, Display, Button, Chip, Avatar, ListRow, EmptyState } from '../ui';
 import { getPushState, enablePush, disablePush, isIOS, isStandalone, PushState } from '../../../lib/push';
+import { haptic, hapticsEnabled, setHapticsEnabled, hapticsSupported } from '../../../lib/haptics';
 
 interface Props {
   currentUser: User;
@@ -37,6 +38,7 @@ const YouScreen: React.FC<Props> = ({
   const [pushState, setPushState] = useState<PushState>(() => getPushState());
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [hapticsOn, setHapticsOn] = useState<boolean>(() => hapticsEnabled());
 
   const canPush = !!onSavePushSubscription && !!onDeletePushSubscription;
 
@@ -105,6 +107,30 @@ const YouScreen: React.FC<Props> = ({
             {pushState === 'denied' && <p className="mt-3 rounded-2xl bg-blush-soft p-3 text-[11px] font-medium text-blush-deep">Notifications are blocked for this app. Enable them in your device settings.</p>}
             {pushState === 'unconfigured' && <p className="mt-3 rounded-2xl bg-white/50 p-3 text-[11px] text-ink-500">Notifications aren't set up for this clinic yet. Messages still appear in the app.</p>}
             {error && <p className="mt-3 text-[11px] font-semibold text-blush-deep">{error}</p>}
+          </Glass>
+        </motion.div>
+      )}
+
+      {/* Haptics */}
+      {hapticsSupported() && (
+        <motion.div {...fade(2, reduce)}>
+          <Glass className="p-5">
+            <div className="flex items-center gap-4">
+              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/60" style={{ color: clinic.primaryColor }}>
+                <Vibrate size={19} />
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-bold text-ink-800">Haptics</p>
+                <p className="text-xs text-ink-400">A light tap as you use the app</p>
+              </div>
+              <button
+                onClick={() => { const next = !hapticsOn; setHapticsEnabled(next); setHapticsOn(next); if (next) haptic('medium'); }}
+                aria-pressed={hapticsOn}
+                className={cn('relative h-6 w-11 shrink-0 rounded-full transition-colors', hapticsOn ? 'bg-primary' : 'bg-ink-950/15')}
+              >
+                <span className={cn('absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-all', hapticsOn ? 'left-[1.375rem]' : 'left-0.5')} />
+              </button>
+            </div>
           </Glass>
         </motion.div>
       )}

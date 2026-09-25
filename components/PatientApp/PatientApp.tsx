@@ -6,12 +6,13 @@ import {
   AppointmentType, TransactionCategory, TransactionType, PatientNotification,
 } from '../../types';
 import { cn } from '../Doctor/ui/primitives';
+import { haptic } from '../../lib/haptics';
 import { Aurora, Avatar, SectionLabel } from './ui';
 import TodayScreen from './screens/TodayScreen';
 import CareScreen from './screens/CareScreen';
 import RewardsScreen from './screens/RewardsScreen';
 import YouScreen from './screens/YouScreen';
-import MessagesSheet from './sheets/MessagesSheet';
+import NotificationsScreen from './screens/NotificationsScreen';
 import BookingSheet from './sheets/BookingSheet';
 import RedeemSheet from './sheets/RedeemSheet';
 import AddFamilySheet from './sheets/AddFamilySheet';
@@ -61,7 +62,8 @@ const PatientApp: React.FC<PatientAppProps> = (props) => {
 
   const reduce = useReducedMotion();
   const [tab, setTab] = useState<PatientTab>(defaultTab);
-  const [sheet, setSheet] = useState<null | 'messages' | 'booking' | 'redeem' | 'family'>(null);
+  const [sheet, setSheet] = useState<null | 'booking' | 'redeem' | 'family'>(null);
+  const [showNotifications, setShowNotifications] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [notifications, setNotifications] = useState<PatientNotification[] | null>(null);
 
@@ -115,12 +117,21 @@ const PatientApp: React.FC<PatientAppProps> = (props) => {
 
   const toggleTask = async (itemId: string) => {
     if (!activePlan) return;
+    const completesAll = (activePlan.checklist || []).every((t) => t.completed || t.id === itemId);
+    haptic(completesAll ? 'success' : 'light');
     await onToggleChecklistItem(activePlan.id, itemId);
   };
 
   const markRead = async (id: string) => {
+    haptic('light');
     setNotifications((prev) => (prev || []).map((n) => (n.id === id ? { ...n, status: 'READ' } : n)));
     await onMarkNotificationRead?.(id);
+  };
+
+  const readAll = async () => {
+    const unreadIds = (notifications || []).filter((n) => n.status !== 'READ').map((n) => n.id);
+    setNotifications((prev) => (prev || []).map((n) => ({ ...n, status: 'READ' })));
+    await Promise.all(unreadIds.map((id) => onMarkNotificationRead?.(id)));
   };
 
   const completeOnboarding = () => {
@@ -133,7 +144,7 @@ const PatientApp: React.FC<PatientAppProps> = (props) => {
     const active = tab === item.id;
     return (
       <button
-        onClick={() => setTab(item.id)}
+        onClick={() => { haptic('selection'); setTab(item.id); }}
         aria-label={item.label}
         aria-current={active ? 'page' : undefined}
         className="relative flex flex-1 flex-col items-center justify-center gap-1 rounded-full py-2.5 text-[10px] font-bold text-ink-400 transition-colors"
@@ -161,7 +172,7 @@ const PatientApp: React.FC<PatientAppProps> = (props) => {
               <p className="truncate font-display text-sm font-bold leading-tight text-ink-900">{clinic.name}</p>
             </div>
             <button
-              onClick={() => setSheet('messages')}
+              onClick={() => { haptic('light'); setShowNotifications(true); }}
               aria-label={`Messages${unreadCount ? `, ${unreadCount} unread` : ''}`}
               className="relative flex h-10 w-10 items-center justify-center rounded-full border border-white/60 bg-white/60 text-ink-600 backdrop-blur-md"
             >
@@ -196,7 +207,7 @@ const PatientApp: React.FC<PatientAppProps> = (props) => {
                   unreadCount={unreadCount}
                   notifications={notifications}
                   onToggleTask={toggleTask}
-                  onOpenMessages={() => setSheet('messages')}
+                  onOpenMessages={() => setShowNotifications(true)}
                   onOpenBooking={() => setSheet('booking')}
                   onGoCare={() => setTab('CARE')}
                   onGoRewards={() => setTab('REWARDS')}
@@ -234,7 +245,7 @@ const PatientApp: React.FC<PatientAppProps> = (props) => {
             <div className="w-14" />
             {RIGHT.map((i) => <NavButton key={i.id} item={i} />)}
             <button
-              onClick={() => setSheet('booking')}
+              onClick={() => { haptic('medium'); setSheet('booking'); }}
               aria-label="Book a visit"
               className="absolute left-1/2 top-1/2 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-white shadow-[0_12px_26px_-10px_rgba(16,24,40,0.7)] transition-transform active:scale-95"
               style={{ backgroundColor: clinic.primaryColor }}
@@ -245,7 +256,7 @@ const PatientApp: React.FC<PatientAppProps> = (props) => {
         </nav>
       </div>
 
-      <MessagesSheet open={sheet === 'messages'} onClose={() => setSheet(null)} notifications={notifications} onRead={markRead} />
+      <NotificationsScreen open={showNotifications} onClose={() => setShowNotifications(false)} accent={clinic.primaryColor} notifications={notifications} onRead={markRead} onReadAll={readAll} />
       <BookingSheet open={sheet === 'booking'} onClose={() => setSheet(null)} clinic={clinic} patientId={currentUser.id} onSchedule={onSchedule} />
       <RedeemSheet open={sheet === 'redeem'} onClose={() => setSheet(null)} clinic={clinic} patientId={currentUser.id} points={points} onRedeem={onRedeem} />
       <AddFamilySheet open={sheet === 'family'} onClose={() => setSheet(null)} clinic={clinic} currentUser={currentUser} household={household} onAddFamilyMember={onAddFamilyMember} onLinkFamily={onLinkFamily} />
