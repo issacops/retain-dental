@@ -491,11 +491,11 @@ export const WeekCalendar: React.FC<{ accent: string; markedDays?: Set<number>; 
   return (
     <div>
       <div className="flex items-center justify-between">
-        <div className="flex items-baseline gap-3">
+        <div className="flex items-center gap-3">
           <span className="font-display text-4xl font-bold leading-none tracking-tighter text-ink-900">{selected.getDate()}</span>
-          <div>
+          <div className="leading-tight">
             <p className="font-display text-base font-bold text-ink-900">{selected.toLocaleDateString('en-US', { weekday: 'long' })}</p>
-            <p className="text-xs font-semibold text-ink-400">{selected.toLocaleDateString('en-US', { month: 'long' })}</p>
+            <p className="mt-0.5 text-xs font-semibold text-ink-400">{selected.toLocaleDateString('en-US', { month: 'long' })}</p>
           </div>
         </div>
         <span className="flex h-9 w-9 items-center justify-center rounded-full bg-ink-950 text-cream-50"><CalendarDays size={16} /></span>
