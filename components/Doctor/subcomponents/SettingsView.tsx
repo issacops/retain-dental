@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
   Building2, Percent, BellRing, ShieldCheck, Download, Save, Users2,
-  Clock, MapPin, Phone, Mail, Check, ScrollText, AlertTriangle,
+  Clock, MapPin, Phone, Mail, Check, ScrollText, AlertTriangle, Receipt,
 } from 'lucide-react';
 import { Clinic, User, Wallet, Transaction, CarePlan, Appointment, AuditLog, TransactionCategory, TIER_THRESHOLDS } from '../../../types';
 import { Card, Label, SectionHeader, Pill, cn } from '../ui/primitives';
@@ -124,6 +124,39 @@ const SettingsView: React.FC<Props> = ({
       emailEnabled: c?.emailEnabled ?? true,
     });
   }, [clinic.id, clinic.settings?.notificationConfig]);
+
+  // --- Billing & tax ---
+  const tc = clinic.settings?.tax;
+  const [tax, setTax] = useState({
+    enabled: tc?.enabled ?? false,
+    label: tc?.label ?? 'GST',
+    rate: String(tc?.rate ?? 18),
+    taxId: tc?.taxId ?? '',
+    invoicePrefix: tc?.invoicePrefix ?? 'INV',
+  });
+  useEffect(() => {
+    const t = clinic.settings?.tax;
+    setTax({
+      enabled: t?.enabled ?? false,
+      label: t?.label ?? 'GST',
+      rate: String(t?.rate ?? 18),
+      taxId: t?.taxId ?? '',
+      invoicePrefix: t?.invoicePrefix ?? 'INV',
+    });
+  }, [clinic.id, clinic.settings?.tax]);
+
+  const saveTax = () => onUpdateClinic(clinic.id, {
+    settings: {
+      ...clinic.settings,
+      tax: {
+        enabled: tax.enabled,
+        label: tax.label || 'Tax',
+        rate: Number(tax.rate) || 0,
+        taxId: tax.taxId,
+        invoicePrefix: tax.invoicePrefix || 'INV',
+      },
+    },
+  });
 
   const saveNotify = () => onUpdateClinic(clinic.id, {
     settings: {
@@ -275,6 +308,39 @@ const SettingsView: React.FC<Props> = ({
                 ))}
               </div>
             </div>
+          </Card>
+
+          {/* Billing & tax */}
+          <Card tone="white">
+            <div className="flex items-start justify-between gap-4">
+              <SectionHeader eyebrow="Billing" title="Invoices & tax" icon={<Receipt size={16} />} />
+              <button onClick={saveTax} className="inline-flex shrink-0 items-center gap-2 rounded-full bg-ink-950 px-4 py-2 text-xs font-bold uppercase tracking-[0.08em] text-cream-50 transition-colors hover:bg-ink-800">
+                <Save size={14} /> Save
+              </button>
+            </div>
+            <div className="mt-6 grid gap-5 sm:grid-cols-2">
+              <div>
+                <Label>Tax label</Label>
+                <input className={inputCls} value={tax.label} onChange={(e) => setTax({ ...tax, label: e.target.value })} placeholder="GST / VAT / Sales Tax" />
+              </div>
+              <div>
+                <Label>Tax rate (%)</Label>
+                <input type="number" className={inputCls} value={tax.rate} onChange={(e) => setTax({ ...tax, rate: e.target.value })} />
+              </div>
+              <div>
+                <Label>Tax ID / registration</Label>
+                <input className={inputCls} value={tax.taxId} onChange={(e) => setTax({ ...tax, taxId: e.target.value })} placeholder="Shown on every invoice" />
+              </div>
+              <div>
+                <Label>Invoice prefix</Label>
+                <input className={inputCls} value={tax.invoicePrefix} onChange={(e) => setTax({ ...tax, invoicePrefix: e.target.value })} placeholder="INV" />
+              </div>
+            </div>
+            <button onClick={() => setTax((prev) => ({ ...prev, enabled: !prev.enabled }))}
+              className={cn('mt-6 inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-bold transition-colors',
+                tax.enabled ? 'border-primary/30 bg-primary/10 text-primary' : 'border-ink-950/10 bg-white text-ink-400')}>
+              {tax.enabled ? <Check size={13} /> : <AlertTriangle size={13} />} Add tax line to invoices
+            </button>
           </Card>
 
           {/* Recall & reminders */}

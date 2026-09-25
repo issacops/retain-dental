@@ -63,10 +63,19 @@ export interface NotificationConfig {
   emailEnabled: boolean;
 }
 
+export interface TaxConfig {
+  enabled: boolean;
+  label: string;        // e.g. "GST", "VAT", "Sales Tax"
+  rate: number;         // percentage
+  taxId?: string;       // GSTIN / VAT number shown on the invoice
+  invoicePrefix?: string;
+}
+
 export interface ClinicSettings {
   address?: string;
   openingHours?: string;     // Free text, e.g. "Mon-Sat 10:00-19:00"
   notificationConfig?: NotificationConfig;
+  tax?: TaxConfig;
 }
 
 export interface Clinic {

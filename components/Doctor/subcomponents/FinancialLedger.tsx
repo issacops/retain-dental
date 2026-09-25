@@ -86,51 +86,77 @@ const FinancialLedger: React.FC<Props> = ({ clinic, transactions, wallets, allUs
     const handlePrintReceipt = (transaction: Transaction) => {
         const wallet = wallets.find(w => w.id === transaction.walletId);
         const patient = allUsers.find(u => u.id === wallet?.userId);
+        const tax = clinic.settings?.tax;
+        const taxEnabled = !!tax?.enabled && (tax?.rate || 0) > 0;
+        const rate = tax?.rate || 0;
+        const total = transaction.amountPaid;
+        const taxAmount = taxEnabled ? Math.round(total * (rate / (100 + rate))) : 0;
+        const subtotal = total - taxAmount;
+        const money = (n: number) => `\u20b9${n.toLocaleString('en-IN')}`;
+        const docTitle = taxEnabled ? 'Tax Invoice' : 'Payment Receipt';
 
         const receiptWindow = window.open('', '_blank');
         if (receiptWindow) {
             receiptWindow.document.write(`
                 <html>
                 <head>
-                    <title>Receipt ${escapeHtml(transaction.invoiceNo || ('#' + transaction.id.slice(0, 8)))}</title>
+                    <title>${escapeHtml(docTitle)} ${escapeHtml(transaction.invoiceNo || ('#' + transaction.id.slice(0, 8)))}</title>
                     <style>
-                        body { font-family: -apple-system, 'Segoe UI', 'Plus Jakarta Sans', sans-serif; padding: 40px; color: #1e293b; max-width: 800px; mx-auto; }
-                        .header { text-align: center; margin-bottom: 40px; border-bottom: 2px solid #f1f5f9; padding-bottom: 20px; }
-                        .logo { height: 60px; margin-bottom: 10px; }
-                        .clinic-name { font-size: 24px; font-weight: 900; color: #0f172a; text-transform: uppercase; letter-spacing: 1px; }
-                        .meta { display: flex; justify-content: space-between; margin-bottom: 40px; font-size: 14px; }
-                        .label { font-weight: bold; text-transform: uppercase; color: #64748b; font-size: 10px; letter-spacing: 1px; }
-                        .value { font-weight: bold; margin-top: 4px; }
-                        .table { width: 100%; border-collapse: collapse; margin-bottom: 40px; }
-                        .table th { text-align: left; text-transform: uppercase; font-size: 10px; letter-spacing: 1px; color: #64748b; padding: 10px 0; border-bottom: 1px solid #e2e8f0; }
-                        .table td { padding: 20px 0; border-bottom: 1px solid #f1f5f9; font-weight: bold; }
-                        .total { text-align: right; font-size: 24px; font-weight: 900; color: #0f172a; }
-                        .footer { margin-top: 60px; text-align: center; font-size: 12px; color: #94a3b8; }
+                        * { box-sizing: border-box; }
+                        body { font-family: -apple-system, 'Segoe UI', 'Plus Jakarta Sans', sans-serif; padding: 48px; color: #0f172a; max-width: 760px; margin: 0 auto; }
+                        .top { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0f172a; padding-bottom: 24px; }
+                        .logo { height: 54px; margin-bottom: 8px; border-radius: 12px; }
+                        .clinic-name { font-size: 24px; font-weight: 800; letter-spacing: -0.02em; }
+                        .muted { color: #64748b; font-size: 12px; line-height: 1.6; }
+                        .doc-type { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: #64748b; text-align: right; }
+                        .doc-no { font-size: 20px; font-weight: 800; text-align: right; margin-top: 4px; }
+                        .meta { display: flex; justify-content: space-between; margin: 32px 0; }
+                        .label { font-weight: 700; text-transform: uppercase; color: #94a3b8; font-size: 10px; letter-spacing: 1.5px; }
+                        .value { font-weight: 700; margin-top: 4px; }
+                        table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+                        th { text-align: left; text-transform: uppercase; font-size: 10px; letter-spacing: 1.5px; color: #94a3b8; padding: 12px 0; border-bottom: 1px solid #e2e8f0; }
+                        td { padding: 16px 0; border-bottom: 1px solid #f1f5f9; font-weight: 600; }
+                        .totals { margin-left: auto; width: 280px; }
+                        .row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px; }
+                        .row.grand { border-top: 2px solid #0f172a; margin-top: 8px; padding-top: 12px; font-size: 20px; font-weight: 800; }
+                        .footer { margin-top: 56px; border-top: 1px solid #e2e8f0; padding-top: 20px; text-align: center; font-size: 12px; color: #94a3b8; }
+                        .printbar { position: fixed; top: 20px; right: 20px; }
+                        .printbar button { font: inherit; font-size: 13px; font-weight: 700; padding: 10px 18px; border-radius: 999px; border: none; background: #0f172a; color: #fff; cursor: pointer; }
+                        @media print { body { padding: 24px; } .printbar { display: none; } }
                     </style>
                 </head>
                 <body>
-                    <div class="header">
-                        ${clinic.logoUrl ? `<img src="${escapeHtml(clinic.logoUrl)}" class="logo" />` : ''}
-                        <div class="clinic-name">${escapeHtml(clinic.name)}</div>
-                        <div style="font-size: 12px; color: #64748b; margin-top: 5px;">Official Payment Receipt</div>
+                    <div class="top">
+                        <div>
+                            ${clinic.logoUrl ? `<img src="${escapeHtml(clinic.logoUrl)}" class="logo" />` : ''}
+                            <div class="clinic-name">${escapeHtml(clinic.name)}</div>
+                            <div class="muted">
+                                ${clinic.settings?.address ? escapeHtml(clinic.settings.address) + '<br/>' : ''}
+                                ${clinic.emergencyPhone ? 'Phone ' + escapeHtml(clinic.emergencyPhone) + '<br/>' : ''}
+                                ${clinic.adminEmail ? escapeHtml(clinic.adminEmail) + '<br/>' : ''}
+                                ${taxEnabled && tax?.taxId ? escapeHtml(tax.label) + ' ' + escapeHtml(tax.taxId) : ''}
+                            </div>
+                        </div>
+                        <div>
+                            <div class="doc-type">${escapeHtml(docTitle)}</div>
+                            <div class="doc-no">${escapeHtml(transaction.invoiceNo || ('#' + transaction.id.slice(0, 8).toUpperCase()))}</div>
+                            <div class="muted" style="text-align:right;">${new Date(transaction.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
+                        </div>
                     </div>
 
                     <div class="meta">
                         <div>
-                            <div class="label">Billed To</div>
+                            <div class="label">Billed to</div>
                             <div class="value">${escapeHtml(patient?.name || 'Walk-in Patient')}</div>
-                            <div style="font-size: 12px; color: #64748b;">${escapeHtml(patient?.mobile || '')}</div>
+                            <div class="muted">${escapeHtml(patient?.mobile || '')}</div>
                         </div>
                         <div style="text-align: right;">
-                            <div class="label">Receipt Number</div>
-                            <div class="value">${escapeHtml(transaction.invoiceNo || ('#' + transaction.id.slice(0, 8).toUpperCase()))}</div>
-                            <br/>
-                            <div class="label">Date Issued</div>
-                            <div class="value">${new Date(transaction.date).toLocaleDateString()}</div>
+                            <div class="label">Payment status</div>
+                            <div class="value">${transaction.type === 'EARN' ? 'Paid' : 'Redeemed'}</div>
                         </div>
                     </div>
 
-                    <table class="table">
+                    <table>
                         <thead>
                             <tr>
                                 <th>Description</th>
@@ -142,20 +168,25 @@ const FinancialLedger: React.FC<Props> = ({ clinic, transactions, wallets, allUs
                             <tr>
                                 <td>${escapeHtml(transaction.description)}</td>
                                 <td>${escapeHtml(transaction.category)}</td>
-                                <td style="text-align: right;">₹${transaction.amountPaid.toLocaleString()}</td>
+                                <td style="text-align: right;">${money(subtotal)}</td>
                             </tr>
                         </tbody>
                     </table>
 
-                    <div class="total">
-                        Total: ₹${transaction.amountPaid.toLocaleString()}
+                    <div class="totals">
+                        <div class="row"><span class="muted">Subtotal</span><span>${money(subtotal)}</span></div>
+                        ${taxEnabled ? `<div class="row"><span class="muted">${escapeHtml(tax!.label)} (${rate}%)</span><span>${money(taxAmount)}</span></div>` : ''}
+                        <div class="row grand"><span>Total</span><span>${money(total)}</span></div>
                     </div>
 
                     <div class="footer">
-                        <p>Thank you for choosing ${clinic.name}.</p>
-                        <p>Generated via Retain Dental • ${new Date().toLocaleString()}</p>
+                        ${clinic.settings?.openingHours ? `<p>Open ${escapeHtml(clinic.settings.openingHours)}</p>` : ''}
+                        <p>Thank you for choosing ${escapeHtml(clinic.name)}.</p>
+                        <p>Issued via Retain Dental \u00b7 ${new Date().toLocaleString('en-IN')}</p>
                     </div>
-                    <script>window.print();</script>
+                    <div class="printbar">
+                        <button onclick="window.print()">Print / Save as PDF</button>
+                    </div>
                 </body>
                 </html>
             `);
@@ -233,7 +264,7 @@ const FinancialLedger: React.FC<Props> = ({ clinic, transactions, wallets, allUs
                                 <th className="p-6 text-[10px] font-bold uppercase text-ink-400 tracking-widest text-right">Category</th>
                                 <th className="p-6 text-[10px] font-bold uppercase text-ink-400 tracking-widest text-right">Amount</th>
                                 <th className="p-6 text-[10px] font-bold uppercase text-ink-400 tracking-widest text-right">Date</th>
-                                <th className="p-6 text-[10px] font-bold uppercase text-ink-400 tracking-widest text-center">Receipt</th>
+                                <th className="p-6 text-[10px] font-bold uppercase text-ink-400 tracking-widest text-center">Invoice</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
@@ -262,7 +293,7 @@ const FinancialLedger: React.FC<Props> = ({ clinic, transactions, wallets, allUs
                                         {new Date(tx.date).toLocaleDateString()} <span className="text-ink-300 mx-1">|</span> {new Date(tx.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                     </td>
                                     <td className="p-6 text-center">
-                                        <button onClick={() => handlePrintReceipt(tx)} title="Print Receipt" className="p-2 hover:bg-slate-100 rounded-lg text-ink-400 hover:text-ink-900 transition-colors">
+                                        <button onClick={() => handlePrintReceipt(tx)} title="View / print invoice" aria-label="View invoice" className="p-2 hover:bg-slate-100 rounded-lg text-ink-400 hover:text-ink-900 transition-colors">
                                             <FileText size={18} />
                                         </button>
                                     </td>
