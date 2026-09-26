@@ -212,7 +212,11 @@ const TodayView: React.FC<Props> = ({
             <IconChip tone="white" size="sm"><CalendarDays size={15} /></IconChip>
           </div>
           <p className="mt-2 text-xs font-semibold text-sun-deep">
-            {nextTime ? `Next appointment ${nextTime}` : 'No appointments booked'}
+            {todaysAppts.length === 0
+              ? 'No appointments booked'
+              : nextTime
+                ? `Next appointment ${nextTime}`
+                : 'All visits completed today'}
           </p>
         </Card>
 
